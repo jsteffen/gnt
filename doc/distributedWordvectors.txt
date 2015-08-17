@@ -1,0 +1,68 @@
+1. Distributed word feature:
+
+f_left(w) ::=
+	cell i gets value x_i = tf(freq(bigram(c_i, w)))
+	"the ith entry named x_i is the weighted number of times 
+		that the INDICATOR WORD c_i occurs immediately to the left of w"
+	
+	where c_i is the word with frequency rank i in the corpus.
+	
+f_right(w) analougsly.
+
+restrict n=500 indicator words.
+
+To avoid zero vectors: add additional cell n+1 and count omitted context.
+
+2. Computation of distributional vectors: -> NOTE it is ako word2vec version
+
+- on all corpora (labelled and unlabelled) 
+	/Users/gune00/data/MLDP/2009/conll09-english (conll format of sec. 2-21 of PTB version 3)
+	/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab (tokenized/sentence/line)
+	
+- and test domain 
+	/Volumes/data1/sancl-2012/sancl.all -> labeled and unlabeled data 
+	/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb (conll format und tokenized/sentence/line)
+	
+-> organize into sentence/line as input format
+
+NOTE: 
+	text is tokenized, lower cased and sentences boundary is known
+	assume special symbols <s> and </s> as sentence end/begin markers
+
+Preprocess:
+	indicatorWords.txt -> all words + TF -> ordered according to rank
+	
+
+- Input: 
+	indicatorWords.txt -> all words + TF -> ordered according to rank
+- Output: 
+	vocFilename.txt -> all words -> used for creating index
+	vocVectorLeft.txt -> bigram counts (c_i, w_i) of left context vectors
+	vocVectorRight.txt -> bigram counts (w_i, c_i) of right context vectors
+
+How are distributed vectors loaded in DeepNER ?
+	- they define a class /NER_solved/FeatureFactory.java
+	- it reads in the vocabulary-index file and the corresponding word vector file
+	- and creates a word2num and num2word index and builds a corresponding matrix using the word vector
+	-> I could adapt this for storing and reading distributed word vectors
+	
+
+
+Steps:
+
+1. build indicatorWords
+	- read file linewise
+	- identify sentence according to corpus style
+	- read in words and count using hash array
+		- what is a word ? every token ?
+	- write out to file sorted according to TF
+-> DONE 
+-> IDEA: check 500 wordlist 
+	-> maybe also possible: just use closed class words as indicator words and others as zero-counts
+	-> would be highly domain independent
+
+2. build distributed vectors using indicator words has input
+
+-> DONE, cf. /Users/gune00/data/wordVectorTests/*
+
+3. apply on complete FLORS corpus

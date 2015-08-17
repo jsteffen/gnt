@@ -1,0 +1,91 @@
+GN on 11. December 2013:
+
+Development of a NER using the liblinear library.
+
+For using liblinear see Liblinear-NER.pdf.
+
+training and test data:
+- /Users/gune00/dfki/data/conll/conll03-NER
+- DE and EN
+
+Preprocessing tools:
+- Morphadorner
+- SvmTagger
+
+
+Classes:
+B-PER, I-PER, B-LOC, I-LOC, B-ORG, I-ORG, B-MISC, I-MISC, O
+
+
+Features: 
+Cf. http://www.cs.bgu.ac.il/~elhadad/nlp09/hw2.html#svm
+
+Lexical features:
+1. The word form (the string as it appears in the sentence)
+2. The POS of the word
+3. ORT - a feature that captures the orthographic (letter) structure of the word. It
+   can have any of the following values: number, contains-digit, contains-hyphen,
+   capitalized, all-capitals, URL, punctuation, regular.
+4. prefix1: first letter of the word
+5. prefix2: first two letters of the word
+6. prefix3: first three letters of the word
+7. suffix1: last letter of the word
+8. suffix2: last two letters of the word
+9. suffix3: last three letters of the word
+
+Lookup features:
+	gazetters
+	similarity
+	simstring
+
+context features: 
+	-2, -1, 0, 1, 2
+
+Training/test data format:
+
+ascii files with format
+<label> <index1>:<value1> <index2>:<value2> .....
+
+
+Implementation:
+
+Training phase:
+I will follow the use of LibLinear in SentenceSplitter but will also consider split-train.
+SentenceSplitter uses classes from MDP.
+
+Steps involved:
+
+Feature extraction:
+define feature vector class 
+define feature extraction functions
+-> main job !
+
+
+Create training data and alphabet:
+read in training data:
+- either map data file to conll-2006 format or adapt reader.
+- for each sentence create a sentence object
+
+create feature vector for each instance/token:
+compute integer encoding
+store in training file
+
+Do training:
+read problem using training data
+call learner
+save model
+
+Testing phase:
+Input: input file, POS tagger model, NER model
+
+read input file:
+- tokenize and call POS tagger
+
+make feature vector 
+
+encode feature vector
+
+predict label using liblinear
+
+assign label to token
+- compute parallel label list per sentence

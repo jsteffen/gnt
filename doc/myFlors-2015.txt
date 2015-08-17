@@ -1,0 +1,155 @@
+Implementing FLORS, schnabel & Schütze:
+
+Idea is to train a one-vs-all POS-tagger and NE-tagger.
+
+One-vs-all means: 
+- for each tag train a model. Then, apply all models on new word and select best tag.
+- Should be part of the Liblinear package.
+
+Learning engine: 
+	LibLinear
+	
+-> NOTE: 
+	Weka only supports liblinear version 1.5 or 1.8
+		(https://github.com/bwaldvogel/liblinear-weka)
+	Newest java version: 1.95 - http://www.csie.ntu.edu.tw/~cjlin/liblinear/
+	Newest C++ version: 2.01  - http://liblinear.bwaldvogel.de/
+	
+-> It should not be so difficult to map between liblinear and Weka format
+
+Background from paper:
+
+Local context for tagging word:
+	window 2l+1 around token v_i: (v_i-l, .., v_i, ..., v_i+l)
+
+	sentences are padded with <BOUNDARY> at the start/end
+	
+	if l = 2 -> 5-token window (v_i-2, v_i-1, v_i, v_i+1, v_i+2)
+
+Representation of feature F for token v_i
+
+	F(v_i) = f(v_i-l) conc ... conc f(v_i+l)
+	
+	
+Word features: each word w is represented by four components
+(normalized by unit vector):
+
+f(w) = f_left(w) + f_right(w) + f_suffix(x) + f_shape(w)
+
+1. Distributed word feature:
+
+f_left(w) ::=
+	cell i gets value x_i = tf(freq(bigram(c_i, w)))
+	"the ith entry named x_i is the weighted number of times 
+		that the INDICATOR WORD c_i occurs immediately to the left of w"
+	
+	where c_i is the word with frequency rank i in the corpus.
+	
+f_right(w) analoguously.
+
+restrict n=500 indicator words.
+
+To avoid zero vectors: add additional cell n+1 and count omitted context.
+
+text is preprocessed by lowercasing everything.
+
+2. Suffix features: all suffixes of a word plus word:
+	they compute 91.161 different suffix features from training data I guess
+	
+3. Shape features:
+	Use Berkely parser word features.
+	Each word is mapped to 16 bit string indicating ENGLISH orthography
+	on WSJ: yields 50 different signatures (bit string instances).
+	This gives 50 different shape features
+	
+Possible representation in AREFF:
+
+1. 501 left and 501 right indicator words used for representing a word
+
+	500 häufigsten Wörter als Attribute mit bigram als Wert + Dummy;
+
+Textuelle Darstellung für distributed representation koennte sein:
+	erzeuge Hash mit word2num und vica versa:
+	w0:0 ... w499:499
+	word	l0:val ... l499:val l500:val r0:val ... r499:val r500:val 
+	
+Textuelle Darstellung für suffixe for training:
+	word	s1, ..., sn
+	
+	determine max sn -> max word length
+	
+	in application phase sn is cutting point for words which are longer
+	
+	OR one large boolean vector for all possible suffixes? -> SEEMS SO IN FLORS
+	
+Shape features: LANGUAGE SPECIFIC
+
+- define 16 predicates -> order them
+	-> assign boolean value -> leads to binary string 
+		where each element corresponds to shap predicate
+-> should lead to 50 different vector instances: if so, define mapping of
+	binary string to index 0-49
+	
+	
+How to implement preprocessing for training, testing and application phase ?
+
+1. Computation of distributional vectors: -> NOTE it is ako word2vec version
+
+- on all corpora (labeled and unlabeled) 
+- output to file ordered according to rank
+- then, for training read data in upto word with rank=500
+
+NOTE: text is tokenized, lower cased and sentences boundary is known
+
+Preprocess:
+	indicatorWords.txt -> all words + TF -> ordered according to rank
+
+- Input: 
+	indicatorWords.txt -> all words + TF -> ordered according to rank
+- Output: 
+	vocFilename.txt -> all words -> used for creating index
+	vocVectorLeft.txt -> bigram counts (c_i, w_i) of left context vectors
+	vocVectorRight.txt -> bigram counts (w_i, c_i) of right context vectors
+
+How are distributed vectors loaded in DeepNER ?
+	- they define a class /NER_solved/FeatureFactory.java
+	- it reads in the vocabulary-index file and the corresponding word vector file
+	- and creates a word2num and num2word index and builds a corresponding matrix using the word vector
+	-> I could adapt this for storing and reading distributed word vectors
+
+
+
+2. Training of POS tagger
+
+- use conll dependency treebanks or SVM format
+
+- the idea is in principle very simple:
+	training: define a feature vector of
+		label feat:num ... feat:num
+	testing/predicting
+		feat:num ... feat:num
+- hence the major steps are the encoding/decoding 
+	of the training/input data 
+
+- following MDP, I would need classes for:
+	- Alphabet: string2num and num2string mappings
+		- for all labels
+		- for all words
+		
+	- FeatureExtractor -> a class that keeps the feature templates
+		for computing suffixes
+		for computing shape features
+	
+- initialize:
+	read in word vectors and indicatorWords
+	initialize word2num
+	
+- read in training file:
+	- for each sentence
+		- create word data element:
+			- word
+			- label
+			- word vector left
+			- word vector right
+			- compute suffixes
+			- compute shape
