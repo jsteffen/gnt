@@ -84,20 +84,23 @@ public class IndicatorWordsCreator {
 	// iterate through input file linewise
 	// clean line according to given type (depends on corpus encoding)
 	// count words according to term frequency
-	public void readAndProcessInputTextLineWise(String fileName, String type){
+	public void readAndProcessInputTextLineWise(String fileName, String type, int max){
 		BufferedReader reader;
 		int mod = 100000;
+		int myLineCnt = 0;
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
 
 			String line;
 			while ((line = reader.readLine()) != null) {
+				if  ((max > 0) && (myLineCnt >= max)) break;
 				lineCnt++;
+				myLineCnt++;
 				String[] words = cleanTextLine(line, type);
 				countWords(words);
 				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
 			}
-			reader.close();
+			System.out.println("+++"+myLineCnt); reader.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -138,24 +141,28 @@ public class IndicatorWordsCreator {
 		}
 	}
 
-	// Still missing: labeled data sentences for training sets and test sets
+	// TODO - Still missing: labeled data sentences for test sets
+	//        Define CONLL2sentence mapper helper function
 	private void processFlorsDataSet(){
-		// Training data
-		readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", "ptb");
+		// Training data labeled sentences
+		readAndProcessInputTextLineWise("/Users/gune00/data/MLDP/english/english-train-sents.txt", "ptb", 100000);
+		// Training data unlabeled
+		readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", "ptb", 100000);
 
 		// Test data
-		readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/unlab/all-unlab.txt", "ptb");
+		// unlabeled PTB-BIO
+		readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/unlab/all-unlab.txt", "ptb", 100000);
 
 		// unlabeled test data in sentence form from /Users/gune00/data/sancl-2012/sancl.all
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt", "ptb");
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-emails.unlabeled.txt", "ptb");
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt", "ptb");
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-reviews.unlabeled.txt", "ptb");
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt", "ptb");
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt", "ptb", -1);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-emails.unlabeled.txt", "ptb", -1);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt", "ptb", -1);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-reviews.unlabeled.txt", "ptb", -1);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt", "ptb", -1);
 	}
 
 	private void processTestData(){
-		readAndProcessInputTextLineWise("/Volumes/data1/news.2012.en.shuffled", "ptb");
+		readAndProcessInputTextLineWise("/Volumes/data1/news.2012.en.shuffled", "ptb", -1);
 	}
 	
 	// Test  caller
@@ -173,12 +180,10 @@ public class IndicatorWordsCreator {
 		time1 = System.currentTimeMillis();
 
 		// -1 means: write all words, otherwise write n highest ranked words
-		iwp.writeSortedIndicatorWords("resources/iw.txt", -1);
+		iwp.writeSortedIndicatorWords("resources/iw.txt", 10000);
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
-		
-		iwp.writeSortedIndicatorWords("resources/iw-1000.txt", 1000);
 		
 	}
 }

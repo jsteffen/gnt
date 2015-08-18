@@ -1,4 +1,17 @@
-Implementing FLORS, schnabel & Schütze:
+Implementing FLORS, Schnabel & Schütze, TACL, 2014
+
+Corpus used by FLORS:
+
+- training: PTB-3, sec. 2-21 + PTB 1988 WSJ 100.000 unlabeled
+	/Users/gune00/data/MLDP/english (conll format of sec. 2-21 of PTB version 3 + extracted sentences)
+	/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab (tokenized/sentence/line) 
+		-> only read first 100.000
+	
+- test domain 
+	/Volumes/data1/sancl-2012/sancl.all -> labeled and unlabeled data (conll format and tokenized/sentence/line) 
+		-> it is said that unlabeled data has 100T sentences each which is not true
+	/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb (conll format and tokenized/sentence/line) 
+		-> only read first 100.000
 
 Idea is to train a one-vs-all POS-tagger and NE-tagger.
 
@@ -99,7 +112,7 @@ How to implement preprocessing for training, testing and application phase ?
 - output to file ordered according to rank
 - then, for training read data in upto word with rank=500
 
-NOTE: text is tokenized, lower cased and sentences boundary is known
+NOTE: text is tokenized, lower-cased and sentences boundary is known
 
 Preprocess:
 	indicatorWords.txt -> all words + TF -> ordered according to rank

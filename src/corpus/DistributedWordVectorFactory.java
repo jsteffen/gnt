@@ -80,7 +80,7 @@ public class DistributedWordVectorFactory {
 	}
 
 	// read file line-wise - basically the same as in indicator words creator
-	public void readAndProcessInputTextLineWise(String fileName, String type){
+	public void readAndProcessInputTextLineWise(String fileName, String type, int max){
 		BufferedReader reader;
 		int lineCnt = 0;
 		int mod = 100000;
@@ -89,6 +89,7 @@ public class DistributedWordVectorFactory {
 
 			String line;
 			while ((line = reader.readLine()) != null) {
+				if  ((max > 0) && (lineCnt >= max)) break;
 				lineCnt++;
 				String[] words = cleanTextLine(line, type);
 				sentence2Bigrams(words);
@@ -272,7 +273,7 @@ public class DistributedWordVectorFactory {
 		dwvFactory.initIndicatorMap("resources/iw.txt", 500);
 		
 		System.out.println("Read unlabeled files of sentences and create word vectors.");
-		dwvFactory.readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", "ptb");
+		dwvFactory.readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", "ptb", 100000);
 		dwvFactory.computeDistributedWordWeights();
 
 		dwvFactory.writeFlorsCondensed();

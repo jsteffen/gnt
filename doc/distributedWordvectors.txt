@@ -13,9 +13,9 @@ restrict n=500 indicator words.
 
 To avoid zero vectors: add additional cell n+1 and count omitted context.
 
-2. Computation of distributional vectors: -> NOTE it is ako word2vec version
+2. Computation of indicator words and distributional vectors is performed on all corpora
 
-- on all corpora (labelled and unlabelled) 
+- on all corpora (labeled and unlabeled) 
 	/Users/gune00/data/MLDP/2009/conll09-english (conll format of sec. 2-21 of PTB version 3)
 	/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab (tokenized/sentence/line)
 	
@@ -45,8 +45,6 @@ How are distributed vectors loaded in DeepNER ?
 	- it reads in the vocabulary-index file and the corresponding word vector file
 	- and creates a word2num and num2word index and builds a corresponding matrix using the word vector
 	-> I could adapt this for storing and reading distributed word vectors
-	
-
 
 Steps:
 
