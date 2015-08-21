@@ -19,17 +19,6 @@ One-vs-all means:
 - for each tag train a model. Then, apply all models on new word and select best tag.
 - Should be part of the Liblinear package.
 
-Learning engine: 
-	LibLinear
-	
--> NOTE: 
-	Weka only supports liblinear version 1.5 or 1.8
-		(https://github.com/bwaldvogel/liblinear-weka)
-	Newest java version: 1.95 - http://www.csie.ntu.edu.tw/~cjlin/liblinear/
-	Newest C++ version: 2.01  - http://liblinear.bwaldvogel.de/
-	
--> It should not be so difficult to map between liblinear and Weka format
-
 Background from paper:
 
 Local context for tagging word:
@@ -75,60 +64,13 @@ text is preprocessed by lowercasing everything.
 	on WSJ: yields 50 different signatures (bit string instances).
 	This gives 50 different shape features
 	
-Possible representation in AREFF:
-
-1. 501 left and 501 right indicator words used for representing a word
-
-	500 häufigsten Wörter als Attribute mit bigram als Wert + Dummy;
-
-Textuelle Darstellung für distributed representation koennte sein:
-	erzeuge Hash mit word2num und vica versa:
-	w0:0 ... w499:499
-	word	l0:val ... l499:val l500:val r0:val ... r499:val r500:val 
+STATUS
 	
-Textuelle Darstellung für suffixe for training:
-	word	s1, ..., sn
-	
-	determine max sn -> max word length
-	
-	in application phase sn is cutting point for words which are longer
-	
-	OR one large boolean vector for all possible suffixes? -> SEEMS SO IN FLORS
-	
-Shape features: LANGUAGE SPECIFIC
-
-- define 16 predicates -> order them
-	-> assign boolean value -> leads to binary string 
-		where each element corresponds to shap predicate
--> should lead to 50 different vector instances: if so, define mapping of
-	binary string to index 0-49
-	
-	
-How to implement preprocessing for training, testing and application phase ?
-
 1. Computation of distributional vectors: -> NOTE it is ako word2vec version
+	-> DONE, cf. /Users/gune00/data/wordVectorTests, indicator words: resources/iw.txt
 
-- on all corpora (labeled and unlabeled) 
-- output to file ordered according to rank
-- then, for training read data in upto word with rank=500
-
-NOTE: text is tokenized, lower-cased and sentences boundary is known
-
-Preprocess:
-	indicatorWords.txt -> all words + TF -> ordered according to rank
-
-- Input: 
-	indicatorWords.txt -> all words + TF -> ordered according to rank
-- Output: 
-	vocFilename.txt -> all words -> used for creating index
-	vocVectorLeft.txt -> bigram counts (c_i, w_i) of left context vectors
-	vocVectorRight.txt -> bigram counts (w_i, c_i) of right context vectors
-
-How are distributed vectors loaded in DeepNER ?
-	- they define a class /NER_solved/FeatureFactory.java
-	- it reads in the vocabulary-index file and the corresponding word vector file
-	- and creates a word2num and num2word index and builds a corresponding matrix using the word vector
-	-> I could adapt this for storing and reading distributed word vectors
+2. Compute suffix features
+	HIERIX
 
 
 

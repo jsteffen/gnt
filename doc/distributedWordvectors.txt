@@ -54,13 +54,15 @@ Steps:
 	- read in words and count using hash array
 		- what is a word ? every token ?
 	- write out to file sorted according to TF
--> DONE 
 -> IDEA: check 500 wordlist 
 	-> maybe also possible: just use closed class words as indicator words and others as zero-counts
 	-> would be highly domain independent
 
 2. build distributed vectors using indicator words has input
 
--> DONE, cf. /Users/gune00/data/wordVectorTests/*
 
-3. apply on complete FLORS corpus
+3. apply on complete FLORS corpus -> DONE - /Users/gune00/data/wordVectorTests/*
+	- separate files for vocabulary and left context and right context using 500 indicators words + dummy
+	- files are index compatible -> line x correspond to same word
+	- same for vectors which correspond to ranked iw enrtries
+	- to save space, only non-zeor elements are stored using ranked index for reference

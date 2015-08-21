@@ -96,8 +96,10 @@ public class IndicatorWordsCreator {
 				if  ((max > 0) && (myLineCnt >= max)) break;
 				lineCnt++;
 				myLineCnt++;
-				String[] words = cleanTextLine(line, type);
-				countWords(words);
+				if (!line.isEmpty()){
+					String[] words = cleanTextLine(line, type);
+					countWords(words);
+				}
 				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
 			}
 			System.out.println("+++"+myLineCnt); reader.close();
@@ -141,30 +143,48 @@ public class IndicatorWordsCreator {
 		}
 	}
 
-	// TODO - Still missing: labeled data sentences for test sets
-	//        Define CONLL2sentence mapper helper function
+	// TODO - check, but I think I have all source files that are also used in FLORS
 	private void processFlorsDataSet(){
+
 		// Training data labeled sentences
 		readAndProcessInputTextLineWise("/Users/gune00/data/MLDP/english/english-train-sents.txt", "ptb", 100000);
 		// Training data unlabeled
 		readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", "ptb", 100000);
 
+		// Labeled development PTB-BIO
+		readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/dev/english_pbiotb_dev-sents.txt", "ptb", 1000);
 		// Test data
 		// unlabeled PTB-BIO
 		readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/unlab/all-unlab.txt", "ptb", 100000);
 
-		// unlabeled test data in sentence form from /Users/gune00/data/sancl-2012/sancl.all
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt", "ptb", -1);
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-emails.unlabeled.txt", "ptb", -1);
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt", "ptb", -1);
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-reviews.unlabeled.txt", "ptb", -1);
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt", "ptb", -1);
+		// sentence form from /Users/gune00/data/sancl-2012/ 
+
+		// sancl.labeled/
+
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-answers-dev-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-emails-dev-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-reviews-dev-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-weblogs-dev-sents.txt", "ptb", 1000);
+
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-answers-test-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-emails-test-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-newsgroups-test-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-reviews-test-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-weblogs-test-sents.txt", "ptb", 1000);
+
+		// unlabeled sancl.all
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-emails.unlabeled.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-reviews.unlabeled.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt", "ptb", 100000);
 	}
 
 	private void processTestData(){
-		readAndProcessInputTextLineWise("/Volumes/data1/news.2012.en.shuffled", "ptb", -1);
+		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt", "ptb", -1);
 	}
-	
+
 	// Test  caller
 
 	public static void main(String[] args) throws IOException {
@@ -184,6 +204,6 @@ public class IndicatorWordsCreator {
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
-		
+
 	}
 }

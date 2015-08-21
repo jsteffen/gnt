@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -91,11 +93,12 @@ public class DistributedWordVectorFactory {
 			while ((line = reader.readLine()) != null) {
 				if  ((max > 0) && (lineCnt >= max)) break;
 				lineCnt++;
-				String[] words = cleanTextLine(line, type);
+				String[] words = cleanTextLine(line);
 				sentence2Bigrams(words);
 				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
 			}
 			reader.close();
+			System.out.println("#"+lineCnt);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -104,7 +107,7 @@ public class DistributedWordVectorFactory {
 
 	// Assume: a line is a tokenized sentence that is a list of words separated by blank.
 	// Following FLORS, lower case all words.
-	private String[] cleanTextLine(String line, String type) {
+	private String[] cleanTextLine(String line) {
 		String[] words = {};
 		words = line.toLowerCase().split(" ");
 		return words;
@@ -245,6 +248,37 @@ public class DistributedWordVectorFactory {
 		}
 	}
 	
+	public void readFlorsCorpus(){
+		List<String> fileList = new ArrayList<String>();
+		//labeled data
+		fileList.add("/Users/gune00/data/MLDP/english/english-train-sents.txt");
+		fileList.add("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/dev/english_pbiotb_dev-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-answers-dev-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-emails-dev-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-reviews-dev-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-weblogs-dev-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-answers-test-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-emails-test-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-newsgroups-test-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-reviews-test-sents.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-weblogs-test-sents.txt");
+		// Unlabeled data
+		fileList.add("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab");
+		fileList.add("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/unlab/all-unlab.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-emails.unlabeled.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-reviews.unlabeled.txt");
+		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt");
+		
+		for (String fileName : fileList){
+			System.out.println(fileName);
+			// read in first 100.000 sentences for each file
+			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
+		}
+	}
+	
 	public void writeFlorsCondensed(){
 		System.out.println("Write FLORS condensed ...");
 		System.out.println("Write out vocabulary file.");
@@ -256,7 +290,7 @@ public class DistributedWordVectorFactory {
 	}
 	
 
-	// TODO
+	// Eventually
 	/* Define also word2vec and glove based output:
 	 * word2vec:
 	 * 	first line: number of words, dimension
@@ -265,15 +299,14 @@ public class DistributedWordVectorFactory {
 	 * 	all lines: word + vector
 	 */
 	
-
 	// Test main method
 	public static void main(String[] args) throws IOException {
 		DistributedWordVectorFactory dwvFactory = new DistributedWordVectorFactory();
 		System.out.println("Read indicator words sorted acoording to rank.");
 		dwvFactory.initIndicatorMap("resources/iw.txt", 500);
 		
-		System.out.println("Read unlabeled files of sentences and create word vectors.");
-		dwvFactory.readAndProcessInputTextLineWise("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", "ptb", 100000);
+		System.out.println("Read sentences from corpus and create word vectors.");
+		dwvFactory.readFlorsCorpus();
 		dwvFactory.computeDistributedWordWeights();
 
 		dwvFactory.writeFlorsCondensed();
