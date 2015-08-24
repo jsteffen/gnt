@@ -33,8 +33,9 @@ import java.util.TreeMap;
  * - check whether already in word2num -> if false initialize word2num, num2word and wordsvector -> if true retrieve wordsVector(word2num)
  * - update left and right context with w_i-1 and w_i+1 by using iw2num(w_i-1); if iw2num is NULL then update last vector cell n+1
  * - when eof is reached, compute weight for non-zero frequencies of each word vector context element
- * - finally create vocabulary file vocFilename.txt using num2word and corresponding left and right files vocVectorLeft.txt and vocVectorRight.txt 
+ * - then create vocabulary file vocFilename.txt using num2word and vocVector.txt file that keeps the left and right vector
  * - this way we obtain a static knowledge base of distributed vectors for a set of words
+ * - finally, provide methods that enables reading and loading embedded word vectors from files directly.
  * @author gune00
  *
  */
@@ -81,6 +82,7 @@ public class DistributedWordVectorFactory {
 		reader.close();
 	}
 
+	//***
 	// read file line-wise - basically the same as in indicator words creator
 	public void readAndProcessInputTextLineWise(String fileName, String type, int max){
 		BufferedReader reader;
@@ -113,6 +115,7 @@ public class DistributedWordVectorFactory {
 		return words;
 	}
 
+	//***
 	// NOW, create and fill the distributed word vectors
 
 	// Iterate from left to right through the words of a sentence and construct/extend distributed vector of each word
@@ -208,6 +211,25 @@ public class DistributedWordVectorFactory {
 		}
 	}
 
+	//***
+	// Save learned word vectors to file: which means: store relevant listed of indicator words, 
+	// and then vocabulary words and left/right context words.
+	// Note, sort num2word according to natural order, and write value of entry key.
+	private void writeIndicatorWordFile(String targetFileName){
+		BufferedWriter writer;
+		Map<Integer, String> sortedMap = new TreeMap<Integer, String>(num2iw);
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
+			//Counts start from 1
+			for(int key: sortedMap.keySet()){
+				writer.write(sortedMap.get(key)+"\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	// after the above has been done, write out vocabulary into files:
 	// Firstly, sort num2word according to natural order, and write value of entry key.
 	private void writeVocabularyFile(String targetFileName){
@@ -225,29 +247,35 @@ public class DistributedWordVectorFactory {
 		}
 	}
 
-	// after the above has been done, write out left and right context vectors of each word in separate files.
+	// after the above has been done, write out left and right context vectors separated by ### in a single file.
 	// The order follows the natural order in num2word, i.e., x-th  left context vector belongs x-th word. 
 	// Same for right context.
 	// Hence, sort distributedWordsTable according to natural order, and write value of entry key.
 	// To save space, only write non-zero weights in form of iw_index:weight -> leads to much smaller files
+
+	// Store it only in ONE FILE:
+	// left ### right
 	
-	private void writeLeftRightContextFile(String leftFilename, String rightFilename){
-		BufferedWriter leftWriter, rightWriter;
+	private void writeContextFile(String filename){
+		BufferedWriter contextReader;
 		Map<Integer, DistributedWordVector> sortedMap = new TreeMap<Integer, DistributedWordVector>(distributedWordsTable);
 		try {
-			leftWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(leftFilename),"UTF-8"));
-			rightWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rightFilename),"UTF-8"));
+			contextReader = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
 			for(int key: sortedMap.keySet()){
-				leftWriter.write(sortedMap.get(key).toLeftContextIndex()+"\n");
-				rightWriter.write(sortedMap.get(key).toRightContextIndex()+"\n");
+				contextReader.write(sortedMap.get(key).toLeftContextIndex()+"###");
+				contextReader.write(sortedMap.get(key).toRightContextIndex()+"\n");
 			}
-			leftWriter.close();
-			rightWriter.close();
+			contextReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	//***
+	// The following two functions are used to create word vectors from a list of relevant source files
+	// and then stored on file.
+	// I call the resulting files condensed because only non-zero weights are stored. This helps reducing space
+	// very much !
 	public void readFlorsCorpus(){
 		List<String> fileList = new ArrayList<String>();
 		//labeled data
@@ -271,24 +299,128 @@ public class DistributedWordVectorFactory {
 		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt");
 		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-reviews.unlabeled.txt");
 		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt");
-		
+
 		for (String fileName : fileList){
 			System.out.println(fileName);
 			// read in first 100.000 sentences for each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
 		}
 	}
-	
+
 	public void writeFlorsCondensed(){
 		System.out.println("Write FLORS condensed ...");
+		System.out.println("Write out used indicator words file.");
+		this.writeIndicatorWordFile("/Users/gune00/data/wordVectorTests/iw.txt");
+
 		System.out.println("Write out vocabulary file.");
 		this.writeVocabularyFile("/Users/gune00/data/wordVectorTests/vocFile.txt");
 		System.out.println("Write out left/right context vector files.");
-		this.writeLeftRightContextFile("/Users/gune00/data/wordVectorTests/vocLeftContext.txt", 
-				"/Users/gune00/data/wordVectorTests/vocRightContext.txt");
+		this.writeContextFile("/Users/gune00/data/wordVectorTests/vocContext.txt");
 		System.out.println("Done!");
 	}
+
+	//***
+	// The following methods are used to load an existing word vector into the main memory.
+	// This also means that the bijective word-index maps have to be restored.
+	// The result is basically a fully instantiated DistributedWordVectorFactory class.
+
+	private void readIndicatorWordFile(String string) {
+		readWordFile(string, iw2num, num2iw);
+	}
+
+	private void readVocabularyFile(String string) {
+		readWordFile(string, word2num, num2word);	
+	}
+
+	// Read in a file containing where each line corresponds to a word. Create bijective index
+	// starting with index 1.
+	private void readWordFile(String string, Map<String, Integer> word2index, Map<Integer, String> index2word) {
+		BufferedReader reader;
+		int cnt = 1;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				word2index.put(line, cnt);
+				index2word.put(cnt,line);
+				cnt++;
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void readContextFile(String contextFile) {
+		BufferedReader reader;
+		int cnt = 1;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(contextFile),"UTF-8"));
+
+			String line;
+			while ((line = reader.readLine()) != null) {
+				DistributedWordVector dwv = new DistributedWordVector(num2iw.size());
+				String[] leftAndRightVector = line.split("###");
+				String[] iwLeftWeightVector = leftAndRightVector[0].split("\t");
+				String[] iwRightWeightVector = leftAndRightVector[1].split("\t");
+				dwv.initializeContext(iwLeftWeightVector, "left");
+				dwv.initializeContext(iwRightWeightVector, "right");
+
+				distributedWordsTable.put(cnt, dwv);
+				cnt++;
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	public void readFlorsCondensed(){
+		System.out.println("Read FLORS condensed ...");
+		System.out.println("Read used indicator words file.");
+		this.readIndicatorWordFile("/Users/gune00/data/wordVectorTests/iw.txt");
+		
+		System.out.println("Read vocabulary file.");
+		this.readVocabularyFile("/Users/gune00/data/wordVectorTests/vocFile.txt");
+		System.out.println("Read left/right context vector files.");
+		this.readContextFile("/Users/gune00/data/wordVectorTests/vocContext.txt");
+		System.out.println("Done!");
+	}
+
+	//***
+	// Some test functions used to create vectors and to write them on file
+	// and to load them into memory.
+	public void testWriteFlorsCorpus() throws IOException {
+		System.out.println("Read indicator words sorted acoording to rank.");
+		this.initIndicatorMap("resources/iw.txt", 500);
+
+		System.out.println("Read sentences from corpus and create word vectors.");
+		this.readFlorsCorpus();
+		this.computeDistributedWordWeights();
+
+		this.writeFlorsCondensed();
+	}
+	
+	public void testReadFlorsVectors() throws IOException {
+		System.out.println("Read precomputed vectors.");
+		this.readFlorsCondensed();
+	}
+	
+	// This is a test which creates vector files so that one can test using "diff" whether the same file content is created
+	// from fresh text sources and from load vectors
+	public void testWriteFlorsCondensed(){
+		System.out.println("Testing Write FLORS condensed from read vectors ...");
+		System.out.println("Write out used indicator words file.");
+		this.writeIndicatorWordFile("/Users/gune00/data/wordVectorTests/iw2.txt");
+
+		System.out.println("Write out vocabulary file.");
+		this.writeVocabularyFile("/Users/gune00/data/wordVectorTests/vocFile2.txt");
+		System.out.println("Write out left/right context vector files.");
+		this.writeContextFile("/Users/gune00/data/wordVectorTests/vocContext2.txt");
+		System.out.println("Done!");
+	}
 
 	// Eventually
 	/* Define also word2vec and glove based output:
@@ -298,18 +430,15 @@ public class DistributedWordVectorFactory {
 	 * Glove:
 	 * 	all lines: word + vector
 	 */
-	
+
 	// Test main method
 	public static void main(String[] args) throws IOException {
 		DistributedWordVectorFactory dwvFactory = new DistributedWordVectorFactory();
-		System.out.println("Read indicator words sorted acoording to rank.");
-		dwvFactory.initIndicatorMap("resources/iw.txt", 500);
 		
-		System.out.println("Read sentences from corpus and create word vectors.");
-		dwvFactory.readFlorsCorpus();
-		dwvFactory.computeDistributedWordWeights();
-
-		dwvFactory.writeFlorsCondensed();
+		// dwvFactory.testWriteFlorsCorpus();
+		
+		dwvFactory.testReadFlorsVectors();
+		
 	}
 
 }

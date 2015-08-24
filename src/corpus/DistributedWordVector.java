@@ -43,6 +43,22 @@ public class DistributedWordVector {
 		this.computeWeights(this.rightContext);
 	}
 
+	public void initializeContext(String[] contextVector, String direction){
+		// Insert non-zero weights for given index
+		for (int i=0; i < contextVector.length;i++){
+			String[] indexWeightPair = contextVector[i].split(":");
+			int index = Integer.parseInt(indexWeightPair[0]);
+			double weight = Double.parseDouble(indexWeightPair[1]);
+			if (direction.equals("left"))
+				leftContext[index] = weight;
+			else
+				if (direction.equals("right"))
+					rightContext[index] = weight;
+		}
+		// Finally set weights of not seen index to zero
+		// BASICALLY I assume that 0 is the default !
+	}
+
 	public String toLeftContext(){
 		String outputString = "";
 		for (int i = 0; i <  leftContext.length; i++){

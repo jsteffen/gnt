@@ -66,3 +66,5 @@ Steps:
 	- files are index compatible -> line x correspond to same word
 	- same for vectors which correspond to ranked iw enrtries
 	- to save space, only non-zeor elements are stored using ranked index for reference
+	
+4. Read in distributed word vectors and re-create word-index arrays/hashes, and test -> DONE
