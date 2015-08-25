@@ -441,7 +441,6 @@ public class DistributedWordVectorFactory {
 		// dwvFactory.testWriteFlorsCorpus();
 		
 		dwvFactory.testReadFlorsVectors();
-		
 	}
 
 }

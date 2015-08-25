@@ -62,7 +62,10 @@ text is preprocessed by lowercasing everything.
 	Use Berkely parser word features.
 	Each word is mapped to 16 bit string indicating ENGLISH orthography
 	on WSJ: yields 50 different signatures (bit string instances).
-	This gives 50 different shape features
+	This gives 50 different shape features.
+
+-> https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeatureExtractor.java
+-> https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeature.java
 	
 STATUS
 	
@@ -70,7 +73,10 @@ STATUS
 	-> DONE, cf. /Users/gune00/data/wordVectorTests, indicator words: resources/iw.txt
 
 2. Compute suffix features
-	HIERIX
+	-> DONE
+	
+3.	Shape Features:
+	
 
 
 

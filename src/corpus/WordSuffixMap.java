@@ -30,7 +30,7 @@ import java.util.TreeMap;
  * @author gune00
  *
  */
-public class WordSuffixVector {
+public class WordSuffixMap {
 	// stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
 	private Map<String, Integer> suffix2num = new HashMap<String, Integer>();
 	// stores rank -> indicator word -> is needed for indexing the context vectors using index rank-1 
@@ -72,6 +72,7 @@ public class WordSuffixVector {
 	}
 
 	// A number is a string which starts and ends with a digit
+	// This is used to filter out strings for which we do not want to compute suffixes, e.g., numbers
 	private boolean isNumber(String word) {
 		char lastChar = word.charAt(word.length()-1);
 		char firstChar = word.charAt(0);
@@ -137,12 +138,13 @@ public class WordSuffixVector {
 		}
 	}
 
+	//*** basic tests
 	/**
 	 * Given a word, find the index of the longest matching suffix from the known suffix list
 	 * @param word
 	 * @return
 	 */
-	public Integer getSuffixForWord(String word){
+	public Integer getKnownSuffixForWord(String word){
 		int suffixIndex = -1;
 		for (int i = 0; i < word.length(); i++){
 			String suffix = word.substring(i);
@@ -168,6 +170,7 @@ public class WordSuffixVector {
 				);
 	}
 
+	//** tests methods
 	public void testWriteSuffixList(){
 		this.createSuffixListFromFile("/Users/gune00/data/MLDP/english/english-train-sents.txt", -1);
 		System.out.println("#word: " + this.wordCnt + 
@@ -184,9 +187,9 @@ public class WordSuffixVector {
 	}
 
 	public static void main(String[] args){
-		WordSuffixVector wordVector = new WordSuffixVector();
+		WordSuffixMap wordVector = new WordSuffixMap();
 		wordVector.testReadSuffixList();
-		int suffixIndex = wordVector.getSuffixForWord("bush");
+		int suffixIndex = wordVector.getKnownSuffixForWord("bush");
 		if (suffixIndex > -1) System.out.println(wordVector.num2suffix.get(suffixIndex));
 		System.out.println(wordVector.hasKnownSuffix("xbush", "ush"));
 	}
