@@ -302,7 +302,7 @@ public class DistributedWordVectorFactory {
 
 		for (String fileName : fileList){
 			System.out.println(fileName);
-			// read in first 100.000 sentences for each file
+			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
 		}
 	}
@@ -355,6 +355,7 @@ public class DistributedWordVectorFactory {
 	private void readContextFile(String contextFile) {
 		BufferedReader reader;
 		int cnt = 1;
+		int mod = 10000;
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(contextFile),"UTF-8"));
 
@@ -362,12 +363,14 @@ public class DistributedWordVectorFactory {
 			while ((line = reader.readLine()) != null) {
 				DistributedWordVector dwv = new DistributedWordVector(num2iw.size());
 				String[] leftAndRightVector = line.split("###");
-				String[] iwLeftWeightVector = leftAndRightVector[0].split("\t");
-				String[] iwRightWeightVector = leftAndRightVector[1].split("\t");
-				dwv.initializeContext(iwLeftWeightVector, "left");
-				dwv.initializeContext(iwRightWeightVector, "right");
+				String[] leftWeightVector = leftAndRightVector[0].split("\t");
+				String[] rightWeightVector = leftAndRightVector[1].split("\t");
+				dwv.initializeContext(leftWeightVector, "left");
+				dwv.initializeContext(rightWeightVector, "right");
 
 				distributedWordsTable.put(cnt, dwv);
+				
+				if ((cnt % mod) == 0) System.out.println(cnt);
 				cnt++;
 			}
 			reader.close();
