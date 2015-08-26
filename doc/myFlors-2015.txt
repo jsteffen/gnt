@@ -76,7 +76,7 @@ STATUS
 	-> DONE
 	
 3.	Shape Features:
-	
+	-> DONE
 
 
 

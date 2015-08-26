@@ -27,9 +27,12 @@ import java.util.TreeMap;
  * I filter string which starts and ends with a digit.
  * This gives: #word: 28481 #suffixes: 91144
  * 
+ * NOTE: in principle: file operation not really needed here, because will be later done in one training class
+ * 
  * @author gune00
  *
  */
+
 public class WordSuffixMap {
 	// stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
 	private Map<String, Integer> suffix2num = new HashMap<String, Integer>();
@@ -179,7 +182,7 @@ public class WordSuffixMap {
 		this.writeSuffixFile("/Users/gune00/data/wordVectorTests/suffixList.txt");
 		System.out.println("... done");
 	}
-	
+
 	public void testReadSuffixList(){
 		System.out.println("Reading suffix list from: " + "/Users/gune00/data/wordVectorTests/suffixList.txt");
 		this.readSuffixFile("/Users/gune00/data/wordVectorTests/suffixList.txt");
