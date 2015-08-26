@@ -176,6 +176,7 @@ public class WordSuffixMap {
 	//** tests methods
 	public void testWriteSuffixList(){
 		this.createSuffixListFromFile("/Users/gune00/data/MLDP/english/english-train-sents.txt", -1);
+		//this.createSuffixListFromFile("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", 100000);
 		System.out.println("#word: " + this.wordCnt + 
 				" #suffixes: " + this.suffixCnt);
 		System.out.println("Writing suffix list to: " + "/Users/gune00/data/wordVectorTests/suffixList.txt");
@@ -191,7 +192,7 @@ public class WordSuffixMap {
 
 	public static void main(String[] args){
 		WordSuffixMap wordVector = new WordSuffixMap();
-		wordVector.testReadSuffixList();
+		wordVector.testWriteSuffixList();
 		int suffixIndex = wordVector.getKnownSuffixForWord("bush");
 		if (suffixIndex > -1) System.out.println(wordVector.num2suffix.get(suffixIndex));
 		System.out.println(wordVector.hasKnownSuffix("xbush", "ush"));

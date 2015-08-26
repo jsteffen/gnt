@@ -98,6 +98,7 @@ public class WordShapeVectorFactory {
 	public static void main(String[] args){
 		WordShapeVectorFactory wordShapeFactory = new WordShapeVectorFactory();
 		wordShapeFactory.createShapeVectorsFromFile("/Users/gune00/data/MLDP/english/english-train-sents.txt", -1);
+		//wordShapeFactory.createShapeVectorsFromFile("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", 100000);
 
 
 		System.out.println("Words: "+ wordShapeFactory.wordCnt 
