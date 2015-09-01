@@ -62,3 +62,5 @@ Java object structure:
 	what to do with the real feature values of word vector?
 	what to do with zero elements ? 
 	and splitting?
+	
+	see http://stats.stackexchange.com/questions/61328/libsvm-data-format

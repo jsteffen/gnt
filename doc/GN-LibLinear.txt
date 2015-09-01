@@ -43,9 +43,7 @@ THUS: all files together define a matrix where each raw denotes a feature-value 
 
 Note: the lines encode token level, not type level ! This is the basis for the counting in the learner.
 
-The model file then contains for each label a feature weight vector. As far as I can see, ALL feature-value combinations
-are there.
-If I need a feature value index, what do I do with real values?
+If I need a feature value index, what do I do with real values? -> I think it is like 1:0.755
 	
 Thus a major step is to define the classes and feature vectors, and to create an integer representation.
 
