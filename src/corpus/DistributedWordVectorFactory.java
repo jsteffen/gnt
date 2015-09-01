@@ -56,6 +56,55 @@ public class DistributedWordVectorFactory {
 	// keeps track of the word indices
 	private int wordCnt = 0;
 
+	public Map<String, Integer> getIw2num() {
+		return iw2num;
+	}
+
+	public void setIw2num(Map<String, Integer> iw2num) {
+		this.iw2num = iw2num;
+	}
+
+	public Map<Integer, String> getNum2iw() {
+		return num2iw;
+	}
+
+	public void setNum2iw(Map<Integer, String> num2iw) {
+		this.num2iw = num2iw;
+	}
+
+	public Map<String, Integer> getWord2num() {
+		return word2num;
+	}
+
+	public void setWord2num(Map<String, Integer> word2num) {
+		this.word2num = word2num;
+	}
+
+	public Map<Integer, String> getNum2word() {
+		return num2word;
+	}
+
+	public void setNum2word(Map<Integer, String> num2word) {
+		this.num2word = num2word;
+	}
+
+	public int getWordCnt() {
+		return wordCnt;
+	}
+
+	public void setWordCnt(int wordCnt) {
+		this.wordCnt = wordCnt;
+	}
+
+	public Map<Integer, DistributedWordVector> getDistributedWordsTable() {
+		return distributedWordsTable;
+	}
+
+	public void setDistributedWordsTable(
+			Map<Integer, DistributedWordVector> distributedWordsTable) {
+		this.distributedWordsTable = distributedWordsTable;
+	}
+
 	// stores context vector of each word, whereby word is indexed using value of word2num
 	// Once text is processed, table has to be sorted in increasing order
 	private Map<Integer, DistributedWordVector> distributedWordsTable = new HashMap<Integer, DistributedWordVector>();
@@ -395,16 +444,7 @@ public class DistributedWordVectorFactory {
 	//***
 	// Some test functions used to create vectors and to write them on file
 	// and to load them into memory.
-	public void testWriteFlorsCorpus() throws IOException {
-		System.out.println("Read indicator words sorted acoording to rank.");
-		this.initIndicatorMap("resources/iw.txt", 500);
-
-		System.out.println("Read sentences from corpus and create word vectors.");
-		this.readFlorsCorpus();
-		this.computeDistributedWordWeights();
-
-		this.writeFlorsCondensed();
-	}
+	
 	
 	public void testReadFlorsVectors() throws IOException {
 		System.out.println("Read precomputed vectors.");
@@ -424,6 +464,17 @@ public class DistributedWordVectorFactory {
 		this.writeContextFile("/Users/gune00/data/wordVectorTests/vocContext2.txt");
 		System.out.println("Done!");
 	}
+	
+	public void testReadAndWriteFlorsCorpus() throws IOException {
+		System.out.println("Read indicator words sorted acoording to rank.");
+		this.initIndicatorMap("resources/iw.txt", 500);
+
+		System.out.println("Read sentences from corpus and create word vectors.");
+		this.readFlorsCorpus();
+		this.computeDistributedWordWeights();
+
+		this.writeFlorsCondensed();
+	}
 
 	// Eventually
 	/* Define also word2vec and glove based output:
@@ -438,7 +489,7 @@ public class DistributedWordVectorFactory {
 	public static void main(String[] args) throws IOException {
 		DistributedWordVectorFactory dwvFactory = new DistributedWordVectorFactory();
 		
-		// dwvFactory.testWriteFlorsCorpus();
+		// dwvFactory.testReadAndWriteFlorsCorpus();
 		
 		dwvFactory.testReadFlorsVectors();
 	}

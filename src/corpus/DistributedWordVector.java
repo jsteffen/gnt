@@ -14,6 +14,19 @@ public class DistributedWordVector {
 	private double[] leftContext;
 	private double[] rightContext;
 
+	public double[] getLeftContext() {
+		return leftContext;
+	}
+	public void setLeftContext(double[] leftContext) {
+		this.leftContext = leftContext;
+	}
+	public double[] getRightContext() {
+		return rightContext;
+	}
+	public void setRightContext(double[] rightContext) {
+		this.rightContext = rightContext;
+	}
+
 	DistributedWordVector(int n){
 		leftContext = new double[n+1];
 		rightContext = new double[n+1];
@@ -57,6 +70,17 @@ public class DistributedWordVector {
 		}
 		// Finally set weights of not seen index to zero
 		// BASICALLY I assume that 0 is the default !
+	}
+	
+	public double[] concatenateleftAndRightVector(){
+		double[] lrVector = new double[this.getLeftContext().length+this.getRightContext().length];
+		for (int i=0; i < this.getLeftContext().length;i++){
+			lrVector[i]=this.getLeftContext()[i];
+		}
+		for (int j=this.getLeftContext().length+1; j < lrVector.length;j++){
+			lrVector[j]=this.getLeftContext()[lrVector.length-j];
+		}
+		return lrVector;
 	}
 
 	public String toLeftContext(){

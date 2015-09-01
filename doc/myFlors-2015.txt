@@ -6,10 +6,12 @@ Corpus used by FLORS:
 	/Users/gune00/data/MLDP/english (conll format of sec. 2-21 of PTB version 3 + extracted sentences)
 		- this should give 39,832 sentences -> I have 39,278
 		- I think it is, because I am ussing CONLL PTB and comments MLDP/2009/conll09-english/
-			It matches sections 2 through 21 of Treebank. Note that a few sentences from the original 
-  			Treebank were removed due to merging problems between the input corpora.
+			"It matches sections 2 through 21 of Treebank. Note that a few sentences from the original 
+  			Treebank were removed due to merging problems between the input corpora."
 	/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab (tokenized/sentence/line) 
 		-> only read first 100.000
+		-> in FLors, they say that they use the first 100Ksentence from PTB-2
+		-> I guess that the corpus above is ok, anyway
 	
 - test domain 
 	/Volumes/data1/sancl-2012/sancl.all -> labeled and unlabeled data (conll format and tokenized/sentence/line) 
@@ -75,7 +77,7 @@ STATUS
 	
 1. Computation of distributional vectors: -> NOTE it is ako word2vec version
 	-> DONE, cf. /Users/gune00/data/wordVectorTests, indicator words: resources/iw.txt
-	-> NOTE: us any token as basis for indictaor word (e.g., also numbers)
+	-> NOTE: us any token as basis for indicator word (e.g., also numbers)
 
 2. Compute suffix features
 	-> DONE
@@ -87,18 +89,22 @@ STATUS
 	-> use all tokens
 	-> I compute 49 signatures as instead of 50
 	
-4. Now, I that I can create all features, I could start doing learning
+4. For testing:
+	- define similarity function on FLORS vectors -> DONE
+	- define interface to word2vec and glove, so that this data can also be loaded
+	
+
+
+
+NOTES on unlabeled data:
 
 - it is still unclear how the unlabeled data is used in training phase
-- so far I understand: all data is used to create distributed word vectors, i.e., source domain knowledge and the test domain knowledge
--> so following Blitzer et al (2006): this should merge hidden distributional information from source domain and test domain
--> this is the only place, where I see how unlabeled training data is used
--> THIS MEANS: one could also do testing with fewer test domain knowledge ...
-
-BEFORE starting, I will define a similarity measure for twoo words based on the distributional features, and will check
-what it means -> similar equations ...
-
-
+- so far I understand: all data is used to create distributed word vectors, 
+i.e., source domain knowledge and the test domain knowledge
+->	so following Blitzer et al (2006): this should merge hidden 
+	distributional information from source domain and test domain
+->	this is the only place, where I see how unlabeled training data is used
+->	THIS MEANS: one could also do testing with fewer test domain knowledge ...
 
 2. Training of POS tagger
 

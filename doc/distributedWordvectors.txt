@@ -70,3 +70,6 @@ Steps:
 4. Read in distributed word vectors and re-create word-index arrays/hashes, and test -> DONE
 
 5. Just for testing, compute similarity for two words using the embedded vectors, e.g., via cosine
+- DONE, see utils.WordVectorSimilarity
+
+6. Integrate interface to word2vec, so that their vectors can also be loaded -> for comparison
