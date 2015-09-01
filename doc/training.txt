@@ -43,4 +43,22 @@
 Java object structure:
 
 - define trainer class
-	stores the loaded and created data sources
+	has a corpus object
+	loads or creates distributed vectors
+	loads or creates precomputed suffixes
+	loads or creates precomputed shape features
+	defines window size l
+	
+	process conll training file and creates 
+	training instance: sentence and label
+	I need to define a label2num num2label file
+	
+	creates feature vector parts
+	
+	for each sentence, performs windows based processing, with prespecified window size
+	fills feature vector parts  for each word
+	writes out liblinear model file (as gzipped)
+	
+	what to do with the real feature values of word vector?
+	what to do with zero elements ? 
+	and splitting?

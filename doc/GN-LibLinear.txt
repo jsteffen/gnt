@@ -34,13 +34,18 @@ About training data input format for Liblinear:
 
 -	1 8:1 9:1 10:1 11:1 ...  134:1 135:1 136:1
 	- First element is a class label (1=N, 2=Y, in case of sentence splitter), and then N feature-value-index:value
-	- Feature-value-index is just the individual index of a feature:value combination
+	- Feature-value-index is just the individual index of a concrete feature:value combination
 	- value is a real number and indicates feature-value-index relevance; 
 	- if only binary features are used (which is the case in MDP), then 1 indicates present feature.
 		All non-present features (non-observed) have value 0.
+		
 THUS: all files together define a matrix where each raw denotes a feature-value and each column a feature.
 
 Note: the lines encode token level, not type level ! This is the basis for the counting in the learner.
+
+The model file then contains for each label a feature weight vector. As far as I can see, ALL feature-value combinations
+are there.
+If I need a feature value index, what do I do with real values?
 	
 Thus a major step is to define the classes and feature vectors, and to create an integer representation.
 
