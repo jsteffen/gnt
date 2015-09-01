@@ -92,6 +92,7 @@ STATUS
 4. For testing:
 	- define similarity function on FLORS vectors -> DONE
 	- define interface to word2vec and glove, so that this data can also be loaded
+		- N.Y. -> need to update indicator word mechanism
 	
 
 
@@ -106,7 +107,16 @@ i.e., source domain knowledge and the test domain knowledge
 ->	this is the only place, where I see how unlabeled training data is used
 ->	THIS MEANS: one could also do testing with fewer test domain knowledge ...
 
-2. Training of POS tagger
+NOTES on unknown words:
+-	distributed word vectors are build for each word in a the train and test corpus
+-> 	in that sense, word vectors are computed incrementally
+-	but what, if a word is totally new ? 
+->  currently I build a entry incrementally, which is supported by Flors, cf. page 20, 2nd paragraph
+	treating a single word as a sentence consisting of a single word
+	-> can be improved for testing -> testing also involved calling corpus.DistributedWordVectorFactory.sentence2Bigrams(String[])
+		but without updating
+
+2. Training of POS tagger and liblinear
 
 - use conll dependency treebanks or SVM format  ->
 	each line corresponds to a sequence of tokens, which are eventually labeled
@@ -118,8 +128,8 @@ i.e., source domain knowledge and the test domain knowledge
 		label feat:num ... feat:num
 	testing/predicting
 		feat:num ... feat:num
-- hence the major steps are the encoding/decoding 
-	of the training/input data 
+		
+- hence the major steps are the encoding/decoding of the training/input data 
 
 - following MDP, I would need classes for:
 	- Alphabet: string2num and num2string mappings -> DONE via corpus.DistributedWordVectorFactory

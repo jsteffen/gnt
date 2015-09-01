@@ -1,4 +1,4 @@
-package corpus;
+package features;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import corpus.Corpus;
 
 /**
  * 
@@ -131,31 +133,6 @@ public class DistributedWordVectorFactory {
 		reader.close();
 	}
 
-	//***
-	// read file line-wise - basically the same as in indicator words creator
-	public void readAndProcessInputTextLineWise(String fileName, String type, int max){
-		BufferedReader reader;
-		int lineCnt = 0;
-		int mod = 100000;
-		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
-
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if  ((max > 0) && (lineCnt >= max)) break;
-				lineCnt++;
-				String[] words = cleanTextLine(line);
-				sentence2Bigrams(words);
-				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
-			}
-			reader.close();
-			System.out.println("#"+lineCnt);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	// Assume: a line is a tokenized sentence that is a list of words separated by blank.
 	// Following FLORS, lower case all words.
 	private String[] cleanTextLine(String line) {
@@ -170,10 +147,13 @@ public class DistributedWordVectorFactory {
 	// Iterate from left to right through the words of a sentence and construct/extend distributed vector of each word
 	// Check whether word is in first/last position of sentence
 
-	// TODO check: 
 	// by adding <s> and </s> virtually, 
 	// I do NOT treat them as individual words that should be tagged but I will count them as context elements.
 	// THIS also means <s> and </s> are also not part of the indicator words
+	//
+	// TODO: make a version that can be used during training and testing, were (strict) testing means: no updates
+	// in this way, unknown words can be handled and tested and eventually it can be decided to extend the vocabulary
+	// NOTE, that we incrementally extend the vocabulary, and thus can also incrementally update statistics and the training model
 	private void sentence2Bigrams(String[] sentence){
 		// sentence only contains a single word (or \newline)
 		if (sentence.length == 1) word2Bigram("<s>", sentence[0],"</s>");
@@ -205,7 +185,7 @@ public class DistributedWordVectorFactory {
 	}
 
 	// Incrementally build a bijective mapping word-integer
-	// Need this construct the liblinear integer encoding
+	// Need this to construct the liblinear integer encoding
 	private int determineWordIndex(String word) {
 		// lookup word -> if true -> get index, if false -> add word with wordCnt value
 		int index = 0;
@@ -257,6 +237,44 @@ public class DistributedWordVectorFactory {
 	private void computeDistributedWordWeights(){
 		for(int key: distributedWordsTable.keySet()){
 			distributedWordsTable.get(key).computeContextWeights();
+		}
+	}
+	
+	// A dummy for handling unknown words, if a word is tested in isolation
+	// Word is known to be unknown in test phase, that is it is not yet part of the distributed vector model
+	
+	public DistributedWordVector handleUnknownWordWithoutContext(String word){
+		word2Bigram("<s>", word,"</s>");
+		int wordIndex = this.word2num.get(word);
+		distributedWordsTable.get(wordIndex).computeContextWeights();
+		return distributedWordsTable.get(wordIndex);
+	}
+
+	//***
+	// read file line-wise - basically the same as in indicator words creator
+	// NOTE: this means that the model is created incrementally;
+	// in principle corpus.DistributedWordVectorFactory.sentence2Bigrams(String[]) can be called after each word !
+	// as I do it in handleUnknownWordWithoutContext
+	public void readAndProcessInputTextLineWise(String fileName, String type, int max){
+		BufferedReader reader;
+		int lineCnt = 0;
+		int mod = 100000;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
+	
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if  ((max > 0) && (lineCnt >= max)) break;
+				lineCnt++;
+				String[] words = cleanTextLine(line);
+				sentence2Bigrams(words);
+				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
+			}
+			reader.close();
+			System.out.println("#"+lineCnt);
+	
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -326,30 +344,17 @@ public class DistributedWordVectorFactory {
 	// I call the resulting files condensed because only non-zero weights are stored. This helps reducing space
 	// very much !
 	public void readFlorsCorpus(){
-		List<String> fileList = new ArrayList<String>();
-		//labeled data
-		fileList.add("/Users/gune00/data/MLDP/english/english-train-sents.txt");
-		fileList.add("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/dev/english_pbiotb_dev-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-answers-dev-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-emails-dev-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-reviews-dev-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-weblogs-dev-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-answers-test-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-emails-test-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-newsgroups-test-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-reviews-test-sents.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-weblogs-test-sents.txt");
-		// Unlabeled data
-		fileList.add("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab");
-		fileList.add("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/unlab/all-unlab.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-emails.unlabeled.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-reviews.unlabeled.txt");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt");
-
-		for (String fileName : fileList){
+		for (String fileName : Corpus.trainingUnLabeledData){
+			System.out.println(fileName);
+			// read in first 100.000 sentences from each file
+			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
+		}
+		for (String fileName : Corpus.devUnLabeledData){
+			System.out.println(fileName);
+			// read in first 100.000 sentences from each file
+			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
+		}
+		for (String fileName : Corpus.testUnLabeledData){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);

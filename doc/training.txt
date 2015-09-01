@@ -1,0 +1,46 @@
+2. Training of POS tagger and liblinear
+
+- use conll dependency treebanks or SVM format  ->
+	each line corresponds to a sequence of tokens, which are eventually labeled
+	w1/t1, w2/t2, ..., wn/tn
+
+
+- the idea is in principle very simple - iterate through sentence and create per token:
+	training: define a feature vector of
+		label feat:num ... feat:num
+	testing/predicting
+		feat:num ... feat:num
+		
+- hence the major steps are the encoding/decoding of the training/input data 
+
+- following MDP, I would need classes for:
+	- Alphabet: string2num and num2string mappings -> DONE via corpus.DistributedWordVectorFactory
+		- for all labels
+		- for all words
+		
+	- FeatureExtractor -> a class that keeps the feature templates
+		for computing suffixes -> DONE
+		for computing shape features -> DONE
+	
+- initialize: -> DONE
+	read in word vectors and indicatorWords
+	initialize bijective indexes
+	
+- read in training corpus line wise (assuming each line corresponds to an training/testing instance)
+
+- read in training file:
+	- for each sentence
+		- create word data element:
+			- word
+			- label
+			- word vector left
+			- word vector right
+			- compute suffixes
+			- compute shape
+			
+		- NOTE: keep the indexes so that symbolic input/output can be reconstructed, cf. http://deeplearning.net/tutorial/rnnslu.html
+		
+Java object structure:
+
+- define trainer class
+	stores the loaded and created data sources

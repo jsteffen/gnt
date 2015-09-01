@@ -67,23 +67,8 @@ public class ConllMapper {
 	}
 	
 	public static void transcodeFlorsFileList(){
-		List<String> fileList = new ArrayList<String>();
-		fileList.add("/Users/gune00/data/MLDP/english/english-train");
-		fileList.add("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/dev/english_pbiotb_dev");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-answers-dev");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-emails-dev");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-reviews-dev");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-weblogs-dev");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-answers-test");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-emails-test");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-newsgroups-test");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-reviews-test");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/gweb-weblogs-test");
-		fileList.add("/Users/gune00/data/sancl-2012/sancl.labeled/ontonotes-wsj-test");
 		
-		for (String fileName : fileList){
+		for (String fileName : Corpus.trainingLabeledData){
 			try {
 				System.out.println(fileName);
 				ConllMapper.transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
@@ -91,7 +76,23 @@ public class ConllMapper {
 				e.printStackTrace();
 			}
 		}
-		
+		for (String fileName : Corpus.devLabeledData){
+			try {
+				System.out.println(fileName);
+				ConllMapper.transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		for (String fileName : Corpus.testLabeledData){
+			try {
+				System.out.println(fileName);
+				ConllMapper.transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}	
 	}
 
 	public static void main(String[] args) throws IOException {

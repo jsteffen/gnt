@@ -1,4 +1,4 @@
-package corpus;
+package features;
 
 import java.util.Comparator;
 import java.util.Map;

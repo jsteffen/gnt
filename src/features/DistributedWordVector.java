@@ -1,4 +1,4 @@
-package corpus;
+package features;
 
 import java.util.Map;
 
@@ -72,6 +72,8 @@ public class DistributedWordVector {
 		// BASICALLY I assume that 0 is the default !
 	}
 	
+	// This is a self-made function that concatenates the left and right vector to a single one
+	// TODO Could also be done offline, finally, and then left and right could be deleted
 	public double[] concatenateleftAndRightVector(){
 		double[] lrVector = new double[this.getLeftContext().length+this.getRightContext().length];
 		for (int i=0; i < this.getLeftContext().length;i++){

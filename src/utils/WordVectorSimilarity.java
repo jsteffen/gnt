@@ -2,8 +2,8 @@ package utils;
 
 import java.io.IOException;
 
-import corpus.DistributedWordVector;
-import corpus.DistributedWordVectorFactory;
+import features.DistributedWordVector;
+import features.DistributedWordVectorFactory;
 
 /**
  * Given two words, compute their similarity based on the distributed word vectors.
@@ -37,7 +37,10 @@ public class WordVectorSimilarity {
 		if (dwvFactory.getWord2num().containsKey(word))
 			return dwvFactory.getDistributedWordsTable().get(dwvFactory.getWord2num().get(word));
 		else
-			return null;
+			{
+			DistributedWordVector unknownWordVector = dwvFactory.handleUnknownWordWithoutContext(word);
+			return unknownWordVector;
+			}
 	}
 	
 	public static void testSimilarity(String word1, String word2){
@@ -68,7 +71,8 @@ public class WordVectorSimilarity {
 		WordVectorSimilarity.testSimilarity("rain", "man");
 		WordVectorSimilarity.testSimilarity("running", "going");
 		WordVectorSimilarity.testSimilarity("running", "stopping");
-
+		WordVectorSimilarity.testSimilarity("paris", "berlin");
+		WordVectorSimilarity.testSimilarity("aaaaa", "man");
 		
 		
 	}

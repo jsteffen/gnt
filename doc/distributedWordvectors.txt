@@ -72,4 +72,19 @@ Steps:
 5. Just for testing, compute similarity for two words using the embedded vectors, e.g., via cosine
 - DONE, see utils.WordVectorSimilarity
 
+6.	distributed word vectors are constructed incrementally and by counting; all training and test data is used;
+	thus, the same mechanism can be used for handling unknown word: 
+	- if a out of vocabulary word is encountered, create it using the current context of it; this means that if the word is encountered
+		we may improve precision of it
+	- pre-process test corpus for building or updating the word vectors
+	- separate a training and testing phase: only through training vector counting is updated
+	- not that this means that new words are entered into the vector space and cached, but not updated (if we dop not want, but we can)
+	- BUT we do not need to store it in the vocabulary
+	- but we can do so and can define some criteria, e.g., if a entry has been seen "enough" time, we mark it for saving
+	- this would support a kind of dynamic learning or even a distributed learning
+
 6. Integrate interface to word2vec, so that their vectors can also be loaded -> for comparison
+	- main problem seems to be the update of the iw2num/num2iw mapping: maybe create it online by means of a virtual indicator file
+		of entries: feat1, feat2, ..., 
+
+7. Multi-word training instances are not supported so far

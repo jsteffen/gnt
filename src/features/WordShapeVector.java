@@ -1,4 +1,4 @@
-package corpus;
+package features;
 
 /**
  * We use the Berkeley parser word signatures (Petrov and Klein, 2007). 
