@@ -27,7 +27,7 @@ public class WordShapeFeatureFactory {
 	// A mapping from the string of a ShapeVector (signature) to its ShapeVector; also used as cache
 	private Map<String,Integer> signature2index = new HashMap<String,Integer>();
 	private Map<Integer,String> index2signature = new TreeMap<Integer,String>();
-	
+
 
 	/* process file line wise
 	 * for each line (sentence) do:
@@ -89,11 +89,21 @@ public class WordShapeFeatureFactory {
 			word2signature.put(word, wordShapeVector);
 		}
 	}
-	
+
 	public void printSignaturesMap(){
 		for (Integer key: index2signature.keySet()){
 			System.out.println(key + " " + index2signature.get(key));
 		} 
+	}
+
+	//TODO
+	private void writeShapeFeatureFile(){
+
+	}
+
+	//TODO
+	private void readShapeFeatureFile(){
+
 	}
 
 	public static void main(String[] args){

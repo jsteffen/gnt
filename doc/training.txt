@@ -90,3 +90,24 @@ Possible approach:
 		- the offset depends on the size of the length of word vectors, suffix vector, and shape vector and the position of the word:
 		- if precomputed offset is used, offsets can be computed directly, else offset can only be computed at the end
 	- when I have the offsets, I can compute the absolute index-feature map as well which is used by liblinear
+	- and later also by the predictor
+
+- size for each word:
+	left+right+shape+sufffix
+	501+501+49+91144=92195 -> I would need of sets for shape and suffix 
+
+-> would it not be easier to directly start counting them with offsets?
+	
+- with offset from window size l=2 -> 2l+1=5 words
+  w_0	=	00001-92195			[0+1,0+1*92195]
+  w_1	=	92196-184391	=	[1+1*92195,1+2*92195]
+  w_2	=	184392-276587	=	[2+2*92195,3+2*92195]
+  w_3	=	276588-368783	=	[3+3*92195,4+3*92195]
+  w_5	=	368784-460979	=	[4+4*92195,4+5*92195]
+  
+ - 	thus, when I create the feature vector, I need to distinguish suffix at word_1, and word_2, e.g., 
+ 	for suffix apple, if it occurs at word 0, I have apple0, and at word 1, I have apple1
+ -	if apple0 has index 92000, then apple1 has 92000+92159=184195, apple2 then 92000+92159+92159=276390
+ -	since I have already all data, it should be possible to create the index-feature map from the data directly
+ 	by means of the window size - just for simulation
+ - 	I will do this first; i can then check how to do it incrementally, if needed (because otherwise, training set must be processed several times)
