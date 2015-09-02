@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -33,11 +35,11 @@ import java.util.TreeMap;
  *
  */
 
-public class WordSuffixMap {
+public class WordSuffixFeatureFactory {
 	// stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
 	private Map<String, Integer> suffix2num = new HashMap<String, Integer>();
 	// stores rank -> indicator word -> is needed for indexing the context vectors using index rank-1 
-	private Map<Integer, String> num2suffix = new HashMap<Integer, String>();
+	private Map<Integer, String> num2suffix = new TreeMap<Integer, String>();
 
 	private int wordCnt = 0;
 	private int suffixCnt = 0;
@@ -108,11 +110,10 @@ public class WordSuffixMap {
 	// Firstly, sort num2word according to natural order, and write value of entry key.
 	private void writeSuffixFile(String targetFileName){
 		BufferedWriter writer;
-		Map<Integer, String> sortedMap = new TreeMap<Integer, String>(num2suffix);
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
-			for(int key: sortedMap.keySet()){
-				writer.write(sortedMap.get(key)+"\n");
+			for(int key: num2suffix.keySet()){
+				writer.write(num2suffix.get(key)+"\n");
 			}
 			writer.close();
 
@@ -147,7 +148,7 @@ public class WordSuffixMap {
 	 * @param word
 	 * @return
 	 */
-	public Integer getKnownSuffixForWord(String word){
+	public Integer getLongestKnownSuffixForWord(String word){
 		int suffixIndex = -1;
 		for (int i = 0; i < word.length(); i++){
 			String suffix = word.substring(i);
@@ -157,6 +158,22 @@ public class WordSuffixMap {
 			}
 		}
 		return suffixIndex;
+	}
+	
+	/**
+	 * Given a word, find all matching suffixes from the known suffix list
+	 * @param word
+	 * @return
+	 */
+	public List<Integer> getAllKnownSuffixForWord(String word){
+		List<Integer> indices = new ArrayList<Integer>();
+		for (int i = 0; i < word.length(); i++){
+			String suffix = word.substring(i);
+			if (suffix2num.containsKey(suffix)) {
+				indices.add(suffix2num.get(suffix));
+			}
+		}
+		return indices;
 	}
 
 	/**
@@ -191,10 +208,14 @@ public class WordSuffixMap {
 	}
 
 	public static void main(String[] args){
-		WordSuffixMap wordVector = new WordSuffixMap();
-		wordVector.testWriteSuffixList();
-		int suffixIndex = wordVector.getKnownSuffixForWord("bush");
-		if (suffixIndex > -1) System.out.println(wordVector.num2suffix.get(suffixIndex));
-		System.out.println(wordVector.hasKnownSuffix("xbush", "ush"));
+		WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
+		wordSuffixFactory.testWriteSuffixList();
+		int suffixIndex = wordSuffixFactory.getLongestKnownSuffixForWord("bush");
+		if (suffixIndex > -1) System.out.println(wordSuffixFactory.num2suffix.get(suffixIndex));
+		List<Integer> indices = wordSuffixFactory.getAllKnownSuffixForWord("appple");
+		for (int x : indices){
+			System.out.println(wordSuffixFactory.num2suffix.get(x));
+		}
+		System.out.println(wordSuffixFactory.hasKnownSuffix("xbush", "ush"));
 	}
 }

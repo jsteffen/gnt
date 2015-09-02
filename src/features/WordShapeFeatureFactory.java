@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /** 
  * For each word given, check all shape features and set bit vector map accordingly.
@@ -19,19 +20,21 @@ import java.util.Map;
  * @author gune00
  *
  */
-public class WordShapeVectorFactory {
+public class WordShapeFeatureFactory {
 
 	// A mapping from word to Shape vector; used as a cache to avoid redundant computation
-	private Map<String,WordShapeVector> word2signature = new HashMap<String,WordShapeVector>();
+	private Map<String,WordShapeFeature> word2signature = new HashMap<String,WordShapeFeature>();
 	// A mapping from the string of a ShapeVector (signature) to its ShapeVector; also used as cache
-	private Map<String,WordShapeVector> signature2index = new HashMap<String,WordShapeVector>();
+	private Map<String,Integer> signature2index = new HashMap<String,Integer>();
+	private Map<Integer,String> index2signature = new TreeMap<Integer,String>();
+	
 
 	/* process file line wise
 	 * for each line (sentence) do:
 	 * - extract words
 	 * - for each word, compute signature, if not done so
 	 * - store it in hash
-	 * - NOTE: before lower casing word (as usual) first check Uppercase feature and the like
+	 * - NOTE: before lower casing word (as usual) first check Upercase feature and the like
 	 */
 
 	private int wordCnt = 0;
@@ -71,32 +74,30 @@ public class WordShapeVectorFactory {
 		}
 	}
 
-	private void determineSignatureType(WordShapeVector wordShapeVector) {
-		String stringIt  = wordShapeVector.toBinaryString();
-		if (!signature2index.containsKey(stringIt)){
-			this.signatureCnt++;
-			signature2index.put(stringIt, wordShapeVector);
+	private void determineSignatureType(WordShapeFeature wordShapeVector) {
+		if (!signature2index.containsKey(wordShapeVector.getBitVectorString())){
+			signatureCnt++;
+			signature2index.put(wordShapeVector.getBitVectorString(), signatureCnt);
+			index2signature.put(signatureCnt, wordShapeVector.getBitVectorString());
 		}
 	}
 
 	private void computeShapeVectorAndStore(String word, int wordIndex) {
 		if (!word2signature.containsKey(word)){
-			WordShapeVector wordShapeVector = new WordShapeVector(word, wordIndex);
+			WordShapeFeature wordShapeVector = new WordShapeFeature(word, wordIndex);
 			this.wordCnt++;
 			word2signature.put(word, wordShapeVector);
 		}
 	}
 	
 	public void printSignaturesMap(){
-		int cnt = 0;
-		for (String key: this.signature2index.keySet()){
-			cnt++;
-			System.out.println(cnt + ": " + key + " " + this.signature2index.get(key));
+		for (Integer key: index2signature.keySet()){
+			System.out.println(key + " " + index2signature.get(key));
 		} 
 	}
 
 	public static void main(String[] args){
-		WordShapeVectorFactory wordShapeFactory = new WordShapeVectorFactory();
+		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
 		wordShapeFactory.createShapeVectorsFromFile("/Users/gune00/data/MLDP/english/english-train-sents.txt", -1);
 		//wordShapeFactory.createShapeVectorsFromFile("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", 100000);
 

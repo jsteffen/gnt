@@ -45,15 +45,13 @@ Java object structure:
 - define trainer class
 	has a corpus object
 	loads or creates distributed vectors
-	loads or creates precomputed suffixes
-	loads or creates precomputed shape features
+	loads or creates pre-computed suffixes
+	loads or creates pre-computed shape features
 	defines window size l
 	
 	process conll training file and creates 
-	training instance: sentence and label
+	training instance: list of pairs (word, pos)
 	I need to define a label2num num2label file
-	
-	creates feature vector parts
 	
 	for each sentence, performs windows based processing, with prespecified window size
 	fills feature vector parts  for each word
@@ -64,3 +62,31 @@ Java object structure:
 	and splitting?
 	
 	see http://stats.stackexchange.com/questions/61328/libsvm-data-format
+	
+Creating training data file:
+- I need to collect all labels and map them to integers
+- I need to collect all features, concatenate them and map them to integers
+- Thus I can define an alphabet class with
+	- labelMap: label-index bijection
+	- featureMap: 
+		- 	this is a concatenation of the features from word vector, suffix, shapes
+			and for each word in the window
+		-	to use the mappings from the feature generation functions, I need to keep an offset
+		- I need to multiple the features because of window site, e.g., shape_feature_n_for_word_1
+		
+Possible approach:
+- load word vectors, which also instantiate training vocabulary, because training set is part of the word vectors
+- create classes for suffix and shap features
+- loop through training sentences incrementally
+- create training instance for each word:
+	- get label and create label map -> can be done incrementally
+	- get words of window
+	- for each word create a tokenInstance consisting of three list of indices
+		- get left and right distributed word vector in form of index:value
+		- compute suffixes, which also incrementally extends suffix factory in form of index:1
+		- compute shapes, which also incrementally extends suffix factory  in form of index:1
+	- the indices above are only relative 
+	- so I need to add an offset:
+		- the offset depends on the size of the length of word vectors, suffix vector, and shape vector and the position of the word:
+		- if precomputed offset is used, offsets can be computed directly, else offset can only be computed at the end
+	- when I have the offsets, I can compute the absolute index-feature map as well which is used by liblinear

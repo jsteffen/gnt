@@ -16,7 +16,7 @@ package features;
  *
  */
 
-public class WordShapeVector {
+public class WordShapeFeature {
 	public static enum MorphFeature {
 		ALL_CAPS, HAS_DASH, HAS_DIGIT, INIT_CAP, KNOWNLC, LOWER_CASE, SUFF_AL, SUFF_ED, 
 		SUFF_ER, SUFF_EST, SUFF_ING, SUFF_ION,  SUFF_ITY, SUFF_LY, SUFF_S, SUFF_Y, 
@@ -37,7 +37,34 @@ public class WordShapeVector {
 			false,false, false,false, 
 			false,false, false, false};
 
-	public WordShapeVector(String word, int wordIndex) {
+	private String bitVectorString = "0000000000000000";
+	
+	// getters and setters
+	public MorphFeature[] getNum2MorphFeature() {
+		return num2MorphFeature;
+	}
+
+	public void setNum2MorphFeature(MorphFeature[] num2MorphFeature) {
+		this.num2MorphFeature = num2MorphFeature;
+	}
+
+	public boolean[] getBitVector() {
+		return bitVector;
+	}
+
+	public void setBitVector(boolean[] bitVector) {
+		this.bitVector = bitVector;
+	}
+
+	public String getBitVectorString() {
+		return bitVectorString;
+	}
+
+	public void setBitVectorString(String bitVectorString) {
+		this.bitVectorString = bitVectorString;
+	}
+
+	public WordShapeFeature(String word, int wordIndex) {
 		createShapeVectorFromWord(word, wordIndex);
 	}
 	
@@ -173,6 +200,9 @@ public class WordShapeVector {
 				this.setBit(MorphFeature.SUFF_AL);
 			}
 		}	
+		
+		//Finally
+		this.bitVectorString = this.toBinaryString();
 	}
 	
 	// Define: make binary string and use this for signature cache -> eventually is faster -> YES
@@ -187,17 +217,11 @@ public class WordShapeVector {
 	}
 	
 	public String toString(){
-		String bitsetString = "";
-		for (int i=0; i < bitVector.length-1; i++){
-			bitsetString = bitsetString + num2MorphFeature[i]+":"+bitVector[i]+",";
-			//if ((i % 4) == 0) bitsetString = bitsetString + "\n";
-		}
-		bitsetString = bitsetString + num2MorphFeature[bitVector.length-1]+":"+bitVector[bitVector.length-1];
-		return bitsetString;
+		return this.bitVectorString;
 	}
 	
 	public static void main(String[] args){
-		WordShapeVector test = new WordShapeVector("123", 1);
+		WordShapeFeature test = new WordShapeFeature("123", 1);
 		System.out.println(test.toString());
 	}
 }
