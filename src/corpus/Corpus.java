@@ -6,13 +6,13 @@ import java.util.List;
 // The class that holds all corpus files for training, testing etc.
 public class Corpus {
 
-	public static List<String> trainingLabeledData = new ArrayList<String>();
-	public static List<String> devLabeledData = new ArrayList<String>();
-	public static List<String> testLabeledData = new ArrayList<String>();
+	public  List<String> trainingLabeledData = new ArrayList<String>();
+	public  List<String> devLabeledData = new ArrayList<String>();
+	public  List<String> testLabeledData = new ArrayList<String>();
 
-	public static List<String> trainingUnLabeledData = new ArrayList<String>();
-	public static List<String> devUnLabeledData = new ArrayList<String>();
-	public static List<String> testUnLabeledData = new ArrayList<String>();
+	public  List<String> trainingUnLabeledData = new ArrayList<String>();
+	public  List<String> devUnLabeledData = new ArrayList<String>();
+	public  List<String> testUnLabeledData = new ArrayList<String>();
 
 	private void setLabeledData(){
 		trainingLabeledData.add("/Users/gune00/data/MLDP/english/english-train");

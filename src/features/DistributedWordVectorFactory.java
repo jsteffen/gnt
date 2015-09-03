@@ -58,58 +58,50 @@ public class DistributedWordVectorFactory {
 	// keeps track of the word indices
 	private int wordCnt = 0;
 
+	// stores context vector of each word, whereby word is indexed using value of word2num
+	// Once text is processed, table has to be sorted in increasing order
+	private Map<Integer, DistributedWordVector> distributedWordsTable = new HashMap<Integer, DistributedWordVector>();
+	
+	// Setters and getters
 	public Map<String, Integer> getIw2num() {
 		return iw2num;
 	}
-
 	public void setIw2num(Map<String, Integer> iw2num) {
 		this.iw2num = iw2num;
 	}
-
 	public Map<Integer, String> getNum2iw() {
 		return num2iw;
 	}
-
 	public void setNum2iw(Map<Integer, String> num2iw) {
 		this.num2iw = num2iw;
 	}
-
 	public Map<String, Integer> getWord2num() {
 		return word2num;
 	}
-
 	public void setWord2num(Map<String, Integer> word2num) {
 		this.word2num = word2num;
 	}
-
 	public Map<Integer, String> getNum2word() {
 		return num2word;
 	}
-
 	public void setNum2word(Map<Integer, String> num2word) {
 		this.num2word = num2word;
 	}
-
 	public int getWordCnt() {
 		return wordCnt;
 	}
-
 	public void setWordCnt(int wordCnt) {
 		this.wordCnt = wordCnt;
 	}
-
 	public Map<Integer, DistributedWordVector> getDistributedWordsTable() {
 		return distributedWordsTable;
 	}
-
 	public void setDistributedWordsTable(
 			Map<Integer, DistributedWordVector> distributedWordsTable) {
 		this.distributedWordsTable = distributedWordsTable;
 	}
 
-	// stores context vector of each word, whereby word is indexed using value of word2num
-	// Once text is processed, table has to be sorted in increasing order
-	private Map<Integer, DistributedWordVector> distributedWordsTable = new HashMap<Integer, DistributedWordVector>();
+	// Methods
 
 	// read ranked list of indicators words from file and construct bijective mapping of word - rank
 	private void initIndicatorMap(String fileName, int dim) throws IOException {
@@ -344,17 +336,18 @@ public class DistributedWordVectorFactory {
 	// I call the resulting files condensed because only non-zero weights are stored. This helps reducing space
 	// very much !
 	public void readFlorsCorpus(){
-		for (String fileName : Corpus.trainingUnLabeledData){
+		Corpus corpus = new Corpus();
+		for (String fileName : corpus.trainingUnLabeledData){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
 		}
-		for (String fileName : Corpus.devUnLabeledData){
+		for (String fileName : corpus.devUnLabeledData){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
 		}
-		for (String fileName : Corpus.testUnLabeledData){
+		for (String fileName : corpus.testUnLabeledData){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);

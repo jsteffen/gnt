@@ -23,8 +23,10 @@ import java.util.List;
  */
 
 public class ConllMapper {
+	
+	private Corpus corpus = new Corpus();
 
-	public static void transcode(String sourceFileName, String sourceEncoding,
+	public void transcode(String sourceFileName, String sourceEncoding,
 			String targetFileName, String targetEncoding)
 					throws IOException {
 
@@ -44,7 +46,7 @@ public class ConllMapper {
 		List<String> tokens = new ArrayList<String>();
 		while ((line = reader.readLine()) != null) {
 			if (line.isEmpty()) {
-				writer.write(ConllMapper.sentenceToString(tokens)+"\n");
+				writer.write(sentenceToString(tokens)+"\n");
 				tokens = new ArrayList<String>();
 			}
 			else
@@ -58,7 +60,7 @@ public class ConllMapper {
 		writer.close();
 	}
 
-	private static String sentenceToString(List<String> tokens){
+	private String sentenceToString(List<String> tokens){
 		String sentenceString = "";
 		for (int i=0; i < tokens.size()-1; i++){
 			sentenceString = sentenceString + tokens.get(i)+" ";
@@ -66,29 +68,28 @@ public class ConllMapper {
 		return sentenceString+tokens.get(tokens.size()-1);
 	}
 	
-	public static void transcodeFlorsFileList(){
-		
-		for (String fileName : Corpus.trainingLabeledData){
+	public void transcodeFlorsFileList(){
+		for (String fileName : corpus.trainingLabeledData){
 			try {
 				System.out.println(fileName);
-				ConllMapper.transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
+				transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		for (String fileName : Corpus.devLabeledData){
+		for (String fileName : corpus.devLabeledData){
 			try {
 				System.out.println(fileName);
-				ConllMapper.transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
+				transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		for (String fileName : Corpus.testLabeledData){
+		for (String fileName : corpus.testLabeledData){
 			try {
 				System.out.println(fileName);
-				ConllMapper.transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
+				transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -96,6 +97,7 @@ public class ConllMapper {
 	}
 
 	public static void main(String[] args) throws IOException {
-		ConllMapper.transcodeFlorsFileList();
+		ConllMapper mapper = new ConllMapper();
+		mapper.transcodeFlorsFileList();
 	}
 }	

@@ -1,53 +1,25 @@
 2. Training of POS tagger and liblinear
-
-- use conll dependency treebanks or SVM format  ->
-	each line corresponds to a sequence of tokens, which are eventually labeled
-	w1/t1, w2/t2, ..., wn/tn
-
-
-- the idea is in principle very simple - iterate through sentence and create per token:
-	training: define a feature vector of
-		label feat:num ... feat:num
-	testing/predicting
-		feat:num ... feat:num
-		
-- hence the major steps are the encoding/decoding of the training/input data 
-
-- following MDP, I would need classes for:
-	- Alphabet: string2num and num2string mappings -> DONE via corpus.DistributedWordVectorFactory
-		- for all labels
-		- for all words
-		
-	- FeatureExtractor -> a class that keeps the feature templates
-		for computing suffixes -> DONE
-		for computing shape features -> DONE
-	
-- initialize: -> DONE
-	read in word vectors and indicatorWords
-	initialize bijective indexes
-	
-- read in training corpus line wise (assuming each line corresponds to an training/testing instance)
-
-- read in training file:
-	- for each sentence
-		- create word data element:
-			- word
-			- label
-			- word vector left
-			- word vector right
-			- compute suffixes
-			- compute shape
-			
-		- NOTE: keep the indexes so that symbolic input/output can be reconstructed, cf. http://deeplearning.net/tutorial/rnnslu.html
 		
 Java object structure:
 
 - define trainer class
 	has a corpus object
+	defines window size l
 	loads or creates distributed vectors
 	loads or creates pre-computed suffixes
 	loads or creates pre-computed shape features
-	defines window size l
+
+-> 	I can combine all in a class Alphabet initialized with corpus
+	- training word2index mapping
+	- label set -> incremental
+	- distributed word factory -> loaded initially
+	- suffix features 	-> incremental
+	- shape features	-> incremental
+	
+
+
+
+	
 	
 	process conll training file and creates 
 	training instance: list of pairs (word, pos)
@@ -64,19 +36,10 @@ Java object structure:
 	see http://stats.stackexchange.com/questions/61328/libsvm-data-format
 	
 Creating training data file:
-- I need to collect all labels and map them to integers
-- I need to collect all features, concatenate them and map them to integers
-- Thus I can define an alphabet class with
-	- labelMap: label-index bijection
-	- featureMap: 
-		- 	this is a concatenation of the features from word vector, suffix, shapes
-			and for each word in the window
-		-	to use the mappings from the feature generation functions, I need to keep an offset
-		- I need to multiple the features because of window site, e.g., shape_feature_n_for_word_1
 		
 Possible approach:
-- load word vectors, which also instantiate training vocabulary, because training set is part of the word vectors
-- create classes for suffix and shap features
+- load word vectors
+- initialize Alphabet
 - loop through training sentences incrementally
 - create training instance for each word:
 	- get label and create label map -> can be done incrementally
@@ -94,20 +57,16 @@ Possible approach:
 
 - size for each word:
 	left+right+shape+sufffix
-	501+501+49+91144=92195 -> I would need of sets for shape and suffix 
-
--> would it not be easier to directly start counting them with offsets?
+	501+501+49+91144=92195 -> I would need offsets for shape and suffix 
 	
 - with offset from window size l=2 -> 2l+1=5 words
-  w_0	=	00001-92195			[0+1,0+1*92195]
-  w_1	=	92196-184391	=	[1+1*92195,1+2*92195]
-  w_2	=	184392-276587	=	[2+2*92195,3+2*92195]
-  w_3	=	276588-368783	=	[3+3*92195,4+3*92195]
-  w_5	=	368784-460979	=	[4+4*92195,4+5*92195]
   
  - 	thus, when I create the feature vector, I need to distinguish suffix at word_1, and word_2, e.g., 
  	for suffix apple, if it occurs at word 0, I have apple0, and at word 1, I have apple1
+ 	
  -	if apple0 has index 92000, then apple1 has 92000+92159=184195, apple2 then 92000+92159+92159=276390
- -	since I have already all data, it should be possible to create the index-feature map from the data directly
- 	by means of the window size - just for simulation
- - 	I will do this first; i can then check how to do it incrementally, if needed (because otherwise, training set must be processed several times)
+ 
+ -	NOTE: feature indices in training file need to be ordered in natural order
+ 
+ - I think using offsets to directly create liblinear feature nodes should be possible, because only for labels I need a bijective
+ 

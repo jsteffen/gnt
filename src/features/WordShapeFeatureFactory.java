@@ -1,9 +1,12 @@
 package features;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -39,6 +42,25 @@ public class WordShapeFeatureFactory {
 
 	private int wordCnt = 0;
 	private int signatureCnt = 0;
+
+	public Map<String, WordShapeFeature> getWord2signature() {
+		return word2signature;
+	}
+	public void setWord2signature(Map<String, WordShapeFeature> word2signature) {
+		this.word2signature = word2signature;
+	}
+	public Map<String, Integer> getSignature2index() {
+		return signature2index;
+	}
+	public void setSignature2index(Map<String, Integer> signature2index) {
+		this.signature2index = signature2index;
+	}
+	public Map<Integer, String> getIndex2signature() {
+		return index2signature;
+	}
+	public void setIndex2signature(Map<Integer, String> index2signature) {
+		this.index2signature = index2signature;
+	}
 
 	public void createShapeVectorsFromFile(String fileName, int max){
 		BufferedReader reader;
@@ -96,14 +118,42 @@ public class WordShapeFeatureFactory {
 		} 
 	}
 
-	//TODO
-	private void writeShapeFeatureFile(){
+	private void writeShapeFeatureFile(String targetFileName){
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
+			for(int key: index2signature.keySet()){
+				writer.write(index2signature.get(key)+"\n");
+			}
+			writer.close();
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	//TODO
-	private void readShapeFeatureFile(){
+	private void readShapeFeatureFile(String string) {
+			BufferedReader reader;
+			int cnt = 1;
+			try {
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					signature2index.put(line, cnt);
+					index2signature.put(cnt,line);
+					cnt++;
+				}
+				reader.close();
 
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	
+	public void testReadShapList(){
+		System.out.println("Reading shape list from: " + "/Users/gune00/data/wordVectorTests/shapeList.txt");
+		this.readShapeFeatureFile("/Users/gune00/data/wordVectorTests/shapeList.txt");
+		System.out.println("... done");
 	}
 
 	public static void main(String[] args){
@@ -111,12 +161,9 @@ public class WordShapeFeatureFactory {
 		wordShapeFactory.createShapeVectorsFromFile("/Users/gune00/data/MLDP/english/english-train-sents.txt", -1);
 		//wordShapeFactory.createShapeVectorsFromFile("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", 100000);
 
-
-		System.out.println("Words: "+ wordShapeFactory.wordCnt 
-				+ " Signatures: " + wordShapeFactory.signatureCnt);
-		System.out.println("Word map: "+ wordShapeFactory.word2signature.size() 
-				+ " Signatures map: " + wordShapeFactory.signature2index.size());
-		wordShapeFactory.printSignaturesMap();
+		System.out.println("Writing shape list to: " + "/Users/gune00/data/wordVectorTests/shapeList.txt");
+		wordShapeFactory.writeShapeFeatureFile("/Users/gune00/data/wordVectorTests/shapeList.txt");
+		System.out.println("... done");
 	}
 
 }

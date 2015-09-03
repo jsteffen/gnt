@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import corpus.Corpus;
+
 /**
  * Goal is to compute all lower-case suffixes from a training set of words.
  * For suffix s, we set the dimension corresponding to s in f_suffix(w) to 1 if lowercased w ends in s 
@@ -44,6 +46,19 @@ public class WordSuffixFeatureFactory {
 	private int wordCnt = 0;
 	private int suffixCnt = 0;
 
+	public Map<String, Integer> getSuffix2num() {
+		return suffix2num;
+	}
+	public void setSuffix2num(Map<String, Integer> suffix2num) {
+		this.suffix2num = suffix2num;
+	}
+	public Map<Integer, String> getNum2suffix() {
+		return num2suffix;
+	}
+	public void setNum2suffix(Map<Integer, String> num2suffix) {
+		this.num2suffix = num2suffix;
+	}
+
 	public void createSuffixListFromFile(String fileName, int max){
 		BufferedReader reader;
 		int lineCnt = 0;
@@ -67,6 +82,16 @@ public class WordSuffixFeatureFactory {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	public void readFlorsCorpus(){
+		Corpus corpus = new Corpus();
+		for (String fileName : corpus.trainingUnLabeledData){
+			System.out.println(fileName);
+			// read only first file
+			createSuffixListFromFile(fileName, -1);
+			break;
+		} 
 	}
 
 	private void computeSuffixesFromWords(String[] words) {
@@ -175,6 +200,9 @@ public class WordSuffixFeatureFactory {
 		}
 		return indices;
 	}
+	
+	//TODO
+	// for an incremental update I need to return the indices of each training instance, either new or cached
 
 	/**
 	 * Given a word and a suffix, first check whether suffix is a known one and
@@ -192,8 +220,7 @@ public class WordSuffixFeatureFactory {
 
 	//** tests methods
 	public void testWriteSuffixList(){
-		this.createSuffixListFromFile("/Users/gune00/data/MLDP/english/english-train-sents.txt", -1);
-		//this.createSuffixListFromFile("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", 100000);
+		this.readFlorsCorpus();
 		System.out.println("#word: " + this.wordCnt + 
 				" #suffixes: " + this.suffixCnt);
 		System.out.println("Writing suffix list to: " + "/Users/gune00/data/wordVectorTests/suffixList.txt");
