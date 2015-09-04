@@ -16,11 +16,6 @@ Java object structure:
 	- suffix features 	-> incremental
 	- shape features	-> incremental
 	
-
-
-
-	
-	
 	process conll training file and creates 
 	training instance: list of pairs (word, pos)
 	I need to define a label2num num2label file

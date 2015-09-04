@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import corpus.Corpus;
+
 /** 
  * For each word given, check all shape features and set bit vector map accordingly.
  * Maintain a map of word - bit vector, so that a output file for the training set can be created - really needed ?
@@ -42,6 +44,8 @@ public class WordShapeFeatureFactory {
 
 	private int wordCnt = 0;
 	private int signatureCnt = 0;
+	
+	// Setters and getters
 
 	public Map<String, WordShapeFeature> getWord2signature() {
 		return word2signature;
@@ -62,6 +66,13 @@ public class WordShapeFeatureFactory {
 		this.index2signature = index2signature;
 	}
 
+	// Instances
+	
+	public WordShapeFeatureFactory(){
+	}
+	
+	// Methods
+	
 	public void createShapeVectorsFromFile(String fileName, int max){
 		BufferedReader reader;
 		int lineCnt = 0;
@@ -150,7 +161,7 @@ public class WordShapeFeatureFactory {
 			}
 		}
 	
-	public void testReadShapList(){
+	public void testReadShapeList(){
 		System.out.println("Reading shape list from: " + "/Users/gune00/data/wordVectorTests/shapeList.txt");
 		this.readShapeFeatureFile("/Users/gune00/data/wordVectorTests/shapeList.txt");
 		System.out.println("... done");

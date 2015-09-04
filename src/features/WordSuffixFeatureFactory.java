@@ -84,8 +84,7 @@ public class WordSuffixFeatureFactory {
 		}	
 	}
 	
-	public void readFlorsCorpus(){
-		Corpus corpus = new Corpus();
+	public void readFlorsCorpus(Corpus corpus){
 		for (String fileName : corpus.trainingUnLabeledData){
 			System.out.println(fileName);
 			// read only first file
@@ -220,7 +219,8 @@ public class WordSuffixFeatureFactory {
 
 	//** tests methods
 	public void testWriteSuffixList(){
-		this.readFlorsCorpus();
+		Corpus corpus = new Corpus();
+		this.readFlorsCorpus(corpus);
 		System.out.println("#word: " + this.wordCnt + 
 				" #suffixes: " + this.suffixCnt);
 		System.out.println("Writing suffix list to: " + "/Users/gune00/data/wordVectorTests/suffixList.txt");
