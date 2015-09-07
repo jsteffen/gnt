@@ -2,7 +2,7 @@ package data;
 
 public class Sentence {
 	private int[] wordArray = new int[0];
-	private int[] posArray = new int[0];
+	private int[] labelArray = new int[0];
 	
 	// Setters and getters
 	public int[] getWordArray() {
@@ -11,11 +11,11 @@ public class Sentence {
 	public void setWordArray(int[] wordArray) {
 		this.wordArray = wordArray;
 	}
-	public int[] getPosArray() {
-		return posArray;
+	public int[] getLabelArray() {
+		return labelArray;
 	}
-	public void setPosArray(int[] posArray) {
-		this.posArray = posArray;
+	public void setLabelArray(int[] labelArray) {
+		this.labelArray = labelArray;
 	}
 	
 	// Instance
@@ -26,12 +26,12 @@ public class Sentence {
 	
 	public Sentence (int size){
 		wordArray = new int[size];
-		posArray = new int[size];
+		labelArray = new int[size];
 	}
 	
 	public void addNextToken(int i, int wordIndex, int posIndex) {
 		this.getWordArray()[i] = wordIndex;
-		this.getPosArray()[i] = posIndex;
+		this.getLabelArray()[i] = posIndex;
 	}
 	
 

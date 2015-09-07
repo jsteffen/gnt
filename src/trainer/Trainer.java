@@ -10,6 +10,7 @@ import java.util.List;
 import corpus.Corpus;
 import data.Data;
 import data.OffSets;
+import data.Window;
 import de.bwaldvogel.liblinear.Parameter;
 import de.bwaldvogel.liblinear.Problem;
 import de.bwaldvogel.liblinear.SolverType;
@@ -157,11 +158,11 @@ public class Trainer {
 	 * - save label index set if Alpha part
 	 */
 
-	public void trainFromConllTrainingFile(String sourceFileName, String sourceEncoding)
+	public void trainFromConllTrainingFile(String sourceFileName)
 			throws IOException {
-
+		System.out.println("Do training from file: " + sourceFileName);
 		BufferedReader conllReader = new BufferedReader(
-				new InputStreamReader(new FileInputStream(sourceFileName),sourceEncoding));
+				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
 		String line = "";
 		List<String[]> tokens = new ArrayList<String[]>();
 
@@ -173,8 +174,12 @@ public class Trainer {
 				// as a side effect, word and pos SetIndexMaps are created
 				// and stored in the data object
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);
+				
 				// do training for new sentence
 				trainFromSentence();
+				
+				// reset tokens
+				tokens = new ArrayList<String[]>();
 			}
 			else
 			{
@@ -184,6 +189,7 @@ public class Trainer {
 			}
 		}
 		conllReader.close();
+		System.out.println("... done");
 	}
 
 	/*
@@ -197,10 +203,20 @@ public class Trainer {
 	 */
 	private void trainFromSentence() {
 		// TODO looks like the main horse
+		// for each token t_i of current training sentence do
+		// System.out.println("Sentence no: " + data.getSentenceCnt());
+		for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++){
+			// create local context for tagging t_i of size 2*windowSize+1 centered around t_i
+			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
+			// make a problem instance out of it using offSets for mapping relative feature index to absolute feature index
+			// add to problem: unclear: can I add problem.n and problem.l at the end?
+			
+			tokenWindow.fillWindow();
+		}
 
 	}
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 		Trainer trainer = new Trainer();
 
 		trainer.alphabet.loadFeaturesFromFiles();
@@ -212,6 +228,10 @@ public class Trainer {
 		System.out.println(trainer.offSets.toString());
 		System.out.println(trainer.getProblem().l);
 		System.out.println(trainer.getProblem().n);
+		
+		trainer.trainFromConllTrainingFile("/Users/gune00/data/MLDP/english/english-train.conll");
+
+		System.out.println(trainer.getData().toString());
 
 
 

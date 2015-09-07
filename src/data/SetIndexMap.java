@@ -46,7 +46,7 @@ public class SetIndexMap {
 	public String toString (){
 		String output = "";
 		for (int index : getNum2label().keySet()){
-			output += index+":"+getNum2label().get(index);
+			output += index+": "+getNum2label().get(index) + "\n";
 		}
 		return output;
 	}

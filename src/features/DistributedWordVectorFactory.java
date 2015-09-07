@@ -201,8 +201,9 @@ public class DistributedWordVectorFactory {
 		if (iw2num.containsKey(word)) 
 			index = iw2num.get(word);
 		else
+			//means also that dummy elements <s> and </s> count as unknown indicator words
 			index = iw2num.size()+1;
-		//System.out.println("IW: " + word + " IwIdx: " + index);
+		//if (word.equals("<s>") || word.equals("</s>")) System.out.println("IW: " + word + " IwIdx: " + index);
 		return index;
 	}
 
