@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import corpus.Corpus;
+import data.Alphabet;
 import data.Data;
 import data.OffSets;
 import data.Window;
 import de.bwaldvogel.liblinear.Parameter;
 import de.bwaldvogel.liblinear.Problem;
 import de.bwaldvogel.liblinear.SolverType;
-import features.Alphabet;
 import features.WordFeatures;
 
 

@@ -3,7 +3,6 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
-import features.Alphabet;
 import features.WordFeatures;
 
 /**

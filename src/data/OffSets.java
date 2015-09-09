@@ -1,6 +1,5 @@
 package data;
 
-import features.Alphabet;
 
 public class OffSets {
 	public static int wvLeftSize = -1;

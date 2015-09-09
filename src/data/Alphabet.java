@@ -1,4 +1,8 @@
-package features;
+package data;
+
+import features.WordDistributedFeatureFactory;
+import features.WordShapeFeatureFactory;
+import features.WordSuffixFeatureFactory;
 
 public class Alphabet {
 	private WordDistributedFeatureFactory wordVectorFactory = new WordDistributedFeatureFactory();

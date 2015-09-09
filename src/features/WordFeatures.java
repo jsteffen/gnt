@@ -3,6 +3,7 @@ package features;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.Alphabet;
 import data.OffSets;
 import data.Pair;
 
