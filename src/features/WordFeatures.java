@@ -20,6 +20,7 @@ import data.Pair;
  *
  */
 public class WordFeatures {
+	private String word = "";
 	private int index = -1;
 	private int elementOffset = 0;
 	private int leftOffset = 0;
@@ -72,7 +73,8 @@ public class WordFeatures {
 		this.adjust = adjust;
 	}
 	// Instantiation
-	public WordFeatures() {
+	public WordFeatures(String word) {
+		this.word = word;
 	}
 
 	// Methods
@@ -168,11 +170,9 @@ public class WordFeatures {
 	}
 
 	// This is a way to show the words/labels that correspond to a window
-	// TODO add the words of the window as well
-	// I need this to see whether my indexing is correct
 	public void ppIthppWordFeaturesWindowElements(Alphabet alphabet){
-		System.out.println("Element: " + index);
-		System.out.println("\nLeft:\n");
+		System.out.println("Element: " + index + " Word: " + word);
+		System.out.println("Left:");
 		for (Pair<Integer,Double> pair : this.getLeft()){
 			int index = (this.isAdjust())?(pair.getL()-this.leftOffset):(pair.getL());
 			double value = pair.getR();
@@ -180,7 +180,7 @@ public class WordFeatures {
 			String label = alphabet.getWordVectorFactory().getNum2iw().get(index+1);
 			System.out.print(label+":"+index+":"+value+";");
 		}
-		System.out.println("\nRight:\n");
+		System.out.println("\nRight:");
 		for (Pair<Integer,Double> pair : this.getRight()){
 			int index = (this.isAdjust())?(pair.getL()-this.rightOffset):(pair.getL());
 			double value = pair.getR();
@@ -188,21 +188,21 @@ public class WordFeatures {
 			String label = alphabet.getWordVectorFactory().getNum2iw().get(index+1);
 			System.out.print(label+":"+index+":"+value+";");
 		}
-		System.out.println("\nShape:\n");
+		System.out.println("\nShape:");
 		for (Pair<Integer,Boolean> pair : this.getShape()){
 			int index = (this.isAdjust())?(pair.getL()-this.shapeOffset):(pair.getL());
 			boolean value = pair.getR();
 			String label = alphabet.getWordShapeFactory().getIndex2signature().get(index);
 			System.out.print(label+":"+index+":"+value+";");
 		}
-		System.out.println("\nSuffix:\n");
+		System.out.println("\nSuffix:");
 		for (Pair<Integer,Boolean> pair : this.getSuffix()){
 			int index = (this.isAdjust())?(pair.getL()-this.suffixOffset):(pair.getL());
 			boolean value = pair.getR();
 			String label = alphabet.getWordSuffixFactory().getNum2suffix().get(index);
 			System.out.print(label+":"+index+":"+value+";");
-		}	
-		System.out.println("\n");
+		}
+		System.out.println("\n************");
 	}
 
 	// String representations

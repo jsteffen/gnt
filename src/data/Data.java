@@ -38,7 +38,7 @@ public class Data {
 	public void setSentence(Sentence sentence) {
 		this.sentence = sentence;
 	}
-	//
+	
 	// Instances
 	public Data() {
 	}

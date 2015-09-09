@@ -21,7 +21,6 @@ public class Window {
 	public static int windowCnt = 0;
 	private Data data ;
 	private Alphabet alphabet ;
-	private OffSets offSets;
 	private Sentence sentence;
 	private int center;
 	private int size = 0;
@@ -29,11 +28,10 @@ public class Window {
 	private boolean trainingPhase = true;
 
 	public Window(Sentence sentence, int i, int windowSize, Data data,
-			Alphabet alphabet, OffSets offSets) {
+			Alphabet alphabet) {
 		Window.windowCnt++;
 		this.size = windowSize;
 		this.alphabet = alphabet;
-		this.offSets = offSets;
 		this.data = data;
 		this.sentence = sentence;
 		this.center = i;
@@ -83,7 +81,6 @@ public class Window {
 		testString +="\n";
 
 		System.out.println(testString);
-
 	}
 
 	/**
@@ -168,7 +165,7 @@ public class Window {
 	// Index is 0 if word is first word in sentence, else 1
 	private WordFeatures createWordFeatures(String word, int wordPosition, int elementCnt, boolean adjust) {
 		// create a new WordFeatures element
-		WordFeatures wordFeatures = new WordFeatures();
+		WordFeatures wordFeatures = new WordFeatures(word);
 		// set its index
 		wordFeatures.setIndex(elementCnt);
 		// set its offsets using the values from OffSets which are pre-initialised after data has been loaded and before

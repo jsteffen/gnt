@@ -507,7 +507,7 @@ public class WordDistributedFeatureFactory {
 	public static void main(String[] args) throws IOException {
 		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
 
-		dwvFactory.createAndWriteDistributedWordFeaturesSparse(10);
+		dwvFactory.createAndWriteDistributedWordFeaturesSparse(500);
 
 		dwvFactory.readDistributedWordFeaturesSparse();
 	}

@@ -15,7 +15,6 @@ import data.Window;
 import de.bwaldvogel.liblinear.Parameter;
 import de.bwaldvogel.liblinear.Problem;
 import de.bwaldvogel.liblinear.SolverType;
-import features.WordFeatures;
 
 
 /**
@@ -74,63 +73,48 @@ public class Trainer {
 	public Corpus getCorpus() {
 		return corpus;
 	}
-
 	public void setCorpus(Corpus corpus) {
 		this.corpus = corpus;
 	}
-
 	public Data getData() {
 		return data;
 	}
-
 	public void setData(Data data) {
 		this.data = data;
 	}
-
 	public Alphabet getAlphabet() {
 		return alphabet;
 	}
-
 	public void setAlphabet(Alphabet alphabet) {
 		this.alphabet = alphabet;
 	}
-
 	public OffSets getOffSets() {
 		return offSets;
 	}
-
 	public void setOffSets(OffSets offSets) {
 		this.offSets = offSets;
 	}
-
 	public int getWindowSize() {
 		return windowSize;
 	}
-
 	public void setWindowSize(int windowSize) {
 		this.windowSize = windowSize;
 	}
-
 	public double getBias() {
 		return bias;
 	}
-
 	public void setBias(double bias) {
 		this.bias = bias;
 	}
-
 	public Parameter getParameter() {
 		return parameter;
 	}
-
 	public void setParameter(Parameter parameter) {
 		this.parameter = parameter;
 	}
-
 	public Problem getProblem() {
 		return problem;
 	}
-
 	public void setProblem(Problem problem) {
 		this.problem = problem;
 	}
@@ -227,23 +211,30 @@ public class Trainer {
 		for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++){
 			// create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 			
-			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet, offSets);
+			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
 			// Fill the elements of the window
 			// first boolean: training mode on/off
 			// second boolean:  adjust offsets on/off
-			
+			// if adjust = true -> use offSets for mapping relative feature index to absolute feature index
 			tokenWindow.fillWindow(train, adjust);
+			
+			// Does bringt nix, braucht zuviel speicher -> > 4gb
+			//data.getInstances().add(tokenWindow);
 			
 			// Print how many windows are created, and pretty print every mod-th window
 			if ((Window.windowCnt % mod) == 0) {
+				System.out.println("\n************");
 				System.out.println("Windows filled: " + Window.windowCnt);
 				tokenWindow.ppWindowElement();
-				System.out.println(tokenWindow.toString());
+				//System.out.println(tokenWindow.toString());
 			}
 			
-			// make a problem instance out of it using offSets for mapping relative feature index to absolute feature index
+			// make a problem instance out of tokenWindow:
+			// - add label
+			// - add feature nodes
 			
-			// add to problem: unclear: can I add problem.n and problem.l at the end?
+			
+			// add to problem: unclear: can I add problem.n and problem.l at the end? -> NO
 
 			
 		}
@@ -256,7 +247,7 @@ public class Trainer {
 		trainer.alphabet.loadFeaturesFromFiles();
 		trainer.offSets.initializeOffsets(trainer.alphabet, trainer.windowSize);
 		
-		trainer.trainFromConllTrainingFile("/Users/gune00/data/MLDP/english/english-train.conll", 10000);
+		trainer.trainFromConllTrainingFile("/Users/gune00/data/MLDP/english/english-train.conll", -1);
 		
 		trainer.getProblem().n = OffSets.windowVectorSize;
 		trainer.getProblem().l=trainer.getData().getSentenceCnt();

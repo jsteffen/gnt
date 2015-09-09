@@ -69,6 +69,12 @@ Possible approach:
 - transform each window into a problem
 	- add index of label
 	- create feature nodes
+	
+-> IT is clear that it is going slow if I have to store windows in memory.
+-> so, try first storing them in a file
+-> OR use smaller data ???
+
+-> and eventually already split them ?
 
 - and later also by the predictor
  
