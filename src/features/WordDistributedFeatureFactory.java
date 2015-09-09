@@ -39,7 +39,7 @@ import corpus.Corpus;
  * @author gune00
  *
  */
-public class DistributedWordVectorFactory {
+public class WordDistributedFeatureFactory {
 	// stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
 	private Map<String, Integer> iw2num = new HashMap<String, Integer>();
 
@@ -58,7 +58,7 @@ public class DistributedWordVectorFactory {
 
 	// stores context vector of each word, whereby word is indexed using value of word2num
 	// Once text is processed, table has to be sorted in increasing order
-	private Map<Integer, DistributedWordVector> distributedWordsTable = new HashMap<Integer, DistributedWordVector>();
+	private Map<Integer, WordDistributedFeature> distributedWordsTable = new HashMap<Integer, WordDistributedFeature>();
 
 	// Setters and getters
 	public Map<String, Integer> getIw2num() {
@@ -91,21 +91,19 @@ public class DistributedWordVectorFactory {
 	public void setWordCnt(int wordCnt) {
 		this.wordCnt = wordCnt;
 	}
-	public Map<Integer, DistributedWordVector> getDistributedWordsTable() {
+	public Map<Integer, WordDistributedFeature> getDistributedWordsTable() {
 		return distributedWordsTable;
 	}
 	public void setDistributedWordsTable(
-			Map<Integer, DistributedWordVector> distributedWordsTable) {
+			Map<Integer, WordDistributedFeature> distributedWordsTable) {
 		this.distributedWordsTable = distributedWordsTable;
 	}
 
 	// Instantiation
 
-	
-
-	public DistributedWordVectorFactory(){
+	public WordDistributedFeatureFactory(){
 	}
-	
+
 	// Methods
 
 	// read ranked list of indicators words from file and construct bijective mapping of word - rank
@@ -224,7 +222,7 @@ public class DistributedWordVectorFactory {
 			//System.out.println("Old:\n" + distributedWordsTable.get(wordIndex).toStringEncoded(num2iw));
 		}
 		else{
-			DistributedWordVector newWordVector = new DistributedWordVector(
+			WordDistributedFeature newWordVector = new WordDistributedFeature(
 					iw2num.size(),leftWordIndex, rightWordIndex);
 			distributedWordsTable.put(wordIndex,newWordVector);
 			//System.out.println("New:\n" + distributedWordsTable.get(wordIndex).toStringEncoded(num2iw));
@@ -241,11 +239,30 @@ public class DistributedWordVectorFactory {
 	// A dummy for handling unknown words, if a word is tested in isolation
 	// Word is known to be unknown in test phase, that is it is not yet part of the distributed vector model
 
-	public DistributedWordVector handleUnknownWordWithoutContext(String word){
+	public WordDistributedFeature handleUnknownWordWithoutContext(String word){
 		word2Bigram("<s>", word,"</s>");
 		int wordIndex = this.word2num.get(word);
 		distributedWordsTable.get(wordIndex).computeContextWeights();
 		return distributedWordsTable.get(wordIndex);
+	}
+
+	/**
+	 * return the distributed word vector of a word. Only in non training phase handle unknown words phase
+	 * @param word
+	 * @param unknown
+	 * @return
+	 */
+	public  WordDistributedFeature getWordVector(String word, boolean train){
+		if (getWord2num().containsKey(word))
+			return getDistributedWordsTable().get(getWord2num().get(word));
+		else
+			if (!train)
+			{
+				WordDistributedFeature unknownWordVector = handleUnknownWordWithoutContext(word);
+				return unknownWordVector;
+			}
+			else
+				return null;
 	}
 
 	//***
@@ -323,7 +340,7 @@ public class DistributedWordVectorFactory {
 
 	private void writeContextFile(String filename){
 		BufferedWriter contextReader;
-		Map<Integer, DistributedWordVector> sortedMap = new TreeMap<Integer, DistributedWordVector>(distributedWordsTable);
+		Map<Integer, WordDistributedFeature> sortedMap = new TreeMap<Integer, WordDistributedFeature>(distributedWordsTable);
 		try {
 			contextReader = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
 			for(int key: sortedMap.keySet()){
@@ -384,15 +401,18 @@ public class DistributedWordVectorFactory {
 		readWordFile(string, word2num, num2word);	
 	}
 
-	// Read in a file containing where each line corresponds to a word. Create bijective index
+	// Read in a file where each line corresponds to a word. Create bijective index
 	// starting with index 1.
 	private void readWordFile(String string, Map<String, Integer> word2index, Map<Integer, String> index2word) {
 		BufferedReader reader;
 		int cnt = 1;
+		int lineCnt = 0;
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
 			String line;
+			
 			while ((line = reader.readLine()) != null) {
+				//System.out.println("IW: " + line + " cnt: " + cnt);
 				word2index.put(line, cnt);
 				index2word.put(cnt,line);
 				cnt++;
@@ -413,7 +433,7 @@ public class DistributedWordVectorFactory {
 
 			String line;
 			while ((line = reader.readLine()) != null) {
-				DistributedWordVector dwv = new DistributedWordVector(num2iw.size());
+				WordDistributedFeature dwv = new WordDistributedFeature(num2iw.size());
 				String[] leftAndRightVector = line.split("###");
 				String[] leftWeightVector = leftAndRightVector[0].split("\t");
 				String[] rightWeightVector = leftAndRightVector[1].split("\t");
@@ -432,7 +452,7 @@ public class DistributedWordVectorFactory {
 		}
 	}
 
-	public void readFlorsCondensed(){
+	public void readDistributedWordFeaturesSparse(){
 		System.out.println("Read FLORS condensed ...");
 		System.out.println("Read used indicator words file.");
 		this.readIndicatorWordFile("/Users/gune00/data/wordVectorTests/iw.txt");
@@ -443,17 +463,21 @@ public class DistributedWordVectorFactory {
 		this.readContextFile("/Users/gune00/data/wordVectorTests/vocContext.txt");
 		System.out.println("Done!");
 	}
+	
+	public void createAndWriteDistributedWordFeaturesSparse(int maxIndicatorWords) throws IOException {
+		Corpus corpus = new Corpus();
+		System.out.println("Read  " + maxIndicatorWords + " indicator words sorted acoording to rank.");
+		this.initIndicatorMap("resources/iw.txt", maxIndicatorWords);
 
-	//***
-	// Some test functions used to create vectors and to write them on file
-	// and to load them into memory.
+		System.out.println("Read sentences from corpus and create word vectors.");
+		this.readFlorsCorpus(corpus);
+		this.computeDistributedWordWeights();
 
-
-	public void testReadFlorsVectors() throws IOException {
-		System.out.println("Read precomputed vectors.");
-		this.readFlorsCondensed();
+		this.writeFlorsCondensed();
 	}
 
+	//***
+	
 	// This is a test which creates vector files so that one can test using "diff" whether the same file content is created
 	// from fresh text sources and from load vectors
 	public void testWriteFlorsCondensed(){
@@ -468,17 +492,7 @@ public class DistributedWordVectorFactory {
 		System.out.println("Done!");
 	}
 
-	public void testReadAndWriteFlorsCorpus() throws IOException {
-		Corpus corpus = new Corpus();
-		System.out.println("Read indicator words sorted acoording to rank.");
-		this.initIndicatorMap("resources/iw.txt", 500);
-
-		System.out.println("Read sentences from corpus and create word vectors.");
-		this.readFlorsCorpus(corpus);
-		this.computeDistributedWordWeights();
-
-		this.writeFlorsCondensed();
-	}
+	
 
 	// Eventually
 	/* Define also word2vec and glove based output:
@@ -491,11 +505,11 @@ public class DistributedWordVectorFactory {
 
 	// Test main method
 	public static void main(String[] args) throws IOException {
-		DistributedWordVectorFactory dwvFactory = new DistributedWordVectorFactory();
+		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
 
-		// dwvFactory.testReadAndWriteFlorsCorpus();
+		dwvFactory.createAndWriteDistributedWordFeaturesSparse(10);
 
-		dwvFactory.testReadFlorsVectors();
+		dwvFactory.readDistributedWordFeaturesSparse();
 	}
 
 }

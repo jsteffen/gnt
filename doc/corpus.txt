@@ -1,0 +1,18 @@
+Corpus used by FLORS:
+
+- training: PTB-3, sec. 2-21 + PTB 1988 WSJ 100.000 unlabeled
+	/Users/gune00/data/MLDP/english (conll format of sec. 2-21 of PTB version 3 + extracted sentences)
+		- this should give 39,832 sentences -> I have 39,278
+		- I think it is, because I am ussing CONLL PTB and comments MLDP/2009/conll09-english/
+			"It matches sections 2 through 21 of Treebank. Note that a few sentences from the original 
+  			Treebank were removed due to merging problems between the input corpora."
+	/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab (tokenized/sentence/line) 
+		-> only read first 100.000
+		-> in FLors, they say that they use the first 100Ksentence from PTB-2
+		-> I guess that the corpus above is ok, anyway
+	
+- test domain 
+	/Volumes/data1/sancl-2012/sancl.all -> labeled and unlabeled data (conll format and tokenized/sentence/line) 
+		-> it is said that unlabeled data has 100T sentences each which is not true
+	/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb (conll format and tokenized/sentence/line) 
+		-> only read first 100.000

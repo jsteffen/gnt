@@ -23,7 +23,7 @@ To avoid zero vectors: add additional cell n+1 and count omitted context.
 	/Volumes/data1/sancl-2012/sancl.all -> labeled and unlabeled data 
 	/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb (conll format und tokenized/sentence/line)
 	
--> organize into sentence/line as input format
+-> organize into sentence/line as input format -> DONE
 
 NOTE: 
 	text is tokenized, lower cased and sentences boundary is known
@@ -78,7 +78,7 @@ Steps:
 		we may improve precision of it
 	- pre-process test corpus for building or updating the word vectors
 	- separate a training and testing phase: only through training vector counting is updated
-	- not that this means that new words are entered into the vector space and cached, but not updated (if we dop not want, but we can)
+	- not that this means that new words are entered into the vector space and cached, but not updated (if we do not want, but we can)
 	- BUT we do not need to store it in the vocabulary
 	- but we can do so and can define some criteria, e.g., if a entry has been seen "enough" time, we mark it for saving
 	- this would support a kind of dynamic learning or even a distributed learning

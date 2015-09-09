@@ -17,6 +17,8 @@ package features;
  */
 
 public class WordShapeFeature {
+	// I guess: ALL_CAPS means: always initial capital (as for NE ion English); INIT_CAP means:
+	// only capital in initial sentence position.
 	public static enum MorphFeature {
 		ALL_CAPS, HAS_DASH, HAS_DIGIT, INIT_CAP, KNOWNLC, LOWER_CASE, SUFF_AL, SUFF_ED, 
 		SUFF_ER, SUFF_EST, SUFF_ING, SUFF_ION,  SUFF_ITY, SUFF_LY, SUFF_S, SUFF_Y, 
@@ -115,7 +117,13 @@ public class WordShapeFeature {
 		}
 	}
 
-	private void createShapeVectorFromWord(String word, int wordIndex) {
+	/**
+	 * Given a word and its index position in a string (0 means: start position, others means: inside sentence)
+	 * create a string which represent the signature of that word
+	 * @param word
+	 * @param wordIndex
+	 */
+	public void createShapeVectorFromWord(String word, int wordIndex) {
 		// Main parts of this code are 
 		// from https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeatureExtractor.java
 		int wlen = word.length();
@@ -221,7 +229,7 @@ public class WordShapeFeature {
 	}
 	
 	public static void main(String[] args){
-		WordShapeFeature test = new WordShapeFeature("123", 1);
+		WordShapeFeature test = new WordShapeFeature("G-7", 0);
 		System.out.println(test.toString());
 	}
 }

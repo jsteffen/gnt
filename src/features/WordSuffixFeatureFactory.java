@@ -83,7 +83,7 @@ public class WordSuffixFeatureFactory {
 			e.printStackTrace();
 		}	
 	}
-	
+
 	public void readFlorsCorpus(Corpus corpus){
 		for (String fileName : corpus.trainingUnLabeledData){
 			System.out.println(fileName);
@@ -183,7 +183,7 @@ public class WordSuffixFeatureFactory {
 		}
 		return suffixIndex;
 	}
-	
+
 	/**
 	 * Given a word, find all matching suffixes from the known suffix list
 	 * @param word
@@ -191,15 +191,17 @@ public class WordSuffixFeatureFactory {
 	 */
 	public List<Integer> getAllKnownSuffixForWord(String word){
 		List<Integer> indices = new ArrayList<Integer>();
-		for (int i = 0; i < word.length(); i++){
-			String suffix = word.substring(i);
-			if (suffix2num.containsKey(suffix)) {
-				indices.add(suffix2num.get(suffix));
+		if (!isNumber(word))
+			for (int i = 0; i < word.length(); i++){
+				String suffix = word.substring(i);
+				if (suffix2num.containsKey(suffix)) {
+					indices.add(suffix2num.get(suffix));
+				}
 			}
-		}
+		indices.sort(null);
 		return indices;
 	}
-	
+
 	//TODO
 	// for an incremental update I need to return the indices of each training instance, either new or cached
 

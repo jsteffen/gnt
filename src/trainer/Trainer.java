@@ -15,6 +15,7 @@ import de.bwaldvogel.liblinear.Parameter;
 import de.bwaldvogel.liblinear.Problem;
 import de.bwaldvogel.liblinear.SolverType;
 import features.Alphabet;
+import features.WordFeatures;
 
 
 /**
@@ -133,6 +134,15 @@ public class Trainer {
 	public void setProblem(Problem problem) {
 		this.problem = problem;
 	}
+	
+	// Instances
+	
+	public Trainer (){
+	}
+	
+	public Trainer (int windowSize){
+		this.setWindowSize(windowSize);
+	}
 
 	// Methods
 
@@ -158,26 +168,32 @@ public class Trainer {
 	 * - save label index set if Alpha part
 	 */
 
-	public void trainFromConllTrainingFile(String sourceFileName)
+	public void trainFromConllTrainingFile(String sourceFileName, int max)
 			throws IOException {
 		System.out.println("Do training from file: " + sourceFileName);
 		BufferedReader conllReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
 		String line = "";
 		List<String[]> tokens = new ArrayList<String[]>();
-
+		boolean train = true;
+		boolean adjust = true;
+		System.out.println("Train?: " + train + " Adjust?: " + adjust);
+		
 		while ((line = conllReader.readLine()) != null) {
 			if (line.isEmpty()) {
+				// Stop of max sentences have been processed
+				if  ((max > 0) && (data.getSentenceCnt() >= max)) break;
+				
 				// If all conll lines of a sentence have been collected
 				// extract the relevant information (here word and pos)
 				// and make a sentence object of it (two parallel int[];)
 				// as a side effect, word and pos SetIndexMaps are created
 				// and stored in the data object
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);
-				
+
 				// do training for new sentence
-				trainFromSentence();
-				
+				trainFromSentence(train, adjust);
+
 				// reset tokens
 				tokens = new ArrayList<String[]>();
 			}
@@ -195,43 +211,61 @@ public class Trainer {
 	/*
 	 * - loop through sentence object
 	 * - create training instance
-	 * - create feature vectors
+	 * - create feature vectors -> DONE here
+	 * - add offSet to each window -> just to check whether it will work !
+	 * 
 	 * - make new problem instance and add to problem space
 	 * UNCLEAR:
 	 * - is it necessary to know in advance problem.l -> # training instances -> # number of words (windows)
 	 * - and problem.n => trainer.getProblem().n = OffSets.windowVectorSize;
 	 */
-	private void trainFromSentence() {
-		// TODO looks like the main horse
+	private void trainFromSentence(boolean train, boolean adjust) {
+		// This is the main working horse!
 		// for each token t_i of current training sentence do
 		// System.out.println("Sentence no: " + data.getSentenceCnt());
+		int mod = 100000;
 		for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++){
 			// create local context for tagging t_i of size 2*windowSize+1 centered around t_i
-			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
-			// make a problem instance out of it using offSets for mapping relative feature index to absolute feature index
-			// add to problem: unclear: can I add problem.n and problem.l at the end?
 			
-			tokenWindow.fillWindow();
-		}
+			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet, offSets);
+			// Fill the elements of the window
+			// first boolean: training mode on/off
+			// second boolean:  adjust offsets on/off
+			
+			tokenWindow.fillWindow(train, adjust);
+			
+			// Print how many windows are created, and pretty print every mod-th window
+			if ((Window.windowCnt % mod) == 0) {
+				System.out.println("Windows filled: " + Window.windowCnt);
+				tokenWindow.ppWindowElement();
+				System.out.println(tokenWindow.toString());
+			}
+			
+			// make a problem instance out of it using offSets for mapping relative feature index to absolute feature index
+			
+			// add to problem: unclear: can I add problem.n and problem.l at the end?
 
+			
+		}
+		// When problem is created run trainer (or save training file for later usage)
 	}
 
 	public static void main(String[] args) throws IOException{
-		Trainer trainer = new Trainer();
+		Trainer trainer = new Trainer(2);
 
 		trainer.alphabet.loadFeaturesFromFiles();
-
 		trainer.offSets.initializeOffsets(trainer.alphabet, trainer.windowSize);
-
-		trainer.getProblem().n = OffSets.windowVectorSize;
-
-		System.out.println(trainer.offSets.toString());
-		System.out.println(trainer.getProblem().l);
-		System.out.println(trainer.getProblem().n);
 		
-		trainer.trainFromConllTrainingFile("/Users/gune00/data/MLDP/english/english-train.conll");
+		trainer.trainFromConllTrainingFile("/Users/gune00/data/MLDP/english/english-train.conll", 10000);
+		
+		trainer.getProblem().n = OffSets.windowVectorSize;
+		trainer.getProblem().l=trainer.getData().getSentenceCnt();
 
-		System.out.println(trainer.getData().toString());
+		
+		System.out.println("Offsets: " + trainer.offSets.toString());
+		System.out.println("Training instances: " + trainer.getProblem().l);
+		System.out.println("Feature instances size: " + trainer.getProblem().n);
+		System.out.println("Windows: " + Window.windowCnt);
 
 
 

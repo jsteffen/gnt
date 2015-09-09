@@ -1,0 +1,19 @@
+
+Shape features:
+	Use Berkely parser word features.
+	Each word is mapped to 16 bit string indicating ENGLISH orthography
+	on WSJ: yields 50 different signatures (bit string instances).
+	This gives 50 different shape features.
+
+-> https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeatureExtractor.java
+-> https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeature.java
+
+
+I currently use only labeled training data:
+	"/Users/gune00/data/MLDP/english/english-train-sents.txt"
+
+-> use all tokens from 
+	-> I also create 50 different signatures
+	-> NOTE: need to distinguish whether word is in 0 or 1 sentence position
+	
+Shape features are language and domain specific

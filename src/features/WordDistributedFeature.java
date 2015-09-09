@@ -2,7 +2,7 @@ package features;
 
 import java.util.Map;
 
-public class DistributedWordVector {
+public class WordDistributedFeature {
 	// leftContext and rightContext both corresponds to a vector constructed from the indicator words
 	// leftContext[0] == indicator word with rank 1
 	// leftContext[n] == indicator word with rank n+1
@@ -27,12 +27,12 @@ public class DistributedWordVector {
 		this.rightContext = rightContext;
 	}
 
-	DistributedWordVector(int n){
+	WordDistributedFeature(int n){
 		leftContext = new double[n+1];
 		rightContext = new double[n+1];
 	}
 
-	public DistributedWordVector(int n, int leftWordIndex, int rightWordIndex) {
+	public WordDistributedFeature(int n, int leftWordIndex, int rightWordIndex) {
 		// when a new word vector is initialized, all elements should be initialized with 0 -> in java the default
 		leftContext = new double[n+1];
 		rightContext = new double[n+1];

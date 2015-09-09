@@ -2,8 +2,8 @@ package utils;
 
 import java.io.IOException;
 
-import features.DistributedWordVector;
-import features.DistributedWordVectorFactory;
+import features.WordDistributedFeature;
+import features.WordDistributedFeatureFactory;
 
 /**
  * Given two words, compute their similarity based on the distributed word vectors.
@@ -17,7 +17,7 @@ import features.DistributedWordVectorFactory;
  *
  */
 public class WordVectorSimilarity {
-	private static DistributedWordVectorFactory dwvFactory = new DistributedWordVectorFactory();
+	private static WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
 	
 	
 
@@ -33,19 +33,19 @@ public class WordVectorSimilarity {
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
 	
-	public static DistributedWordVector getWordVector(String word){
+	public static WordDistributedFeature getWordVector(String word){
 		if (dwvFactory.getWord2num().containsKey(word))
 			return dwvFactory.getDistributedWordsTable().get(dwvFactory.getWord2num().get(word));
 		else
 			{
-			DistributedWordVector unknownWordVector = dwvFactory.handleUnknownWordWithoutContext(word);
+			WordDistributedFeature unknownWordVector = dwvFactory.handleUnknownWordWithoutContext(word);
 			return unknownWordVector;
 			}
 	}
 	
 	public static void testSimilarity(String word1, String word2){
-		DistributedWordVector vec1 = WordVectorSimilarity.getWordVector(word1);
-		DistributedWordVector vec2 = WordVectorSimilarity.getWordVector(word2);
+		WordDistributedFeature vec1 = WordVectorSimilarity.getWordVector(word1);
+		WordDistributedFeature vec2 = WordVectorSimilarity.getWordVector(word2);
 		double[] vectorA = vec1.concatenateleftAndRightVector();
 		double[] vectorB = vec2.concatenateleftAndRightVector();
 		
@@ -57,8 +57,8 @@ public class WordVectorSimilarity {
 
 	// Test main method
 	public static void main(String[] args) throws IOException {
-		WordVectorSimilarity.dwvFactory.testReadFlorsVectors();
-		WordVectorSimilarity.testSimilarity("house", "building");
+		WordVectorSimilarity.dwvFactory.readDistributedWordFeaturesSparse();
+		WordVectorSimilarity.testSimilarity("an", "an");
 		WordVectorSimilarity.testSimilarity("house", "house");
 		WordVectorSimilarity.testSimilarity("house", "houses");
 		WordVectorSimilarity.testSimilarity("building", "building");

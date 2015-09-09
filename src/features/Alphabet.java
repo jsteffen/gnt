@@ -1,15 +1,15 @@
 package features;
 
 public class Alphabet {
-	private DistributedWordVectorFactory wordVectorFactory = new DistributedWordVectorFactory();
+	private WordDistributedFeatureFactory wordVectorFactory = new WordDistributedFeatureFactory();
 	private WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
 	private WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
 	
 	// Setters and getters
-	public DistributedWordVectorFactory getWordVectorFactory() {
+	public WordDistributedFeatureFactory getWordVectorFactory() {
 		return wordVectorFactory;
 	}
-	public void setWordVectorFactory(DistributedWordVectorFactory wordVectorFactory) {
+	public void setWordVectorFactory(WordDistributedFeatureFactory wordVectorFactory) {
 		this.wordVectorFactory = wordVectorFactory;
 	}
 	public WordSuffixFeatureFactory getWordSuffixFactory() {
@@ -27,9 +27,8 @@ public class Alphabet {
 	
 	// Methods
 
-	
 	public void loadFeaturesFromFiles(){
-		this.wordVectorFactory.readFlorsCondensed();
+		this.wordVectorFactory.readDistributedWordFeaturesSparse();
 		this.wordSuffixFactory.testReadSuffixList();
 		this.wordShapeFactory.testReadShapeList();
 	}

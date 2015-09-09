@@ -1,0 +1,12 @@
+Possible parameters for experiments:
+
+- dimension of indicator words -> size if distributed feature of words
+	- means that distributed word features have to be preprocessed with maxIndicatorWords
+
+- dimension of suffixes
+
+- different suffix sets
+
+- ablation tests on feature sets
+
+- different liblinear classifiers

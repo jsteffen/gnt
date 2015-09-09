@@ -33,35 +33,43 @@ Java object structure:
 Creating training data file:
 		
 Possible approach:
-- load word vectors
-- initialize Alphabet
+- load word vectors, suffixes, shapes
+	- seems that offline mode is ok, because then I can do experiments with ranked suffixes
+-> DONE
+- initialize Alphabet -> DONE
+- initialize offSets -> DONE
 - loop through training sentences incrementally
 - create training instance for each word:
-	- get label and create label map -> can be done incrementally
-	- get words of window
-	- for each word create a tokenInstance consisting of three list of indices
+	- get label and create label map -> DONE -> in class Data
+	- get words of window -> DONE
+	- for each word create a tokenInstance consisting of four list of indices
 		- get left and right distributed word vector in form of index:value
 		- compute suffixes, which also incrementally extends suffix factory in form of index:1
 		- compute shapes, which also incrementally extends suffix factory  in form of index:1
-	- the indices above are only relative 
-	- so I need to add an offset:
-		- the offset depends on the size of the length of word vectors, suffix vector, and shape vector and the position of the word:
-		- if precomputed offset is used, offsets can be computed directly, else offset can only be computed at the end
-	- when I have the offsets, I can compute the absolute index-feature map as well which is used by liblinear
-	- and later also by the predictor
-
-- size for each word:
-	left+right+shape+sufffix
-	501+501+49+91144=92195 -> I would need offsets for shape and suffix 
+	-> DONE
 	
-- with offset from window size l=2 -> 2l+1=5 words
-  
- - 	thus, when I create the feature vector, I need to distinguish suffix at word_1, and word_2, e.g., 
- 	for suffix apple, if it occurs at word 0, I have apple0, and at word 1, I have apple1
- 	
- -	if apple0 has index 92000, then apple1 has 92000+92159=184195, apple2 then 92000+92159+92159=276390
+- the indices above are only relative 
+- so I need to add an offset:
+	- the offset depends on the size of the length of word vectors, suffix vector, and shape vector and the position of the word:
+	- if precomputed offset is used, offsets can be computed directly, else offset can only be computed at the end
+- when I have the offsets, I can compute the absolute index-feature map as well which is used by liblinear
+-> DONE -> actually done incrementally for each newly create window
+	Approach:
+		- currently, I follow an offline approach:
+		- load preprocessed feature data (distributed word vectors, suffixes, shapes)
+		- this also gives me the max number of different feature values from which 
+			- I can compute the offsets of each window element
+			- max number of different features
+		- when filling the components of each window token, I determine
+			- firstly the relative index of each non-zero feature using the alphabet
+			- and then compute the absolute index using the offsets
+		- in this way, the features indices are enumerate within a window in increasing order
+			and only the non-zero feature are collected, which gives sparse window elements
+	
+- transform each window into a problem
+	- add index of label
+	- create feature nodes
+
+- and later also by the predictor
  
- -	NOTE: feature indices in training file need to be ordered in natural order
- 
- - I think using offsets to directly create liblinear feature nodes should be possible, because only for labels I need a bijective
  
