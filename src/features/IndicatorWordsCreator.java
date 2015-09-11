@@ -26,10 +26,20 @@ public class IndicatorWordsCreator {
 	static int lineCnt = 0;
 	static int tokenCnt = 0;
 	private Map<String, Integer> wordToNum = new HashMap<String, Integer>();
+	
+	
 
 	// Clean text line according to given type
 	// AND lower case text
 	// It is assumed that line is a tokenized sentence
+
+	public Map<String, Integer> getWordToNum() {
+		return wordToNum;
+	}
+
+	public void setWordToNum(Map<String, Integer> wordToNum) {
+		this.wordToNum = wordToNum;
+	}
 
 	private String[] cleanTextLine(String line, String type) {
 		String[] words = {};
@@ -65,10 +75,10 @@ public class IndicatorWordsCreator {
 	// Count frequency of words
 	public void countWords(String[] words){
 		for (String word : words){
-			if (wordToNum.containsKey(word)) {
-				wordToNum.put(word, wordToNum.get(word)+1);
+			if (this.getWordToNum().containsKey(word)) {
+				this.getWordToNum().put(word, this.getWordToNum().get(word)+1);
 			} else {
-				wordToNum.put(word, 1);
+				this.getWordToNum().put(word, 1);
 			}
 		}
 	}
@@ -121,7 +131,7 @@ public class IndicatorWordsCreator {
 		int cnt = 1;
 		Map<String, Integer> sortedMap = sortByValue(wordToNum);
 		try {
-			writer.write(tokenCnt + "\t" + wordToNum.size());
+			writer.write(tokenCnt + "\t" + this.getWordToNum().size());
 			for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
 				writer.write("\n" + entry.getKey() + "\t"+ entry.getValue());
 				if (cnt == n) break; cnt++;

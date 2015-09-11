@@ -16,66 +16,131 @@ Java object structure:
 	- suffix features 	-> incremental
 	- shape features	-> incremental
 	
-	process conll training file and creates 
-	training instance: list of pairs (word, pos)
+	process conll training file and create sentence internal forms: list of pairs (word, pos)
 	I need to define a label2num num2label file
 	
-	for each sentence, performs windows based processing, with prespecified window size
+	for each sentence, perform windows based processing, with prespecified window size
 	fills feature vector parts  for each word
 	writes out liblinear model file (as gzipped)
-	
-	what to do with the real feature values of word vector?
-	what to do with zero elements ? 
-	and splitting?
 	
 	see http://stats.stackexchange.com/questions/61328/libsvm-data-format
 	
 Creating training data file:
 		
-Possible approach:
+Current approach:
 - load word vectors, suffixes, shapes
 	- seems that offline mode is ok, because then I can do experiments with ranked suffixes
+	
+-> but running and creating all the data before training starts is also possible, because creating the
+   features is not so time consuming (as whole training later)
 -> DONE
+
 - initialize Alphabet -> DONE
+
 - initialize offSets -> DONE
+
 - loop through training sentences incrementally
-- create training instance for each word:
+	- save label set in file
+
+- create training window instance for each word:
 	- get label and create label map -> DONE -> in class Data
 	- get words of window -> DONE
-	- for each word create a tokenInstance consisting of four list of indices
+	- initialize window and store all window frames in training instances
+	
+	
+- construct problem
+	- 	initialize problem
+	-	iterate through all training instances
+		- for each word create a tokenInstance consisting of four list of indices
 		- get left and right distributed word vector in form of index:value
 		- compute suffixes, which also incrementally extends suffix factory in form of index:1
 		- compute shapes, which also incrementally extends suffix factory  in form of index:1
-	-> DONE
+		- add an offset to relative indices
+	- 	map each filled window to problem instance and clean it
+		- feature vector size is given by means of maxFeatureSize
+		- add index of label and create feature nodes
 	
-- the indices above are only relative 
-- so I need to add an offset:
-	- the offset depends on the size of the length of word vectors, suffix vector, and shape vector and the position of the word:
-	- if precomputed offset is used, offsets can be computed directly, else offset can only be computed at the end
-- when I have the offsets, I can compute the absolute index-feature map as well which is used by liblinear
--> DONE -> actually done incrementally for each newly create window
-	Approach:
-		- currently, I follow an offline approach:
-		- load preprocessed feature data (distributed word vectors, suffixes, shapes)
-		- this also gives me the max number of different feature values from which 
-			- I can compute the offsets of each window element
-			- max number of different features
-		- when filling the components of each window token, I determine
-			- firstly the relative index of each non-zero feature using the alphabet
-			- and then compute the absolute index using the offsets
-		- in this way, the features indices are enumerate within a window in increasing order
-			and only the non-zero feature are collected, which gives sparse window elements
+- run trainer:
+	- initialize liblinear with problem and parameters
+	- run learner
+	- save model
 	
-- transform each window into a problem
-	- add index of label
-	- create feature nodes
-	
--> IT is clear that it is going slow if I have to store windows in memory.
--> so, try first storing them in a file
--> OR use smaller data ???
+- finally also write out problem relevant values into file and label set mapping
 
--> and eventually already split them ?
 
-- and later also by the predictor
+NOTES on Alphabet:
+- load preprocessed feature data (distributed word vectors, suffixes, shapes)
+- this also gives me the max number of different feature values maxFeatureSize from which 
+	- I can compute the offsets of each window element
+	- max number of different features
+- when filling the components of each window token, I determine
+	- firstly the relative index of each non-zero feature using the alphabet
+	- and then compute the absolute index using the offsets
+- in this way, the features indices are enumerate within a window in increasing order
+	and only the non-zero feature are collected, which gives sparse window elements
+
+NOTES: about writing out training instances
+	-> define a out buffer as part of Corpus and initialize with filename;
+	-> open that buffer before training starts, and close it after.
+	-> DONE: define a new ModelFiles.java class
+	-> BUT files are getting really huge !
+	-> file writing time: dim:50, #sent: 5000 -> 2.44 minutes, dim:250, #sent: 5000 -> 29.59 minutes
+	-> with the approach abve, splitting should also be possible 
+		-> create pos-many different files
+		-> split word vectors into n-parts and save n-different files
+		
+NOTES: possible alternative -> no need to save training instances in file
+	-> create window frame instances (non filled windows)
+	-> gives me training instances size needed for init problem
+	-> seems to be fast enough
+	-> then fill window, create problem instance and add to problem
+		and finally clean window to save memory (garbage collection)
+		define a method Window.clean()
+
+-> DONE; looks good ! get my first trained models ! 11.9.2015
+
+-> NEXT
+	- store all file in compressed folder automatically
+
+Training:
+- defined training and run it using FLORS learner setting 
+	new Parameter(SolverType.L2R_LR, 1.0, 0.01); -> DONE ! used Xmx6g
+	-> time for constructing model iw=50 and examples=5000: 35.3328333 minutes
+	-> saving model in: /Users/gune00/data/wordVectorTests/testModel__L2R_LR.txt -> time 25 seconds (207MB)
+	-> TOTAL  System time (msec): 2156062 -> 35.9343667 minutes
+	
+- defined training and run it using MDP learner setting 
+	new Parameter(SolverType.MCSVM_CS, 0.1, 0.3); but bias not used
+	-> time for constructing model iw=50 and examples=5000: 19.57455 minutes
+	-> saving model in: /Users/gune00/data/wordVectorTests/testModel__L2R_LR.txt -> time 12 seconds (59MB)
+	-> TOTAL  System time (msec): 1174473 -> 19.57455 minutes
+
+
+EFFICIENCY:
+
+-> I will first go with iw=50 and examples=5000 for testing complete system
+
+Processing experiments:
+All training instances
+- with iw=100: 0.35705 minutes
+- with iw=200: 0.499816667 minutes
+- with iw=300: 0.659533333 minutes
+
+Used in Flors:
+- with iw=250: 0.575133333 minutes
+- with iw=500: 0.9153 minutes
+
+Memory needed:
+n * m * 8 + m (laut Bernd)
+average vector length * #window instances * 8 (double) + #window instances
+
+iw=500, #sentences=39278 ->
+2291*958150*8+958150 -> 17.5619313 gigabytes
+
+iw=50, #sentences=5000 -> 
+365*122983*8+122983 -> 0.359233343 gigabytes
+
+iw=250, #sentences=5000
+1303*122983*8+122983 -> 1.28209777 gigabytes
  
  

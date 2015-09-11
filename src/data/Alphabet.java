@@ -8,7 +8,7 @@ public class Alphabet {
 	private WordDistributedFeatureFactory wordVectorFactory = new WordDistributedFeatureFactory();
 	private WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
 	private WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
-	
+
 	// Setters and getters
 	public WordDistributedFeatureFactory getWordVectorFactory() {
 		return wordVectorFactory;
@@ -28,13 +28,25 @@ public class Alphabet {
 	public void setWordShapeFactory(WordShapeFeatureFactory wordShapeFactory) {
 		this.wordShapeFactory = wordShapeFactory;
 	}
-	
+
 	// Methods
 
 	public void loadFeaturesFromFiles(){
 		this.wordVectorFactory.readDistributedWordFeaturesSparse();
 		this.wordSuffixFactory.testReadSuffixList();
 		this.wordShapeFactory.testReadShapeList();
+	}
+
+	public void clean(){
+		System.out.println("Cleaning word vectors ... ");
+		this.wordVectorFactory.clean();
+		
+		System.out.println("Cleaning suffix list ... ");
+		this.wordSuffixFactory.clean();
+		
+		System.out.println("Cleaning shape list ... ");
+		this.wordShapeFactory.clean();
+
 	}
 
 }

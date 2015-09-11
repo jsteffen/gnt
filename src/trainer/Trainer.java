@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import corpus.Corpus;
+import corpus.ModelFiles;
 import data.Alphabet;
 import data.Data;
 import data.OffSets;
@@ -54,15 +55,15 @@ import de.bwaldvogel.liblinear.SolverType;
 
 public class Trainer {
 	private Corpus corpus = new Corpus();
+	private ModelFiles modelFiles = new ModelFiles();
 	private Data data = new Data();
 	private Alphabet alphabet = new Alphabet();
 	private OffSets offSets = new OffSets();
 	private int windowSize = 2;
 
-	// API/Vlaues for Liblinear
+	// API/Values for Liblinear
 	// GN: used in MDP
 	private double bias = -1;
-
 	// GN: default values as used in Flors
 	private Parameter parameter = new Parameter(SolverType.L2R_LR, 1.0, 0.01);
 	// GN: used in MDP
@@ -118,12 +119,17 @@ public class Trainer {
 	public void setProblem(Problem problem) {
 		this.problem = problem;
 	}
-	
+	public ModelFiles getModelFiles() {
+		return modelFiles;
+	}
+	public void setModelFiles(ModelFiles modelFiles) {
+		this.modelFiles = modelFiles;
+	}
+
 	// Instances
-	
 	public Trainer (){
 	}
-	
+
 	public Trainer (int windowSize){
 		this.setWindowSize(windowSize);
 	}
@@ -144,6 +150,7 @@ public class Trainer {
 	 * - loop through sentence object
 	 * - create training instance
 	 * - create feature vectors
+	 * TODO hierix
 	 * - add to problem
 	 * 
 	 * - after all training instances have been computed
@@ -151,7 +158,7 @@ public class Trainer {
 	 * - save model file
 	 * - save label index set if Alpha part
 	 */
-
+	
 	public void trainFromConllTrainingFile(String sourceFileName, int max)
 			throws IOException {
 		System.out.println("Do training from file: " + sourceFileName);
@@ -162,28 +169,24 @@ public class Trainer {
 		boolean train = true;
 		boolean adjust = true;
 		System.out.println("Train?: " + train + " Adjust?: " + adjust);
-		
+
 		while ((line = conllReader.readLine()) != null) {
 			if (line.isEmpty()) {
 				// Stop of max sentences have been processed
 				if  ((max > 0) && (data.getSentenceCnt() >= max)) break;
-				
-				// If all conll lines of a sentence have been collected
-				// extract the relevant information (here word and pos)
-				// and make a sentence object of it (two parallel int[];)
-				// as a side effect, word and pos SetIndexMaps are created
-				// and stored in the data object
+
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
-				// do training for new sentence
+				// create window instances and store in list
 				trainFromSentence(train, adjust);
+				
+				// do training for new sentence stored in this.data
+				// trainFromSentence(train, adjust);
 
 				// reset tokens
 				tokens = new ArrayList<String[]>();
 			}
-			else
-			{
-				// Collect each conll line of sentence into a List
+			else {
 				String[] tokenizedLine = line.split("\t");
 				tokens.add(tokenizedLine);
 			}
@@ -195,70 +198,50 @@ public class Trainer {
 	/*
 	 * - loop through sentence object
 	 * - create training instance
-	 * - create feature vectors -> DONE here
-	 * - add offSet to each window -> just to check whether it will work !
+	 * - create feature vectors -> DONE
+	 * - add offSet to each window -> DONE
+	 * - make new problem instance -> DONE
 	 * 
-	 * - make new problem instance and add to problem space
+	 * - add to problem space
 	 * UNCLEAR:
-	 * - is it necessary to know in advance problem.l -> # training instances -> # number of words (windows)
+	 * - is it necessary to know in advance problem.l -> YES
 	 * - and problem.n => trainer.getProblem().n = OffSets.windowVectorSize;
 	 */
-	private void trainFromSentence(boolean train, boolean adjust) {
-		// This is the main working horse!
+	private void trainFromSentence(boolean train, boolean adjust) throws IOException {
 		// for each token t_i of current training sentence do
 		// System.out.println("Sentence no: " + data.getSentenceCnt());
 		int mod = 100000;
 		for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++){
+			int labelIndex = this.getData().getSentence().getLabelArray()[i];
 			// create local context for tagging t_i of size 2*windowSize+1 centered around t_i
-			
+
 			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
 			// Fill the elements of the window
 			// first boolean: training mode on/off
 			// second boolean:  adjust offsets on/off
 			// if adjust = true -> use offSets for mapping relative feature index to absolute feature index
 			tokenWindow.fillWindow(train, adjust);
+
+			ProblemInstance problemInstance = new ProblemInstance();
+			problemInstance.createProblemInstanceFromWindow(tokenWindow);
 			
-			// Does bringt nix, braucht zuviel speicher -> > 4gb
-			//data.getInstances().add(tokenWindow);
-			
+			// Write out training instances into file, iff class ModelFiles is active
+			if (this.getModelFiles().isActive()) {
+				String longString = labelIndex + " " + problemInstance.toString();
+				this.getModelFiles().getWriterTrainingInstances().write(longString);
+				this.getModelFiles().getWriterTrainingInstances().write("\n");
+			}
+
 			// Print how many windows are created, and pretty print every mod-th window
 			if ((Window.windowCnt % mod) == 0) {
 				System.out.println("\n************");
 				System.out.println("Windows filled: " + Window.windowCnt);
-				tokenWindow.ppWindowElement();
-				//System.out.println(tokenWindow.toString());
+				// tokenWindow.ppWindowElement();
+				// System.out.println(tokenWindow.toString());
+				//System.out.println(labelIndex + " "+problemInstance.toString());
 			}
-			
-			// make a problem instance out of tokenWindow:
-			// - add label
-			// - add feature nodes
-			
-			
-			// add to problem: unclear: can I add problem.n and problem.l at the end? -> NO
-
-			
 		}
-		// When problem is created run trainer (or save training file for later usage)
 	}
-
-	public static void main(String[] args) throws IOException{
-		Trainer trainer = new Trainer(2);
-
-		trainer.alphabet.loadFeaturesFromFiles();
-		trainer.offSets.initializeOffsets(trainer.alphabet, trainer.windowSize);
-		
-		trainer.trainFromConllTrainingFile("/Users/gune00/data/MLDP/english/english-train.conll", -1);
-		
-		trainer.getProblem().n = OffSets.windowVectorSize;
-		trainer.getProblem().l=trainer.getData().getSentenceCnt();
-
-		
-		System.out.println("Offsets: " + trainer.offSets.toString());
-		System.out.println("Training instances: " + trainer.getProblem().l);
-		System.out.println("Feature instances size: " + trainer.getProblem().n);
-		System.out.println("Windows: " + Window.windowCnt);
-
-
-
-	}
+	
+	
 }

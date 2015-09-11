@@ -1,5 +1,6 @@
 package data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
@@ -12,8 +13,16 @@ public class Data {
 
 	private int sentenceCnt = 0;
 
+	private List<Window> instances = new ArrayList<Window>();
+
 	// Setters and getters
 
+	public List<Window> getInstances() {
+		return instances;
+	}
+	public void setInstances(List<Window> instances) {
+		this.instances = instances;
+	}
 	public int getSentenceCnt() {
 		return sentenceCnt;
 	}
@@ -38,7 +47,7 @@ public class Data {
 	public void setSentence(Sentence sentence) {
 		this.sentence = sentence;
 	}
-	
+
 	// Instances
 	public Data() {
 	}
@@ -52,6 +61,14 @@ public class Data {
 		return this.getLabelSet().updateSetIndexMap(label);
 	}
 
+	/**
+	 * If all conll lines of a sentence have been collected
+	 * extract the relevant information (here word and pos)
+	 * and make a sentence object of it (two parallel int[];)
+	 * as a side effect, word and pos SetIndexMaps are created
+	 * and stored in the data object
+	 * @param tokens
+	 */
 	public void generateSentenceObjectFromConllLabeledSentence(List<String[]> tokens) {
 		Sentence sentence = new Sentence(tokens.size());
 		for (int i=0; i < tokens.size(); i++){
@@ -66,6 +83,14 @@ public class Data {
 		}
 		this.setSentence(sentence);
 		this.sentenceCnt++;
+	}
+	
+	public void saveLabelSet(){
+		this.getLabelSet().writeSetIndexMap("/Users/gune00/data/wordVectorTests/labelSet.txt");	
+	}
+	
+	public void readLabelSet(){
+		this.getLabelSet().readSetIndexMap("/Users/gune00/data/wordVectorTests/labelSet.txt");	
 	}
 
 	public String toString(){

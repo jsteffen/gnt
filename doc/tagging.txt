@@ -1,0 +1,35 @@
+I have first trained model files:
+
+all relevant files are stored in /Users/gune00/data/wordVectorTests
+
+For tagging, I need:
+- Get all feature maps:
+	init alphabet alphabet
+
+- do initialize data labelSetMapping
+	/Users/gune00/data/wordVectorTests/labelSet.txt
+
+- load model
+	model = Model.load(/Users/gune00/data/wordVectorTests/testModelXYZ.txt);
+	-> test with the two example model files
+	
+- tagger is called like this
+
+	Feature[] instance = { new FeatureNode(1, 4), new FeatureNode(2, 2) };
+	double prediction = Linear.predict(model, instance);
+
+- prediction: I guess the predicted label index
+
+- instance:
+	problem instance for each word
+	
+- for a sentence (sequence of tokens)
+	data.generateSentenceObjectFromConllLabeledSentence(tokens);
+	adapting createWindowFramesFromSentence(): loop over tokens i:
+		Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
+		nextWindow.fillWindow(train, adjust);
+		ProblemInstance problemInstance = new ProblemInstance();
+		problemInstance.createProblemInstanceFromWindow(nextWindow);
+		double prediction = Linear.predict(model, problemInstance.getFeatureVector());
+		this.getData().getSentence().getLabelArray()[i] = prediction;
+

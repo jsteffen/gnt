@@ -46,8 +46,8 @@ public class WordVectorSimilarity {
 	public static void testSimilarity(String word1, String word2){
 		WordDistributedFeature vec1 = WordVectorSimilarity.getWordVector(word1);
 		WordDistributedFeature vec2 = WordVectorSimilarity.getWordVector(word2);
-		double[] vectorA = vec1.concatenateleftAndRightVector();
-		double[] vectorB = vec2.concatenateleftAndRightVector();
+		double[] vectorA = vec1.concatenateLeftAndRightVector();
+		double[] vectorB = vec2.concatenateLeftAndRightVector();
 		
 		double simValue = WordVectorSimilarity.cosineSimilarity(vectorA, vectorB);
 		

@@ -47,7 +47,8 @@ public class WordDistributedFeature {
 
 	private void computeWeights(double[] context){
 		for (int i=0; i < context.length;i++){
-			if (context[i] != 0.0) context[i]= 1 + Math.log(context[i]);
+			// for rounding Math.floor((1 + Math.log(context[i]))*1000)/1000;
+			if (context[i] != 0.0) context[i]= (1 + Math.log(context[i]));
 		}
 	}
 
@@ -74,7 +75,7 @@ public class WordDistributedFeature {
 	
 	// This is a self-made function that concatenates the left and right vector to a single one
 	// TODO Could also be done offline, finally, and then left and right could be deleted
-	public double[] concatenateleftAndRightVector(){
+	public double[] concatenateLeftAndRightVector(){
 		double[] lrVector = new double[this.getLeftContext().length+this.getRightContext().length];
 		for (int i=0; i < this.getLeftContext().length;i++){
 			lrVector[i]=this.getLeftContext()[i];

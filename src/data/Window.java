@@ -26,7 +26,31 @@ public class Window {
 	private int size = 0;
 	private List<WordFeatures> elements = new ArrayList<WordFeatures>();
 	private boolean trainingPhase = true;
-
+	private int windowLength = 0;
+	private int labelIndex = -1;
+	
+	// Setters and getters
+	
+	public List<WordFeatures> getElements() {
+		return elements;
+	}
+	public void setElements(List<WordFeatures> elements) {
+		this.elements = elements;
+	}
+	public int getWindowLength() {
+		return windowLength;
+	}
+	public void setWindowLength(int windowLength) {
+		this.windowLength = windowLength;
+	}
+	public int getLabelIndex() {
+		return labelIndex;
+	}
+	public void setLabelIndex(int labelIndex) {
+		this.labelIndex = labelIndex;
+	}
+	
+	// Instance
 	public Window(Sentence sentence, int i, int windowSize, Data data,
 			Alphabet alphabet) {
 		Window.windowCnt++;
@@ -35,6 +59,11 @@ public class Window {
 		this.data = data;
 		this.sentence = sentence;
 		this.center = i;
+	}
+	
+	public void clean() {
+		elements = new ArrayList<WordFeatures>();
+		windowLength = 0;
 	}
 
 	/*
@@ -46,42 +75,6 @@ public class Window {
 	 * - rp -> number of right pads -> rp = l-rc
 	 * This will give me a total of 2 * windowSize + 1 elements for the window
 	 */
-
-	/**
-	 * Only for printing the borders of the window elements
-	 * @param max
-	 * @param lp
-	 * @param lc
-	 * @param rc
-	 * @param rp
-	 */
-	public void printWindowIntervalInfo(int max, int lp, int lc, int rc, int rp){
-		// print intervals
-		System.out.println("max: " + max + " center: " + this.center);
-		System.out.println("lp: " + lp + " lc: " + lc);
-		System.out.println("rc: " + rc + " rp: " + rp);
-
-		// print content of intervals
-
-		String testString = "";
-		// left sentence pads
-		for (int i = 0 ; i < lp; i++) 
-			testString += "<BOUNDARY> ";
-		// lef context elements
-		for (int i = (this.center-lc) ; i < this.center; i++)
-			testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i])+" ";
-		// center elelemt
-		testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center])+" ";
-		// right content elements
-		for (int i = this.center+1 ; i < (this.center+1+rc); i++)
-			testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i])+" ";
-		// right sentence pads
-		for (int i = (this.center + rc) ; i < (this.center + rc + rp); i++) 
-			testString += "<BOUNDARY> ";
-		testString +="\n";
-
-		System.out.println(testString);
-	}
 
 	/**
 	 * The general structure of a window is:
@@ -124,15 +117,17 @@ public class Window {
 			wordString = "<BOUNDARY>";
 			// wordLoc does not matter here, because empty WordFeatures class is created
 			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
+			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
 		// Add left context elements
 		for (int i = (this.center-lc) ; i < this.center; i++){
-			// check position of word in sentence; if it is either at start or not; influneces computation of shape feature
+			// check position of word in sentence; if it is either at start or not; influences computation of shape feature
 			wordLoc = (i==0)?0:1;
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
 			WordFeatures wordFeatures = createWordFeatures(wordString, wordLoc, elementCnt, adjust);
+			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
@@ -140,6 +135,7 @@ public class Window {
 		{	wordLoc = (this.center==0)?0:1;
 		wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center]);
 		WordFeatures wordFeatures = createWordFeatures(wordString, wordLoc, elementCnt, adjust);
+		windowLength+= wordFeatures.getLength();
 		elements.add(wordFeatures);
 		elementCnt++;
 		}
@@ -148,6 +144,7 @@ public class Window {
 		for (int i = this.center+1 ; i < (this.center+1+rc); i++){
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
 			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
+			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
@@ -157,6 +154,7 @@ public class Window {
 			wordString = "<BOUNDARY>";
 			// wordLoc does not matter here, because empty WordFeatures class is created
 			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
+			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
@@ -178,6 +176,44 @@ public class Window {
 		return wordFeatures;
 	}
 	
+	// Print functions
+	
+	/**
+	 * Only for printing the borders of the window elements
+	 * @param max
+	 * @param lp
+	 * @param lc
+	 * @param rc
+	 * @param rp
+	 */
+	public void printWindowIntervalInfo(int max, int lp, int lc, int rc, int rp){
+		// print intervals
+		System.out.println("max: " + max + " center: " + this.center);
+		System.out.println("lp: " + lp + " lc: " + lc);
+		System.out.println("rc: " + rc + " rp: " + rp);
+
+		// print content of intervals
+
+		String testString = "";
+		// left sentence pads
+		for (int i = 0 ; i < lp; i++) 
+			testString += "<BOUNDARY> ";
+		// lef context elements
+		for (int i = (this.center-lc) ; i < this.center; i++)
+			testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i])+" ";
+		// center elelemt
+		testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center])+" ";
+		// right content elements
+		for (int i = this.center+1 ; i < (this.center+1+rc); i++)
+			testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i])+" ";
+		// right sentence pads
+		for (int i = (this.center + rc) ; i < (this.center + rc + rp); i++) 
+			testString += "<BOUNDARY> ";
+		testString +="\n";
+
+		System.out.println(testString);
+	}
+	
 	public void ppWindowElement(){
 		for (WordFeatures element : elements){
 			element.ppIthppWordFeaturesWindowElements(alphabet);
@@ -185,12 +221,14 @@ public class Window {
 	}
 
 	public String toString(){
-		String output = "Window elements:\n";
+		String output = "Window index:" + Window.windowCnt + " Window label index: " + this.getLabelIndex() + "\n";
+		output += "Window total length:" + this.getWindowLength() + "\n";
 		for (WordFeatures wordFeatures : this.elements){
 			output+=wordFeatures.toString();
 		}
 		return output;
 	}
+	
 
 
 

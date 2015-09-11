@@ -41,6 +41,8 @@ public class WordSuffixFeatureFactory {
 	// stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
 	private Map<String, Integer> suffix2num = new HashMap<String, Integer>();
 	// stores rank -> indicator word -> is needed for indexing the context vectors using index rank-1 
+	
+	// TODO later only used for ppPrint
 	private Map<Integer, String> num2suffix = new TreeMap<Integer, String>();
 
 	private int wordCnt = 0;
@@ -59,6 +61,10 @@ public class WordSuffixFeatureFactory {
 		this.num2suffix = num2suffix;
 	}
 
+	public void clean(){
+		num2suffix = new TreeMap<Integer, String>();
+	}
+	
 	public void createSuffixListFromFile(String fileName, int max){
 		BufferedReader reader;
 		int lineCnt = 0;
@@ -120,11 +126,11 @@ public class WordSuffixFeatureFactory {
 	}
 
 	private void updateSuffixTable(String suffix, int i) {
-		if (!suffix2num.containsKey(suffix)){
+		if (!this.getSuffix2num().containsKey(suffix)){
 			if (i==0) wordCnt++;
 
 			this.suffixCnt++;
-			suffix2num.put(suffix, suffixCnt);
+			this.getSuffix2num().put(suffix, suffixCnt);
 			num2suffix.put(suffixCnt, suffix);
 		}
 	}
@@ -155,8 +161,8 @@ public class WordSuffixFeatureFactory {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
 			String line;
 			while ((line = reader.readLine()) != null) {
-				suffix2num.put(line, cnt);
-				num2suffix.put(cnt,line);
+				this.getSuffix2num().put(line, cnt);
+				this.getNum2suffix().put(cnt,line);
 				cnt++;
 			}
 			reader.close();
@@ -176,8 +182,8 @@ public class WordSuffixFeatureFactory {
 		int suffixIndex = -1;
 		for (int i = 0; i < word.length(); i++){
 			String suffix = word.substring(i);
-			if (suffix2num.containsKey(suffix)) {
-				suffixIndex = suffix2num.get(suffix);
+			if (this.getSuffix2num().containsKey(suffix)) {
+				suffixIndex = this.getSuffix2num().get(suffix);
 				break;
 			}
 		}
@@ -194,8 +200,8 @@ public class WordSuffixFeatureFactory {
 		if (!isNumber(word))
 			for (int i = 0; i < word.length(); i++){
 				String suffix = word.substring(i);
-				if (suffix2num.containsKey(suffix)) {
-					indices.add(suffix2num.get(suffix));
+				if (this.getSuffix2num().containsKey(suffix)) {
+					indices.add(this.getSuffix2num().get(suffix));
 				}
 			}
 		indices.sort(null);
@@ -214,7 +220,7 @@ public class WordSuffixFeatureFactory {
 	 */
 	public boolean hasKnownSuffix(String word, String suffix){
 		return (
-				suffix2num.containsKey(suffix) &&
+				this.getSuffix2num().containsKey(suffix) &&
 				suffix.equals(word.substring((word.length()-suffix.length())))
 				);
 	}

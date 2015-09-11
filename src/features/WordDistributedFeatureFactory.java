@@ -43,12 +43,14 @@ public class WordDistributedFeatureFactory {
 	// stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
 	private Map<String, Integer> iw2num = new HashMap<String, Integer>();
 
+	// TODO actually not needed, only in ppPrint methods
 	// stores rank -> indicator word -> is needed for indexing the context vectors using index rank-1 
 	private Map<Integer, String> num2iw = new HashMap<Integer, String>();
 
 	// stores word -> num -> is needed for computing an index for each word type needed for accessing distributed word vector
 	private Map<String, Integer> word2num = new HashMap<String, Integer>();
 
+	// TODO after word features are created or loaded, not more used
 	// stores num -> word -> is needed for creating the vocabulary file so that position in file corresponds to index and position 
 	// of left/right vector files
 	private Map<Integer, String> num2word = new HashMap<Integer, String>();
@@ -105,6 +107,12 @@ public class WordDistributedFeatureFactory {
 	}
 
 	// Methods
+	
+	public void clean(){
+		 num2iw = new HashMap<Integer, String>();
+		 num2word = new HashMap<Integer, String>();
+		 
+	}
 
 	// read ranked list of indicators words from file and construct bijective mapping of word - rank
 	private void initIndicatorMap(String fileName, int dim) throws IOException {
@@ -117,8 +125,8 @@ public class WordDistributedFeatureFactory {
 			if (lineCnt != 0){
 
 				String[] entry = line.split("\t");
-				iw2num.put(entry[0], lineCnt);
-				num2iw.put(lineCnt,entry[0]);
+				this.getIw2num().put(entry[0], lineCnt);
+				this.getNum2iw().put(lineCnt,entry[0]);
 				// stop if dim-many lines have been read
 				// this means the iw2num.size() == dim
 				if (lineCnt == dim) break;
@@ -184,9 +192,11 @@ public class WordDistributedFeatureFactory {
 	private int determineWordIndex(String word) {
 		// lookup word -> if true -> get index, if false -> add word with wordCnt value
 		int index = 0;
-		if (word2num.containsKey(word)) index = word2num.get(word);
+		if (this.getWord2num().containsKey(word)) index = this.getWord2num().get(word);
 		else
-		{word2num.put(word, ++wordCnt); index = wordCnt; num2word.put(wordCnt, word);
+		{this.getWord2num().put(word, ++wordCnt); 
+		index = wordCnt; 
+		this.getNum2word().put(wordCnt, word);
 		}
 		//System.out.println("Word: " + word + " WordIdx: " + index);
 		return index;
@@ -196,11 +206,11 @@ public class WordDistributedFeatureFactory {
 	private int determineIwIndex(String word) {
 		// lookup word in iw2num -> if true -> value, if false iw2num.length+1
 		int index = 0;
-		if (iw2num.containsKey(word)) 
-			index = iw2num.get(word);
+		if (this.getIw2num().containsKey(word)) 
+			index = this.getIw2num().get(word);
 		else
 			//means also that dummy elements <s> and </s> count as unknown indicator words
-			index = iw2num.size()+1;
+			index = this.getIw2num().size()+1;
 		//if (word.equals("<s>") || word.equals("</s>")) System.out.println("IW: " + word + " IwIdx: " + index);
 		return index;
 	}
@@ -217,22 +227,22 @@ public class WordDistributedFeatureFactory {
 		//				+ " Word: " + wordIndex+":"+num2word.get(wordIndex)
 		//				+ " Right: " + rightWordIndex+":"+num2iw.get(rightWordIndex+1)
 		//				);
-		if (distributedWordsTable.containsKey(wordIndex)){
-			distributedWordsTable.get(wordIndex).updateWordVector(leftWordIndex, rightWordIndex);
+		if (this.getDistributedWordsTable().containsKey(wordIndex)){
+			this.getDistributedWordsTable().get(wordIndex).updateWordVector(leftWordIndex, rightWordIndex);
 			//System.out.println("Old:\n" + distributedWordsTable.get(wordIndex).toStringEncoded(num2iw));
 		}
 		else{
 			WordDistributedFeature newWordVector = new WordDistributedFeature(
-					iw2num.size(),leftWordIndex, rightWordIndex);
-			distributedWordsTable.put(wordIndex,newWordVector);
+					this.getIw2num().size(),leftWordIndex, rightWordIndex);
+			this.getDistributedWordsTable().put(wordIndex,newWordVector);
 			//System.out.println("New:\n" + distributedWordsTable.get(wordIndex).toStringEncoded(num2iw));
 		}
 	}
 
 	//after all distributed word vectors have been computed, compute weights for the nonzero frequencies according to tf(x) = 1 + log(x)
 	private void computeDistributedWordWeights(){
-		for(int key: distributedWordsTable.keySet()){
-			distributedWordsTable.get(key).computeContextWeights();
+		for(int key: this.getDistributedWordsTable().keySet()){
+			this.getDistributedWordsTable().get(key).computeContextWeights();
 		}
 	}
 
@@ -241,9 +251,9 @@ public class WordDistributedFeatureFactory {
 
 	public WordDistributedFeature handleUnknownWordWithoutContext(String word){
 		word2Bigram("<s>", word,"</s>");
-		int wordIndex = this.word2num.get(word);
-		distributedWordsTable.get(wordIndex).computeContextWeights();
-		return distributedWordsTable.get(wordIndex);
+		int wordIndex = this.getWord2num().get(word);
+		this.getDistributedWordsTable().get(wordIndex).computeContextWeights();
+		return this.getDistributedWordsTable().get(wordIndex);
 	}
 
 	/**
@@ -299,7 +309,7 @@ public class WordDistributedFeatureFactory {
 	// Note, sort num2word according to natural order, and write value of entry key.
 	private void writeIndicatorWordFile(String targetFileName){
 		BufferedWriter writer;
-		Map<Integer, String> sortedMap = new TreeMap<Integer, String>(num2iw);
+		Map<Integer, String> sortedMap = new TreeMap<Integer, String>(this.getNum2iw());
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
 			//Counts start from 1
@@ -316,7 +326,7 @@ public class WordDistributedFeatureFactory {
 	// Firstly, sort num2word according to natural order, and write value of entry key.
 	private void writeVocabularyFile(String targetFileName){
 		BufferedWriter writer;
-		Map<Integer, String> sortedMap = new TreeMap<Integer, String>(num2word);
+		Map<Integer, String> sortedMap = new TreeMap<Integer, String>(this.getNum2word());
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
 			for(int key: sortedMap.keySet()){
@@ -340,7 +350,7 @@ public class WordDistributedFeatureFactory {
 
 	private void writeContextFile(String filename){
 		BufferedWriter contextReader;
-		Map<Integer, WordDistributedFeature> sortedMap = new TreeMap<Integer, WordDistributedFeature>(distributedWordsTable);
+		Map<Integer, WordDistributedFeature> sortedMap = new TreeMap<Integer, WordDistributedFeature>(this.getDistributedWordsTable());
 		try {
 			contextReader = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
 			for(int key: sortedMap.keySet()){
@@ -394,11 +404,11 @@ public class WordDistributedFeatureFactory {
 	// The result is basically a fully instantiated DistributedWordVectorFactory class.
 
 	private void readIndicatorWordFile(String string) {
-		readWordFile(string, iw2num, num2iw);
+		readWordFile(string, this.getIw2num(), this.getNum2iw());
 	}
 
 	private void readVocabularyFile(String string) {
-		readWordFile(string, word2num, num2word);	
+		readWordFile(string, this.getWord2num(), this.getNum2word());	
 	}
 
 	// Read in a file where each line corresponds to a word. Create bijective index
@@ -433,14 +443,14 @@ public class WordDistributedFeatureFactory {
 
 			String line;
 			while ((line = reader.readLine()) != null) {
-				WordDistributedFeature dwv = new WordDistributedFeature(num2iw.size());
+				WordDistributedFeature dwv = new WordDistributedFeature(this.getIw2num().size());
 				String[] leftAndRightVector = line.split("###");
 				String[] leftWeightVector = leftAndRightVector[0].split("\t");
 				String[] rightWeightVector = leftAndRightVector[1].split("\t");
 				dwv.initializeContext(leftWeightVector, "left");
 				dwv.initializeContext(rightWeightVector, "right");
 
-				distributedWordsTable.put(cnt, dwv);
+				this.getDistributedWordsTable().put(cnt, dwv);
 
 				if ((cnt % mod) == 0) System.out.println(cnt);
 				cnt++;
@@ -507,7 +517,7 @@ public class WordDistributedFeatureFactory {
 	public static void main(String[] args) throws IOException {
 		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
 
-		dwvFactory.createAndWriteDistributedWordFeaturesSparse(500);
+		dwvFactory.createAndWriteDistributedWordFeaturesSparse(250);
 
 		dwvFactory.readDistributedWordFeaturesSparse();
 	}

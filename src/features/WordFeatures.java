@@ -28,6 +28,7 @@ public class WordFeatures {
 	private int shapeOffset = 0;
 	private int suffixOffset = 0;
 	private boolean adjust = false;
+	private int length = 0;
 
 
 	private List<Pair<Integer,Double>> left = new ArrayList<Pair<Integer,Double>>();
@@ -72,6 +73,12 @@ public class WordFeatures {
 	public void setAdjust(boolean adjust) {
 		this.adjust = adjust;
 	}
+	public int getLength() {
+		return length;
+	}
+	public void setLength(int length) {
+		this.length = length;
+	}
 	// Instantiation
 	public WordFeatures(String word) {
 		this.word = word;
@@ -81,7 +88,7 @@ public class WordFeatures {
 
 	public void setOffSets() {
 		elementOffset = index * OffSets.tokenVectorSize;
-		leftOffset = elementOffset;
+		leftOffset = elementOffset + 1; // Plus one here is needed to make sure that indices in Liblinear start from 1 and not 0
 		rightOffset = leftOffset + 1 + OffSets.wvLeftSize-1;
 		shapeOffset = rightOffset + 1 + OffSets.wvRightSize-1;
 		suffixOffset = shapeOffset + 1 + OffSets.shapeSize-1;
@@ -94,7 +101,6 @@ public class WordFeatures {
 		fillRightDistributedWordFeatures(word, alphabet, train, true);
 		fillShapeFeatures(word, index, alphabet, true);
 		fillSuffixFeatures(word, alphabet, true);
-
 	}
 
 	// boolean flag offline means: assume that features have been pre-loaded into to memory
@@ -111,6 +117,7 @@ public class WordFeatures {
 				left.add(node);
 			}
 		}
+		length += left.size();
 	}
 
 	private void fillRightDistributedWordFeatures(String word,
@@ -125,6 +132,7 @@ public class WordFeatures {
 				right.add(node);
 			}
 		}
+		length += right.size();
 	}
 
 	/** 
@@ -149,7 +157,7 @@ public class WordFeatures {
 			System.err.println("Word: " + word + " at loc: " + index + " has unknown signature !");
 			shape = null;
 		}
-
+		length += shape.size();
 	}
 
 	// boolean flag offline means: assume that suffixes have been preprocessed and pre-loaded into to memory
@@ -167,12 +175,13 @@ public class WordFeatures {
 			Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
 			suffix.add(node);
 		}
+		length += suffix.size();
 	}
 
 	// This is a way to show the words/labels that correspond to a window
 	public void ppIthppWordFeaturesWindowElements(Alphabet alphabet){
-		System.out.println("Element: " + index + " Word: " + word);
-		System.out.println("Left:");
+		System.out.println(" Word: " + word + "; Element: " + index + "; Length: " + length);
+		System.out.println("\nLeft:");
 		for (Pair<Integer,Double> pair : this.getLeft()){
 			int index = (this.isAdjust())?(pair.getL()-this.leftOffset):(pair.getL());
 			double value = pair.getR();
@@ -206,11 +215,12 @@ public class WordFeatures {
 	}
 
 	// String representations
-	
+
 	public String toOffSetsString(){
 		String output = "\nElement-"+this.getIndex()+"\n";
 		output += "OffSets:\n";
 		output += "Element: " + this.elementOffset +"\n";
+		output += "Length: " + this.length +"\n";
 		output += "Left: " + this.leftOffset +"\n";
 		output += "Right: " + this.rightOffset +"\n";
 		output += "Shape: " + this.shapeOffset +"\n";
@@ -237,7 +247,6 @@ public class WordFeatures {
 		for (Pair<Integer,Boolean> pair : this.suffix){
 			output+=pair.toString();
 		}
-
 		return output;
 	}
 }

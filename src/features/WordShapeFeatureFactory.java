@@ -30,9 +30,13 @@ public class WordShapeFeatureFactory {
 	// A mapping from word to Shape vector; used as a cache to avoid redundant computation
 	// NOTE: need to distinguish whether word is at sentence initial position or not
 	// I do this by adding 0 or 1 as key value (but NOT when creating the shape, because otherwise I get wrong results)
+	
+	//TODO only used in ppPrint
 	private Map<String,WordShapeFeature> word2signature = new HashMap<String,WordShapeFeature>();
 	// A mapping from the string of a ShapeVector (signature) to its ShapeVector; also used as cache
 	private Map<String,Integer> signature2index = new HashMap<String,Integer>();
+	
+	//TODO only used in ppPrint
 	private Map<Integer,String> index2signature = new TreeMap<Integer,String>();
 
 
@@ -74,6 +78,11 @@ public class WordShapeFeatureFactory {
 	}
 
 	// Methods
+	
+	public void clean(){
+		word2signature = new HashMap<String,WordShapeFeature>();
+		index2signature = new TreeMap<Integer,String>();
+	}
 
 	public void createShapeVectorsFromFile(String fileName, int max){
 		BufferedReader reader;

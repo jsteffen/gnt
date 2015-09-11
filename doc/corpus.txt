@@ -16,3 +16,11 @@ Corpus used by FLORS:
 		-> it is said that unlabeled data has 100T sentences each which is not true
 	/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb (conll format and tokenized/sentence/line) 
 		-> only read first 100.000
+		
+also here:
+
+/home/neumann/excitement/data/flors
+
+Feature maps and models on DFKI computers:
+
+/home/neumann/excitement/data/wordVectorTests

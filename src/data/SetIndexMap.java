@@ -1,5 +1,12 @@
 package data;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -42,7 +49,38 @@ public class SetIndexMap {
 		}	
 		return index;
 	}
+
+	public void writeSetIndexMap(String targetFileName){
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
+			for(int key: this.getNum2label().keySet()){
+				writer.write(this.getNum2label().get(key)+"\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	public void readSetIndexMap(String string) {
+		BufferedReader reader;
+		int cnt = 1;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				this.getLabel2num().put(line, cnt);
+				this.getNum2label().put(cnt,line);
+				cnt++;
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public String toString (){
 		String output = "";
 		for (int index : getNum2label().keySet()){
