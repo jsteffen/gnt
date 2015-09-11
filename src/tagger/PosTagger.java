@@ -51,12 +51,14 @@ public class PosTagger {
 	// Methods
 
 	public void initPosTagger(String modelFile, int windowSize) throws IOException{
-		System.out.println("Set window size: " + windowSize);
-		this.setWindowSize(windowSize);
-		System.out.println("Load feature files:");
 		time1 = System.currentTimeMillis();
 		
+		System.out.println("Set window size: " + windowSize);
+		this.setWindowSize(windowSize);
+		
+		System.out.println("Load feature files:");
 		this.getAlphabet().loadFeaturesFromFiles();
+		
 		System.out.println("Load label set:");
 		this.getData().readLabelSet();
 
@@ -70,9 +72,11 @@ public class PosTagger {
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1)+"\n");
 		
-		System.out.println("Load model file: " + modelFile);
 		time1 = System.currentTimeMillis();
+		
+		System.out.println("Load model file: " + modelFile);
 		Model.load(new File(modelFile));
+		
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 	}

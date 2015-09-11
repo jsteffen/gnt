@@ -12,7 +12,8 @@ For tagging, I need:
 - load model
 	model = Model.load(/Users/gune00/data/wordVectorTests/testModelXYZ.txt);
 	-> test with the two example model files
-	
+
+HIERIX
 - tagger is called like this
 
 	Feature[] instance = { new FeatureNode(1, 4), new FeatureNode(2, 2) };
