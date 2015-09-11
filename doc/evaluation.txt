@@ -1,0 +1,5 @@
+check tests according to accuracy etc.
+
+eventually liblinear comes with own software
+
+else use existing conll based packages

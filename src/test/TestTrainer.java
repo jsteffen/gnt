@@ -12,8 +12,8 @@ import trainer.TrainerInMem;
 public class TestTrainer {
 
 	private TrainerInMem trainer;
-	long time1 ;
-	long time2;
+	private long time1 ;
+	private long time2;
 
 	public TrainerInMem getTrainer() {
 		return trainer;

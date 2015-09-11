@@ -101,6 +101,7 @@ NOTES: possible alternative -> no need to save training instances in file
 
 -> NEXT
 	- store all file in compressed folder automatically
+	- run larger experiments, when tagging done
 
 Training:
 - defined training and run it using FLORS learner setting 
