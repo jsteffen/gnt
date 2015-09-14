@@ -315,7 +315,7 @@ public class TrainerInMem {
 		
 		System.out.println("Save  model file: " + "/Users/gune00/data/wordVectorTests/testModel.txt");
 		time1 = System.currentTimeMillis();
-		model.save(new File("/Users/gune00/data/wordVectorTests/testModel_MCSVM_CS.txt"));
+		model.save(new File("/Users/gune00/data/wordVectorTests/testModel_"+this.getParameter().getSolverType()+".txt"));
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 		

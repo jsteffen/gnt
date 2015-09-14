@@ -23,7 +23,8 @@ For tagging, I need:
 - instance:
 	problem instance for each word
 	
-- for a sentence (sequence of tokens)
+- algorithm: for a sentence (sequence of tokens)
+
 	data.generateSentenceObjectFromUnlabeledTokens(tokens);
 	
 	adapting createWindowFramesFromSentence(): loop over tokens i:
@@ -41,4 +42,9 @@ For tagging, I need:
 -> Performance:
 	- 65 msec for 278 token list.
 	- performance for both used models is similar, only time for loading model is different
+
+-> HIERIX: 14th Sept. 2015
+
+Problems:
+- testing with development files -> Word: E-mail at loc: 0 has unknown signature !
 

@@ -1,7 +1,11 @@
 package tagger;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import trainer.ProblemInstance;
@@ -54,7 +58,7 @@ public class PosTagger {
 	public void setModel(Model model) {
 		this.model = model;
 	}
-	
+
 	// Init
 	public PosTagger(){
 	}
@@ -63,13 +67,13 @@ public class PosTagger {
 
 	public void initPosTagger(String modelFile, int windowSize) throws IOException{
 		time1 = System.currentTimeMillis();
-		
+
 		System.out.println("Set window size: " + windowSize);
 		this.setWindowSize(windowSize);
-		
+
 		System.out.println("Load feature files:");
 		this.getAlphabet().loadFeaturesFromFiles();
-		
+
 		System.out.println("Load label set:");
 		this.getData().readLabelSet();
 
@@ -79,19 +83,19 @@ public class PosTagger {
 		System.out.println("Initialize offsets:");
 		this.getOffSets().initializeOffsets(this.getAlphabet(), this.getWindowSize());
 		System.out.println("\t"+this.getOffSets().toString());
-		
+
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1)+"\n");
-		
+
 		time1 = System.currentTimeMillis();
-		
+
 		System.out.println("Load model file: " + modelFile);
 		this.setModel(Model.load(new File(modelFile)));
-		
+
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 	}
-	
+
 	/**
 	 * The same as trainer.TrainerInMem.createWindowFramesFromSentence()!
 	 * @throws IOException
@@ -116,55 +120,68 @@ public class PosTagger {
 			}
 		}
 	}
-	
+
 	/**
 	 * Iterate through all window frames:
 	 * - create the feature vector: train=false means: handle unknown words; adjust=true: means adjust feature indices
 	 * - create a problem instance -> mainly the feature vector
 	 * - and call the learner with model and feature vector
 	 * - save the predicted label in the corresponding field of the word in the sentence.
+	 * 
+	 * Mainly the same as trainer.TrainerInMem.constructProblem(train, adjust), but uses predictor
 	 */
-	private void constructProblemAndTag() {
+	private void constructProblemAndTag(boolean train, boolean adjust) {
 		int problemCnt = 0;
 		int prediction = 0;
-		
+
 		for (int i = 0; i < data.getInstances().size();i++){
 			// For each window frame of a sentence
 			Window nextWindow = data.getInstances().get(i);
 			// Fill the frame with all availablel features. First boolean sets 
 			// training mode to false which means that unknown words are handled.
-			nextWindow.fillWindow(false, true);
+			nextWindow.fillWindow(train, adjust);
 			// Create the feature vector
 			ProblemInstance problemInstance = new ProblemInstance();
 			problemInstance.createProblemInstanceFromWindow(nextWindow);
 			problemCnt++;
-			
+
 			// Call the learner to predict the label
 			prediction = (int) Linear.predict(this.getModel(), problemInstance.getFeatureVector());
-			
+//			System.out.println("Word: " + this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i]) +
+//			"\tPrediction: " + this.getData().getLabelSet().getNum2label().get(prediction));
+
 			//Here, I am assuming that sentence length equals # of windows
 			// So store predicted label i to word i
 			this.getData().getSentence().getLabelArray()[i]=prediction;
 			nextWindow.clean();
 		}	
 	}
-	
+
+	/**
+	 * A method for tagging a singel sentence given as list of tokens.
+	 * @param tokens
+	 * @throws IOException
+	 */
 	public void tagTokens(String[] tokens) throws IOException{
 		this.time1 = System.currentTimeMillis();
-		
+
 		// create internal sentence object
 		this.getData().generateSentenceObjectFromUnlabeledTokens(tokens);
-		
+
 		// create window frames from sentence and store in list
 		this.createWindowFramesFromSentence();
-		
+
 		// create feature vector instance for each window frame and tag
-		this.constructProblemAndTag();
-		
+		this.constructProblemAndTag(false, true);
+
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1)+"\n");
 	}
-	
+
+	/**
+	 * A simple print out of a sentence in form of list of word/tag
+	 * @return
+	 */
 	public String taggedSentenceToString(){
 		String output ="";
 		int mod = 10;
@@ -176,18 +193,82 @@ public class PosTagger {
 			if ((cnt % mod)==0) output+="\n";
 		}
 		return output;
+
+	}
+	
+	/**
+	 * For each internalized conll sentence:
+	 * - compute window frames
+	 * - fill windows using train=false mode
+	 * - construct problem and call predictor
+	 * - reset instance variable of data object, because predictor is called directly on windows of sentences
+	 * @param conllReader
+	 * @param max
+	 * @throws IOException
+	 */
+	private void tagSentencesFromConllReader(BufferedReader conllReader, int max) throws IOException{
+		String line = "";
+		List<String[]> tokens = new ArrayList<String[]>();
+
+		while ((line = conllReader.readLine()) != null) {
+			if (line.isEmpty()) {
+				// Stop if max sentences have been processed
+				if  ((max > 0) && (data.getSentenceCnt() >= max)) break;
+				
+				// create internal sentence object and label maps
+				// I use this here although labels will be late overwritten - but can u8se it in eval modus as well
+				data.generateSentenceObjectFromConllLabeledSentence(tokens);
+
+				// create window frames and store in list
+				createWindowFramesFromSentence();
+				
+				System.out.println("In:  " + this.taggedSentenceToString());
+				
+				// create feature vector instance for each window frame and tag
+				this.constructProblemAndTag(false, true);
+				
+				System.out.println("Out: " + this.taggedSentenceToString() + "\n");
+				
+				// reset instances - need to do this here, because learner is called directly on windows
+				this.getData().setInstances(new ArrayList<Window>());
+
+				// reset tokens
+				tokens = new ArrayList<String[]>();
+			}
+			else {
+				String[] tokenizedLine = line.split("\t");
+				tokens.add(tokenizedLine);
+			}
+		}
+		conllReader.close();
+	}
+	
+	public void tagFromConllDevelFile(String sourceFileName, int max)
+			throws IOException {
+		long time1;
+		long time2;
+
+		BufferedReader conllReader = new BufferedReader(
+				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
+		boolean train = false;
+		boolean adjust = true;
+
+		System.out.println("Do testing from file: " + sourceFileName);
+		System.out.println("Train?: " + train + " Adjust?: " + adjust);
+
+		time1 = System.currentTimeMillis();
+		this.tagSentencesFromConllReader(conllReader, max);
+		time2 = System.currentTimeMillis();
+		System.out.println("System time (msec): " + (time2-time1));
 		
+		System.out.println("Offsets: " + this.getOffSets().toString());
+		System.out.println("Sentences: " + this.getData().getSentenceCnt());
+		System.out.println("Testing instances: " + Window.windowCnt);
+		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
+
 	}
 
-	public static void main(String[] args) throws IOException{
-		int windowSize = 2;
-		String modelFile1 = "/Users/gune00/data/wordVectorTests/testModel_L2R_LR.txt";
-		String modelFile2 = "/Users/gune00/data/wordVectorTests/testModel_MCSVM_CS.txt";
-
-		PosTagger posTagger = new PosTagger();
-
-		posTagger.initPosTagger(modelFile2, windowSize);
-		
+	public void tagSentenceTest(){
 		String sentence ="This is the first call of the GNT-tagger . ";
 		sentence = "Do not underestimate the effects of the Internet economy on load growth . "
 				+ "I have been preaching the tremendous growth described below for the last year . "
@@ -206,12 +287,32 @@ public class PosTagger {
 				+ "Exodus is now wrapping up construction on a new 13 - acre , 576,000 - square - foot data center less than a mile from its original facility . "
 				+ "Sitting at the confluence of several fiber optic backbones , the Exodus plant will consume "
 				+ "enough power for a small town and eventually house Internet servers for firms such as Avenue A , Microsoft and Onvia.com . ";
-		
 		String[] tokens = sentence.split(" ");
-		posTagger.tagTokens(tokens);
 		
+		try {
+			this.tagTokens(tokens);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		System.out.println("#Tokens: " + tokens.length);
-		System.out.println(posTagger.taggedSentenceToString());
+		System.out.println(this.taggedSentenceToString());
+	}
+
+	public static void main(String[] args) throws IOException{
+		int windowSize = 2;
+		String modelFile1 = "/Users/gune00/data/wordVectorTests/testModel_L2R_LR.txt";
+		String modelFile2 = "/Users/gune00/data/wordVectorTests/testModel_MCSVM_CS.txt";
+
+		PosTagger posTagger = new PosTagger();
+
+		posTagger.initPosTagger(modelFile2, windowSize);
+		
+		// posTagger.tagSentenceTest();
+		
+		posTagger.tagFromConllDevelFile("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/dev/english_pbiotb_dev.conll", -1);
+		
+		
 	}
 
 }

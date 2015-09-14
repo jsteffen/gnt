@@ -34,7 +34,7 @@ public class TestTrainer {
 		dwvFactory.createAndWriteDistributedWordFeaturesSparse(dim);
 	}
 
-	private void testPerformanceTraining(int maxExamples, boolean saveVectors) throws IOException{
+	private void testPerformanceTraining(int maxExamples) throws IOException{
 		System.out.println("Load feature files:");
 		time1 = System.currentTimeMillis();
 
@@ -66,7 +66,7 @@ public class TestTrainer {
 		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 	}
 
-	private void testPerformanceTrainingWithDimension(int dim, int maxExamples, boolean saveVectors) throws IOException{
+	private void testPerformanceTrainingWithDimension(int dim, int maxExamples) throws IOException{
 		System.out.println("Create wordVectors:");
 		time1 = System.currentTimeMillis();
 
@@ -75,18 +75,15 @@ public class TestTrainer {
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 
-		this.testPerformanceTraining(maxExamples, saveVectors);
+		this.testPerformanceTraining(maxExamples);
 	}
-
-
-
-
+	
 	public static void main(String[] args) throws IOException{
 		int windowSize = 2;
 		TestTrainer testTrainer = new TestTrainer(windowSize);
 
 		
-		testTrainer.testPerformanceTraining(5000, false);
+		testTrainer.testPerformanceTraining(5000);
 
 	}
 

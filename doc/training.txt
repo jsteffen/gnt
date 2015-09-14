@@ -66,7 +66,9 @@ Current approach:
 	- save model
 	
 - finally also write out problem relevant values into file and label set mapping
-	- modelfile: has all settings fro problem
+	- parametrize trainer with model file string
+	- parameter setting for learner
+	- modelfile: has all settings for problem
 	- save label set
 	- save windowSize
 
