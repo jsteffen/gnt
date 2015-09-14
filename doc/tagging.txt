@@ -13,24 +13,32 @@ For tagging, I need:
 	model = Model.load(/Users/gune00/data/wordVectorTests/testModelXYZ.txt);
 	-> test with the two example model files
 
-HIERIX
 - tagger is called like this
 
 	Feature[] instance = { new FeatureNode(1, 4), new FeatureNode(2, 2) };
 	double prediction = Linear.predict(model, instance);
 
-- prediction: I guess the predicted label index
+- prediction: predicted label index
 
 - instance:
 	problem instance for each word
 	
 - for a sentence (sequence of tokens)
-	data.generateSentenceObjectFromConllLabeledSentence(tokens);
+	data.generateSentenceObjectFromUnlabeledTokens(tokens);
+	
 	adapting createWindowFramesFromSentence(): loop over tokens i:
 		Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
-		nextWindow.fillWindow(train, adjust);
+		nextWindow.fillWindow(train=false, adjust=true);
+			- set train to false will cause handling of unknown words
 		ProblemInstance problemInstance = new ProblemInstance();
 		problemInstance.createProblemInstanceFromWindow(nextWindow);
-		double prediction = Linear.predict(model, problemInstance.getFeatureVector());
+		int prediction = (int) Linear.predict(model, problemInstance.getFeatureVector());
 		this.getData().getSentence().getLabelArray()[i] = prediction;
+		
+-> DONE
+-> first version for processing unlabeled list of string
+
+-> Performance:
+	- 65 msec for 278 token list.
+	- performance for both used models is similar, only time for loading model is different
 

@@ -1,12 +1,34 @@
 Possible parameters for experiments:
 
 - dimension of indicator words -> size if distributed feature of words
-	- means that distributed word features have to be preprocessed with maxIndicatorWords
-
+	- means that distributed word features have to be pre-processed with maxIndicatorWords
+	- Schnabel&Schütze 2013: use all iw (the larger the better)
+	
 - dimension of suffixes
+	- n-most ranked (Schnabel&Schütze 2013 used n=100)
+	- Schnabel&Schütze 2013: use all (also means: no parameter necessary)
+	
+- different source of indicator words
+	- also together with training set filter
 
 - different suffix sets
+	- inflection
+
+- shape features
+	- Schnabel&Schütze 2013: maybe domain dependent
+
+- normalization
+	- digits to 0
+	- Schnabel&Schütze 2015: might be useful
+	- BUT: is this not yet covered by the shape features?
 
 - ablation tests on feature sets
 
 - different liblinear classifiers
+
+- training set filtering (idea: make domain more similar)
+	- filter short words: seems to be useful
+	- filter words on frequency
+	- open/closed tag classes
+	- Schnabel&Schütze 2013: future work to find domain-specific computation of word-length threshold
+		(what is a domain specific good "long word")

@@ -66,6 +66,9 @@ Current approach:
 	- save model
 	
 - finally also write out problem relevant values into file and label set mapping
+	- modelfile: has all settings fro problem
+	- save label set
+	- save windowSize
 
 
 NOTES on Alphabet:

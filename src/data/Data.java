@@ -85,6 +85,27 @@ public class Data {
 		this.sentenceCnt++;
 	}
 	
+	/**
+	 * tokens are a list of words in form of strings.
+	 * - the words are unlabeled
+	 * - No lower case here of word
+	 * - Using a dummy POS "UNK" encoded as -1
+	 * @param tokens
+	 */
+	public void generateSentenceObjectFromUnlabeledTokens(String[] tokens){
+		Sentence sentence = new Sentence(tokens.length);
+		for (int i=0; i < tokens.length; i++){
+			// tokens are strings
+			// NOTE: No lower case here of word
+			// Using a dummy POS -1
+			sentence.addNextToken(i,
+					updateWordMap(tokens[i]), -1);
+		}
+		this.setSentence(sentence);
+		this.sentenceCnt++;
+		
+	}
+	
 	public void saveLabelSet(){
 		this.getLabelSet().writeSetIndexMap("/Users/gune00/data/wordVectorTests/labelSet.txt");	
 	}
