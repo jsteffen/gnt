@@ -5,7 +5,7 @@ import java.util.List;
 
 // The class that holds all corpus files for training, testing etc.
 public class Corpus {
-	public String prefix ="/Users/gune00/gnt/data/";
+	public String prefix ="/Users/gune00/dfki/gnt/data/";
 
 	public  List<String> trainingLabeledData = new ArrayList<String>();
 	public  List<String> devLabeledData = new ArrayList<String>();

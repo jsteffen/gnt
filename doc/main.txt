@@ -23,7 +23,7 @@ Configuration file:
 - OBACHT: in the feature factories I use absolute pathnames
 
 - data prefix = /Users/gune00/data/
-	-> collect all data to /Users/gune00/gnt/data --- at unix: /projects/excitement/gnt/data
+	-> collect all data to /Users/gune00/dfki/gnt/data --- at unix: /projects/excitement/gnt/data
 
 - alphabet prefix = /Users/gune00/data/wordVectorTests
 	-> move to /Users/gune00/gnt/wordVectorTests

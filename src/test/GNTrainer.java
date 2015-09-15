@@ -87,8 +87,8 @@ public class GNTrainer {
 	}
 	
 	public static void main(String[] args) throws IOException{
-		ModelInfo modelInfo = new ModelInfo("MDP", 2);
-		modelInfo.setModelFile("/Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt");
+		ModelInfo modelInfo = new ModelInfo("FLORS", 2);
+		modelInfo.setModelFile("/Users/gune00/data/wordVectorTests/testModel100iw10k_L2R_LR.txt");
 		GNTrainer gnTrainer = new GNTrainer(modelInfo);
 		String trainingFileName = "/Users/gune00/data/MLDP/english/english-train.conll";
 		int numberOfSentences = 10000;
