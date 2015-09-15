@@ -22,15 +22,18 @@ public class Window {
 	private Data data ;
 	private Alphabet alphabet ;
 	private Sentence sentence;
+	// Index of the window center element
 	private int center;
+	// radius of the window
 	private int size = 0;
 	private List<WordFeatures> elements = new ArrayList<WordFeatures>();
 	private boolean trainingPhase = true;
+	// Total length of the window by adding all features of each window element
 	private int windowLength = 0;
 	private int labelIndex = -1;
-	
+
 	// Setters and getters
-	
+
 	public List<WordFeatures> getElements() {
 		return elements;
 	}
@@ -49,7 +52,7 @@ public class Window {
 	public void setLabelIndex(int labelIndex) {
 		this.labelIndex = labelIndex;
 	}
-	
+
 	// Instance
 	public Window(Sentence sentence, int i, int windowSize, Data data,
 			Alphabet alphabet) {
@@ -60,7 +63,7 @@ public class Window {
 		this.sentence = sentence;
 		this.center = i;
 	}
-	
+
 	public void clean() {
 		elements = new ArrayList<WordFeatures>();
 		windowLength = 0;
@@ -90,7 +93,7 @@ public class Window {
 	 */
 	public void fillWindow(boolean train, boolean adjust){
 		this.trainingPhase = train;
-		
+
 		// compute left/right borders of the size of the window elements
 		// depends on windowSize
 		int max = this.sentence.getWordArray().length-1;
@@ -98,7 +101,7 @@ public class Window {
 		int lc = (this.size-lp);
 		int rc = ((max-this.center) < this.size)?(max-this.center):this.size;
 		int rp = (this.size-rc);
-		
+
 		// the surface word string determined from the training examples
 		String wordString ="";
 		// the location of the word in the sentence: 0 means "first word in sentence", 1 means "otherwise"
@@ -160,7 +163,7 @@ public class Window {
 		}
 	}
 
-	// Index is 0 if word is first word in sentence, else 1
+	// wordPosition is 0 if word is first word in sentence, else 1
 	private WordFeatures createWordFeatures(String word, int wordPosition, int elementCnt, boolean adjust) {
 		// create a new WordFeatures element
 		WordFeatures wordFeatures = new WordFeatures(word);
@@ -175,9 +178,9 @@ public class Window {
 		wordFeatures.fillWordFeatures(word, wordPosition, alphabet, this.trainingPhase);
 		return wordFeatures;
 	}
-	
+
 	// Print functions
-	
+
 	/**
 	 * Only for printing the borders of the window elements
 	 * @param max
@@ -213,7 +216,7 @@ public class Window {
 
 		System.out.println(testString);
 	}
-	
+
 	public void ppWindowElement(){
 		for (WordFeatures element : elements){
 			element.ppIthppWordFeaturesWindowElements(alphabet);
@@ -228,7 +231,7 @@ public class Window {
 		}
 		return output;
 	}
-	
+
 
 
 

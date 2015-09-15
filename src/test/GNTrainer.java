@@ -2,14 +2,14 @@ package test;
 
 import java.io.IOException;
 
+import data.ModelInfo;
 import data.OffSets;
 import data.Window;
 import features.WordDistributedFeatureFactory;
 import trainer.ProblemInstance;
-import trainer.Trainer;
 import trainer.TrainerInMem;
 
-public class TestTrainer {
+public class GNTrainer {
 
 	private TrainerInMem trainer;
 	private long time1 ;
@@ -22,8 +22,16 @@ public class TestTrainer {
 		this.trainer = trainer;
 	}
 
-	public TestTrainer(int dim) {
+	public GNTrainer(int dim) {
 		this.trainer = new TrainerInMem(dim);
+	}
+	
+	public GNTrainer(ModelInfo modelInfo) {
+		this.trainer = new TrainerInMem(modelInfo);
+	}
+	
+	public GNTrainer(ModelInfo modelInfo, int dim) {
+		this.trainer = new TrainerInMem(modelInfo, dim);
 	}
 
 	// test methods
@@ -34,7 +42,7 @@ public class TestTrainer {
 		dwvFactory.createAndWriteDistributedWordFeaturesSparse(dim);
 	}
 
-	private void testPerformanceTraining(int maxExamples) throws IOException{
+	private void gntTrainingFromConllFile(String trainingFileName, int maxExamples) throws IOException{
 		System.out.println("Load feature files:");
 		time1 = System.currentTimeMillis();
 
@@ -50,7 +58,7 @@ public class TestTrainer {
 		System.out.println("Create windows:");
 		time1 = System.currentTimeMillis();
 		
-		this.getTrainer().trainFromConllTrainingFileInMemory("/Users/gune00/data/MLDP/english/english-train.conll", maxExamples);
+		this.getTrainer().trainFromConllTrainingFileInMemory(trainingFileName, maxExamples);
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
@@ -66,7 +74,7 @@ public class TestTrainer {
 		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 	}
 
-	private void testPerformanceTrainingWithDimension(int dim, int maxExamples) throws IOException{
+	private void gntTrainingWithDimensionFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
 		System.out.println("Create wordVectors:");
 		time1 = System.currentTimeMillis();
 
@@ -75,15 +83,18 @@ public class TestTrainer {
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 
-		this.testPerformanceTraining(maxExamples);
+		this.gntTrainingFromConllFile(trainingFileName, maxExamples);
 	}
 	
 	public static void main(String[] args) throws IOException{
-		int windowSize = 2;
-		TestTrainer testTrainer = new TestTrainer(windowSize);
+		ModelInfo modelInfo = new ModelInfo("MDP", 2);
+		modelInfo.setModelFile("/Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt");
+		GNTrainer gnTrainer = new GNTrainer(modelInfo);
+		String trainingFileName = "/Users/gune00/data/MLDP/english/english-train.conll";
+		int numberOfSentences = 10000;
 
 		
-		testTrainer.testPerformanceTraining(5000);
+		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, 100, numberOfSentences);
 
 	}
 

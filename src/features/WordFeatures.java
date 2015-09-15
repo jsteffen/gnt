@@ -34,6 +34,7 @@ public class WordFeatures {
 	private List<Pair<Integer,Double>> left = new ArrayList<Pair<Integer,Double>>();
 	private List<Pair<Integer,Double>> right = new ArrayList<Pair<Integer,Double>>();
 	private List<Pair<Integer,Boolean>> suffix = new ArrayList<Pair<Integer,Boolean>>();
+	// I am using here a list although we only have always one shape
 	private List<Pair<Integer,Boolean>> shape = new ArrayList<Pair<Integer,Boolean>>();
 
 	//Setters and getters
@@ -154,8 +155,9 @@ public class WordFeatures {
 		}
 		else
 		{
-			System.err.println("Word: " + word + " at loc: " + index + " has unknown signature !");
-			shape = null;
+			// means that shape-size() will be 0
+			System.err.println("Word: " + word + " at loc: " + index + "has unknown signature !"+ "Shape length: " + shape.size());
+
 		}
 		length += shape.size();
 	}

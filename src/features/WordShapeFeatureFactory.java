@@ -30,12 +30,12 @@ public class WordShapeFeatureFactory {
 	// A mapping from word to Shape vector; used as a cache to avoid redundant computation
 	// NOTE: need to distinguish whether word is at sentence initial position or not
 	// I do this by adding 0 or 1 as key value (but NOT when creating the shape, because otherwise I get wrong results)
-	
+
 	//TODO only used in ppPrint
 	private Map<String,WordShapeFeature> word2signature = new HashMap<String,WordShapeFeature>();
 	// A mapping from the string of a ShapeVector (signature) to its ShapeVector; also used as cache
 	private Map<String,Integer> signature2index = new HashMap<String,Integer>();
-	
+
 	//TODO only used in ppPrint
 	private Map<Integer,String> index2signature = new TreeMap<Integer,String>();
 
@@ -78,7 +78,7 @@ public class WordShapeFeatureFactory {
 	}
 
 	// Methods
-	
+
 	public void clean(){
 		word2signature = new HashMap<String,WordShapeFeature>();
 		index2signature = new TreeMap<Integer,String>();
@@ -130,12 +130,14 @@ public class WordShapeFeatureFactory {
 	public int getShapeFeature(String word, int index){
 		WordShapeFeature newSignature = new WordShapeFeature(word, index);
 		String binaryString = newSignature.getBitVectorString();
-		// If signature for word is an unknown one
+		// If signature for word is a known one, return it
 		if (this.getSignature2index().containsKey(binaryString))
 			return this.getSignature2index().get(binaryString);
 		else
-			// signal error
+		{// signal error
+			System.err.println("Unknown signature: " + binaryString);
 			return -1;
+		}
 	}
 
 	// NOTE: I need to take into account the loc value, either 0 or 1 to distinguish the position of a word

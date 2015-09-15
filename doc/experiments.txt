@@ -4,6 +4,8 @@ Possible parameters for experiments:
 	- means that distributed word features have to be pre-processed with maxIndicatorWords
 	- Schnabel&Schütze 2013: use all iw (the larger the better)
 	
+- different word vectors (word2vec)
+	
 - dimension of suffixes
 	- n-most ranked (Schnabel&Schütze 2013 used n=100)
 	- Schnabel&Schütze 2013: use all (also means: no parameter necessary)

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import corpus.Corpus;
-import corpus.ModelFiles;
 import data.Alphabet;
 import data.Data;
+import data.ModelInfo;
 import data.OffSets;
 import data.Window;
 import de.bwaldvogel.liblinear.FeatureNode;
@@ -63,18 +63,17 @@ public class TrainerInMem {
 	private Alphabet alphabet = new Alphabet();
 	private OffSets offSets = new OffSets();
 	private int windowSize = 2;
-	
+	private ModelInfo modelInfo = new ModelInfo();
+
 	// API/Values for Liblinear
 	// GN: used in MDP
 	private double bias = -1;
 	// GN: default values as used in Flors
 	// C -> cost of constraints violation
 	// eps -> stopping criteria; influences number of iterations performed, the higher the less
-	
-	// private Parameter parameter = new Parameter(SolverType.L2R_LR, 1.0, 0.01);
-	
-	// GN: used in MDP
-	private Parameter parameter = new Parameter(SolverType.MCSVM_CS, 0.1, 0.3);
+
+	private Parameter parameter = new Parameter(SolverType.L2R_LR, 1.0, 0.01);
+
 	private Problem problem = new Problem();
 
 	// Setters and getters
@@ -89,6 +88,12 @@ public class TrainerInMem {
 	}
 	public void setData(Data data) {
 		this.data = data;
+	}
+	public ModelInfo getModelInfo() {
+		return modelInfo;
+	}
+	public void setModelInfo(ModelInfo modelInfo) {
+		this.modelInfo = modelInfo;
 	}
 	public Alphabet getAlphabet() {
 		return alphabet;
@@ -134,6 +139,27 @@ public class TrainerInMem {
 	public TrainerInMem (int windowSize){
 		this.setWindowSize(windowSize);
 	}
+	
+	public TrainerInMem(ModelInfo modelInfo) {
+		this.setWindowSize(modelInfo.getWindowSize());
+		this.setModelInfo(modelInfo);
+
+		this.setParameter(new Parameter(
+				modelInfo.getSolver(),
+				modelInfo.getC(),
+				modelInfo.getEps()));
+	}
+
+	public TrainerInMem (ModelInfo modelInfo, int windowSize){
+		this.setWindowSize(windowSize);
+		this.setModelInfo(modelInfo);
+
+		this.setParameter(new Parameter(
+				modelInfo.getSolver(),
+				modelInfo.getC(),
+				modelInfo.getEps()));
+	}
+
 
 	// Methods
 
@@ -155,9 +181,16 @@ public class TrainerInMem {
 	 * - add to problem
 	 * - do training
 	 * - save model file
-	 * - TODO save label index set if Alpha part
 	 */
 
+	
+	/**
+	 * For each token of a sentence create a window frame, add the label of the current sentence token wot the window
+	 * and store it in Data instances.
+	 * The latter is a global storage and stores all frames first, before the windows are filled.
+	 * I do this because I do not know in advance the number of sentences and hence, the number of tokens in a file.
+	 * @throws IOException
+	 */
 	private void createWindowFramesFromSentence() throws IOException {
 		// for each token t_i of current training sentence do
 		// System.out.println("Sentence no: " + data.getSentenceCnt());
@@ -194,7 +227,7 @@ public class TrainerInMem {
 			if (line.isEmpty()) {
 				// Stop if max sentences have been processed
 				if  ((max > 0) && (data.getSentenceCnt() >= max)) break;
-				
+
 				// create internal sentence object and label maps
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
@@ -213,7 +246,7 @@ public class TrainerInMem {
 		data.saveLabelSet();
 		System.out.println("... done");
 	}
-	
+
 	/**
 	 * initialize problem for liblinear using
 	 * Window.windowCnt for problem.l (training instance size)
@@ -227,17 +260,25 @@ public class TrainerInMem {
 		problem.y = new double[problem.l];
 
 		this.setProblem(problem);
-		
+
 		System.out.println("problem.l: " + problem.l);
 		System.out.println("problem.n: " + problem.n);
 		System.out.println("problem.y.size: " + problem.y.length);
 		System.out.println("problem.x.size: " + problem.x.length);
 	}
 
+	/**
+	 * Loop through all window frames. Fill the window, adjust the feature indices
+	 * and create a feature vector for the filled window.
+	 * This is directly add to problem.x, where the corresponding label of the window
+	 * is added to problem.y
+	 * @param train
+	 * @param adjust
+	 */
 	private void constructProblem(boolean train, boolean adjust) {
 		int mod = 10000;
 		int problemCnt = 0;
-		
+
 		this.initProblem();
 
 		for (int i = 0; i < data.getInstances().size();i++){
@@ -246,7 +287,7 @@ public class TrainerInMem {
 			ProblemInstance problemInstance = new ProblemInstance();
 			problemInstance.createProblemInstanceFromWindow(nextWindow);
 			problemCnt++;
-			
+
 			this.getProblem().y[i]=nextWindow.getLabelIndex();
 			this.getProblem().x[i]=problemInstance.getFeatureVector();
 
@@ -279,12 +320,13 @@ public class TrainerInMem {
 
 		System.out.println("Do training with TrainerInMem() from file: " + sourceFileName);
 		System.out.println("Train?: " + train + " Adjust?: " + adjust);
+		System.out.println(this.getModelInfo().toString());
 
 		time1 = System.currentTimeMillis();
 		this.createTrainingInstancesFromConllReader(conllReader, max);
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
-		
+
 		System.out.println("Offsets: " + this.getOffSets().toString());
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
 		System.out.println("Feature instances size: " + OffSets.windowVectorSize);
@@ -301,9 +343,10 @@ public class TrainerInMem {
 
 		System.out.println("Construct model:");
 		this.runLiblinearTrainer();
-		
+
 		System.out.println("... done");
 	}
+
 	private void runLiblinearTrainer() throws IOException {
 		long time1;
 		long time2;
@@ -312,12 +355,11 @@ public class TrainerInMem {
 		Model model = Linear.train(this.getProblem(), this.getParameter());
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
-		
-		System.out.println("Save  model file: " + "/Users/gune00/data/wordVectorTests/testModel.txt");
+
+		System.out.println("Save  model file: " + modelInfo.getModelFile());
 		time1 = System.currentTimeMillis();
-		model.save(new File("/Users/gune00/data/wordVectorTests/testModel_"+this.getParameter().getSolverType()+".txt"));
+		model.save(new File(modelInfo.getModelFile()));
 		time2 = System.currentTimeMillis();
-		System.out.println("System time (msec): " + (time2-time1));
-		
+		System.out.println("System time (msec): " + (time2-time1));		
 	}
 }

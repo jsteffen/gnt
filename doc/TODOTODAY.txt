@@ -1,0 +1,33 @@
+15.9.2015:
+
+- find error with missing signature
+	- solved -> 
+	  features.WordFeatures.fillShapeFeatures(String, int, Alphabet, boolean) does return an empty shape list (instead of NULL)
+
+- use model file and label map file as parameter
+	- solved -> define a class ModelInfo() and use it in trainer and tagger
+
+- define evaluation method
+	- done as part of tagger
+	- I am using the original conll token and the predicted labels
+	- and construct a version which consistent with conlleval
+
+- check which tool for evaluation
+	the one here: /Users/gune00/data/conll/conll03-NER/bin
+	can also be used for NER
+	
+16.9.2015:
+
+- define a single place for major resources
+	resource/data
+	resource/alphabet
+	resource/modelfiles
+	
+- define main function to be used by exectuable
+- define proberty class, so that tagger can be called from jar file also on unix machine
+- define logger
+
+- train larger models for MDP and FLORS
+	
+
+	

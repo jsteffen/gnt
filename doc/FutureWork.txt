@@ -1,0 +1,11 @@
+September, 15th, 2015:
+
+NER - soon test GNT for NER and German
+
+Stemming
+
+Integration of NemexF and NemexA
+
+More unsupervised
+
+Parallel processing

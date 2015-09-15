@@ -21,5 +21,3 @@ Online creation of distributed word vectors:
 		but without updating
 		
 Comparing new vectors: /GNT/src/utils/WordVectorSimilarity.java
-
-NER - soon test GNT for NER and German

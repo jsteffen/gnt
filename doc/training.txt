@@ -108,7 +108,7 @@ NOTES: possible alternative -> no need to save training instances in file
 	- store all file in compressed folder automatically
 	- run larger experiments, when tagging done
 
-Training:
+Status Training:
 - defined training and run it using FLORS learner setting 
 	new Parameter(SolverType.L2R_LR, 1.0, 0.01); -> DONE ! used Xmx6g
 	-> time for constructing model iw=50 and examples=5000: 35.3328333 minutes
@@ -118,8 +118,16 @@ Training:
 - defined training and run it using MDP learner setting 
 	new Parameter(SolverType.MCSVM_CS, 0.1, 0.3); but bias not used
 	-> time for constructing model iw=50 and examples=5000: 19.57455 minutes
-	-> saving model in: /Users/gune00/data/wordVectorTests/testModel__L2R_LR.txt -> time 12 seconds (59MB)
+	-> saving model in: /Users/gune00/data/wordVectorTests/testModel_MCSVM_CS.txt -> time 12 seconds (59MB)
 	-> TOTAL  System time (msec): 1174473 -> 19.57455 minutes
+	
+	-> iw=50 and examples=10000 -> 2068044 msec -> 34.4674 minutes
+	Save  model file: /Users/gune00/data/wordVectorTests/testModel10k_MCSVM_CS.txt -> time ca. 12 seconds
+	
+	-> iw=100 and examples=10000 -> 4109242 msec -> 68.4873667 minutes
+	Save  model file: /Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt -> 162 seconds (ca. 60MB)
+-> it seems that when using modelInfo=MDP, then size of model is similar independent of parameters (and so the load time)
+	
 
 
 EFFICIENCY:

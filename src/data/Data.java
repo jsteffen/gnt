@@ -5,15 +5,12 @@ import java.util.List;
 
 public class Data {
 
-	// TODO necessary to keep a hash-map for words ?
 	private SetIndexMap wordSet = new SetIndexMap();
 	private SetIndexMap labelSet = new SetIndexMap();
-
 	private Sentence sentence = new Sentence();
-
 	private int sentenceCnt = 0;
-
 	private List<Window> instances = new ArrayList<Window>();
+	private String labelMapFileName = "/Users/gune00/data/wordVectorTests/labelSet.txt";
 
 	// Setters and getters
 
@@ -47,7 +44,13 @@ public class Data {
 	public void setSentence(Sentence sentence) {
 		this.sentence = sentence;
 	}
-
+	public String getLabelMapFileName() {
+		return labelMapFileName;
+	}
+	public void setLabelMapFileName(String labelMapFileName) {
+		this.labelMapFileName = labelMapFileName;
+	}
+	
 	// Instances
 	public Data() {
 	}
@@ -109,12 +112,16 @@ public class Data {
 
 	}
 
+	public void clean(){
+		wordSet = new SetIndexMap();
+	}
+	
 	public void saveLabelSet(){
-		this.getLabelSet().writeSetIndexMap("/Users/gune00/data/wordVectorTests/labelSet.txt");	
+		this.getLabelSet().writeSetIndexMap(this.getLabelMapFileName());	
 	}
 
 	public void readLabelSet(){
-		this.getLabelSet().readSetIndexMap("/Users/gune00/data/wordVectorTests/labelSet.txt");	
+		this.getLabelSet().readSetIndexMap(this.getLabelMapFileName());	
 	}
 
 	public String toString(){

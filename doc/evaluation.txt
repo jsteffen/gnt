@@ -3,3 +3,81 @@ check tests according to accuracy etc.
 eventually liblinear comes with own software
 
 else use existing conll based packages
+- I will the conlleval scripts -> copy in /Users/gune00/data/wordVectorTests/bin
+- Usefull also for NER
+
+- about conlleval script
+
+#!/usr/bin/perl -w
+# conlleval: evaluate result of processing CoNLL-2000 shared task
+# usage:     conlleval [-l] [-r] [-d delimiterTag] [-o oTag] < file
+#            README: http://cnts.uia.ac.be/conll2000/chunking/output.html
+# options:   l: generate LaTeX output for tables like in
+#               http://cnts.uia.ac.be/conll2003/ner/example.tex
+#            r: accept raw result tags (without B- and I- prefix;
+#                                       assumes one word per chunk)
+#            d: alternative delimiter tag (default is single space)
+#            o: alternative outside tag (default is O)
+# note:      the file should contain lines with items separated
+#            by $delimiter characters (default space). The final
+#            two items should contain the correct tag and the 
+#            guessed tag in that order. Sentences should be
+#            separated from each other by empty lines or lines
+#            with $boundary fields (default -X-).
+
+so I guess:
+	
+	idx word gold-pos gnt-pos
+	
+	with separator single space
+	
+	with "-X- -X- -X- -X-" as sentence boarder
+	
+- two steps necessary:
+	- create eval file
+	- call ./bin/conlleval -r < eval-file
+	
+	
+- Current results:
+  iw=50, #sent=5000
+  
+  ./bin/conlleval -r < gweb-answers-dev.txt
+  ->
+  ModelInfo=MDP:
+  ./bin/conlleval -r < gweb-answers-dev.txt
+  	accuracy:  53.32%; precision:  53.32%; recall:  49.86%; FB1:  51.53
+  
+  
+  ./bin/conlleval -r < english_pbiotb_dev.txt 
+	processed 5017 tokens with 5217 phrases; found: 5017 phrases; correct: 3660.
+	accuracy:  72.95%; precision:  72.95%; recall:  70.16%; FB1:  71.53
+	
+  ./bin/conlleval -r < english-devel.txt 
+	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 26305.
+	accuracy:  78.83%; precision:  78.83%; recall:  75.80%; FB1:  77.29
+	
+	
+
+
+  ModelInfo=Flors:
+  ./bin/conlleval -r < gweb-answers-dev.txt
+  	accuracy:  39.81%; precision:  39.81%; recall:  37.23%; FB1:  38.47
+  
+   ./bin/conlleval -r < english_pbiotb_dev.txt 
+	processed 5017 tokens with 5217 phrases; found: 5017 phrases; correct: 3190.
+	accuracy:  63.58%; precision:  63.58%; recall:  61.15%; FB1:  62.34
+	
+	./bin/conlleval -r < english-devel.txt 
+	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 24467.
+	accuracy:  73.32%; precision:  73.32%; recall:  70.51%; FB1:  71.89
+
+iw=50, #sent=10000
+	ModelInfo=MDP:
+	./bin/conlleval -r < english-devel.txt 
+	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 26505.
+	accuracy:  79.43%; precision:  79.43%; recall:  76.38%; FB1:  77.88
+	
+iw=100, #sent=10000
+	./bin/conlleval -r < english-devel.txt 
+	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 26800.
+	accuracy:  80.32%; precision:  80.32%; recall:  77.23%; FB1:  78.74

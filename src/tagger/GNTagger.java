@@ -1,22 +1,27 @@
 package tagger;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import trainer.ProblemInstance;
 import data.Alphabet;
 import data.Data;
+import data.ModelInfo;
 import data.OffSets;
+import data.Sentence;
 import data.Window;
 import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
 
-public class PosTagger {
+public class GNTagger {
 	private Data data = new Data();
 	private Alphabet alphabet = new Alphabet();
 	private OffSets offSets = new OffSets();
@@ -60,12 +65,12 @@ public class PosTagger {
 	}
 
 	// Init
-	public PosTagger(){
+	public GNTagger(){
 	}
 
 	// Methods
 
-	public void initPosTagger(String modelFile, int windowSize) throws IOException{
+	public void initGNTagger(String modelFile, int windowSize) throws IOException{
 		time1 = System.currentTimeMillis();
 
 		System.out.println("Set window size: " + windowSize);
@@ -77,8 +82,9 @@ public class PosTagger {
 		System.out.println("Load label set:");
 		this.getData().readLabelSet();
 
-		System.out.println("Resetting non-used variables ...");
+		System.out.println("Resetting non-used variables in Alphabe and in Datat:");
 		this.getAlphabet().clean();
+		this.getData().clean();
 
 		System.out.println("Initialize offsets:");
 		this.getOffSets().initializeOffsets(this.getAlphabet(), this.getWindowSize());
@@ -158,7 +164,7 @@ public class PosTagger {
 	}
 
 	/**
-	 * A method for tagging a singel sentence given as list of tokens.
+	 * A method for tagging a single sentence given as list of tokens.
 	 * @param tokens
 	 * @throws IOException
 	 */
@@ -243,6 +249,55 @@ public class PosTagger {
 		conllReader.close();
 	}
 	
+	private void tagAndWriteSentencesFromConllReader(BufferedReader conllReader, BufferedWriter conllWriter, int max) throws IOException{
+		String line = "";
+		List<String[]> tokens = new ArrayList<String[]>();
+
+		while ((line = conllReader.readLine()) != null) {
+			if (line.isEmpty()) {
+				// Stop if max sentences have been processed
+				if  ((max > 0) && (data.getSentenceCnt() >= max)) break;
+				
+				// create internal sentence object and label maps
+				// I use this here although labels will be late overwritten - but can u8se it in eval modus as well
+				data.generateSentenceObjectFromConllLabeledSentence(tokens);
+
+				// create window frames and store in list
+				createWindowFramesFromSentence();
+				
+				// create feature vector instance for each window frame and tag
+				this.constructProblemAndTag(false, true);
+				
+				// Create conlleval consistent output using original conll tokens plus predicted labels 
+				this.writeTokensAndWithLabels(conllWriter, tokens, data.getSentence());
+				
+				// reset instances - need to do this here, because learner is called directly on windows
+				this.getData().setInstances(new ArrayList<Window>());
+
+				// reset tokens
+				tokens = new ArrayList<String[]>();
+			}
+			else {
+				String[] tokenizedLine = line.split("\t");
+				tokens.add(tokenizedLine);
+			}
+		}
+		conllReader.close();
+		conllWriter.close();
+	}
+	
+	private void writeTokensAndWithLabels(BufferedWriter conllWriter,
+			List<String[]> tokens, Sentence sentence) throws IOException {
+		for (int i=0; i < tokens.size(); i++){
+			String[] token = tokens.get(i);
+			String label = this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i]);
+			String newConllToken = token[0]+" "+token[1]+" "+token[4]+" "+label+"\n";
+			
+			conllWriter.write(newConllToken);
+		}
+		conllWriter.write("-X- -X- -X- -X-\n");
+		
+	}
 	public void tagFromConllDevelFile(String sourceFileName, int max)
 			throws IOException {
 		long time1;
@@ -254,7 +309,8 @@ public class PosTagger {
 		boolean adjust = true;
 
 		System.out.println("Do testing from file: " + sourceFileName);
-		System.out.println("Train?: " + train + " Adjust?: " + adjust);
+		System.out.println("Train?: " + train + " Adjust?: " + adjust + "\n");
+		System.out.println(this.getModel().toString());
 
 		time1 = System.currentTimeMillis();
 		this.tagSentencesFromConllReader(conllReader, max);
@@ -267,50 +323,51 @@ public class PosTagger {
 		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 
 	}
+	
+	public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName, int max)
+			throws IOException {
+		long time1;
+		long time2;
 
-	public void tagSentenceTest(){
-		String sentence ="This is the first call of the GNT-tagger . ";
-		sentence = "Do not underestimate the effects of the Internet economy on load growth . "
-				+ "I have been preaching the tremendous growth described below for the last year . "
-				+ "The utility infrastructure simply can not handle these loads at the distribution level "
-				+ "and ultimatley distributed generation will be required for power quality reasons . "
-				+ "The City of Austin , TX has experienced 300 + MW of load growth this year due to server farms and technology companies . "
-				+ "There is a 100 MW server farm trying to hook up to HL&P as we speak and "
-				+ "they can not deliver for 12 months due to distribution infrastructure issues . "
-				+ "Obviously , Seattle , Porltand , Boise , Denver , "
-				+ "San Fran and San Jose in your markets are in for a rude awakening in the next 2 - 3 years . "
-				+ "George Hopley 09/05/2000 11:41 AM Internet Data Gain Is a Major Power Drain on Local Utilities"
-				+ "( September 05 , 2000 )"
-				+ "In 1997 , a little - known Silicon Valley company called Exodus Communications opened a 15,000 - square - foot data center in Tukwila . "
-				+ "The mission was to handle the Internet traffic and computer servers for the region 's growing number of dot - coms . "
-				+ "Fast - forward to summer 2000 . "
-				+ "Exodus is now wrapping up construction on a new 13 - acre , 576,000 - square - foot data center less than a mile from its original facility . "
-				+ "Sitting at the confluence of several fiber optic backbones , the Exodus plant will consume "
-				+ "enough power for a small town and eventually house Internet servers for firms such as Avenue A , Microsoft and Onvia.com . ";
-		String[] tokens = sentence.split(" ");
+		BufferedReader conllReader = new BufferedReader(
+				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
+		BufferedWriter conllWriter = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(evalFileName),"UTF-8"));
+		boolean train = false;
+		boolean adjust = true;
+
+		System.out.println("Do testing from file: " + sourceFileName);
+		System.out.println("Train?: " + train + " Adjust?: " + adjust + "\n");
+		System.out.println("Create eval file: " + sourceFileName);
+		System.out.println(this.getModel().toString());
+
+		time1 = System.currentTimeMillis();
+		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, max);
+		time2 = System.currentTimeMillis();
+		System.out.println("System time (msec): " + (time2-time1));
 		
-		try {
-			this.tagTokens(tokens);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("#Tokens: " + tokens.length);
-		System.out.println(this.taggedSentenceToString());
+		System.out.println("Offsets: " + this.getOffSets().toString());
+		System.out.println("Sentences: " + this.getData().getSentenceCnt());
+		System.out.println("Testing instances: " + Window.windowCnt);
+		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
+
 	}
 
 	public static void main(String[] args) throws IOException{
-		int windowSize = 2;
-		String modelFile1 = "/Users/gune00/data/wordVectorTests/testModel_L2R_LR.txt";
-		String modelFile2 = "/Users/gune00/data/wordVectorTests/testModel_MCSVM_CS.txt";
-
-		PosTagger posTagger = new PosTagger();
-
-		posTagger.initPosTagger(modelFile2, windowSize);
+		ModelInfo modelInfo = new ModelInfo("MDP");
 		
-		// posTagger.tagSentenceTest();
+		modelInfo.setModelFile("/Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt");
+
+		System.out.println(modelInfo.toString());
+
+		GNTagger posTagger = new GNTagger();
+
+		posTagger.initGNTagger(modelInfo.getModelFile(), modelInfo.getWindowSize());
 		
-		posTagger.tagFromConllDevelFile("/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/dev/english_pbiotb_dev.conll", -1);
+		posTagger.tagAndWriteFromConllDevelFile(
+				"/Users/gune00/data/MLDP/english/english-devel.conll", 
+				"/Users/gune00/data/wordVectorTests/english-devel.txt",
+				-1);
 		
 		
 	}
