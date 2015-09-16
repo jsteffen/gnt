@@ -27,8 +27,6 @@ public class IndicatorWordsCreator {
 	static int tokenCnt = 0;
 	private Map<String, Integer> wordToNum = new HashMap<String, Integer>();
 	
-	
-
 	// Clean text line according to given type
 	// AND lower case text
 	// It is assumed that line is a tokenized sentence
@@ -36,11 +34,11 @@ public class IndicatorWordsCreator {
 	public Map<String, Integer> getWordToNum() {
 		return wordToNum;
 	}
-
 	public void setWordToNum(Map<String, Integer> wordToNum) {
 		this.wordToNum = wordToNum;
 	}
-
+	
+	//
 	private String[] cleanTextLine(String line, String type) {
 		String[] words = {};
 		switch (type) {
@@ -154,7 +152,7 @@ public class IndicatorWordsCreator {
 	}
 
 	// TODO - check, but I think I have all source files that are also used in FLORS
-	private void processFlorsDataSet(){
+	private void createIndicatorWordsFromFiles(){
 
 		// Training data labeled sentences
 		readAndProcessInputTextLineWise("/Users/gune00/data/MLDP/english/english-train-sents.txt", "ptb", 100000);
@@ -191,17 +189,13 @@ public class IndicatorWordsCreator {
 		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt", "ptb", 100000);
 	}
 
-	private void processTestData(){
-		readAndProcessInputTextLineWise("/Users/gune00/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt", "ptb", -1);
-	}
-
 	// Test  caller
 
 	public static void main(String[] args) throws IOException {
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
 		long time1 = System.currentTimeMillis();
 
-		iwp.processFlorsDataSet();
+		iwp.createIndicatorWordsFromFiles();
 
 		long time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));

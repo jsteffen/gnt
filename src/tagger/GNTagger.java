@@ -338,7 +338,7 @@ public class GNTagger {
 
 		System.out.println("Do testing from file: " + sourceFileName);
 		System.out.println("Train?: " + train + " Adjust?: " + adjust + "\n");
-		System.out.println("Create eval file: " + sourceFileName);
+		System.out.println("Create eval file: " + evalFileName);
 		System.out.println(this.getModel().toString());
 
 		time1 = System.currentTimeMillis();
@@ -354,7 +354,10 @@ public class GNTagger {
 	}
 
 	public static void main(String[] args) throws IOException{
-		ModelInfo modelInfo = new ModelInfo("MDP");
+		
+		//NOTE parameter setting does not place a role (because it is part of the mode file), 
+		// but window size, which should be the same as for training.
+		ModelInfo modelInfo = new ModelInfo();
 		
 		modelInfo.setModelFile("/Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt");
 

@@ -126,7 +126,9 @@ Status Training:
 	
 	-> iw=100 and examples=10000 -> 4109242 msec -> 68.4873667 minutes
 	Save  model file: /Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt -> 162 seconds (ca. 60MB)
--> it seems that when using modelInfo=MDP, then size of model is similar independent of parameters (and so the load time)
+	-> it seems that when using modelInfo=MDP, then size of model is similar independent of parameters (and so the load time)
+	
+	-> but also for L2R_LR is growth moderately
 	
 
 

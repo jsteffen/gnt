@@ -30,7 +30,7 @@ import corpus.Corpus;
  * - read in file linewise; each line corresponds to a tokenized sentence and also has <s> and </s> boundaries (implicit)
  * - iterate through token list of sentence: means words are counted from left to right which will define word2num and num2word mapping
  * - for each word w_i:
- * - check whether already in word2num -> if false initialize word2num, num2word and wordsvector -> if true retrieve wordsVector(word2num)
+ * - check whether already in word2num -> if false initialize word2num, num2word and word vector -> if true retrieve wordsVector(word2num)
  * - update left and right context with w_i-1 and w_i+1 by using iw2num(w_i-1); if iw2num is NULL then update last vector cell n+1
  * - when eof is reached, compute weight for non-zero frequencies of each word vector context element
  * - then create vocabulary file vocFilename.txt using num2word and vocVector.txt file that keeps the left and right vector

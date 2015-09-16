@@ -94,7 +94,7 @@ public class GNTrainer {
 		int numberOfSentences = 10000;
 
 		
-		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, 100, numberOfSentences);
+		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, 150, numberOfSentences);
 
 	}
 
