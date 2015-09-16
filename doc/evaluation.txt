@@ -88,3 +88,10 @@ iw=100, #sent=10000
 
 iw=100, #sent=all
 
+I started evaluation on  ssh lns-87244 -l neumann (64 GB). Xmx=24g
+All code is on /project/excitement/gnt
+
+16th September 2015:
+I run with iw=500 and all sentences
+
+

@@ -464,7 +464,7 @@ public class WordDistributedFeatureFactory {
 	}
 
 	public void readDistributedWordFeaturesSparse(int maxIndicatorWords){
-		System.out.println("Read FLORS condensed ...");
+		System.out.println("Read GNT condensed ...");
 		System.out.println("Read used indicator words file.");
 		this.readIndicatorWordFile("resources/features/iw"+maxIndicatorWords+".txt");
 

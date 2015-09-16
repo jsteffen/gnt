@@ -34,7 +34,6 @@ public class GNTrainer {
 
 	private void createWordVectors(int dim) throws IOException{
 		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
-
 		dwvFactory.createAndWriteDistributedWordFeaturesSparse(dim);
 	}
 
@@ -51,7 +50,7 @@ public class GNTrainer {
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 
-		System.out.println("Create windows:");
+		System.out.println("Create windows with size: " + this.getTrainer().getWindowSize());
 		time1 = System.currentTimeMillis();
 
 		this.getTrainer().trainFromConllTrainingFileInMemory(trainingFileName, maxExamples);
@@ -74,7 +73,7 @@ public class GNTrainer {
 		System.out.println("Create wordVectors:");
 		time1 = System.currentTimeMillis();
 
-		this.createWordVectors(dim);
+		if (dim > 0) this.createWordVectors(dim);
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
@@ -85,8 +84,9 @@ public class GNTrainer {
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("GNT");
 		int windowSize = 2;
-		int numberOfSentences = 500;
-		int dim = 50;
+		int numberOfSentences = 39200;
+		int dim = 1;
+		
 		modelInfo.createModelFileName(dim, numberOfSentences);
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
 		String trainingFileName = "resources/data/english/english-train.conll";

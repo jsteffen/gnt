@@ -22,10 +22,19 @@
 
 - define main function to be used by exectuable
 
+- train larger models
+
 17.9.2015
+
+- allow training without selected features
+
+- allow run shells with parameters and defaults
+
+- handle GNTrainer bugs
+
 - define logger
 
-- train larger models for MDP and FLORS
+
 	
 
 	

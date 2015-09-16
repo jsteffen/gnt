@@ -130,7 +130,9 @@ public class GNT {
 		posTagger.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
 
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile);
-
+		
+		System.out.println("To evaluate performance call:");
+		System.out.println("resources/conlleval -r < " + this.outFile);
 	}
 
 

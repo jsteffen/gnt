@@ -129,6 +129,15 @@ Status Training:
 	-> it seems that when using modelInfo=MDP, then size of model is similar independent of parameters (and so the load time)
 	
 	-> but also for L2R_LR is growth moderately
+
+PROBLEM:
+
+when sentence count is -1 or > 39200 -> I get liblinear error that indices in problem instances are not correctly ordered 
+wnen sentence countis= -1 & wordvectors are deactivated -> error array bounds
+
+How can activate/activate features ?
+-> this can be done as part of features.WordFeatures.fillWordFeatures(String, int, Alphabet, boolean)
+-> and by defining useful parameters, _noShpae, :noSuffix, :noWordVectors
 	
 
 

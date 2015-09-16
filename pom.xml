@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>GNT</groupId>
 	<artifactId>GNT</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>GNT</name>
 	<description>POS and NER tagger for Liblinear</description>
 	<properties>
@@ -29,7 +29,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>TestTrainer</mainClass>
+							<mainClass>main.GNT</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
