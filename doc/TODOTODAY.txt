@@ -19,16 +19,10 @@
 16.9.2015:
 
 - define a single place for major resources
-	../gnt/data
-	../gnt/alphabet
-	../gnt/modelfiles
-	
--> a prefix
-	/Users/gune00/dfki/gnt/data/
-	/home/neumann/excitement/gnt
-	
+
 - define main function to be used by exectuable
-- define proberty class, so that tagger can be called from jar file also on unix machine
+
+17.9.2015
 - define logger
 
 - train larger models for MDP and FLORS

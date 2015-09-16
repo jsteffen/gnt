@@ -231,14 +231,14 @@ public class WordSuffixFeatureFactory {
 		this.readFlorsCorpus(corpus);
 		System.out.println("#word: " + this.wordCnt + 
 				" #suffixes: " + this.suffixCnt);
-		System.out.println("Writing suffix list to: " + "/Users/gune00/data/wordVectorTests/suffixList.txt");
-		this.writeSuffixFile("/Users/gune00/data/wordVectorTests/suffixList.txt");
+		System.out.println("Writing suffix list to: " + "resources/features/suffixList.txt");
+		this.writeSuffixFile("resources/features/suffixList.txt");
 		System.out.println("... done");
 	}
 
 	public void testReadSuffixList(){
-		System.out.println("Reading suffix list from: " + "/Users/gune00/data/wordVectorTests/suffixList.txt");
-		this.readSuffixFile("/Users/gune00/data/wordVectorTests/suffixList.txt");
+		System.out.println("Reading suffix list from: " + "resources/features/suffixList.txt");
+		this.readSuffixFile("resources/features/suffixList.txt");
 		System.out.println("... done");
 	}
 

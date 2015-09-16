@@ -3,15 +3,14 @@ package data;
 import de.bwaldvogel.liblinear.SolverType;
 
 public class ModelInfo {
-	
+
 	private SolverType solver = SolverType.L2R_LR; // -s 0
 	private double C = 1.0;    // cost of constraints violation
 	private double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
-	
-	private int windowSize = 2;
-	
-	private String modelFilePrefix = "/Users/gune00/data/wordVectorTests/testModel10k_";
+
+	private String modelFilePrefix = "resources/models/model_";
 	private String modelFile = "";
+
 
 	public SolverType getSolver() {
 		return solver;
@@ -43,54 +42,46 @@ public class ModelInfo {
 	public void setModelFile(String modelFile) {
 		this.modelFile = modelFile;
 	}
-	public int getWindowSize() {
-		return windowSize;
-	}
-	public void setWindowSize(int windowSize) {
-		this.windowSize = windowSize;
-	}
-	
+
 	//
 	public ModelInfo(){
 	}
-	
+
 	public ModelInfo(String type){
 		if (type.equalsIgnoreCase("FLORS")) this.initFlorsInfo();
 		else
 			if (type.equalsIgnoreCase("MDP")) this.initMDPInfo();
 			else
-			{
-				System.err.println("Unknown model info type: " + type);
-				System.exit(0);
-			}
+				if (type.equalsIgnoreCase("GNT")) this.initGNTInfo();
+				else
+				{
+					System.err.println("Unknown model info type: " + type);
+					System.exit(0);
+				}
 		this.setModelFile(this.getModelFilePrefix()+this.getSolver()+".txt");
 	}
-	
-	public ModelInfo(String type, int windowSize){
-		if (type.equalsIgnoreCase("FLORS")) this.initFlorsInfo();
-		else
-			if (type.equalsIgnoreCase("MDP")) this.initMDPInfo();
-			else
-			{
-				System.err.println("Unknown model info type: " + type);
-				System.exit(0);
-			}
-		this.setModelFile(this.getModelFilePrefix()+this.getSolver()+".txt");
-		this.setWindowSize(windowSize);
-	}
-	
+
 	public void initFlorsInfo(){
-		this.setSolver(SolverType.L2R_LR);
+		// L2-regularized L2-loss support vector classification (primal)
+		this.setSolver(SolverType.L2R_L2LOSS_SVC);
 		this.setC(1.0);
 		this.setEps(0.01);
 	}
-	
+
 	public void initMDPInfo(){
+		// multi-class SVM by Crammer and Singer
 		this.setSolver(SolverType.MCSVM_CS);
 		this.setC(0.1);
 		this.setEps(0.3);
 	}
-	
+
+	public void initGNTInfo(){
+		// L2-regularized logistic regression (primal)
+		this.setSolver(SolverType.L2R_LR);
+		this.setC(1.0);
+		this.setEps(0.01);
+	}
+
 	public String toString(){
 		String output ="ModelInfo:\n";
 		output += "Solver: " + this.getSolver()+"\n";
@@ -98,9 +89,12 @@ public class ModelInfo {
 		output += "Eps: " + this.getEps()+"\n";
 		output += "ModelFilePrefix: " + this.getModelFilePrefix()+"\n";
 		output += "ModelFileNames: " + this.getModelFile()+"\n";
-		output += "WindowSize: " + this.getWindowSize()+"\n";
 		return output;
-		
+
+	}
+	public void createModelFileName(int dim, int numberOfSentences) {
+		this.modelFile = this.modelFilePrefix+dim+"iw"+numberOfSentences+"sent_"+this.getSolver()+".txt";
+
 	}
 
 }

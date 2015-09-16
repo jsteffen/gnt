@@ -70,14 +70,14 @@ public class GNTagger {
 
 	// Methods
 
-	public void initGNTagger(String modelFile, int windowSize) throws IOException{
+	public void initGNTagger(String modelFile, int windowSize, int dim) throws IOException{
 		time1 = System.currentTimeMillis();
 
 		System.out.println("Set window size: " + windowSize);
 		this.setWindowSize(windowSize);
 
-		System.out.println("Load feature files:");
-		this.getAlphabet().loadFeaturesFromFiles();
+		System.out.println("Load feature files with dim: " + dim);
+		this.getAlphabet().loadFeaturesFromFiles(dim);
 
 		System.out.println("Load label set:");
 		this.getData().readLabelSet();
@@ -324,7 +324,7 @@ public class GNTagger {
 
 	}
 	
-	public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName, int max)
+	public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName)
 			throws IOException {
 		long time1;
 		long time2;
@@ -342,7 +342,8 @@ public class GNTagger {
 		System.out.println(this.getModel().toString());
 
 		time1 = System.currentTimeMillis();
-		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, max);
+		// -1 means: all sentences from file are processed
+		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, -1);
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 		
@@ -355,24 +356,22 @@ public class GNTagger {
 
 	public static void main(String[] args) throws IOException{
 		
-		//NOTE parameter setting does not place a role (because it is part of the mode file), 
-		// but window size, which should be the same as for training.
-		ModelInfo modelInfo = new ModelInfo();
 		
-		modelInfo.setModelFile("/Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt");
-
+		ModelInfo modelInfo = new ModelInfo("GNT");
+		
+		int windowSize = 2;
+		int numberOfSentences = 500;
+		int dim = 50;
+		modelInfo.createModelFileName(dim, numberOfSentences);
+		
 		System.out.println(modelInfo.toString());
 
 		GNTagger posTagger = new GNTagger();
 
-		posTagger.initGNTagger(modelInfo.getModelFile(), modelInfo.getWindowSize());
+		posTagger.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
 		
 		posTagger.tagAndWriteFromConllDevelFile(
-				"/Users/gune00/data/MLDP/english/english-devel.conll", 
-				"/Users/gune00/data/wordVectorTests/english-devel.txt",
-				-1);
-		
-		
+				"resources/data/english/english-devel.conll", "resources/eval/english-devel.txt");
 	}
 
 }

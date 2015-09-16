@@ -140,16 +140,6 @@ public class TrainerInMem {
 		this.setWindowSize(windowSize);
 	}
 	
-	public TrainerInMem(ModelInfo modelInfo) {
-		this.setWindowSize(modelInfo.getWindowSize());
-		this.setModelInfo(modelInfo);
-
-		this.setParameter(new Parameter(
-				modelInfo.getSolver(),
-				modelInfo.getC(),
-				modelInfo.getEps()));
-	}
-
 	public TrainerInMem (ModelInfo modelInfo, int windowSize){
 		this.setWindowSize(windowSize);
 		this.setModelInfo(modelInfo);

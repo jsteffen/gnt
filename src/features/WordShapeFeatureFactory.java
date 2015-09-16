@@ -202,18 +202,17 @@ public class WordShapeFeatureFactory {
 	}
 
 	public void testReadShapeList(){
-		System.out.println("Reading shape list from: " + "/Users/gune00/data/wordVectorTests/shapeList.txt");
-		this.readShapeFeatureFile("/Users/gune00/data/wordVectorTests/shapeList.txt");
+		System.out.println("Reading shape list from: " + "resources/features/shapeList.txt");
+		this.readShapeFeatureFile("resources/features/shapeList.txt");
 		System.out.println("... done");
 	}
 
 	public static void main(String[] args){
 		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
-		wordShapeFactory.createShapeVectorsFromFile("/Users/gune00/data/MLDP/english/english-train-sents.txt", -1);
-		//wordShapeFactory.createShapeVectorsFromFile("/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", 100000);
+		wordShapeFactory.createShapeVectorsFromFile("resources/data/english/english-train-sents.txt", -1);
 
-		System.out.println("Writing shape list to: " + "/Users/gune00/data/wordVectorTests/shapeList.txt");
-		wordShapeFactory.writeShapeFeatureFile("/Users/gune00/data/wordVectorTests/shapeList.txt");
+		System.out.println("Writing shape list to: " + "resources/features/shapeList.txt");
+		wordShapeFactory.writeShapeFeatureFile("resources/features/shapeList.txt");
 		System.out.println("... done");
 	}
 

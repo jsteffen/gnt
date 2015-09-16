@@ -10,7 +10,7 @@ public class Data {
 	private Sentence sentence = new Sentence();
 	private int sentenceCnt = 0;
 	private List<Window> instances = new ArrayList<Window>();
-	private String labelMapFileName = "/Users/gune00/data/wordVectorTests/labelSet.txt";
+	private String labelMapFileName = "resources/features//labelSet.txt";
 
 	// Setters and getters
 

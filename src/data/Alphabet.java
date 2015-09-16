@@ -31,8 +31,8 @@ public class Alphabet {
 
 	// Methods
 
-	public void loadFeaturesFromFiles(){
-		this.wordVectorFactory.readDistributedWordFeaturesSparse();
+	public void loadFeaturesFromFiles(int dim){
+		this.wordVectorFactory.readDistributedWordFeaturesSparse(dim);
 		this.wordSuffixFactory.testReadSuffixList();
 		this.wordShapeFactory.testReadShapeList();
 	}

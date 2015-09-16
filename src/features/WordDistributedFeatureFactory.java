@@ -368,7 +368,7 @@ public class WordDistributedFeatureFactory {
 	// and then stored on file.
 	// I call the resulting files condensed because only non-zero weights are stored. This helps reducing space
 	// very much !
-	public void readFlorsCorpus(Corpus corpus){
+	public void readGNTCorpus(Corpus corpus){
 		for (String fileName : corpus.trainingUnLabeledData){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
@@ -386,15 +386,16 @@ public class WordDistributedFeatureFactory {
 		}
 	}
 
-	public void writeFlorsCondensed(){
-		System.out.println("Write FLORS condensed ...");
+	public void writeFlorsCondensed(int maxIndicatorWords){
+		System.out.println("Write GNT data condensed ...");
 		System.out.println("Write out used indicator words file.");
-		this.writeIndicatorWordFile("/Users/gune00/data/wordVectorTests/iw.txt");
+		this.writeIndicatorWordFile("resources/features/iw"+maxIndicatorWords+".txt");
 
 		System.out.println("Write out vocabulary file.");
-		this.writeVocabularyFile("/Users/gune00/data/wordVectorTests/vocFile.txt");
+		this.writeVocabularyFile("resources/features/vocFile.txt");
+		
 		System.out.println("Write out left/right context vector files.");
-		this.writeContextFile("/Users/gune00/data/wordVectorTests/vocContext.txt");
+		this.writeContextFile("resources/features/vocContext"+maxIndicatorWords+".txt");
 		System.out.println("Done!");
 	}
 
@@ -462,46 +463,31 @@ public class WordDistributedFeatureFactory {
 		}
 	}
 
-	public void readDistributedWordFeaturesSparse(){
+	public void readDistributedWordFeaturesSparse(int maxIndicatorWords){
 		System.out.println("Read FLORS condensed ...");
 		System.out.println("Read used indicator words file.");
-		this.readIndicatorWordFile("/Users/gune00/data/wordVectorTests/iw.txt");
+		this.readIndicatorWordFile("resources/features/iw"+maxIndicatorWords+".txt");
 
 		System.out.println("Read vocabulary file.");
-		this.readVocabularyFile("/Users/gune00/data/wordVectorTests/vocFile.txt");
+		this.readVocabularyFile("resources/features/vocFile.txt");
 		System.out.println("Read left/right context vector files.");
-		this.readContextFile("/Users/gune00/data/wordVectorTests/vocContext.txt");
+		this.readContextFile("resources/features/vocContext"+maxIndicatorWords+".txt");
 		System.out.println("Done!");
 	}
 	
 	public void createAndWriteDistributedWordFeaturesSparse(int maxIndicatorWords) throws IOException {
 		Corpus corpus = new Corpus();
 		System.out.println("Read  " + maxIndicatorWords + " indicator words sorted acoording to rank.");
-		this.initIndicatorMap("resources/iw.txt", maxIndicatorWords);
+		this.initIndicatorMap("resources/features/iw_all.txt", maxIndicatorWords);
 
 		System.out.println("Read sentences from corpus and create word vectors.");
-		this.readFlorsCorpus(corpus);
+		this.readGNTCorpus(corpus);
 		this.computeDistributedWordWeights();
 
-		this.writeFlorsCondensed();
+		this.writeFlorsCondensed(maxIndicatorWords);
 	}
 
 	//***
-	
-	// This is a test which creates vector files so that one can test using "diff" whether the same file content is created
-	// from fresh text sources and from load vectors
-	public void testWriteFlorsCondensed(){
-		System.out.println("Testing Write FLORS condensed from read vectors ...");
-		System.out.println("Write out used indicator words file.");
-		this.writeIndicatorWordFile("/Users/gune00/data/wordVectorTests/iw2.txt");
-
-		System.out.println("Write out vocabulary file.");
-		this.writeVocabularyFile("/Users/gune00/data/wordVectorTests/vocFile2.txt");
-		System.out.println("Write out left/right context vector files.");
-		this.writeContextFile("/Users/gune00/data/wordVectorTests/vocContext2.txt");
-		System.out.println("Done!");
-	}
-
 	
 
 	// Eventually
@@ -519,7 +505,7 @@ public class WordDistributedFeatureFactory {
 
 		dwvFactory.createAndWriteDistributedWordFeaturesSparse(250);
 
-		dwvFactory.readDistributedWordFeaturesSparse();
+		dwvFactory.readDistributedWordFeaturesSparse(250);
 	}
 
 }
