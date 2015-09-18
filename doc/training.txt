@@ -128,44 +128,40 @@ Status Training:
 	Save  model file: /Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt -> 162 seconds (ca. 60MB)
 	-> it seems that when using modelInfo=MDP, then size of model is similar independent of parameters (and so the load time)
 	
-	-> but also for L2R_LR is growth moderately
-
-PROBLEM:
-
-when sentence count is -1 or > 39200 -> I get liblinear error that indices in problem instances are not correctly ordered 
-wnen sentence countis= -1 & wordvectors are deactivated -> error array bounds
-
-How can activate/activate features ?
--> this can be done as part of features.WordFeatures.fillWordFeatures(String, int, Alphabet, boolean)
--> and by defining useful parameters, _noShpae, :noSuffix, :noWordVectors
+	-> but also for L2R_LR it growth moderately
 	
+Activation of features: if one is set to false, featuer is deactivated -> also use this in model file name
+public static boolean withWordFeats = true;
+public static boolean withShapeFeats = true;
+public static boolean withSuffixFeats = true;
+
+- now, when running:
+
+with w=2, d=0, m=GNT, s=39274 und features activated=FTT
+training time: 1801235
+model saving time: 38036
+model file: resources/models/model_0iw39274sent_FTT_L2R_LR.txt (467MB)
+
+same, but m=FLORS:
+System time (msec): 673170
+Save  model file: resources/models/model_0iw39274sent_FTT_L2R_L2LOSS_SVC.txt
+System time (msec): 39302
+
 
 
 EFFICIENCY:
-
--> I will first go with iw=50 and examples=5000 for testing complete system
-
-Processing experiments:
-All training instances
-- with iw=100: 0.35705 minutes
-- with iw=200: 0.499816667 minutes
-- with iw=300: 0.659533333 minutes
-
-Used in Flors:
-- with iw=250: 0.575133333 minutes
-- with iw=500: 0.9153 minutes
 
 Memory needed:
 n * m * 8 + m (laut Bernd)
 average vector length * #window instances * 8 (double) + #window instances
 
-iw=500, #sentences=39278 ->
-2291*958150*8+958150 -> 17.5619313 gigabytes
+PROBLEM:
 
-iw=50, #sentences=5000 -> 
-365*122983*8+122983 -> 0.359233343 gigabytes
+when sentence count is -1 (max=39278) or > 39274; 
+-> I get lib-linear error that indices in problem instances are not correctly ordered 
 
-iw=250, #sentences=5000
-1303*122983*8+122983 -> 1.28209777 gigabytes
- 
- 
+Everything works, but I get not reproduce FLORS result:
+
+- I get worse results for english-test and domain test:
+	- in both cases I tag very often words with -RRB-, -LRB-
+	- STRANGE: I predict pos tags which are not trained, e-g-, -RRB-, -LRB-, NFP, FW

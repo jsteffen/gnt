@@ -1,6 +1,7 @@
 package data;
 
 import de.bwaldvogel.liblinear.SolverType;
+import features.WordFeatures;
 
 public class ModelInfo {
 
@@ -93,8 +94,14 @@ public class ModelInfo {
 
 	}
 	public void createModelFileName(int dim, int numberOfSentences) {
-		this.modelFile = this.modelFilePrefix+dim+"iw"+numberOfSentences+"sent_"+this.getSolver()+".txt";
+		String wordFeatString = (WordFeatures.withWordFeats)?"T":"F";
+		String shapeFeatString = (WordFeatures.withShapeFeats)?"T":"F";
+		String suffixFeatString = (WordFeatures.withShapeFeats)?"T":"F";
+		if (wordFeatString.equals("F")) dim=0;
 
+		this.modelFile = 
+				this.modelFilePrefix+dim+"iw"+numberOfSentences+"sent_"+
+				wordFeatString+shapeFeatString+suffixFeatString+"_"+
+				this.getSolver()+".txt";
 	}
-
 }

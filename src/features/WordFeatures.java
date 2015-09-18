@@ -36,6 +36,10 @@ public class WordFeatures {
 	private List<Pair<Integer,Boolean>> suffix = new ArrayList<Pair<Integer,Boolean>>();
 	// I am using here a list although we only have always one shape
 	private List<Pair<Integer,Boolean>> shape = new ArrayList<Pair<Integer,Boolean>>();
+	
+	public static boolean withWordFeats = true;
+	public static boolean withShapeFeats = true;
+	public static boolean withSuffixFeats = true;
 
 	//Setters and getters
 	public List<Pair<Integer, Double>> getLeft() {
@@ -95,13 +99,18 @@ public class WordFeatures {
 		suffixOffset = shapeOffset + 1 + OffSets.shapeSize-1;
 	}
 
+	// TODO allow that featues can be switched off
 	public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
 		// if word is a sentence padding element, then just return an empty WordFeatures
 		if (word.endsWith("<BOUNDARY>")) return;
-		fillLeftDistributedWordFeatures(word, alphabet, train, true);
-		fillRightDistributedWordFeatures(word, alphabet, train, true);
-		fillShapeFeatures(word, index, alphabet, true);
-		fillSuffixFeatures(word, alphabet, true);
+		if (WordFeatures.withWordFeats) {
+			fillLeftDistributedWordFeatures(word, alphabet, train, true);
+			fillRightDistributedWordFeatures(word, alphabet, train, true);
+		}
+		if (WordFeatures.withShapeFeats)
+			fillShapeFeatures(word, index, alphabet, true);
+		if (WordFeatures.withSuffixFeats)
+			fillSuffixFeatures(word, alphabet, true);
 	}
 
 	// boolean flag offline means: assume that features have been pre-loaded into to memory
@@ -187,7 +196,7 @@ public class WordFeatures {
 		for (Pair<Integer,Double> pair : this.getLeft()){
 			int index = (this.isAdjust())?(pair.getL()-this.leftOffset):(pair.getL());
 			double value = pair.getR();
-			// index+1 plus is needed because left is a vector with index tsarting from 0, but I start iw words from 1
+			// index+1 plus is needed because left is a vector with index starting from 0, but I start iw words from 1
 			String label = alphabet.getWordVectorFactory().getNum2iw().get(index+1);
 			System.out.print(label+":"+index+":"+value+";");
 		}
@@ -195,7 +204,7 @@ public class WordFeatures {
 		for (Pair<Integer,Double> pair : this.getRight()){
 			int index = (this.isAdjust())?(pair.getL()-this.rightOffset):(pair.getL());
 			double value = pair.getR();
-			// index+1 plus is needed because left is a vector with index tsarting from 0, but I start iw words from 1
+			// index+1 plus is needed because left is a vector with index starting from 0, but I start iw words from 1
 			String label = alphabet.getWordVectorFactory().getNum2iw().get(index+1);
 			System.out.print(label+":"+index+":"+value+";");
 		}

@@ -5,6 +5,7 @@ import java.io.IOException;
 import tagger.GNTagger;
 import test.GNTrainer;
 import data.ModelInfo;
+import features.WordFeatures;
 
 /**
  * The main calls for training and tagging and testing with GNTagger
@@ -17,8 +18,8 @@ import data.ModelInfo;
 /*
  * arguments:
  * 
- * -mode train -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -f <filename>
- * -mode test -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -f <filename test> -e <evalFileName>
+ * -mode train -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename>
+ * -mode test -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename test> -e <evalFileName>
  */
 public class GNT {
 	private String mode = "train";
@@ -29,65 +30,102 @@ public class GNT {
 	private String inFile = "";
 	private String outFile = "";
 
-
+	public GNT(){
+		this.setDefaultValues();
+	}
 
 	private void errorMessageAndExit(){
-		System.err.println("No arguments specified. Run either");
 		System.err.println("-mode train -w <window size> -d <dimension> -s <number of sentences> "
-				+ "-m <model info type> -f <training file name in conll format>"
+				+ "-m <model info type> "
+				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T"
+				+ "-f <training file name in conll format>"
 				+ "\nor ...");
 		System.err.println("-mode test -w <window size> -d <dimension> -s <number of sentences> "
-				+ "-m <model info type> -f <test file name in conll format> -e <merged output file for evaluation>");
+				+ "-m <model info type> "
+				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T"
+				+ "-f <test file name in conll format> -e <merged output file for evaluation>");
+		System.err.println("Or use defaults by just calling -mode train|test ; Default values are:");
+		System.err.println(this.toString());
 		// Exit with error !
 		System.exit(1);
 	}
 
-	private void setArgValues(String[] args) {
-		if (args.length == 0) 
-			errorMessageAndExit();
-		else
-			if ((args.length == 12)){
-				this.initWith12arguments(args);
-			}
-			else
-				if ((args.length == 14)){
-					this.initWith14arguments(args);
-				}
+	private void setDefaultValues(){
+		mode = "train";
+		windowSize = "2";
+		dimension = "500";
+		sentences = "39274";
+		modelInfoType = "GNT";
+		inFile = "";
+		outFile = "";
+		WordFeatures.withWordFeats = true;
+		WordFeatures.withShapeFeats = true;
+		WordFeatures.withSuffixFeats = true;
+	}
+	
+	private void initGNTArguments(String[] args){
+
+		if (args[0].equalsIgnoreCase("-mode"))this.mode = args[1];
+		for (int i=0; i < args.length;i++){
+			switch (args[i]){
+			case "-mode" : this.mode = args[1]; break;
+			case "-w" : this.windowSize= args[i+1]; break;
+			case "-d" : this.dimension= args[i+1]; break;
+			case "-s" : this.sentences= args[i+1]; break;
+			case "-m" : this.modelInfoType= args[i+1]; break;
+			case "-f" : this.inFile= args[i+1]; break;
+			case "-e" : this.outFile = args[i+1]; break;
+			case "-wordFeats" : 
+				if (args[i+1].equalsIgnoreCase("F"))
+					WordFeatures.withWordFeats=false;
 				else
-					errorMessageAndExit();
-
+					WordFeatures.withWordFeats=true;
+				; break;
+			case "-shapeFeats" : 
+				if (args[i+1].equalsIgnoreCase("F"))
+					WordFeatures.withShapeFeats=false;
+				else
+					WordFeatures.withShapeFeats=true;
+				; break;
+			case "-suffixFeats" : 
+				if (args[i+1].equalsIgnoreCase("F"))
+					WordFeatures.withSuffixFeats=false;
+				else
+					WordFeatures.withSuffixFeats=true;
+				; break;
+			}
+		}
 	}
 
-	// -mode train -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -f <filename>
-	private void initWith12arguments(String[] args) {
-		if (args[0].equalsIgnoreCase("-mode"))this.mode = args[1];
-		if (args[2].equalsIgnoreCase("-w"))this.windowSize= args[3];
-		if (args[4].equalsIgnoreCase("-d"))this.dimension = args[5];
-		if (args[6].equalsIgnoreCase("-s"))this.sentences = args[7];
-		if (args[8].equalsIgnoreCase("-m"))this.modelInfoType = args[9];
-		if (args[10].equalsIgnoreCase("-f"))this.inFile = args[11];
-
-	}
-
-	// -mode test -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -f <filename test> -e <evalFileName>
-	private void initWith14arguments(String[] args) {
-		if (args[0].equalsIgnoreCase("-mode"))this.mode = args[1];
-		if (args[2].equalsIgnoreCase("-w"))this.windowSize= args[3];
-		if (args[4].equalsIgnoreCase("-d"))this.dimension = args[5];
-		if (args[6].equalsIgnoreCase("-s"))this.sentences = args[7];
-		if (args[8].equalsIgnoreCase("-m"))this.modelInfoType = args[9];
-		if (args[10].equalsIgnoreCase("-f"))this.inFile = args[11];
-		if (args[12].equalsIgnoreCase("-e"))this.outFile = args[13];
+	private void setArgValues(String[] args) {
+		if ((args.length == 0)) 
+		{
+			System.err.println("No arguments specified. Run either");
+			errorMessageAndExit();
+		}
+		if ((args.length % 2) != 0){
+			System.err.println("Not all arguments have values! Check!");
+			errorMessageAndExit();
+		}
+		if (args[0].equals("-mode"))
+		{
+			this.initGNTArguments(args);
+		}
+		else
+			errorMessageAndExit();
 	}
 
 	public String toString (){
 		String output = "";
-		
+
 		output += "-mode "+ this.mode ;
 		output += " -w "+ this.windowSize ;
 		output += " -d "+ this.dimension ;
 		output += " -s "+ this.sentences ;
 		output += " -m "+ this.modelInfoType ;
+		output += " -wordFeats "+ ((WordFeatures.withWordFeats)?"T":"F");
+		output += " -shapeFeats "+ ((WordFeatures.withShapeFeats)?"T":"F");
+		output += " -suffixFeats "+ ((WordFeatures.withSuffixFeats)?"T":"F");
 		output += " -f "+ this.inFile ;
 		if (this.mode.equalsIgnoreCase("test"))
 			output += " -e "+ this.outFile ;
@@ -130,15 +168,13 @@ public class GNT {
 		posTagger.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
 
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile);
-		
-		System.out.println("To evaluate performance call:");
-		System.out.println("resources/conlleval -r < " + this.outFile);
 	}
 
 
 	public static void main(String[] args) throws IOException{
 		GNT newGNT = new GNT();
 		newGNT.setArgValues(args);
+		
 		if (newGNT.mode.equalsIgnoreCase("train"))
 			newGNT.runGNTrainer(args);
 		else
@@ -146,7 +182,6 @@ public class GNT {
 				newGNT.runGNTagger(args);
 			else
 				System.exit(1);
-
 	}
 
 }

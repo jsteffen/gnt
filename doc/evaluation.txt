@@ -37,6 +37,9 @@ so I guess:
 	- create eval file
 	- call ./bin/conlleval -r < eval-file
 	
+I do now compute accuracy by my own. seems to be correct.
+See class corpus/EvalConllFile.java
+	
 	
 - Current results:
   iw=50, #sent=5000
@@ -86,12 +89,18 @@ iw=100, #sent=10000
 	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 28821.
 	accuracy:  86.37%; precision:  86.37%; recall:  83.05%; FB1:  84.68
 
-iw=100, #sent=all
+GNT:
+iw=0, #sent=392740
+processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 32654.
+accuracy:  97.86%; precision:  97.86%; recall:  94.10%; FB1:  95.94
+FLORS:
+processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 32697.
+accuracy:  97.99%; precision:  97.99%; recall:  94.22%; FB1:  96.07
 
-I started evaluation on  ssh lns-87244 -l neumann (64 GB). Xmx=24g
-All code is on /project/excitement/gnt
+When running above FLORS on 
+"resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll", "resources/eval/gweb-answers-dev-flors.txt"
+I get: accuracy:  55.26% which is similar to Flors-OOV reported accuarcy (55.82%)
 
-16th September 2015:
-I run with iw=500 and all sentences
+
 
 

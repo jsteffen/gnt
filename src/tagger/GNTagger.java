@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import corpus.EvalConllFile;
 import trainer.ProblemInstance;
 import data.Alphabet;
 import data.Data;
@@ -20,6 +21,7 @@ import data.Sentence;
 import data.Window;
 import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
+import features.WordFeatures;
 
 public class GNTagger {
 	private Data data = new Data();
@@ -219,7 +221,7 @@ public class GNTagger {
 		while ((line = conllReader.readLine()) != null) {
 			if (line.isEmpty()) {
 				// Stop if max sentences have been processed
-				if  ((max > 0) && (data.getSentenceCnt() >= max)) break;
+				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 				
 				// create internal sentence object and label maps
 				// I use this here although labels will be late overwritten - but can u8se it in eval modus as well
@@ -256,7 +258,7 @@ public class GNTagger {
 		while ((line = conllReader.readLine()) != null) {
 			if (line.isEmpty()) {
 				// Stop if max sentences have been processed
-				if  ((max > 0) && (data.getSentenceCnt() >= max)) break;
+				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 				
 				// create internal sentence object and label maps
 				// I use this here although labels will be late overwritten - but can u8se it in eval modus as well
@@ -310,6 +312,7 @@ public class GNTagger {
 
 		System.out.println("Do testing from file: " + sourceFileName);
 		System.out.println("Train?: " + train + " Adjust?: " + adjust + "\n");
+		System.out.println("Offsets: " + this.getOffSets().toString());
 		System.out.println(this.getModel().toString());
 
 		time1 = System.currentTimeMillis();
@@ -317,10 +320,8 @@ public class GNTagger {
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 		
-		System.out.println("Offsets: " + this.getOffSets().toString());
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
 		System.out.println("Testing instances: " + Window.windowCnt);
-		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 
 	}
 	
@@ -338,30 +339,36 @@ public class GNTagger {
 
 		System.out.println("Do testing from file: " + sourceFileName);
 		System.out.println("Train?: " + train + " Adjust?: " + adjust + "\n");
-		System.out.println("Create eval file: " + evalFileName);
+		System.out.println("Offsets: " + this.getOffSets().toString());
+		
 		System.out.println(this.getModel().toString());
 
 		time1 = System.currentTimeMillis();
 		// -1 means: all sentences from file are processed
 		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, -1);
+		
+		System.out.println("Create eval file: " + evalFileName);
+		
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 		
-		System.out.println("Offsets: " + this.getOffSets().toString());
+		
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
 		System.out.println("Testing instances: " + Window.windowCnt);
-		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
+		EvalConllFile.computeAccuracy(evalFileName);
 
 	}
 
 	public static void main(String[] args) throws IOException{
 		
 		
-		ModelInfo modelInfo = new ModelInfo("GNT");
-		
+		ModelInfo modelInfo = new ModelInfo("FLORS");
 		int windowSize = 2;
-		int numberOfSentences = 500;
-		int dim = 50;
+		int numberOfSentences = 39274;
+		int dim = 0;
+		
+		WordFeatures.withWordFeats=false;
+		
 		modelInfo.createModelFileName(dim, numberOfSentences);
 		
 		System.out.println(modelInfo.toString());
@@ -370,8 +377,10 @@ public class GNTagger {
 
 		posTagger.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
 		
-		posTagger.tagAndWriteFromConllDevelFile(
-				"resources/data/english/english-devel.conll", "resources/eval/english-devel.txt");
+		//"resources/data/english/english-devel.conll", "resources/eval/english-devel-flors.txt"
+		String testFile = "resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll";
+		String evalFile = "resources/eval/gweb-weblogs-dev-flors.txt";
+		posTagger.tagAndWriteFromConllDevelFile(testFile, evalFile);
 	}
 
 }

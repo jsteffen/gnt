@@ -1,6 +1,6 @@
 Possible parameters for experiments:
 
-- dimension of indicator words -> size if distributed feature of words
+- dimension of indicator words -> size of distributed feature of words
 	- means that distributed word features have to be pre-processed with maxIndicatorWords
 	- Schnabel&Schütze 2013: use all iw (the larger the better)
 	

@@ -6,6 +6,7 @@ import data.ModelInfo;
 import data.OffSets;
 import data.Window;
 import features.WordDistributedFeatureFactory;
+import features.WordFeatures;
 import trainer.ProblemInstance;
 import trainer.TrainerInMem;
 
@@ -14,7 +15,8 @@ public class GNTrainer {
 	private TrainerInMem trainer;
 	private long time1 ;
 	private long time2;
-
+	
+	//
 	public TrainerInMem getTrainer() {
 		return trainer;
 	}
@@ -30,7 +32,7 @@ public class GNTrainer {
 		this.trainer = new TrainerInMem(modelInfo, dim);
 	}
 
-	// test methods
+	// This is a method for on-demand creation of the distributed word vectors given the dimension dim.
 
 	private void createWordVectors(int dim) throws IOException{
 		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
@@ -82,10 +84,12 @@ public class GNTrainer {
 	}
 
 	public static void main(String[] args) throws IOException{
-		ModelInfo modelInfo = new ModelInfo("GNT");
+		ModelInfo modelInfo = new ModelInfo("FLORS");
 		int windowSize = 2;
-		int numberOfSentences = 39200;
-		int dim = 1;
+		int numberOfSentences = 39274;
+		int dim = 5;
+		
+		WordFeatures.withWordFeats=false;
 		
 		modelInfo.createModelFileName(dim, numberOfSentences);
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);

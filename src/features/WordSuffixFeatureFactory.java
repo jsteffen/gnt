@@ -208,27 +208,12 @@ public class WordSuffixFeatureFactory {
 		return indices;
 	}
 
-	//TODO
-	// for an incremental update I need to return the indices of each training instance, either new or cached
-
-	/**
-	 * Given a word and a suffix, first check whether suffix is a known one and
-	 * if word contains it
-	 * @param word
-	 * @param suffix
-	 * @return
-	 */
-	public boolean hasKnownSuffix(String word, String suffix){
-		return (
-				this.getSuffix2num().containsKey(suffix) &&
-				suffix.equals(word.substring((word.length()-suffix.length())))
-				);
-	}
-
 	//** tests methods
 	public void testWriteSuffixList(){
-		Corpus corpus = new Corpus();
-		this.readFlorsCorpus(corpus);
+		
+		createSuffixListFromFile("resources/data/english/english-train-sents.txt", -1);
+		// createSuffixListFromFile("resources/data/ptb/unlab/english_ptb_unlab", -1);
+		
 		System.out.println("#word: " + this.wordCnt + 
 				" #suffixes: " + this.suffixCnt);
 		System.out.println("Writing suffix list to: " + "resources/features/suffixList.txt");
@@ -245,12 +230,5 @@ public class WordSuffixFeatureFactory {
 	public static void main(String[] args){
 		WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
 		wordSuffixFactory.testWriteSuffixList();
-		int suffixIndex = wordSuffixFactory.getLongestKnownSuffixForWord("bush");
-		if (suffixIndex > -1) System.out.println(wordSuffixFactory.num2suffix.get(suffixIndex));
-		List<Integer> indices = wordSuffixFactory.getAllKnownSuffixForWord("appple");
-		for (int x : indices){
-			System.out.println(wordSuffixFactory.num2suffix.get(x));
-		}
-		System.out.println(wordSuffixFactory.hasKnownSuffix("xbush", "ush"));
 	}
 }

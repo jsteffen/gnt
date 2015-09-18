@@ -18,17 +18,17 @@
 	
 16.9.2015:
 
-- define a single place for major resources
+- define a single place for major resources -> DONE
 
-- define main function to be used by exectuable
+- define main function to be used by exectuable -> DONE
 
-- train larger models
+- train larger models -> DONE
 
 17.9.2015
 
-- allow training without selected features
+- allow training without selected features -> DONE
 
-- allow run shells with parameters and defaults
+- allow run shells with parameters and defaults -> DONE
 
 - handle GNTrainer bugs
 

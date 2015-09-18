@@ -150,7 +150,6 @@ public class TrainerInMem {
 				modelInfo.getEps()));
 	}
 
-
 	// Methods
 
 	/*
@@ -216,7 +215,7 @@ public class TrainerInMem {
 		while ((line = conllReader.readLine()) != null) {
 			if (line.isEmpty()) {
 				// Stop if max sentences have been processed
-				if  ((max > 0) && (data.getSentenceCnt() >= max)) break;
+				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 
 				// create internal sentence object and label maps
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);

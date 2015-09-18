@@ -96,7 +96,7 @@ public class WordShapeFeatureFactory {
 			while ((line = reader.readLine()) != null) {
 				if  ((max > 0) && (lineCnt >= max)) break;
 				lineCnt++;
-				// split off words -> it will be lowercased as part of the process that computes the signatures
+				// split off words -> it will be lower-cased as part of the process that computes the signatures
 				String[] words = line.split(" ");
 				// then compute suffixes
 				computeShapeVectorsFromWords(words);
@@ -158,7 +158,7 @@ public class WordShapeFeatureFactory {
 			// NOTE: here, I need to use the original word for creating its shape !
 			WordShapeFeature wordShapeVector = new WordShapeFeature(wordIn, wordIndex);
 			this.wordCnt++;
-			System.out.println("Word: " + word + " and Loc: " + wordIndex + " Sign: " + wordShapeVector.toString());
+			//System.out.println("Word: " + word + " and Loc: " + wordIndex + " Sign: " + wordShapeVector.toString());
 			word2signature.put(word, wordShapeVector);
 		}
 	}
@@ -210,6 +210,7 @@ public class WordShapeFeatureFactory {
 	public static void main(String[] args){
 		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
 		wordShapeFactory.createShapeVectorsFromFile("resources/data/english/english-train-sents.txt", -1);
+		//wordShapeFactory.createShapeVectorsFromFile("resources/data/ptb/unlab/english_ptb_unlab", -1);
 
 		System.out.println("Writing shape list to: " + "resources/features/shapeList.txt");
 		wordShapeFactory.writeShapeFeatureFile("resources/features/shapeList.txt");

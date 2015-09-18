@@ -32,7 +32,7 @@ public class Alphabet {
 	// Methods
 
 	public void loadFeaturesFromFiles(int dim){
-		this.wordVectorFactory.readDistributedWordFeaturesSparse(dim);
+		if (dim > 0) this.wordVectorFactory.readDistributedWordFeaturesSparse(dim);
 		this.wordSuffixFactory.testReadSuffixList();
 		this.wordShapeFactory.testReadShapeList();
 	}
