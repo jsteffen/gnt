@@ -19,7 +19,7 @@ Java object structure:
 	process conll training file and create sentence internal forms: list of pairs (word, pos)
 	I need to define a label2num num2label file
 	
-	for each sentence, perform windows based processing, with prespecified window size
+	for each sentence, perform windows based processing, with pre-specified window size
 	fills feature vector parts  for each word
 	writes out liblinear model file (as gzipped)
 	
@@ -160,8 +160,13 @@ PROBLEM:
 when sentence count is -1 (max=39278) or > 39274; 
 -> I get lib-linear error that indices in problem instances are not correctly ordered 
 
-Everything works, but I get not reproduce FLORS result:
+Everything works, but I cannot reproduce FLORS result:
 
 - I get worse results for english-test and domain test:
 	- in both cases I tag very often words with -RRB-, -LRB-
 	- STRANGE: I predict pos tags which are not trained, e-g-, -RRB-, -LRB-, NFP, FW
+	- In domain-devel files these pos tags exist, 
+		but I should not predict them because I do not have them in my training set
+	
+- Can it be that I use the wrong PTB version for training ? -> IT SEEMS SO !
+- But it does not explain how I can predict them ! There must be some error.
