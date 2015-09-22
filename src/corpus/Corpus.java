@@ -18,6 +18,10 @@ public class Corpus {
 		trainingLabeledData.add("resources/data/english/ptb3-std-training");
 		devLabeledData.add("resources/data/english/ptb3-std-devel");
 		testLabeledData.add("resources/data/english/ptb3-std-test");
+		
+		trainingLabeledData.add("resources/data/ner/eng-testa");
+		devLabeledData.add("resources/data/ner/eng-testb");
+		testLabeledData.add("resources/data/ner/eng-train");
 
 		devLabeledData.add("resources/data/pbiotb/dev/english_pbiotb_dev");
 		
@@ -44,6 +48,10 @@ public class Corpus {
 		trainingUnLabeledData.add("resources/data/english/ptb3-std-training-sents.txt");
 		devUnLabeledData.add("resources/data/english/ptb3-devel-sents.txt");
 		testUnLabeledData.add("resources/data/english/ptb3-std-test-sents.txt");
+		
+		trainingUnLabeledData.add("resources/data/ner/eng-testa-sents.txt");
+		devUnLabeledData.add("resources/data/ner/eng-testb-sents.txt");
+		testUnLabeledData.add("resources/data/ner/eng-train-sents.txt");
 		
 		trainingUnLabeledData.add("resources/data/pbiotb/dev/english_pbiotb_dev-sents.txt");
 

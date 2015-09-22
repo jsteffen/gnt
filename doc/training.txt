@@ -149,6 +149,9 @@ System time (msec): 39302
 
 training with new ptb3 training set of 39826 sentences: 11.5470167 minutes
 
+training with new ptb3-std-training setting: 38215 (of 38219): 10.5294167 minutes
+
+
 EFFICIENCY:
 
 Memory needed:
@@ -168,5 +171,10 @@ so what is a word?
 when not using distributed word vectors, I still have at least one feature length of 1
 
 For being able to were I am, I will create ptb3-std-training.conll etc. data -> DONE
+sentences: 38219 -> use 38215 because of above error
 
-sentences: 38219
+OK, now training with iw=25 
+-> construction of in memory problem: about 4 minutes.
+-> construction of model: 46.5056 minutes
+-> save model: 14.6517667 minutes
+

@@ -114,7 +114,7 @@ public class ConllMapper {
 
 		String line = "";
 		while ((line = reader.readLine()) != null) {
-			if (line.isEmpty())writer.newLine();
+			if (line.isEmpty()) writer.newLine();
 			else
 			{
 				String[] tokenizedLine = line.split("\t");
@@ -138,9 +138,58 @@ public class ConllMapper {
 
 	}
 
+	public void transcodeNERfile(String sourceFileName, String sourceEncoding,
+			String targetFileName, String targetEncoding)
+					throws IOException{
+		// init reader for CONLL style file
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(
+						new FileInputStream(sourceFileName),
+						sourceEncoding));
+
+		// init writer for line-wise file
+		BufferedWriter writer = new BufferedWriter(
+				new OutputStreamWriter(
+						new FileOutputStream(targetFileName),
+						targetEncoding));
+
+		String line = "";
+		int tokenCnt = 0;
+		while ((line = reader.readLine()) != null) {
+			if (line.isEmpty()) {
+				tokenCnt = 0;
+				writer.newLine();
+			}
+			else
+			{ //if (!line.equals("-DOCSTART- -X- O O"))
+			{
+				tokenCnt++;
+				String[] tokenizedLine = line.split(" ");
+				writer.write(this.nerTokenToString(tokenizedLine, tokenCnt));
+				writer.newLine();
+			}
+			}
+		}
+
+		reader.close();
+		writer.close();
+	}
+
+	private String nerTokenToString(String[] tokenizedLine, int index) {
+		// West NNP I-NP I-MISC
+		// index West NNP I-NP I-MISC
+		String output = index+"\t";
+		output +=tokenizedLine[0]+"\t";
+		output +=tokenizedLine[1]+"\t";
+		output +=tokenizedLine[2]+"\t";
+		output +=tokenizedLine[3];
+		return output;
+
+	}
+
 	public static void main(String[] args) throws IOException {
 		ConllMapper mapper = new ConllMapper();
 		mapper.transcodeFlorsFileList();
-		//mapper.transcode2("resources/data/english/ptb3-std-test.conll", "utf-8", "resources/data/english/ptb3-std-test2.conll", "utf-8");
+		//mapper.transcodeNERfile("resources/data/ner/eng.testb", "utf-8", "resources/data/ner/eng-testb.conll", "utf-8");
 	}
 }	

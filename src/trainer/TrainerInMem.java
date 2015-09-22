@@ -139,7 +139,7 @@ public class TrainerInMem {
 	public TrainerInMem (int windowSize){
 		this.setWindowSize(windowSize);
 	}
-	
+
 	public TrainerInMem (ModelInfo modelInfo, int windowSize){
 		this.setWindowSize(windowSize);
 		this.setModelInfo(modelInfo);
@@ -172,7 +172,7 @@ public class TrainerInMem {
 	 * - save model file
 	 */
 
-	
+
 	/**
 	 * For each token of a sentence create a window frame, add the label of the current sentence token wot the window
 	 * and store it in Data instances.
@@ -214,17 +214,18 @@ public class TrainerInMem {
 
 		while ((line = conllReader.readLine()) != null) {
 			if (line.isEmpty()) {
-				// Stop if max sentences have been processed
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 
-				// create internal sentence object and label maps
-				data.generateSentenceObjectFromConllLabeledSentence(tokens);
+					// create internal sentence object and label maps
+					data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
-				// create window frames and store in list
-				createWindowFramesFromSentence();
+					// System.out.println("In:  " + this.taggedSentenceToString());
 
-				// reset tokens
-				tokens = new ArrayList<String[]>();
+					// create window frames and store in list
+					createWindowFramesFromSentence();
+
+					// reset tokens
+					tokens = new ArrayList<String[]>();
 			}
 			else {
 				String[] tokenizedLine = line.split("\t");
@@ -334,6 +335,20 @@ public class TrainerInMem {
 		this.runLiblinearTrainer();
 
 		System.out.println("... done");
+	}
+
+	public String taggedSentenceToString(){
+		String output ="";
+		int mod = 10;
+		int cnt = 0;
+		for (int i=0; i < this.getData().getSentence().getWordArray().length;i++){
+			output += this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i])+"/"+
+					this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i])+" ";
+			cnt++;
+			if ((cnt % mod)==0) output+="\n";
+		}
+		return output;
+
 	}
 
 	private void runLiblinearTrainer() throws IOException {

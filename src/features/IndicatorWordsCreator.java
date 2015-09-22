@@ -164,6 +164,10 @@ public class IndicatorWordsCreator {
 		// Test data
 		// unlabeled PTB-BIO
 		readAndProcessInputTextLineWise("resources/data/pbiotb/unlab/all-unlab.txt", "ptb", 100000);
+		
+		readAndProcessInputTextLineWise("resources/data/ner/eng-train-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/eng-testa-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/eng-testb-sents.txt", "ptb", 1000);
 
 		// sentence form from resources/data/sancl-2012/ 
 

@@ -37,7 +37,7 @@ so I guess:
 	- create eval file
 	- call ./bin/conlleval -r < eval-file
 	
-For current SOTA: http://aclweb.org/aclwiki/index.php?title=POS_Tagging_%28State_of_the_art%29
+
 	
 I do now compute accuracy by my own. seems to be correct.
 See class corpus/EvalConllFile.java
@@ -68,11 +68,70 @@ iw=0, #sent=392740, FLORS:
 -> All pos: 5017 Correct: 4472 Accuracy: 89,14% (official: 87,27%, +1,87)
 
 
+PTB3-std: For current SOTA: http://aclweb.org/aclwiki/index.php?title=POS_Tagging_%28State_of_the_art%29
+
+With model: resources/models/model_0iw38215sent_FTT_L2R_L2LOSS_SVC.txt
+
+"resources/data/english/ptb3-std-devel.conll", "resources/eval/ptb3-std-devel-flors.txt"
+-> All pos: 131808 Correct: 127434 Accuracy: 96,68%
+"resources/data/english/ptb3-std-test.conll", "resources/eval/ptb3-std-test-flors.txt"
+-> All pos: 129696 Correct: 125510 Accuracy: 96,77% (-0,34% cf. Flors, -0,78% cf. best)
+
+
+With model: resources/models/model_25iw38215sent_TTT_L2R_L2LOSS_SVC.txt
+
+"resources/data/english/ptb3-std-devel.conll", "resources/eval/ptb3-std-devel-flors.txt"
+-> All pos: 131808 Correct: 110583 Accuracy: 83,90%
+"resources/data/english/ptb3-std-test.conll", "resources/eval/ptb3-std-test-flors.txt"
+-> All pos: 129696 Correct: 106930 Accuracy: 82,45%
 
 
 
+Testing NER:
+-> had to update corpus data foies as well!
+
+eng.train.conll -> mapped to conll format via 
+
+modefile: model_0iw-1sent_FTT_L2R_L2LOSS_SVC.txt
+mapper.transcodeNERfile("resources/data/ner/eng.testb", "utf-8", "resources/data/ner/eng-testb.conll", "utf-8");
 
 
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 9408 phrases; found: 6155 phrases; correct: 5000.
+accuracy:  97.40%; precision:  81.23%; recall:  53.15%; FB1:  64.25
+              LOC: precision:  88.45%; recall:  90.47%; FB1:  89.45
+             MISC: precision:  81.54%; recall:  79.07%; FB1:  80.29
+              ORG: precision:  67.76%; recall:  75.24%; FB1:  71.31
+              PER: precision:  84.52%; recall:  86.86%; FB1:  85.68
+                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
+lt-pool-183:resources gune00$ ./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 9332 phrases; found: 6133 phrases; correct: 4252.
+accuracy:  95.45%; precision:  69.33%; recall:  45.56%; FB1:  54.99
+              LOC: precision:  80.66%; recall:  86.03%; FB1:  83.26
+             MISC: precision:  63.35%; recall:  71.65%; FB1:  67.25
+              ORG: precision:  59.26%; recall:  67.25%; FB1:  63.00
+              PER: precision:  71.46%; recall:  74.03%; FB1:  72.72
+                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
 
-
-
+ModelInfo modelInfo = new ModelInfo("FLORS");
+		int windowSize = 2;
+		int numberOfSentences = 14000;
+		int dim = 50;
+		WordFeatures.withWordFeats=true;
+		
+lt-pool-183:resources gune00$ ./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 9332 phrases; found: 6010 phrases; correct: 4353.
+accuracy:  95.77%; precision:  72.43%; recall:  46.65%; FB1:  56.75
+              LOC: precision:  80.62%; recall:  85.31%; FB1:  82.90
+             MISC: precision:  68.58%; recall:  71.51%; FB1:  70.01
+              ORG: precision:  60.43%; recall:  62.79%; FB1:  61.59
+              PER: precision:  77.50%; recall:  85.65%; FB1:  81.37
+                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
+lt-pool-183:resources gune00$ ./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 9408 phrases; found: 6135 phrases; correct: 4912.
+accuracy:  97.05%; precision:  80.07%; recall:  52.21%; FB1:  63.21
+              LOC: precision:  86.51%; recall:  89.38%; FB1:  87.93
+             MISC: precision:  78.23%; recall:  74.84%; FB1:  76.50
+              ORG: precision:  66.20%; recall:  66.74%; FB1:  66.47
+              PER: precision:  84.12%; recall:  91.48%; FB1:  87.65
+                X: precision:   0.00%; recall:   0.00%; FB1:   0.00

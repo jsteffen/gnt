@@ -11,7 +11,7 @@ public class Data {
 	private int sentenceCnt = 0;
 	private List<Window> instances = new ArrayList<Window>();
 	private String labelMapFileName = "resources/features/labelSet.txt";
-
+	
 	// Setters and getters
 
 	public List<Window> getInstances() {
@@ -76,8 +76,8 @@ public class Data {
 		// tokens are of form
 		// "1	The	The	DT	DT	_	2	NMOD"
 		// NOTE: No lower case here of word
-		int wordFormIndex = 1; // counted form 0, 2nd column in conll
-		int posTagIndex = 4 ; // counted form 0, 5th column in conll
+		int wordFormIndex = 1; // counted form 0, 2nd column in conll in case of POS, else 0 for NER
+		int posTagIndex = 4; // counted form 0, 5th column in conll
 		Sentence sentence = new Sentence(tokens.size());
 		for (int i=0; i < tokens.size(); i++){
 			// Extract word and pos from conll sentence, create index for both
