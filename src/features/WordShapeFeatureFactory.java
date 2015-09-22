@@ -209,9 +209,8 @@ public class WordShapeFeatureFactory {
 
 	public static void main(String[] args){
 		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
-		wordShapeFactory.createShapeVectorsFromFile("resources/data/english/ptb3-std-training-sents.txt", -1);
-		wordShapeFactory.createShapeVectorsFromFile("resources/data/ner/eng-train-sents.txt", -1);
-		//wordShapeFactory.createShapeVectorsFromFile("resources/data/ptb/unlab/english_ptb_unlab", -1);
+		wordShapeFactory.createShapeVectorsFromFile("resources/data/english/ptb3-training-sents.txt", -1);
+		//wordShapeFactory.createShapeVectorsFromFile("resources/data/ner/eng-train-sents.txt", -1);
 
 		System.out.println("Writing shape list to: " + "resources/features/shapeList.txt");
 		wordShapeFactory.writeShapeFeatureFile("resources/features/shapeList.txt");

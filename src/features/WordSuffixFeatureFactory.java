@@ -211,9 +211,8 @@ public class WordSuffixFeatureFactory {
 	//** tests methods
 	public void testWriteSuffixList(){
 		
-		createSuffixListFromFile("resources/data/english/ptb3-std-training-sents.txt", -1);
-		createSuffixListFromFile("resources/data/ner/eng-train-sents.txt", -1);
-		// createSuffixListFromFile("resources/data/ptb/unlab/english_ptb_unlab", -1);
+		createSuffixListFromFile("resources/data/english/ptb3-training-sents.txt", -1);
+		// createSuffixListFromFile("resources/data/ner/eng-train-sents.txt", -1);
 		
 		System.out.println("#word: " + this.wordCnt + 
 				" #suffixes: " + this.suffixCnt);

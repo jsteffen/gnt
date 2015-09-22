@@ -47,7 +47,6 @@ Current approach:
 	- get words of window -> DONE
 	- initialize window and store all window frames in training instances
 	
-	
 - construct problem
 	- 	initialize problem
 	-	iterate through all training instances
@@ -106,29 +105,14 @@ NOTES: possible alternative -> no need to save training instances in file
 
 -> NEXT
 	- store all file in compressed folder automatically
-	- run larger experiments, when tagging done
 
-Status Training:
-- defined training and run it using FLORS learner setting 
-	new Parameter(SolverType.L2R_LR, 1.0, 0.01); -> DONE ! used Xmx6g
-	-> time for constructing model iw=50 and examples=5000: 35.3328333 minutes
-	-> saving model in: /Users/gune00/data/wordVectorTests/testModel__L2R_LR.txt -> time 25 seconds (207MB)
-	-> TOTAL  System time (msec): 2156062 -> 35.9343667 minutes
-	
-- defined training and run it using MDP learner setting 
-	new Parameter(SolverType.MCSVM_CS, 0.1, 0.3); but bias not used
-	-> time for constructing model iw=50 and examples=5000: 19.57455 minutes
-	-> saving model in: /Users/gune00/data/wordVectorTests/testModel_MCSVM_CS.txt -> time 12 seconds (59MB)
-	-> TOTAL  System time (msec): 1174473 -> 19.57455 minutes
-	
-	-> iw=50 and examples=10000 -> 2068044 msec -> 34.4674 minutes
-	Save  model file: /Users/gune00/data/wordVectorTests/testModel10k_MCSVM_CS.txt -> time ca. 12 seconds
-	
-	-> iw=100 and examples=10000 -> 4109242 msec -> 68.4873667 minutes
-	Save  model file: /Users/gune00/data/wordVectorTests/testModel100iw10k_MCSVM_CS.txt -> 162 seconds (ca. 60MB)
-	-> it seems that when using modelInfo=MDP, then size of model is similar independent of parameters (and so the load time)
-	
-	-> but also for L2R_LR it growth moderately
+Before training, create features:
+
+- eventually update corpus and create sentences only files using ConllMapper.java
+- create iw
+- create shapes 
+- create suffix
+- create word vectors -> mostly done when training is done
 	
 Activation of features: if one is set to false, feature is deactivated -> also use this in model file name
 public static boolean withWordFeats = true;
@@ -172,9 +156,4 @@ when not using distributed word vectors, I still have at least one feature lengt
 
 For being able to were I am, I will create ptb3-std-training.conll etc. data -> DONE
 sentences: 38219 -> use 38215 because of above error
-
-OK, now training with iw=25 
--> construction of in memory problem: about 4 minutes.
--> construction of model: 46.5056 minutes
--> save model: 14.6517667 minutes
 

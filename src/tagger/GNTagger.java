@@ -362,51 +362,74 @@ public class GNTagger {
 
 	}
 
-	public static void main(String[] args) throws IOException{
-
-
+	private void runNerTagger() throws IOException{
 		ModelInfo modelInfo = new ModelInfo("FLORS");
-		int windowSize = 2;
+		int windowSize = 1;
 		int numberOfSentences = 14000;
-		int dim = 50;
+		int dim = 100;
 		WordFeatures.withWordFeats=true;
 
 		modelInfo.createModelFileName(dim, numberOfSentences);
 
 		System.out.println(modelInfo.toString());
 
-		GNTagger posTagger = new GNTagger();
-
-		posTagger.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
+		this.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
 
 		List<Pair<String, String>> fileList = new ArrayList<Pair<String, String>>();
 
-//		fileList.add(new Pair<String, String>(
-//				"resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll", "resources/eval/gweb-newsgroups-dev-flors.txt"));
-//		fileList.add(new Pair<String, String>(
-//				"resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll", "resources/eval/gweb-reviews-dev-flors.txt"));
-//		fileList.add(new Pair<String, String>(
-//				"resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll", "resources/eval/gweb-weblogs-dev-flors.txt"));
-//		fileList.add(new Pair<String, String>(
-//				"resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll", "resources/eval/gweb-answers-dev-flors.txt"));
-//		fileList.add(new Pair<String, String>(
-//				"resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll", "resources/eval/gweb-emails-dev-flors.txt"));
-//		fileList.add(new Pair<String, String>(
-//				"resources/data/english/ptb3-std-devel.conll", "resources/eval/ptb3-std-devel-flors.txt"));
-//		fileList.add(new Pair<String, String>(
-//				"resources/data/english/ptb3-std-test.conll", "resources/eval/ptb3-std-test-flors.txt"));
-//		fileList.add(new Pair<String, String>(
-//				"resources/data/pbiotb/dev/english_pbiotb_dev.conll", "resources/eval/english_pbiotb_dev.txt"));
-		
 		fileList.add(new Pair<String, String>(
 				"resources/data/ner/eng-testa.conll", "resources/eval/eng-testa.txt"));
 		fileList.add(new Pair<String, String>(
 				"resources/data/ner/eng-testb.conll", "resources/eval/eng-testb.txt"));
 
-
 		for (Pair<String, String> pair : fileList){
-			posTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());
+			this.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());
 		}
+	}
+	
+	private void runPosTagger() throws IOException{
+		ModelInfo modelInfo = new ModelInfo("FLORS");
+		int windowSize = 2;
+		int numberOfSentences = 39826;
+		int dim = 0;
+		WordFeatures.withWordFeats=false;
+
+		modelInfo.createModelFileName(dim, numberOfSentences);
+
+		System.out.println(modelInfo.toString());
+
+		this.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
+
+		List<Pair<String, String>> fileList = new ArrayList<Pair<String, String>>();
+
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll", "resources/eval/gweb-newsgroups-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll", "resources/eval/gweb-reviews-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll", "resources/eval/gweb-weblogs-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll", "resources/eval/gweb-answers-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll", "resources/eval/gweb-emails-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/english/ptb3-devel.conll", "resources/eval/ptb3-devel-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/english/ptb3-test.conll", "resources/eval/ptb3-test-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/pbiotb/dev/english_pbiotb_dev.conll", "resources/eval/english_pbiotb_dev.txt"));
+		
+		for (Pair<String, String> pair : fileList){
+			this.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());
+		}
+	}
+	
+	public static void main(String[] args) throws IOException{
+
+
+		GNTagger posTagger = new GNTagger();
+		
+		posTagger.runPosTagger();
 	}
 
 }

@@ -39,7 +39,9 @@ public class EvalConllFile {
 	
 	// TODO
 	// Define a method for counting accuracy of OOV - that is only words that do not occur in the labeled WSJ data
-	// Fro this I need to hash the words in the training phase and load them when I compute the OOV accuarcy
+	// For this I need to hash the words in the training phase and load them when I compute the OOV .
+	
+	
 	public static void main(String[] args) throws IOException{
 
 		EvalConllFile.computeAccuracy("resources/eval/gweb-answers-dev-flors.txt");

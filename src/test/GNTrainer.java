@@ -86,13 +86,13 @@ public class GNTrainer {
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("FLORS");
 		int windowSize = 2;
-		int numberOfSentences = 14000;
-		int dim = 50;
-		WordFeatures.withWordFeats=true;
+		int numberOfSentences = 39826;
+		int dim = 0;
+		WordFeatures.withWordFeats=false;
 		
 		modelInfo.createModelFileName(dim, numberOfSentences);
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
-		String trainingFileName = "resources/data/ner/eng-train.conll";
+		String trainingFileName = "resources/data/english/ptb3-training.conll";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, dim, numberOfSentences);
 

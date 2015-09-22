@@ -30,8 +30,19 @@
 
 - allow run shells with parameters and defaults -> DONE
 
+22.9.2015:
 
-- handle GNTrainer bugs
+- first tests with NER -> DONE
+	- results are not optimal, even worst than with SvmNER and MdpNER, but probably because shape and suffix features etc.
+	- results with conlleval look a bit strange -> use therefore average FB1 over types
+	- so need to create own version for NER
+
+23.9.2015:
+- check whole code again:
+	- handle GNTrainer bugs
+	- check feature extraction -> suffixes
+	- use better absolute feature counts -> map numbers to bijective with enumeration from 1 - X -> should effect problem size
+		- then later use mapping to get symbols back
 
 - define logger
 

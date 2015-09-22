@@ -1,0 +1,85 @@
+check tests according to accuracy etc.
+
+- Usefull also for NER:
+
+- about conlleval script
+
+#!/usr/bin/perl -w
+# conlleval: evaluate result of processing CoNLL-2000 shared task
+# usage:     conlleval [-l] [-r] [-d delimiterTag] [-o oTag] < file
+#            README: http://cnts.uia.ac.be/conll2000/chunking/output.html
+# options:   l: generate LaTeX output for tables like in
+#               http://cnts.uia.ac.be/conll2003/ner/example.tex
+#            r: accept raw result tags (without B- and I- prefix;
+#                                       assumes one word per chunk)
+#            d: alternative delimiter tag (default is single space)
+#            o: alternative outside tag (default is O)
+# note:      the file should contain lines with items separated
+#            by $delimiter characters (default space). The final
+#            two items should contain the correct tag and the 
+#            guessed tag in that order. Sentences should be
+#            separated from each other by empty lines or lines
+#            with $boundary fields (default -X-).
+
+so I guess:
+	
+	idx word gold-pos gnt-pos
+	
+	with separator single space
+	
+	with "-X- -X- -X- -X-" as sentence boarder
+	
+- two steps necessary:
+	- create eval file
+	- call ./bin/conlleval -r < eval-file
+	
+
+	
+I do now compute accuracy by my own. seems to be correct.
+See class corpus/EvalConllFile.java
+	
+	
+- Current results: with trained ptb3-training.conll
+
+iw=0, #sent=39274, FLORS:
+
+"resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll", "resources/eval/gweb-newsgroups-dev-flors.txt"
+-> All pos: 22398 Correct: 19511 Accuracy: 87,11% (official: 89,14%, -2,03)
+
+"resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll", "resources/eval/gweb-reviews-dev-flors.txt"
+-> All pos: 27504 Correct: 24772 Accuracy: 90,07%  (official: 91,80%, -1,71)
+
+"resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll", "resources/eval/gweb-weblogs-dev-flors.txt"
+-> All pos: 24025 Correct: 21840 Accuracy: 90,91% (official: 93,40%, -2,53)
+
+"resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll", "resources/eval/gweb-answers-dev-flors.txt"
+-> All pos: 25180 Correct: 22050 Accuracy: 87,57% (official: 89,47%, -1,92)
+
+"resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll", "resources/eval/gweb-emails-dev-flors.txt"
+-> All pos: 29131 Correct: 24890 Accuracy: 85,44% (official: 88,21%, 2,74)
+
+"resources/data/english/ptb3-devel.conll", "resources/eval/ptb3-devel-flors.txt"
+-> All pos: 40121 Correct: 38732 Accuracy: 96,54% (official: 96,29%, +0,3)
+
+"resources/data/pbiotb/dev/english_pbiotb_dev.conll", "resources/eval/english_pbiotb_dev.txt"
+-> All pos: 5017 Correct: 4484 Accuracy: 89,38% (official: 87,27%, +1,87)
+
+
+PTB3-std: For current SOTA: http://aclweb.org/aclwiki/index.php?title=POS_Tagging_%28State_of_the_art%29
+
+With model: resources/models/model_0iw38215sent_FTT_L2R_L2LOSS_SVC.txt
+
+"resources/data/english/ptb3-std-devel.conll", "resources/eval/ptb3-std-devel-flors.txt"
+-> All pos: 131808 Correct: 127434 Accuracy: 96,68%
+"resources/data/english/ptb3-std-test.conll", "resources/eval/ptb3-std-test-flors.txt"
+-> All pos: 129696 Correct: 125510 Accuracy: 96,77% (-0,34% cf. Flors, -0,78% cf. best)
+
+
+With model: resources/models/model_25iw38215sent_TTT_L2R_L2LOSS_SVC.txt
+
+"resources/data/english/ptb3-std-devel.conll", "resources/eval/ptb3-std-devel-flors.txt"
+-> All pos: 131808 Correct: 110583 Accuracy: 83,90%
+"resources/data/english/ptb3-std-test.conll", "resources/eval/ptb3-std-test-flors.txt"
+-> All pos: 129696 Correct: 106930 Accuracy: 82,45%
+
+-> vectors HURT!

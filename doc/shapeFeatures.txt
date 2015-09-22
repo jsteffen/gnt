@@ -11,10 +11,11 @@ Shape features:
 
 I currently use only labeled training data:
 	"/Users/gune00/data/MLDP/english/english-train-sents.txt"
-
--> use all tokens from it:
+	-> use all tokens from it:
 	-> I also create 50 different signatures
 	-> NOTE: need to distinguish whether word is in 0 or 1 sentence position
+
+-> New training version ptb3-training: 52 shapes
 	
 If word cannot be mapped to one of the learned shape features, then its shape list is empty.
 Which means that the fetaure is actually not available for that work.

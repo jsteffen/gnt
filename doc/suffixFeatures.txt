@@ -8,16 +8,17 @@ Goal is to compute all lower-case suffixes from a training set of words.
 I currently use only labeled training data:
 	"/Users/gune00/data/MLDP/english/english-train-sents.txt"
 
-
-
 I try to compute suffixes only from words, so filter out
 - number expressions -> DONE
 - multi-character string like '', G-7
 
-Current result when using PTB version three without filter: 
- 	#word: 32491 #suffixes: 98358
+Current result without filter:  #word: 32491 #suffixes: 98358
  	
 With number filter: #word: 28481 #suffixes: 91144
+
+New training version ptb3-training: #suffixes 116752
+
+
 
 
 Lower dimensions:

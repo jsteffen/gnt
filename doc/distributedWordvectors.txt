@@ -64,7 +64,7 @@ Steps:
 3. apply on complete FLORS corpus -> DONE - /Users/gune00/data/wordVectorTests/*
 	- separate files for vocabulary and left context and right context using 500 indicators words + dummy
 	- files are index compatible -> line x correspond to same word
-	- same for vectors which correspond to ranked iw enrtries
+	- same for vectors which correspond to ranked iw entries
 	- to save space, only non-zeor elements are stored using ranked index for reference
 	
 4. Read in distributed word vectors and re-create word-index arrays/hashes, and test -> DONE

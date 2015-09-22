@@ -152,30 +152,22 @@ public class IndicatorWordsCreator {
 	}
 
 	// TODO - check, but I think I have all source files that are also used in FLORS
-	private void createIndicatorWordsFromFiles(){
+	private void createIndicatorPosWordsFromFiles(){
 
 		// Training data labeled sentences
-		readAndProcessInputTextLineWise("resources/data/english/ptb3-std-training-sents.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/english/ptb3-training-sents.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/english/ptb3-devel-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/english/ptb3-test-sents.txt", "ptb", 1000);
+		
 		// Training data unlabeled
 		readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);
 
-		// Labeled development PTB-BIO
+		// PTB-BIO
 		readAndProcessInputTextLineWise("resources/data/pbiotb/dev/english_pbiotb_dev-sents.txt", "ptb", 1000);
-		// Test data
-		// unlabeled PTB-BIO
 		readAndProcessInputTextLineWise("resources/data/pbiotb/unlab/all-unlab.txt", "ptb", 100000);
-		
-		readAndProcessInputTextLineWise("resources/data/ner/eng-train-sents.txt", "ptb", 1000);
-		readAndProcessInputTextLineWise("resources/data/ner/eng-testa-sents.txt", "ptb", 1000);
-		readAndProcessInputTextLineWise("resources/data/ner/eng-testb-sents.txt", "ptb", 1000);
 
 		// sentence form from resources/data/sancl-2012/ 
 
-		// sancl.labeled/
-
-		readAndProcessInputTextLineWise("resources/data/english/ptb3-std-devel-sents.txt", "ptb", 1000);
-		readAndProcessInputTextLineWise("resources/data/english/ptb3-std-test-sents.txt", "ptb", 1000);
-		
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/gweb-answers-dev-sents.txt", "ptb", 1000);
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/gweb-emails-dev-sents.txt", "ptb", 1000);
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev-sents.txt", "ptb", 1000);
@@ -188,7 +180,6 @@ public class IndicatorWordsCreator {
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/gweb-reviews-test-sents.txt", "ptb", 1000);
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-test-sents.txt", "ptb", 1000);
 
-		// unlabeled sancl.all
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.all/gweb-answers.unlabeled.txt", "ptb", 100000);
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.all/gweb-emails.unlabeled.txt", "ptb", 100000);
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt", "ptb", 100000);
@@ -196,13 +187,24 @@ public class IndicatorWordsCreator {
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt", "ptb", 100000);
 	}
 
+	// TODO - check, but I think I have all source files that are also used in FLORS
+		private void createIndicatorNerWordsFromFiles(){
+
+			// Training data unlabeled
+			readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);
+
+			readAndProcessInputTextLineWise("resources/data/ner/eng-train-sents.txt", "ptb", 1000);
+			readAndProcessInputTextLineWise("resources/data/ner/eng-testa-sents.txt", "ptb", 1000);
+			readAndProcessInputTextLineWise("resources/data/ner/eng-testb-sents.txt", "ptb", 1000);
+
+		}
 	// Test  caller
 
 	public static void main(String[] args) throws IOException {
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
 		long time1 = System.currentTimeMillis();
 
-		iwp.createIndicatorWordsFromFiles();
+		iwp.createIndicatorPosWordsFromFiles();
 
 		long time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
