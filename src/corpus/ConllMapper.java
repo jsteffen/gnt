@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 public class ConllMapper {
-	
+
 	private Corpus corpus = new Corpus();
 
 	public void transcode(String sourceFileName, String sourceEncoding,
@@ -67,7 +67,7 @@ public class ConllMapper {
 		}
 		return sentenceString+tokens.get(tokens.size()-1);
 	}
-	
+
 	public void transcodeFlorsFileList(){
 		for (String fileName : corpus.trainingLabeledData){
 			try {
@@ -96,8 +96,51 @@ public class ConllMapper {
 		}	
 	}
 
+	public void transcode2(String sourceFileName, String sourceEncoding,
+			String targetFileName, String targetEncoding)
+					throws IOException {
+
+		// init reader for CONLL style file
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(
+						new FileInputStream(sourceFileName),
+						sourceEncoding));
+
+		// init writer for line-wise file
+		BufferedWriter writer = new BufferedWriter(
+				new OutputStreamWriter(
+						new FileOutputStream(targetFileName),
+						targetEncoding));
+
+		String line = "";
+		while ((line = reader.readLine()) != null) {
+			if (line.isEmpty())writer.newLine();
+			else
+			{
+				String[] tokenizedLine = line.split("\t");
+				// DUplicate pos at column 3 (start counting from 0) to column 4
+				tokenizedLine[4] = tokenizedLine[3];
+				writer.write(this.tokenToString(tokenizedLine));
+				writer.newLine();
+			}
+		}
+
+		reader.close();
+		writer.close();
+	}
+
+	private String tokenToString(String[] tokenizedLine) {
+		String output = "";
+		for (int i = 0; i < tokenizedLine.length-1; i++)
+			output += tokenizedLine[i]+"\t";
+		output +=tokenizedLine[tokenizedLine.length-1];
+		return output;
+
+	}
+
 	public static void main(String[] args) throws IOException {
 		ConllMapper mapper = new ConllMapper();
 		mapper.transcodeFlorsFileList();
+		//mapper.transcode2("resources/data/english/ptb3-std-test.conll", "utf-8", "resources/data/english/ptb3-std-test2.conll", "utf-8");
 	}
 }	

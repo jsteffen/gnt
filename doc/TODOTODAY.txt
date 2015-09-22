@@ -30,6 +30,7 @@
 
 - allow run shells with parameters and defaults -> DONE
 
+
 - handle GNTrainer bugs
 
 - define logger

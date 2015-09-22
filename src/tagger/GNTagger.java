@@ -17,6 +17,7 @@ import data.Alphabet;
 import data.Data;
 import data.ModelInfo;
 import data.OffSets;
+import data.Pair;
 import data.Sentence;
 import data.Window;
 import de.bwaldvogel.liblinear.Linear;
@@ -99,9 +100,11 @@ public class GNTagger {
 
 		System.out.println("Load model file: " + modelFile);
 		this.setModel(Model.load(new File(modelFile)));
+		System.out.println(".... DONE!");
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
+		System.out.println(this.getModel().toString()+"\n");
 	}
 
 	/**
@@ -123,7 +126,6 @@ public class GNTagger {
 
 			// Print how many windows are created so far, and pretty print every mod-th window
 			if ((Window.windowCnt % mod) == 0) {
-				System.out.println("\n************");
 				System.out.println("# Window instances: " + Window.windowCnt);
 			}
 		}
@@ -155,8 +157,8 @@ public class GNTagger {
 
 			// Call the learner to predict the label
 			prediction = (int) Linear.predict(this.getModel(), problemInstance.getFeatureVector());
-//			System.out.println("Word: " + this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i]) +
-//			"\tPrediction: " + this.getData().getLabelSet().getNum2label().get(prediction));
+			//			System.out.println("Word: " + this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i]) +
+			//			"\tPrediction: " + this.getData().getLabelSet().getNum2label().get(prediction));
 
 			//Here, I am assuming that sentence length equals # of windows
 			// So store predicted label i to word i
@@ -203,7 +205,7 @@ public class GNTagger {
 		return output;
 
 	}
-	
+
 	/**
 	 * For each internalized conll sentence:
 	 * - compute window frames
@@ -222,21 +224,21 @@ public class GNTagger {
 			if (line.isEmpty()) {
 				// Stop if max sentences have been processed
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
-				
+
 				// create internal sentence object and label maps
 				// I use this here although labels will be late overwritten - but can u8se it in eval modus as well
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
 				// create window frames and store in list
 				createWindowFramesFromSentence();
-				
-				System.out.println("In:  " + this.taggedSentenceToString());
-				
+
+				//System.out.println("In:  " + this.taggedSentenceToString());
+
 				// create feature vector instance for each window frame and tag
 				this.constructProblemAndTag(false, true);
-				
-				System.out.println("Out: " + this.taggedSentenceToString() + "\n");
-				
+
+				//System.out.println("Out: " + this.taggedSentenceToString() + "\n");
+
 				// reset instances - need to do this here, because learner is called directly on windows
 				this.getData().setInstances(new ArrayList<Window>());
 
@@ -250,7 +252,7 @@ public class GNTagger {
 		}
 		conllReader.close();
 	}
-	
+
 	private void tagAndWriteSentencesFromConllReader(BufferedReader conllReader, BufferedWriter conllWriter, int max) throws IOException{
 		String line = "";
 		List<String[]> tokens = new ArrayList<String[]>();
@@ -259,20 +261,25 @@ public class GNTagger {
 			if (line.isEmpty()) {
 				// Stop if max sentences have been processed
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
-				
+
 				// create internal sentence object and label maps
-				// I use this here although labels will be late overwritten - but can u8se it in eval modus as well
-				data.generateSentenceObjectFromConllLabeledSentence(tokens);
+				data.generateSentenceObjectFromConllUnLabeledSentence(tokens);
+
+				//System.out.println("In:  " + this.taggedSentenceToString());
 
 				// create window frames and store in list
 				createWindowFramesFromSentence();
-				
+
+
+
 				// create feature vector instance for each window frame and tag
 				this.constructProblemAndTag(false, true);
-				
+
+				//System.out.println("Out:  " + this.taggedSentenceToString());
+
 				// Create conlleval consistent output using original conll tokens plus predicted labels 
 				this.writeTokensAndWithLabels(conllWriter, tokens, data.getSentence());
-				
+
 				// reset instances - need to do this here, because learner is called directly on windows
 				this.getData().setInstances(new ArrayList<Window>());
 
@@ -287,18 +294,18 @@ public class GNTagger {
 		conllReader.close();
 		conllWriter.close();
 	}
-	
+
 	private void writeTokensAndWithLabels(BufferedWriter conllWriter,
 			List<String[]> tokens, Sentence sentence) throws IOException {
 		for (int i=0; i < tokens.size(); i++){
 			String[] token = tokens.get(i);
 			String label = this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i]);
 			String newConllToken = token[0]+" "+token[1]+" "+token[4]+" "+label+"\n";
-			
+
 			conllWriter.write(newConllToken);
 		}
 		conllWriter.write("-X- -X- -X- -X-\n");
-		
+
 	}
 	public void tagFromConllDevelFile(String sourceFileName, int max)
 			throws IOException {
@@ -319,12 +326,12 @@ public class GNTagger {
 		this.tagSentencesFromConllReader(conllReader, max);
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
-		
+
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
 		System.out.println("Testing instances: " + Window.windowCnt);
 
 	}
-	
+
 	public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName)
 			throws IOException {
 		long time1;
@@ -337,22 +344,18 @@ public class GNTagger {
 		boolean train = false;
 		boolean adjust = true;
 
-		System.out.println("Do testing from file: " + sourceFileName);
-		System.out.println("Train?: " + train + " Adjust?: " + adjust + "\n");
-		System.out.println("Offsets: " + this.getOffSets().toString());
-		
-		System.out.println(this.getModel().toString());
+		System.out.println("\n++++\nDo testing from file: " + sourceFileName);
 
 		time1 = System.currentTimeMillis();
 		// -1 means: all sentences from file are processed
 		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, -1);
-		
+
 		System.out.println("Create eval file: " + evalFileName);
-		
+
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
-		
-		
+
+
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
 		System.out.println("Testing instances: " + Window.windowCnt);
 		EvalConllFile.computeAccuracy(evalFileName);
@@ -360,27 +363,44 @@ public class GNTagger {
 	}
 
 	public static void main(String[] args) throws IOException{
-		
-		
+
+
 		ModelInfo modelInfo = new ModelInfo("FLORS");
 		int windowSize = 2;
-		int numberOfSentences = 39274;
+		int numberOfSentences = 38215;
 		int dim = 0;
-		
+
 		WordFeatures.withWordFeats=false;
-		
+
 		modelInfo.createModelFileName(dim, numberOfSentences);
-		
+
 		System.out.println(modelInfo.toString());
 
 		GNTagger posTagger = new GNTagger();
 
 		posTagger.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
-		
-		//"resources/data/english/english-devel.conll", "resources/eval/english-devel-flors.txt"
-		String testFile = "resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll";
-		String evalFile = "resources/eval/gweb-weblogs-dev-flors.txt";
-		posTagger.tagAndWriteFromConllDevelFile(testFile, evalFile);
+
+		List<Pair<String, String>> fileList = new ArrayList<Pair<String, String>>();
+
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll", "resources/eval/gweb-newsgroups-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll", "resources/eval/gweb-reviews-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll", "resources/eval/gweb-weblogs-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll", "resources/eval/gweb-answers-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll", "resources/eval/gweb-emails-dev-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/english/ptb3-devel.conll", "resources/eval/ptb3-devel-flors.txt"));
+		fileList.add(new Pair<String, String>(
+				"resources/data/pbiotb/dev/english_pbiotb_dev.conll", "resources/eval/english_pbiotb_dev.txt"));
+
+
+		for (Pair<String, String> pair : fileList){
+			posTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());
+		}
 	}
 
 }

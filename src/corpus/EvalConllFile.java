@@ -22,8 +22,7 @@ public class EvalConllFile {
 					String predPos = tokenizedLine[3];
 					goldPosCnt++;
 					if (predPos.equals(goldPos)) correctPosCnt++;
-					else
-						System.out.println(line);
+					// else System.out.println(line);
 				}
 			}
 		}

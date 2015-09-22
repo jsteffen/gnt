@@ -209,7 +209,7 @@ public class WordShapeFeatureFactory {
 
 	public static void main(String[] args){
 		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
-		wordShapeFactory.createShapeVectorsFromFile("resources/data/english/english-train-sents.txt", -1);
+		wordShapeFactory.createShapeVectorsFromFile("resources/data/english/ptb3-std-training-sents.txt", -1);
 		//wordShapeFactory.createShapeVectorsFromFile("resources/data/ptb/unlab/english_ptb_unlab", -1);
 
 		System.out.println("Writing shape list to: " + "resources/features/shapeList.txt");

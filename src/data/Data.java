@@ -89,9 +89,30 @@ public class Data {
 		this.setSentence(sentence);
 		this.sentenceCnt++;
 	}
-
+	
 	/**
 	 * tokens are a list of words in form of strings.
+	 * - the words are unlabeled
+	 * - No lower case here of word
+	 * - Using a dummy POS "UNK" encoded as -1
+	 * @param tokens
+	 */
+	public void generateSentenceObjectFromConllUnLabeledSentence(List<String[]> tokens) {
+		int wordFormIndex = 1; // counted form 0, 2nd column in conll
+		Sentence sentence = new Sentence(tokens.size());
+		for (int i=0; i < tokens.size(); i++){
+			// Extract word and pos from conll sentence, create index for both
+			// and create sentence using word/pos index
+			sentence.addNextToken(i,
+					updateWordMap(tokens.get(i)[wordFormIndex]),
+					-1);
+		}
+		this.setSentence(sentence);
+		this.sentenceCnt++;
+	}
+
+	/**
+	 * tokens are a vector of words in form of strings.
 	 * - the words are unlabeled
 	 * - No lower case here of word
 	 * - Using a dummy POS "UNK" encoded as -1

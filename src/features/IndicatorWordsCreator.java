@@ -155,20 +155,23 @@ public class IndicatorWordsCreator {
 	private void createIndicatorWordsFromFiles(){
 
 		// Training data labeled sentences
-		readAndProcessInputTextLineWise("resources/data/english/english-train-sents.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/english/ptb3-std-training-sents.txt", "ptb", 100000);
 		// Training data unlabeled
-		readAndProcessInputTextLineWise("resources/data/BioNLPdata/CoNLL2007/ptb/unlab/english_ptb_unlab", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);
 
 		// Labeled development PTB-BIO
-		readAndProcessInputTextLineWise("resources/data/BioNLPdata/CoNLL2007/pbiotb/dev/english_pbiotb_dev-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/pbiotb/dev/english_pbiotb_dev-sents.txt", "ptb", 1000);
 		// Test data
 		// unlabeled PTB-BIO
-		readAndProcessInputTextLineWise("resources/data/BioNLPdata/CoNLL2007/pbiotb/unlab/all-unlab.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/pbiotb/unlab/all-unlab.txt", "ptb", 100000);
 
 		// sentence form from resources/data/sancl-2012/ 
 
 		// sancl.labeled/
 
+		readAndProcessInputTextLineWise("resources/data/english/ptb3-std-devel-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/english/ptb3-std-test-sents.txt", "ptb", 1000);
+		
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/gweb-answers-dev-sents.txt", "ptb", 1000);
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/gweb-emails-dev-sents.txt", "ptb", 1000);
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev-sents.txt", "ptb", 1000);

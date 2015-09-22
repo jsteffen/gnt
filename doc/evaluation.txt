@@ -37,69 +37,41 @@ so I guess:
 	- create eval file
 	- call ./bin/conlleval -r < eval-file
 	
+For current SOTA: http://aclweb.org/aclwiki/index.php?title=POS_Tagging_%28State_of_the_art%29
+	
 I do now compute accuracy by my own. seems to be correct.
 See class corpus/EvalConllFile.java
 	
 	
-- Current results:
-  iw=50, #sent=5000
-  
-  ./bin/conlleval -r < gweb-answers-dev.txt
-  ->
-  ModelInfo=MDP:
-  ./bin/conlleval -r < gweb-answers-dev.txt
-  	accuracy:  53.32%; precision:  53.32%; recall:  49.86%; FB1:  51.53
-  
-  
-  ./bin/conlleval -r < english_pbiotb_dev.txt 
-	processed 5017 tokens with 5217 phrases; found: 5017 phrases; correct: 3660.
-	accuracy:  72.95%; precision:  72.95%; recall:  70.16%; FB1:  71.53
-	
-  ./bin/conlleval -r < english-devel.txt 
-	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 26305.
-	accuracy:  78.83%; precision:  78.83%; recall:  75.80%; FB1:  77.29
-	
-  ModelInfo=Flors:
-  ./bin/conlleval -r < gweb-answers-dev.txt
-  	accuracy:  39.81%; precision:  39.81%; recall:  37.23%; FB1:  38.47
-  
-   ./bin/conlleval -r < english_pbiotb_dev.txt 
-	processed 5017 tokens with 5217 phrases; found: 5017 phrases; correct: 3190.
-	accuracy:  63.58%; precision:  63.58%; recall:  61.15%; FB1:  62.34
-	
-	./bin/conlleval -r < english-devel.txt 
-	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 24467.
-	accuracy:  73.32%; precision:  73.32%; recall:  70.51%; FB1:  71.89
+- Current results: with trained ptb3-training.conll
+iw=0, #sent=392740, FLORS:
 
-ModelInfo=MDP:
-iw=50, #sent=10000
-	
-	./bin/conlleval -r < english-devel.txt 
-	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 26505.
-	accuracy:  79.43%; precision:  79.43%; recall:  76.38%; FB1:  77.88
-	
-iw=100, #sent=10000
-	./bin/conlleval -r < english-devel.txt 
-	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 26800.
-	accuracy:  80.32%; precision:  80.32%; recall:  77.23%; FB1:  78.74
-	
-FLORS:
-iw=100, #sent=10000
-	./bin/conlleval -r < english-devel.txt 
-	processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 28821.
-	accuracy:  86.37%; precision:  86.37%; recall:  83.05%; FB1:  84.68
+"resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll", "resources/eval/gweb-newsgroups-dev-flors.txt"
+-> All pos: 22398 Correct: 19500 Accuracy: 87,06% (official: 89,14%, -2,08)
 
-GNT:
-iw=0, #sent=392740
-processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 32654.
-accuracy:  97.86%; precision:  97.86%; recall:  94.10%; FB1:  95.94
-FLORS:
-processed 33368 tokens with 34702 phrases; found: 33368 phrases; correct: 32697.
-accuracy:  97.99%; precision:  97.99%; recall:  94.22%; FB1:  96.07
+"resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll", "resources/eval/gweb-reviews-dev-flors.txt"
+-> All pos: 27504 Correct: 24777 Accuracy: 90,09%  (official: 91,80%, -1,71)
 
-When running above FLORS on 
+"resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll", "resources/eval/gweb-weblogs-dev-flors.txt"
+-> All pos: 24025 Correct: 21831 Accuracy: 90,87% (official: 93,40%, -2,53)
+
 "resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll", "resources/eval/gweb-answers-dev-flors.txt"
-I get: accuracy:  55.26% which is similar to Flors-OOV reported accuarcy (55.82%)
+-> All pos: 25180 Correct: 22044 Accuracy: 87,55% (official: 89,47%, -1,92)
+
+"resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll", "resources/eval/gweb-emails-dev-flors.txt"
+-> All pos: 29131 Correct: 24898 Accuracy: 85,47% (official: 88,21%, 2,74)
+
+"resources/data/english/ptb3-devel.conll", "resources/eval/ptb3-devel-flors.txt"
+-> All pos: 40121 Correct: 38720 Accuracy: 96,51% (official: 96,29%, +0,3)
+
+"resources/data/pbiotb/dev/english_pbiotb_dev.conll", "resources/eval/english_pbiotb_dev.txt"
+-> All pos: 5017 Correct: 4472 Accuracy: 89,14% (official: 87,27%, +1,87)
+
+
+
+
+
+
 
 
 

@@ -130,7 +130,7 @@ Status Training:
 	
 	-> but also for L2R_LR it growth moderately
 	
-Activation of features: if one is set to false, featuer is deactivated -> also use this in model file name
+Activation of features: if one is set to false, feature is deactivated -> also use this in model file name
 public static boolean withWordFeats = true;
 public static boolean withShapeFeats = true;
 public static boolean withSuffixFeats = true;
@@ -147,26 +147,26 @@ System time (msec): 673170
 Save  model file: resources/models/model_0iw39274sent_FTT_L2R_L2LOSS_SVC.txt
 System time (msec): 39302
 
-
+training with new ptb3 training set of 39826 sentences: 11.5470167 minutes
 
 EFFICIENCY:
 
 Memory needed:
-n * m * 8 + m (laut Bernd)
+n * m * 8 + m: 
 average vector length * #window instances * 8 (double) + #window instances
 
 PROBLEM:
 
 when sentence count is -1 (max=39278) or > 39274; 
 -> I get lib-linear error that indices in problem instances are not correctly ordered 
+-> internally, when using the max number I actually get 39279 somewhere 
 
-Everything works, but I cannot reproduce FLORS result:
+Everything works, but I cannot reproduce FLORS result so far;
 
-- I get worse results for english-test and domain test:
-	- in both cases I tag very often words with -RRB-, -LRB-
-	- STRANGE: I predict pos tags which are not trained, e-g-, -RRB-, -LRB-, NFP, FW
-	- In domain-devel files these pos tags exist, 
-		but I should not predict them because I do not have them in my training set
-	
-- Can it be that I use the wrong PTB version for training ? -> IT SEEMS SO !
-- But it does not explain how I can predict them ! There must be some error.
+try suffixes without isNumber filter -> gives some improvements, but does it make sense?
+so what is a word?
+when not using distributed word vectors, I still have at least one feature length of 1
+
+For being able to were I am, I will create ptb3-std-training.conll etc. data -> DONE
+
+sentences: 38219
