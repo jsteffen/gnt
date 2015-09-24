@@ -86,7 +86,7 @@ public class GNTrainer {
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("FLORS");
 		int windowSize = 2;
-		int numberOfSentences = 39826;
+		int numberOfSentences = -1; //39826;
 		int dim = 0;
 		WordFeatures.withWordFeats=false;
 		

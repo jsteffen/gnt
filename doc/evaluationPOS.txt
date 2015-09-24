@@ -39,7 +39,7 @@ I do now compute accuracy by my own. seems to be correct.
 See class corpus/EvalConllFile.java
 
 ptb3-std-training.conll: 
-For current SOTA: http://aclweb.org/aclwiki/index.php?title=POS_Tagging_%28State_of_the_art%29
+For current SOTA of POS from page: http://aclweb.org/aclwiki/index.php?title=POS_Tagging_%28State_of_the_art%29
 
 With model: resources/models/model_0iw38215sent_FTT_L2R_L2LOSS_SVC.txt
 
@@ -57,34 +57,107 @@ With model: resources/models/model_25iw38215sent_TTT_L2R_L2LOSS_SVC.txt
 -> All pos: 129696 Correct: 106930 Accuracy: 82,45%
 	
 
-
 Current results: with trained ptb3-training.conll and Flors data sets
 
-iw=0, #sent=39274, FLORS:
-
-"resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll", "resources/eval/gweb-newsgroups-dev-flors.txt"
--> All pos: 22398 Correct: 19511 Accuracy: 87,06% (official: 89,14%, -2,08)
-
-"resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll", "resources/eval/gweb-reviews-dev-flors.txt"
--> All pos: 27504 Correct: 24772 Accuracy: 90,09%  (official: 91,80%, -1,71)
-
-"resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll", "resources/eval/gweb-weblogs-dev-flors.txt"
--> All pos: 24025 Correct: 21840 Accuracy: 90,87% (official: 93,40%, -2,57)
-
-"resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll", "resources/eval/gweb-answers-dev-flors.txt"
--> All pos: 25180 Correct: 22050 Accuracy: 87,55% (official: 89,47%, -1,95)
-
-"resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll", "resources/eval/gweb-emails-dev-flors.txt"
--> All pos: 29131 Correct: 24890 Accuracy: 85,47% (official: 88,21%, 2,74)
-
-"resources/data/english/ptb3-devel.conll", "resources/eval/ptb3-devel-flors.txt"
--> All pos: 40121 Correct: 38732 Accuracy: 96,54% (official: 96,29%, +0,3)
-
-"resources/data/english/ptb3-test.conll", "resources/eval/ptb3-test-flors.txt"
--> All pos: 56702 Correct: 54930 Accuracy: 96,87% (official: 97,11 (all feats), -0,22)
-
-"resources/data/pbiotb/dev/english_pbiotb_dev.conll", "resources/eval/english_pbiotb_dev.txt"
--> All pos: 5017 Correct: 4484 Accuracy: 89,14% (official: 87,27%, +1,87)
+Load model file: resources/models/model_0iw-1sent_FTT_L2R_L2LOSS_SVC.txt
+.... DONE!
+System time (msec): 21819
+Model bias=0.0 nr_class=45 nr_feature=584034 solverType=L2R_L2LOSS_SVC
 
 
-RUN all tests separately
+++++
+Load known vocabulary from trainign for evaluating OOV: 
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll
+Create eval file: resources/eval/gweb-newsgroups-dev-flors.txt
+System time (msec): 366
+Sentences: 1196
+Testing instances: 22398
+All pos: 22398 Correct: 19502 Accuracy: 87,07%
+All OOV pos: 2400 Correct: 1188 Accuracy: 49,50%
+All InV pos: 19998 Correct: 18314 Accuracy: 91,58%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll
+Unknown signature: 0010010000000001
+Word: 2scompany at loc: 1: unknown signature!
+Unknown signature: 0010010000000001
+Word: 2scompany at loc: 1: unknown signature!
+Unknown signature: 0010010000000001
+Word: 2scompany at loc: 1: unknown signature!
+Unknown signature: 0010010000000001
+Word: 2scompany at loc: 1: unknown signature!
+Create eval file: resources/eval/gweb-reviews-dev-flors.txt
+System time (msec): 279
+Sentences: 3103
+Testing instances: 49902
+All pos: 27504 Correct: 24773 Accuracy: 90,07%
+All OOV pos: 1879 Correct: 1133 Accuracy: 60,30%
+All InV pos: 25625 Correct: 23640 Accuracy: 92,25%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll
+Create eval file: resources/eval/gweb-weblogs-dev-flors.txt
+System time (msec): 238
+Sentences: 4119
+Testing instances: 73927
+All pos: 24025 Correct: 21842 Accuracy: 90,91%
+All OOV pos: 2114 Correct: 1445 Accuracy: 68,35%
+All InV pos: 21911 Correct: 20397 Accuracy: 93,09%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll
+Create eval file: resources/eval/gweb-answers-dev-flors.txt
+System time (msec): 241
+Sentences: 5864
+Testing instances: 99107
+All pos: 25180 Correct: 22037 Accuracy: 87,52%
+All OOV pos: 2199 Correct: 1081 Accuracy: 49,16%
+All InV pos: 22981 Correct: 20956 Accuracy: 91,19%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll
+# Window instances: 100000
+Unknown signature: 0011000000000000
+Word: Jgerma5@aol.com at loc: 0: unknown signature!
+Unknown signature: 0011000000000000
+Word: Jgerma5@aol.com at loc: 0: unknown signature!
+Create eval file: resources/eval/gweb-emails-dev-flors.txt
+System time (msec): 284
+Sentences: 8314
+Testing instances: 128238
+All pos: 29131 Correct: 24897 Accuracy: 85,47%
+All OOV pos: 3347 Correct: 1685 Accuracy: 50,34%
+All InV pos: 25784 Correct: 23212 Accuracy: 90,02%
+
+++++
+Do testing from file: resources/data/english/ptb3-devel.conll
+Create eval file: resources/eval/ptb3-devel-flors.txt
+System time (msec): 405
+Sentences: 10014
+Testing instances: 168359
+All pos: 40121 Correct: 38728 Accuracy: 96,53%
+All OOV pos: 1105 Correct: 986 Accuracy: 89,23%
+All InV pos: 39016 Correct: 37742 Accuracy: 96,73%
+
+++++
+Do testing from file: resources/data/english/ptb3-test.conll
+# Window instances: 200000
+Create eval file: resources/eval/ptb3-test-flors.txt
+System time (msec): 579
+Sentences: 12430
+Testing instances: 225061
+All pos: 56702 Correct: 54935 Accuracy: 96,88%
+All OOV pos: 1390 Correct: 1180 Accuracy: 84,89%
+All InV pos: 55312 Correct: 53755 Accuracy: 97,19%
+
+++++
+Do testing from file: resources/data/pbiotb/dev/english_pbiotb_dev.conll
+Create eval file: resources/eval/english_pbiotb_dev.txt
+System time (msec): 51
+Sentences: 12630
+Testing instances: 230078
+All pos: 5017 Correct: 4480 Accuracy: 89,30%
+All OOV pos: 936 Correct: 549 Accuracy: 58,65%
+All InV pos: 4081 Correct: 3931 Accuracy: 96,32%

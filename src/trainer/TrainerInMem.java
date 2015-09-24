@@ -174,7 +174,7 @@ public class TrainerInMem {
 
 
 	/**
-	 * For each token of a sentence create a window frame, add the label of the current sentence token wot the window
+	 * For each token of a sentence create a window frame, add the label of the current sentence token wrt the window
 	 * and store it in Data instances.
 	 * The latter is a global storage and stores all frames first, before the windows are filled.
 	 * I do this because I do not know in advance the number of sentences and hence, the number of tokens in a file.
@@ -234,6 +234,7 @@ public class TrainerInMem {
 		}
 		conllReader.close();
 		data.saveLabelSet();
+		data.saveWordSet();
 		System.out.println("... done");
 	}
 
@@ -245,7 +246,7 @@ public class TrainerInMem {
 	private void initProblem(){
 		Problem problem = new Problem();
 		problem.l = Window.windowCnt;
-		problem.n = OffSets.windowVectorSize;
+		//problem.n = OffSets.windowVectorSize;
 		problem.x = new FeatureNode[problem.l][];
 		problem.y = new double[problem.l];
 
@@ -269,6 +270,8 @@ public class TrainerInMem {
 		int mod = 10000;
 		int problemCnt = 0;
 
+		// Initialize problem with potential feature vector size and number of training instances
+		// and size of x and y which uses training instance
 		this.initProblem();
 
 		for (int i = 0; i < data.getInstances().size();i++){
@@ -356,6 +359,9 @@ public class TrainerInMem {
 		long time2;
 		Linear.disableDebugOutput();
 		time1 = System.currentTimeMillis();
+		// Number of feature can be set here
+		this.getProblem().n = OffSets.windowVectorSize;
+		System.out.println("problem.n: " + this.getProblem().n);
 		Model model = Linear.train(this.getProblem(), this.getParameter());
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));

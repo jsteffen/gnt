@@ -11,6 +11,7 @@ public class Data {
 	private int sentenceCnt = 0;
 	private List<Window> instances = new ArrayList<Window>();
 	private String labelMapFileName = "resources/features/labelSet.txt";
+	private String wordMapFileName = "resources/features/wordSet.txt";
 	
 	// Setters and getters
 
@@ -51,6 +52,12 @@ public class Data {
 		this.labelMapFileName = labelMapFileName;
 	}
 	
+	public String getWordMapFileName() {
+		return wordMapFileName;
+	}
+	public void setWordMapFileName(String wordMapFileName) {
+		this.wordMapFileName = wordMapFileName;
+	}
 	// Instances
 	public Data() {
 	}
@@ -143,6 +150,14 @@ public class Data {
 
 	public void readLabelSet(){
 		this.getLabelSet().readSetIndexMap(this.getLabelMapFileName());	
+	}
+	
+	public void saveWordSet(){
+		this.getWordSet().writeSetIndexMap(this.getWordMapFileName());	
+	}
+
+	public void readWordSet(){
+		this.getWordSet().readSetIndexMap(this.getWordMapFileName());	
 	}
 
 	public String toString(){

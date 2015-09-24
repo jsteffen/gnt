@@ -82,18 +82,9 @@ NOTES on Alphabet:
 	- and then compute the absolute index using the offsets
 - in this way, the features indices are enumerate within a window in increasing order
 	and only the non-zero feature are collected, which gives sparse window elements
-
-NOTES: about writing out training instances
-	-> define a out buffer as part of Corpus and initialize with filename;
-	-> open that buffer before training starts, and close it after.
-	-> DONE: define a new ModelFiles.java class
-	-> BUT files are getting really huge !
-	-> file writing time: dim:50, #sent: 5000 -> 2.44 minutes, dim:250, #sent: 5000 -> 29.59 minutes
-	-> with the approach abve, splitting should also be possible 
-		-> create pos-many different files
-		-> split word vectors into n-parts and save n-different files
 		
-NOTES: possible alternative -> no need to save training instances in file
+NOTES on in memory training
+	-> no need to save training instances in file
 	-> create window frame instances (non filled windows)
 	-> gives me training instances size needed for init problem
 	-> seems to be fast enough
@@ -146,14 +137,16 @@ PROBLEM:
 
 when sentence count is -1 (max=39278) or > 39274; 
 -> I get lib-linear error that indices in problem instances are not correctly ordered 
--> internally, when using the max number I actually get 39279 somewhere 
+-> DONE ->  
+	OffSets.windowVectorSize = (tokenVectorSize * (windowSize*2+1))+(windowSize*2+1);
 
-Everything works, but I cannot reproduce FLORS result so far;
+Everything works, but I cannot reproduce FLORS result so far; but the trend is ok;
 
-try suffixes without isNumber filter -> gives some improvements, but does it make sense?
-so what is a word?
 when not using distributed word vectors, I still have at least one feature length of 1
 
-For being able to were I am, I will create ptb3-std-training.conll etc. data -> DONE
-sentences: 38219 -> use 38215 because of above error
+HIERIX
+Map current absolute index to integer enumeration 1, 2, ...
+This should reduce the necessary size of problem.n
+However, when done so I need to memorize the mappping as part of Alphabet for testing phase later
+and for restroing the absolute indices
 

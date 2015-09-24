@@ -165,7 +165,7 @@ public class WordFeatures {
 		else
 		{
 			// means that shape-size() will be 0
-			System.err.println("Word: " + word + " at loc: " + index + "has unknown signature !"+ "Shape length: " + shape.size());
+			System.err.println("Word: " + word + " at loc: " + index + ": unknown signature!");
 
 		}
 		length += shape.size();

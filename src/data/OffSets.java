@@ -15,7 +15,7 @@ public class OffSets {
 		OffSets.suffixSize = alphabet.getWordSuffixFactory().getSuffix2num().size();
 		OffSets.shapeSize = alphabet.getWordShapeFactory().getSignature2index().size();
 		OffSets.tokenVectorSize = ( wvLeftSize + wvRightSize + suffixSize  + shapeSize);
-		OffSets.windowVectorSize = tokenVectorSize * (windowSize*2+1);
+		OffSets.windowVectorSize = (tokenVectorSize * (windowSize*2+1))+(windowSize*2+1);
 	}
 	
 	

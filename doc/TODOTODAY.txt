@@ -38,6 +38,8 @@
 	- so need to create own version for NER
 
 23.9.2015:
+- also count unknown and known word accuracies -> DONE
+
 - check whole code again:
 	- handle GNTrainer bugs
 	- check feature extraction -> suffixes
@@ -45,6 +47,7 @@
 		- then later use mapping to get symbols back
 
 - define logger
+- define parallel processing
 
 
 	

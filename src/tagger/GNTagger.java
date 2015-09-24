@@ -301,7 +301,7 @@ public class GNTagger {
 			String[] token = tokens.get(i);
 			String label = this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i]);
 			String newConllToken=token[0]+" "+token[1]+" "+token[4]+" "+label+"\n";
-			
+
 			conllWriter.write(newConllToken);
 		}
 		conllWriter.write("-X- -X- -X- -X-\n");
@@ -386,11 +386,11 @@ public class GNTagger {
 			this.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());
 		}
 	}
-	
+
 	private void runPosTagger() throws IOException{
 		ModelInfo modelInfo = new ModelInfo("FLORS");
 		int windowSize = 2;
-		int numberOfSentences = 39826;
+		int numberOfSentences = -1;
 		int dim = 0;
 		WordFeatures.withWordFeats=false;
 
@@ -418,17 +418,16 @@ public class GNTagger {
 				"resources/data/english/ptb3-test.conll", "resources/eval/ptb3-test-flors.txt"));
 		fileList.add(new Pair<String, String>(
 				"resources/data/pbiotb/dev/english_pbiotb_dev.conll", "resources/eval/english_pbiotb_dev.txt"));
-		
+
+		System.out.println("\n++++\nLoad known vocabulary from trainign for evaluating OOV: ");
+		EvalConllFile.data.readWordSet();
 		for (Pair<String, String> pair : fileList){
 			this.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());
 		}
 	}
-	
+
 	public static void main(String[] args) throws IOException{
-
-
-		GNTagger posTagger = new GNTagger();
-		
+		GNTagger posTagger = new GNTagger();	
 		posTagger.runPosTagger();
 	}
 
