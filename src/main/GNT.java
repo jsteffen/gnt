@@ -2,6 +2,7 @@ package main;
 
 import java.io.IOException;
 
+import corpus.EvalConllFile;
 import tagger.GNTagger;
 import test.GNTrainer;
 import data.ModelInfo;
@@ -166,7 +167,8 @@ public class GNT {
 		GNTagger posTagger = new GNTagger();
 
 		posTagger.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
-
+		System.out.println("\n++++\nLoad known vocabulary from trainign for evaluating OOV: ");
+		EvalConllFile.data.readWordSet();
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile);
 	}
 
