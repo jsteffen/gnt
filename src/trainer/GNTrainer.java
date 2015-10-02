@@ -1,4 +1,4 @@
-package test;
+package trainer;
 
 import java.io.IOException;
 
@@ -7,8 +7,6 @@ import data.OffSets;
 import data.Window;
 import features.WordDistributedFeatureFactory;
 import features.WordFeatures;
-import trainer.ProblemInstance;
-import trainer.TrainerInMem;
 
 public class GNTrainer {
 
@@ -45,7 +43,7 @@ public class GNTrainer {
 
 		this.getTrainer().getAlphabet().loadFeaturesFromFiles(dim);
 
-		System.out.println("Resetting not used storage:");
+		System.out.println("Cleaning not used storage:");
 		this.getTrainer().getAlphabet().clean();
 
 		this.getTrainer().getOffSets().initializeOffsets(this.getTrainer().getAlphabet(), this.getTrainer().getWindowSize());

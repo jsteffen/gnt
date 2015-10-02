@@ -85,7 +85,7 @@ public class GNTagger {
 		System.out.println("Load label set:");
 		this.getData().readLabelSet();
 
-		System.out.println("Resetting non-used variables in Alphabe and in Datat:");
+		System.out.println("Cleaning non-used variables in Alphabe and in Data:");
 		this.getAlphabet().clean();
 		this.getData().clean();
 
@@ -117,8 +117,8 @@ public class GNTagger {
 		int mod = 100000;
 		for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++){
 			int labelIndex = this.getData().getSentence().getLabelArray()[i];
-			// create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 
+			// create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
 			tokenWindow.setLabelIndex(labelIndex);
 

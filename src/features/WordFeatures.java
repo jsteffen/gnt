@@ -99,10 +99,10 @@ public class WordFeatures {
 		suffixOffset = shapeOffset + 1 + OffSets.shapeSize-1;
 	}
 
-	// TODO allow that featues can be switched off
 	public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
 		// if word is a sentence padding element, then just return an empty WordFeatures
 		if (word.endsWith("<BOUNDARY>")) return;
+		
 		if (WordFeatures.withWordFeats) {
 			fillLeftDistributedWordFeatures(word, alphabet, train, true);
 			fillRightDistributedWordFeatures(word, alphabet, train, true);
@@ -154,6 +154,7 @@ public class WordFeatures {
 	 * @param alphabet
 	 * @param offline
 	 */
+	// TODO: it is an overhead to keep a list of shapes, because we always have a single element
 	private void fillShapeFeatures(String word, int index, Alphabet alphabet, boolean offline) {
 		int wordShapeIndex = alphabet.getWordShapeFactory().getShapeFeature(word, index);
 		if (wordShapeIndex > -1) {
@@ -164,14 +165,16 @@ public class WordFeatures {
 		}
 		else
 		{
-			// means that shape-size() will be 0
+			// means that shape-size() will remain 0
 			System.err.println("Word: " + word + " at loc: " + index + ": unknown signature!");
 
 		}
+		// is always 1
 		length += shape.size();
 	}
 
-	// boolean flag offline means: assume that suffixes have been preprocessed and pre-loaded into to memory
+	// boolean flag offline means: assume that suffixes have been preprocessed 
+	// and pre-loaded into to memory
 	private void fillSuffixFeatures(String word, Alphabet alphabet, boolean offline) {
 		/*
 		 * Lowercase word
@@ -186,6 +189,7 @@ public class WordFeatures {
 			Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
 			suffix.add(node);
 		}
+		// this means that if word has no known suffix, then suffix list is 0
 		length += suffix.size();
 	}
 

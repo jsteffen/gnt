@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import corpus.EvalConllFile;
 import tagger.GNTagger;
-import test.GNTrainer;
+import trainer.GNTrainer;
 import data.ModelInfo;
 import features.WordFeatures;
 

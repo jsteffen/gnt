@@ -34,3 +34,5 @@ Possible parameters for experiments:
 	- open/closed tag classes
 	- Schnabel&Schütze 2013: future work to find domain-specific computation of word-length threshold
 		(what is a domain specific good "long word")
+		
+- Mit Philip: twitter corpus fuer deutsch

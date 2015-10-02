@@ -272,6 +272,7 @@ public class TrainerInMem {
 
 		// Initialize problem with potential feature vector size and number of training instances
 		// and size of x and y which uses training instance
+		// current element has index i
 		this.initProblem();
 
 		for (int i = 0; i < data.getInstances().size();i++){

@@ -41,11 +41,25 @@
 - also count unknown and known word accuracies -> DONE
 
 - check whole code again:
-	- handle GNTrainer bugs
-	- check feature extraction -> suffixes
-	- use better absolute feature counts -> map numbers to bijective with enumeration from 1 - X -> should effect problem size
-		- then later use mapping to get symbols back
+	- handle GNTrainer bugs -> DONE
+	- "<BOUNDARY>" in window 
+		-> dummy strings that are needed if index of current token is near beginning/end of sentence
+		-> note that this means that context cannot cross sentence border -> OK?
+		
+- I am using now "<BOUNDARY>" also for "<s>" and "</s>"
+	
+HIERIX
 
+- unknown word handling: 
+	- currently unknown words are considered as isolated words, 
+		i.e., words with no context using word2Bigram("<s>", word,"</s>");
+	- eventually improve by computing WordDistributedFeatureFactory.word2Bigram(leftWord, word,rightWord);
+
+- use better absolute feature counts -> map numbers to bijective with enumeration from 1 - X 
+-> should effect problem size
+- then later use mapping to get symbols back
+
+- check feature extraction -> suffixes
 - define logger
 - define parallel processing
 

@@ -159,14 +159,14 @@ public class WordDistributedFeatureFactory {
 	// NOTE, that we incrementally extend the vocabulary, and thus can also incrementally update statistics and the training model
 	private void sentence2Bigrams(String[] sentence){
 		// sentence only contains a single word (or \newline)
-		if (sentence.length == 1) word2Bigram("<s>", sentence[0],"</s>");
+		if (sentence.length == 1) word2Bigram("<BOUNDARY>", sentence[0],"<BOUNDARY>");
 		else
 			for (int i= 0; i < sentence.length; i++){
 				// two word sentence
-				if (i==0) word2Bigram("<s>", sentence[0],sentence[1]);
+				if (i==0) word2Bigram("<BOUNDARY>", sentence[0],sentence[1]);
 				else
 					// remaining two words
-					if (i==(sentence.length-1)) word2Bigram(sentence[i-1],sentence[i],"</s>");
+					if (i==(sentence.length-1)) word2Bigram(sentence[i-1],sentence[i],"<BOUNDARY>");
 					else
 						// all others
 						word2Bigram(sentence[i-1],sentence[i],sentence[i+1]);	
@@ -202,14 +202,15 @@ public class WordDistributedFeatureFactory {
 		return index;
 	}
 
-	// Needed for building the context vectors and for mapping contetx words to its rank
+	// Needed for building the context vectors and for mapping context words to its rank
 	private int determineIwIndex(String word) {
 		// lookup word in iw2num -> if true -> value, if false iw2num.length+1
 		int index = 0;
 		if (this.getIw2num().containsKey(word)) 
 			index = this.getIw2num().get(word);
 		else
-			//means also that dummy elements <s> and </s> count as unknown indicator words
+			// means also that dummy elements <s> and </s> count as unknown indicator words
+			// so return last dimension+1 as index for unknown words
 			index = this.getIw2num().size()+1;
 		//if (word.equals("<s>") || word.equals("</s>")) System.out.println("IW: " + word + " IwIdx: " + index);
 		return index;
@@ -250,7 +251,7 @@ public class WordDistributedFeatureFactory {
 	// Word is known to be unknown in test phase, that is it is not yet part of the distributed vector model
 
 	public WordDistributedFeature handleUnknownWordWithoutContext(String word){
-		word2Bigram("<s>", word,"</s>");
+		word2Bigram("<BOUNDARY>", word,"<BOUNDARY>");
 		int wordIndex = this.getWord2num().get(word);
 		this.getDistributedWordsTable().get(wordIndex).computeContextWeights();
 		return this.getDistributedWordsTable().get(wordIndex);
@@ -417,7 +418,6 @@ public class WordDistributedFeatureFactory {
 	private void readWordFile(String string, Map<String, Integer> word2index, Map<Integer, String> index2word) {
 		BufferedReader reader;
 		int cnt = 1;
-		int lineCnt = 0;
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
 			String line;

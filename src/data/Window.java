@@ -25,7 +25,7 @@ public class Window {
 	// Index of the window center element
 	private int center;
 	// radius of the window
-	private int size = 0;
+	private int windowSize = 0;
 	private List<WordFeatures> elements = new ArrayList<WordFeatures>();
 	private boolean trainingPhase = true;
 	// Total length of the window by adding all features of each window element
@@ -57,7 +57,7 @@ public class Window {
 	public Window(Sentence sentence, int i, int windowSize, Data data,
 			Alphabet alphabet) {
 		Window.windowCnt++;
-		this.size = windowSize;
+		this.windowSize = windowSize;
 		this.alphabet = alphabet;
 		this.data = data;
 		this.sentence = sentence;
@@ -72,10 +72,11 @@ public class Window {
 	/*
 	 * I have to fill pads on either sides of a sentence, depending on windowSize l and sentence length max.
 	 * In order to do so, I distinguish for the window center i:
-	 * - lp -> number of left pads : if i < l then lp=l-i  else lp=0; 
-	 * - lc -> number of left context elements -> lc=l-lp
-	 * - rc -> number of right context elements -> (max-i) < l then rc=max-i else rc=l
-	 * - rp -> number of right pads -> rp = l-rc
+	 * - leftPads -> number of left pads : if i < l then lp=l-i  else lp=0; 
+	 * - leftContext -> number of left context elements -> lc=l-lp
+	 * - rightContext -> number of right context elements -> (max-i) < l then rc=max-i else rc=l
+	 * - rightPads -> number of right pads -> rp = l-rc
+	 * 
 	 * This will give me a total of 2 * windowSize + 1 elements for the window
 	 */
 
@@ -84,7 +85,7 @@ public class Window {
 	 * <leftPads, leftContext, Center, rightContext, rightPad>
 	 * where center is a single elements, and the other elements are sequences of elements
 	 * depending on the actually value of this.size; this means that the total number of elements
-	 * is #|leftPads and leftContext| == this.size
+	 * is #|leftPads + leftContext| == this.size
 	 * 
 	 * boolean train means: we are in the training mode
 	 * boolean adjust means: add offsets to each index in order to get Liblinear-consitent feature names (numerical indices)
@@ -94,15 +95,16 @@ public class Window {
 	public void fillWindow(boolean train, boolean adjust){
 		this.trainingPhase = train;
 
-		// compute left/right borders of the size of the window elements
-		// depends on windowSize
+		// compute left/right borders of the size of the window elements, which depends on windowSize
 		int max = this.sentence.getWordArray().length-1;
-		int lp = (this.center < this.size)?(this.size-this.center):0;
-		int lc = (this.size-lp);
-		int rc = ((max-this.center) < this.size)?(max-this.center):this.size;
-		int rp = (this.size-rc);
+		int leftPads = (this.center < this.windowSize)?(this.windowSize-this.center):0;
+		int leftContext = (this.windowSize-leftPads);
+		int rightContext = ((max-this.center) < this.windowSize)?(max-this.center):this.windowSize;
+		// TODO: means context cannot cross sentence boundary ! -> OK?
+		int rightPads = (this.windowSize-rightContext);
 
 		// the surface word string determined from the training examples
+		// Use "<BOUNDARY>" as dummy for padding elements
 		String wordString ="";
 		// the location of the word in the sentence: 0 means "first word in sentence", 1 means "otherwise"
 		int wordLoc = 1;
@@ -114,9 +116,10 @@ public class Window {
 		// Based on the computed intervals above, this also indicates the number of window elements.
 		// based on value this.size;
 		// NOTE Does not add label
-		// Add left padding elements to sentence; needed to later correctly compute global offSets
+		
+		// Add left padding elements to sentence (if any); needed to later correctly compute global offSets
 
-		for (int i = 0 ; i < lp; i++){
+		for (int i = 0 ; i < leftPads; i++){
 			wordString = "<BOUNDARY>";
 			// wordLoc does not matter here, because empty WordFeatures class is created
 			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
@@ -125,7 +128,7 @@ public class Window {
 			elementCnt++;
 		}
 		// Add left context elements
-		for (int i = (this.center-lc) ; i < this.center; i++){
+		for (int i = (this.center-leftContext) ; i < this.center; i++){
 			// check position of word in sentence; if it is either at start or not; influences computation of shape feature
 			wordLoc = (i==0)?0:1;
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
@@ -144,7 +147,7 @@ public class Window {
 		}
 		// right content elements; 
 		// set wordLoc always to 1, because can never be 0
-		for (int i = this.center+1 ; i < (this.center+1+rc); i++){
+		for (int i = this.center+1 ; i < (this.center+1+rightContext); i++){
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
 			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
 			windowLength+= wordFeatures.getLength();
@@ -153,7 +156,7 @@ public class Window {
 		}
 		// right sentence pads
 
-		for (int i = (this.center + rc) ; i < (this.center + rc + rp); i++) {
+		for (int i = (this.center + rightContext) ; i < (this.center + rightContext + rightPads); i++) {
 			wordString = "<BOUNDARY>";
 			// wordLoc does not matter here, because empty WordFeatures class is created
 			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
@@ -164,6 +167,14 @@ public class Window {
 	}
 
 	// wordPosition is 0 if word is first word in sentence, else 1
+	/**
+	 * Create a feature vector for a word.
+	 * @param word
+	 * @param wordPosition
+	 * @param elementCnt
+	 * @param adjust
+	 * @return
+	 */
 	private WordFeatures createWordFeatures(String word, int wordPosition, int elementCnt, boolean adjust) {
 		// create a new WordFeatures element
 		WordFeatures wordFeatures = new WordFeatures(word);
@@ -183,11 +194,11 @@ public class Window {
 
 	/**
 	 * Only for printing the borders of the window elements
-	 * @param max
-	 * @param lp
-	 * @param lc
-	 * @param rc
-	 * @param rp
+	 * @param max	- indx of last token in sentence
+	 * @param lp	- number of left padding elements	
+	 * @param lc	- number of left context elements
+	 * @param rc	- number of right context elements
+	 * @param rp	- number of right padding elements
 	 */
 	public void printWindowIntervalInfo(int max, int lp, int lc, int rc, int rp){
 		// print intervals
