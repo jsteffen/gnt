@@ -85,9 +85,9 @@ public class GNTagger {
 		System.out.println("Load label set:");
 		this.getData().readLabelSet();
 
-		System.out.println("Cleaning non-used variables in Alphabe and in Data:");
+		System.out.println("Cleaning non-used variables in Alphabet and in Data:");
 		this.getAlphabet().clean();
-		this.getData().clean();
+		this.getData().cleanWordSet();
 
 		System.out.println("Initialize offsets:");
 		this.getOffSets().initializeOffsets(this.getAlphabet(), this.getWindowSize());
@@ -160,9 +160,10 @@ public class GNTagger {
 			//			System.out.println("Word: " + this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i]) +
 			//			"\tPrediction: " + this.getData().getLabelSet().getNum2label().get(prediction));
 
-			//Here, I am assuming that sentence length equals # of windows
+			//	Here, I am assuming that sentence length equals # of windows
 			// So store predicted label i to word i
 			this.getData().getSentence().getLabelArray()[i]=prediction;
+			// Free space by resetting filled window to unfilled-window
 			nextWindow.clean();
 		}	
 	}
@@ -265,12 +266,10 @@ public class GNTagger {
 				// create internal sentence object and label maps
 				data.generateSentenceObjectFromConllUnLabeledSentence(tokens);
 
-				//System.out.println("In:  " + this.taggedSentenceToString());
+				// System.out.println("In ("+this.data.getSentenceCnt()+"): " + this.taggedSentenceToString());
 
 				// create window frames and store in list
 				createWindowFramesFromSentence();
-
-
 
 				// create feature vector instance for each window frame and tag
 				this.constructProblemAndTag(false, true);
@@ -281,7 +280,7 @@ public class GNTagger {
 				this.writeTokensAndWithLabels(conllWriter, tokens, data.getSentence());
 
 				// reset instances - need to do this here, because learner is called directly on windows
-				this.getData().setInstances(new ArrayList<Window>());
+				this.getData().cleanInstances();
 
 				// reset tokens
 				tokens = new ArrayList<String[]>();
@@ -291,8 +290,6 @@ public class GNTagger {
 				tokens.add(tokenizedLine);
 			}
 		}
-		conllReader.close();
-		conllWriter.close();
 	}
 
 	private void writeTokensAndWithLabels(BufferedWriter conllWriter,
@@ -341,16 +338,18 @@ public class GNTagger {
 				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
 		BufferedWriter conllWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(evalFileName),"UTF-8"));
-		boolean train = false;
-		boolean adjust = true;
 
 		System.out.println("\n++++\nDo testing from file: " + sourceFileName);
+		// Reset some data to make sure each file has same change
+		this.getData().setSentenceCnt(0);
+		Window.windowCnt=0;
+
 
 		time1 = System.currentTimeMillis();
 		// -1 means: all sentences from file are processed
 		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, -1);
-
-		System.out.println("Create eval file: " + evalFileName);
+		// close the buffers
+		conllReader.close(); conllWriter.close();
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
@@ -358,8 +357,13 @@ public class GNTagger {
 
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
 		System.out.println("Testing instances: " + Window.windowCnt);
+		System.out.println("Sentences/sec: " + (this.getData().getSentenceCnt()*1000)/(time2-time1));
+		System.out.println("Words/sec: " + (Window.windowCnt*1000)/(time2-time1));
+		
+		System.out.println("Create eval file: " + evalFileName);
 		EvalConllFile.computeAccuracy(evalFileName);
-
+		
+		
 	}
 
 	private void runNerTagger() throws IOException{
@@ -419,7 +423,7 @@ public class GNTagger {
 		fileList.add(new Pair<String, String>(
 				"resources/data/pbiotb/dev/english_pbiotb_dev.conll", "resources/eval/english_pbiotb_dev.txt"));
 
-		System.out.println("\n++++\nLoad known vocabulary from trainign for evaluating OOV: ");
+		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile.data.readWordSet();
 		for (Pair<String, String> pair : fileList){
 			this.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());

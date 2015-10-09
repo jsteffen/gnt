@@ -140,8 +140,15 @@ public class Data {
 
 	}
 
-	public void clean(){
+	public void cleanWordSet(){
 		wordSet = new SetIndexMap();
+	}
+	public void cleanLabelSet(){
+		labelSet = new SetIndexMap();
+	}
+	
+	public void cleanInstances(){
+		instances = new ArrayList<Window>();
 	}
 	
 	public void saveLabelSet(){
