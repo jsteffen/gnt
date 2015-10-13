@@ -70,9 +70,13 @@ public class ProblemInstance {
 	
 	public String toString(){
 		String output = "";
-		for (FeatureNode x : this.featureVector){
+		int fLen = this.featureVector.length-1;
+		for (int i = 0; i < fLen;i++){
+			FeatureNode x = this.featureVector[i];
 			output += x.getIndex()+":"+x.getValue()+" ";
 		}
+		output += this.featureVector[fLen].getIndex()
+				+":"+this.featureVector[fLen].getValue();
 		return output;
 	}
 }

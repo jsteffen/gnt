@@ -11,6 +11,7 @@ public class ModelInfo {
 
 	private String modelFilePrefix = "resources/models/model_";
 	private String modelFile = "";
+	private String taggerName = "";
 
 
 	public SolverType getSolver() {
@@ -43,7 +44,12 @@ public class ModelInfo {
 	public void setModelFile(String modelFile) {
 		this.modelFile = modelFile;
 	}
-
+	public String getTaggerName() {
+		return taggerName;
+	}
+	public void setTaggerName(String taggerName) {
+		this.taggerName = taggerName.toUpperCase();
+	}
 	//
 	public ModelInfo(){
 	}
@@ -100,7 +106,7 @@ public class ModelInfo {
 		if (wordFeatString.equals("F")) dim=0;
 
 		this.modelFile = 
-				this.modelFilePrefix+dim+"iw"+numberOfSentences+"sent_"+
+				this.modelFilePrefix+this.getTaggerName()+"_"+dim+"iw"+numberOfSentences+"sent_"+
 				wordFeatString+shapeFeatString+suffixFeatString+"_"+
 				this.getSolver()+".txt";
 	}

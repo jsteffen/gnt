@@ -10,6 +10,7 @@ public class Data {
 	private Sentence sentence = new Sentence();
 	private int sentenceCnt = 0;
 	private List<Window> instances = new ArrayList<Window>();
+	private String taggerName = "POS";
 	private String labelMapFileName = "resources/features/labelSet.txt";
 	private String wordMapFileName = "resources/features/wordSet.txt";
 	
@@ -58,12 +59,24 @@ public class Data {
 	public void setWordMapFileName(String wordMapFileName) {
 		this.wordMapFileName = wordMapFileName;
 	}
+	public String getTaggerName() {
+		return taggerName;
+	}
+	public void setTaggerName(String taggerName) {
+		this.taggerName = taggerName;
+	}
 	// Instances
 	public Data() {
 	}
 
+	public Data(String taggerName) {
+		this.setTaggerName(taggerName);
+		labelMapFileName = "resources/features/labelSet"+taggerName+".txt";
+		wordMapFileName = "resources/features/wordSet"+taggerName+".txt";
+	}
 	// Methods
 
+	
 	private int updateWordMap(String word) {
 		return this.getWordSet().updateSetIndexMap(word);
 	}
@@ -165,6 +178,10 @@ public class Data {
 
 	public void readWordSet(){
 		this.getWordSet().readSetIndexMap(this.getWordMapFileName());	
+	}
+	
+	public void readWordSet(String taggerName){
+		this.getWordSet().readSetIndexMap("resources/features/wordSet"+taggerName+".txt");	
 	}
 
 	public String toString(){

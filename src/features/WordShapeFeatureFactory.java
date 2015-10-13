@@ -84,7 +84,18 @@ public class WordShapeFeatureFactory {
 		index2signature = new TreeMap<Integer,String>();
 	}
 
-	public void createShapeVectorsFromFile(String fileName, int max){
+	public void createAndSaveShapeFeature(String taggerName, String trainingFileName){
+		System.out.println("Create shape list from: " + trainingFileName);
+		this.createShapeVectorsFromFile(trainingFileName, -1);
+
+		String shapeFileName = "resources/features/shapeList"+"_"+taggerName+".txt";
+		System.out.println("Writing shape list to: " + shapeFileName);
+		this.writeShapeFeatureFile(shapeFileName);
+
+		System.out.println("... done");
+	}
+
+	private void createShapeVectorsFromFile(String fileName, int max){
 		BufferedReader reader;
 		int lineCnt = 0;
 		int mod = 10000;
@@ -134,7 +145,7 @@ public class WordShapeFeatureFactory {
 		if (this.getSignature2index().containsKey(binaryString))
 			return this.getSignature2index().get(binaryString);
 		else
-		{// signal error
+		{// signal unknown signature occured and return it as -1
 			System.err.println("Unknown signature: " + binaryString);
 			return -1;
 		}
@@ -169,7 +180,7 @@ public class WordShapeFeatureFactory {
 		} 
 	}
 
-	private void writeShapeFeatureFile(String targetFileName){
+	public void writeShapeFeatureFile(String targetFileName){
 		BufferedWriter writer;
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
@@ -201,9 +212,10 @@ public class WordShapeFeatureFactory {
 		}
 	}
 
-	public void testReadShapeList(){
-		System.out.println("Reading shape list from: " + "resources/features/shapeList.txt");
-		this.readShapeFeatureFile("resources/features/shapeList.txt");
+	public void readShapeList(String taggerName){
+		String shapeFileName = "resources/features/shapeList"+"_"+taggerName+".txt";
+		System.out.println("Reading shape list from: " + shapeFileName);
+		this.readShapeFeatureFile(shapeFileName);
 		System.out.println("... done");
 	}
 

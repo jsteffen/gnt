@@ -48,22 +48,22 @@
 		
 - I am using now "<BOUNDARY>" also for "<s>" and "</s>"
 	
-HIERIX
+13.10.2015:
 
-- in tagger.GNTagger.runPosTagger(), when running tagger on independent files it seems that 
-	first file processing initializes some hashes or so which makes processing faster for next 
-	runs;
+- add to training phase generation of shape features and suffix list -> DONE
+- collect all data using taggerName as part of filenames -> DONE
+
+HIERIX:
+- generated compressed folder of all data that is necessary for tagging
 
 - unknown word handling: 
 	- currently unknown words are considered as isolated words, 
 		i.e., words with no context using word2Bigram("<s>", word,"</s>");
 	- eventually improve by computing WordDistributedFeatureFactory.word2Bigram(leftWord, word,rightWord);
+	- but can only be tested once I have an efficient solution for the distributed word vectors
 
-- use better absolute feature counts -> map numbers to bijective with enumeration from 1 - X 
--> should effect problem size
-- then later use mapping to get symbols back
 
-- check feature extraction -> suffixes
+
 - define logger
 - define parallel processing
 

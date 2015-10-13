@@ -1,17 +1,26 @@
 Tagging phase
 
-For tagging, I need:
-- Get all feature maps:
-	init alphabet alphabet
+Initialization of tagger:
 
-- do initialize data labelSetMapping
-	/Users/gune00/data/wordVectorTests/labelSet.txt
+- create model file name
+	using same parameter settings as used during training (can be made easier later)
+- set window size
+- load feature files:
+	1. suffixList.txt -> the number-suffix mapping computed from the labeled training corpus
+	2. shapeList.txt -> the number-bitvector mapping of shape features computed from the labeled training corpus
+	3. iwDIM.txt -> indicator words used to create the distributed vector dimension
+	4. vocContentDIM.txt -> the distributed vectors; keeping left and right vectors separated by ###
+	5. vocFile.txt -> the mapping of words to distributed vectors as defined by means of all used unlabeled/labeled corpus
+- load label set
+	6. labelSet.txt -> the number-label mapping as defined by means of the training corpus
+- read word set: (optional for evaluation phase)
+	7. wordSet.txt -> the number-word mapping of all words of the labeled training corpus; used for computing unknown word tagging accuracy
 
-- load model
-	model = Model.load(/Users/gune00/data/wordVectorTests/testModelXYZ.txt);
-	-> test with the two example model files
+	
+Running tagger:
+	
 
-- tagger is called like this
+- tagger is then called like this
 
 	Feature[] instance = { new FeatureNode(1, 4), new FeatureNode(2, 2) };
 	double prediction = Linear.predict(model, instance);
@@ -23,21 +32,57 @@ For tagging, I need:
 	
 - algorithm: for a sentence (sequence of tokens)
 
-	data.generateSentenceObjectFromUnlabeledTokens(tokens);
-	
-	adapting createWindowFramesFromSentence(): loop over tokens i:
-		Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
+step1:	data.generateSentenceObjectFromUnlabeledTokens(tokens);
+step2: 	createWindowFramesFromSentence(): loop over tokens i:
+			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
+			data.getInstances().add(tokenWindow);
+step3:  tag window instances: loop over data.getInstances():
 		nextWindow.fillWindow(train=false, adjust=true);
-			- set train to false will cause handling of unknown words
+			- setting train to false will cause handling of unknown words
 		ProblemInstance problemInstance = new ProblemInstance();
 		problemInstance.createProblemInstanceFromWindow(nextWindow);
 		int prediction = (int) Linear.predict(model, problemInstance.getFeatureVector());
 		this.getData().getSentence().getLabelArray()[i] = prediction;
-		
--> DONE
--> first version for processing unlabeled list of string
+		nextWindow.clean()
+step3: this.getData().cleanInstances();
+
+step2 and step3 are realized within: tagger.GNTagger.tagSentenceObject()
+
+Handling of unknown words:
+
+- unknown word:
+	-	if not found in distributed word vector
+	-	no known suffix
+	-	no known shape
+- not that since a token is represented also by it context words
+	also context words can be unknown words
+	
+- features.WordFeatures.fillWordFeatures(String, int, Alphabet, boolean)
+	- actually recognizes and handles unknown words, if boolean train is set to false
+	- but only effective for fillLeftDistributedWordFeatures() and fillRightDistributedWordFeatures()
+	
+	- for fillLeftDistributedWordFeatures(): this means: unknown words vectors are created incrementally
+		- if for word no distributed vector can be accessed
+		- create an unknown word feature vector via features.WordDistributedFeatureFactory.handleUnknownWordWithoutContext(String)
+		- create or update bigrams using left/right <BOUNDARY> dummy words, which means: we consider word in isolation
+			- since <BOUNDARY> are not part of indicator words, the weight of the last dimension+1 indicator word is used
+		- as a side effect the "new" unknown word is added to the distributed word features
+		- if unknown is seen second time or more then update its counts
+		- then adjust its compute its statistics 
+	-> improvement: it would make sense to consider left/right words
+	
+- for fillShapeFeatures()
+	- we just return the empty feature vector
+	- since shape features are binary features, it would not make sense to add shapes
+		from different domain words which are not covered by source labeled training because
+		only for the latter shape can be used as effective features
+	
+- for fillSuffixFeatures()
+	- for each word determine features.WordSuffixFeatureFactory.getAllKnownSuffixForWord(String)
+	- can eventually be empty, but then word is usually a number, because smallest suffix is a character
+	- since suffix features are binary, only those which are seen in training can be used for learning
+	- so unlabeled data is not usable if I actually use all suffixes from training
 
 -> Performance:
-	- 65 msec for 278 token list.
-	- performance for both used models is similar, only time for loading model is different
+	- between 66K - 100K tokens per second
 

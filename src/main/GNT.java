@@ -19,11 +19,12 @@ import features.WordFeatures;
 /*
  * arguments:
  * 
- * -mode train -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename>
- * -mode test -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename test> -e <evalFileName>
+ * -mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename>
+ * -mode test -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename test> -e <evalFileName>
  */
 public class GNT {
 	private String mode = "train";
+	private String taggerName = "POS";
 	private String windowSize = "2";
 	private String dimension = "50";
 	private String sentences = "100000";
@@ -36,12 +37,12 @@ public class GNT {
 	}
 
 	private void errorMessageAndExit(){
-		System.err.println("-mode train -w <window size> -d <dimension> -s <number of sentences> "
+		System.err.println("-mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> "
 				+ "-m <model info type> "
 				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T"
 				+ "-f <training file name in conll format>"
 				+ "\nor ...");
-		System.err.println("-mode test -w <window size> -d <dimension> -s <number of sentences> "
+		System.err.println("-mode test -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> "
 				+ "-m <model info type> "
 				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T"
 				+ "-f <test file name in conll format> -e <merged output file for evaluation>");
@@ -53,6 +54,7 @@ public class GNT {
 
 	private void setDefaultValues(){
 		mode = "train";
+		taggerName = "POS";
 		windowSize = "2";
 		dimension = "500";
 		sentences = "39274";
@@ -66,16 +68,16 @@ public class GNT {
 	
 	private void initGNTArguments(String[] args){
 
-		if (args[0].equalsIgnoreCase("-mode"))this.mode = args[1];
 		for (int i=0; i < args.length;i++){
 			switch (args[i]){
-			case "-mode" : this.mode = args[1]; break;
-			case "-w" : this.windowSize= args[i+1]; break;
-			case "-d" : this.dimension= args[i+1]; break;
-			case "-s" : this.sentences= args[i+1]; break;
-			case "-m" : this.modelInfoType= args[i+1]; break;
-			case "-f" : this.inFile= args[i+1]; break;
-			case "-e" : this.outFile = args[i+1]; break;
+			case "-mode" 	: this.mode = args[i+1]; break;
+			case "-tagger" 	: this.taggerName = args[i+1]; break;
+			case "-w" 		: this.windowSize= args[i+1]; break;
+			case "-d" 		: this.dimension= args[i+1]; break;
+			case "-s" 		: this.sentences= args[i+1]; break;
+			case "-m" 		: this.modelInfoType= args[i+1]; break;
+			case "-f" 		: this.inFile= args[i+1]; break;
+			case "-e" 		: this.outFile = args[i+1]; break;
 			case "-wordFeats" : 
 				if (args[i+1].equalsIgnoreCase("F"))
 					WordFeatures.withWordFeats=false;
@@ -108,18 +110,14 @@ public class GNT {
 			System.err.println("Not all arguments have values! Check!");
 			errorMessageAndExit();
 		}
-		if (args[0].equals("-mode"))
-		{
-			this.initGNTArguments(args);
-		}
-		else
-			errorMessageAndExit();
+		this.initGNTArguments(args);
 	}
 
 	public String toString (){
 		String output = "";
 
 		output += "-mode "+ this.mode ;
+		output += "-tagger "+ this.taggerName;
 		output += " -w "+ this.windowSize ;
 		output += " -d "+ this.dimension ;
 		output += " -s "+ this.sentences ;
@@ -139,6 +137,7 @@ public class GNT {
 		System.out.println(this.toString());
 
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
+		modelInfo.setTaggerName(taggerName);
 
 		int windowSize = Integer.valueOf(this.windowSize);
 		int dim = Integer.valueOf(this.dimension);
@@ -157,6 +156,7 @@ public class GNT {
 		System.out.println(this.toString());
 
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
+		modelInfo.setTaggerName(taggerName);
 
 		int windowSize = Integer.valueOf(this.windowSize);
 		int dim = Integer.valueOf(this.dimension);
@@ -164,10 +164,10 @@ public class GNT {
 
 		modelInfo.createModelFileName(dim, numberOfSentences);
 
-		GNTagger posTagger = new GNTagger();
+		GNTagger posTagger = new GNTagger(modelInfo);
 
-		posTagger.initGNTagger(modelInfo.getModelFile(), windowSize, dim);
-		System.out.println("\n++++\nLoad known vocabulary from trainign for evaluating OOV: ");
+		posTagger.initGNTagger(windowSize, dim);
+		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile.data.readWordSet();
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile);
 	}

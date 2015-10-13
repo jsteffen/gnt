@@ -1,111 +1,46 @@
 22.9.2015, GN:
 
 Testing NER:
--> had to update corpus data foies as well!
+-> had to update corpus data as well!
 
-eng.train.conll -> mapped to conll format via 
-
-modefile: model_0iw-1sent_FTT_L2R_L2LOSS_SVC.txt
+eng.train -> mapped to conll format eng.train.conll via:
 mapper.transcodeNERfile("resources/data/ner/eng.testb", "utf-8", "resources/data/ner/eng-testb.conll", "utf-8");
 
-Heer: this works for -1 !
+// I have adjusted the NER conll format to be consistent with the other conll formats, i.e.
+// LONDON NNP I-NP I-LOC -> 1	LONDON	NNP	I-NP	I-LOC
+// This is why I have 5 elements instead of 4 
 
-./conlleval < eval/eng-testa.txt 
-processed 51578 tokens with 9408 phrases; found: 6155 phrases; correct: 5000.
-accuracy:  97.40%; precision:  81.23%; recall:  53.15%; FB1:  64.25
-              LOC: precision:  88.45%; recall:  90.47%; FB1:  89.45
-             MISC: precision:  81.54%; recall:  79.07%; FB1:  80.29
-              ORG: precision:  67.76%; recall:  75.24%; FB1:  71.31
-              PER: precision:  84.52%; recall:  86.86%; FB1:  85.68
-                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
 
-./conlleval < eval/eng-testb.txt 
-processed 46666 tokens with 9332 phrases; found: 6133 phrases; correct: 4252.
-accuracy:  95.45%; precision:  69.33%; recall:  45.56%; FB1:  54.99
-              LOC: precision:  80.66%; recall:  86.03%; FB1:  83.26
-             MISC: precision:  63.35%; recall:  71.65%; FB1:  67.25
-              ORG: precision:  59.26%; recall:  67.25%; FB1:  63.00
-              PER: precision:  71.46%; recall:  74.03%; FB1:  72.72
-                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
+
+
+Actual results using settings:
 
 ModelInfo modelInfo = new ModelInfo("FLORS");
+		modelInfo.setTaggerName("NER");
+		
 		int windowSize = 2;
-		int numberOfSentences = 14000;
-		int dim = 50;
-		WordFeatures.withWordFeats=true;
-
-./conlleval < eval/eng-testa.txt 
-processed 51578 tokens with 9408 phrases; found: 6135 phrases; correct: 4912.
-accuracy:  97.05%; precision:  80.07%; recall:  52.21%; FB1:  63.21
-              LOC: precision:  86.51%; recall:  89.38%; FB1:  87.93
-             MISC: precision:  78.23%; recall:  74.84%; FB1:  76.50
-              ORG: precision:  66.20%; recall:  66.74%; FB1:  66.47
-              PER: precision:  84.12%; recall:  91.48%; FB1:  87.65
-                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
-
--> FB1: 79,64 (average over individual FB1 results)
-
-./conlleval < eval/eng-testb.txt 
-processed 46666 tokens with 9332 phrases; found: 6010 phrases; correct: 4353.
-accuracy:  95.77%; precision:  72.43%; recall:  46.65%; FB1:  56.75
-              LOC: precision:  80.62%; recall:  85.31%; FB1:  82.90
-             MISC: precision:  68.58%; recall:  71.51%; FB1:  70.01
-              ORG: precision:  60.43%; recall:  62.79%; FB1:  61.59
-              PER: precision:  77.50%; recall:  85.65%; FB1:  81.37
-                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
--> FB1 -> 73,97 (average over individual FB1 results)
-                
-
-
-ModelInfo modelInfo = new ModelInfo("FLORS");
-		int windowSize = 1;
-		int numberOfSentences = 14000;
+		int numberOfSentences = -1;
 		int dim = 0;
 		WordFeatures.withWordFeats=false;
-
+		
 ./conlleval < eval/eng-testa.txt 
-processed 51578 tokens with 9408 phrases; found: 6165 phrases; correct: 4962.
-accuracy:  97.28%; precision:  80.49%; recall:  52.74%; FB1:  63.73
-              LOC: precision:  87.01%; recall:  90.09%; FB1:  88.53
-             MISC: precision:  82.07%; recall:  80.91%; FB1:  81.49
-              ORG: precision:  68.05%; recall:  73.23%; FB1:  70.55
-              PER: precision:  82.63%; recall:  85.72%; FB1:  84.15
+processed 51578 tokens with 9408 phrases; found: 6075 phrases; correct: 5036.
+accuracy:  97.53%; precision:  82.90%; recall:  53.53%; FB1:  65.05
+              LOC: precision:  89.09%; recall:  90.69%; FB1:  89.88
+             MISC: precision:  81.75%; recall:  80.15%; FB1:  80.94
+              ORG: precision:  71.08%; recall:  76.44%; FB1:  73.66
+              PER: precision:  86.39%; recall:  87.19%; FB1:  86.79
                 X: precision:   0.00%; recall:   0.00%; FB1:   0.00
                 
--> FB1=81,18
+Average FB1: 82.81
                 
 ./conlleval < eval/eng-testb.txt 
-processed 46666 tokens with 9332 phrases; found: 6074 phrases; correct: 4202.
-accuracy:  95.34%; precision:  69.18%; recall:  45.03%; FB1:  54.55
-              LOC: precision:  78.41%; recall:  85.55%; FB1:  81.82
-             MISC: precision:  68.10%; recall:  74.50%; FB1:  71.16
-              ORG: precision:  60.26%; recall:  67.19%; FB1:  63.54
-              PER: precision:  69.52%; recall:  70.25%; FB1:  69.89
-                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
-                
--> FB1=71,60
+processed 46666 tokens with 9332 phrases; found: 5974 phrases; correct: 4255.
+accuracy:  95.65%; precision:  71.23%; recall:  45.60%; FB1:  55.60
+              LOC: precision:  81.39%; recall:  84.95%; FB1:  83.13
+             MISC: precision:  66.62%; recall:  74.22%; FB1:  70.22
+              ORG: precision:  61.68%; recall:  68.51%; FB1:  64.92
+              PER: precision:  73.41%; recall:  72.91%; FB1:  73.16
+                X: precision:   0.00%; recall:   0.00%; FB1:   0.00                
 
-ModelInfo modelInfo = new ModelInfo("FLORS");
-		int windowSize = 1;
-		int numberOfSentences = 14000;
-		int dim = 100;
-		WordFeatures.withWordFeats=true;
-
-./conlleval < eval/eng-testa.txt 
-processed 51578 tokens with 9408 phrases; found: 6221 phrases; correct: 4881.
-accuracy:  96.85%; precision:  78.46%; recall:  51.88%; FB1:  62.46
-              LOC: precision:  84.86%; recall:  88.51%; FB1:  86.65
-             MISC: precision:  78.56%; recall:  76.68%; FB1:  77.61
-              ORG: precision:  64.09%; recall:  63.76%; FB1:  63.93
-              PER: precision:  81.75%; recall:  91.91%; FB1:  86.53
-                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
-                
-./conlleval < eval/eng-testb.txt 
-processed 46666 tokens with 9332 phrases; found: 6175 phrases; correct: 4299.
-accuracy:  95.56%; precision:  69.62%; recall:  46.07%; FB1:  55.45
-              LOC: precision:  78.83%; recall:  84.83%; FB1:  81.72
-             MISC: precision:  65.71%; recall:  71.79%; FB1:  68.62
-              ORG: precision:  56.04%; recall:  59.48%; FB1:  57.71
-              PER: precision:  75.24%; recall:  86.09%; FB1:  80.30
-                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
--> HURTS !		
+Average FB1: 72,86

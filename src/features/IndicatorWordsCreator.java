@@ -26,7 +26,7 @@ public class IndicatorWordsCreator {
 	static int lineCnt = 0;
 	static int tokenCnt = 0;
 	private Map<String, Integer> wordToNum = new HashMap<String, Integer>();
-	
+
 	// Clean text line according to given type
 	// AND lower case text
 	// It is assumed that line is a tokenized sentence
@@ -37,7 +37,7 @@ public class IndicatorWordsCreator {
 	public void setWordToNum(Map<String, Integer> wordToNum) {
 		this.wordToNum = wordToNum;
 	}
-	
+
 	//
 	private String[] cleanTextLine(String line, String type) {
 		String[] words = {};
@@ -158,7 +158,7 @@ public class IndicatorWordsCreator {
 		readAndProcessInputTextLineWise("resources/data/english/ptb3-training-sents.txt", "ptb", 100000);
 		readAndProcessInputTextLineWise("resources/data/english/ptb3-devel-sents.txt", "ptb", 1000);
 		readAndProcessInputTextLineWise("resources/data/english/ptb3-test-sents.txt", "ptb", 1000);
-		
+
 		// Training data unlabeled
 		readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);
 
@@ -188,16 +188,16 @@ public class IndicatorWordsCreator {
 	}
 
 	// TODO - check, but I think I have all source files that are also used in FLORS
-		private void createIndicatorNerWordsFromFiles(){
+	private void createIndicatorNerWordsFromFiles(){
 
-			// Training data unlabeled
-			readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);
+		// Training data unlabeled
+		readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);
 
-			readAndProcessInputTextLineWise("resources/data/ner/eng-train-sents.txt", "ptb", 1000);
-			readAndProcessInputTextLineWise("resources/data/ner/eng-testa-sents.txt", "ptb", 1000);
-			readAndProcessInputTextLineWise("resources/data/ner/eng-testb-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/eng-train-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/eng-testa-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/eng-testb-sents.txt", "ptb", 1000);
 
-		}
+	}
 	// Test  caller
 
 	public static void main(String[] args) throws IOException {

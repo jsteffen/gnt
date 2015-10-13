@@ -115,6 +115,7 @@ public class WordFeatures {
 
 	// boolean flag offline means: assume that features have been pre-loaded into to memory
 	// boolean train means: training phase, which means do not handle unknown words
+	// since word is from input stream, need to lower-case it first
 	private void fillLeftDistributedWordFeatures(String word,
 			Alphabet alphabet, boolean train, boolean offline) {
 		String lowWord = word.toLowerCase();
@@ -132,6 +133,7 @@ public class WordFeatures {
 
 	private void fillRightDistributedWordFeatures(String word,
 			Alphabet alphabet, boolean train, boolean offline) {
+		// since word is from input stream, need to lower-case it first
 		String lowWord = word.toLowerCase();
 		WordDistributedFeature distributedWordVector = alphabet.getWordVectorFactory().getWordVector(lowWord, train);
 		for (int i = 0; i < distributedWordVector.getRightContext().length; i++){
@@ -165,7 +167,8 @@ public class WordFeatures {
 		}
 		else
 		{
-			// means that shape-size() will remain 0
+			// we have an unknown signature, so we cannot add it to the list
+			// which basically means that shape-size() will remain 0
 			System.err.println("Word: " + word + " at loc: " + index + ": unknown signature!");
 
 		}
@@ -182,8 +185,10 @@ public class WordFeatures {
 		 * Loop them up
 		 * Return suffixes list of Pairs (index, true)
 		 */
+		// since word is from input stream, need to lower-case it first
 		String lowWord = word.toLowerCase();
 		List<Integer> suffixIndices = alphabet.getWordSuffixFactory().getAllKnownSuffixForWord(lowWord);
+		//if (suffixIndices.isEmpty()) System.err.println("No known suffixes: " + word);
 		for (int x : suffixIndices){
 			int realIndex = (this.isAdjust())?(this.suffixOffset+x):x;
 			Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);

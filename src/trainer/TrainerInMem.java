@@ -143,6 +143,7 @@ public class TrainerInMem {
 	public TrainerInMem (ModelInfo modelInfo, int windowSize){
 		this.setWindowSize(windowSize);
 		this.setModelInfo(modelInfo);
+		this.setData(new Data(modelInfo.getTaggerName()));
 
 		this.setParameter(new Parameter(
 				modelInfo.getSolver(),
@@ -202,8 +203,8 @@ public class TrainerInMem {
 	}
 
 	/**
-	 * Loops through a file where each line is conll encoded, collects tokens to a sentence 
-	 * and calls windows creator on sentence.
+	 * Loops through a file where each line is conll encoded, collect tokens to a sentence 
+	 * and call windows creator on sentence.
 	 * @param conllReader
 	 * @param max if -1 then infinite else max sentences are processed and then methods stops
 	 * @throws IOException

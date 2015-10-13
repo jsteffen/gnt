@@ -2,23 +2,19 @@
 Goal is to compute all lower-case suffixes from a training set of words.
  * For suffix s, we set the dimension corresponding to s in f_suffix(w) to 1 if lowercased w ends in s 
  * and to 0 otherwise. Note that w is a suffix of itself.
- * In FLORS: 91,161 suffix features from PTB - I guess - and PTB as about 32.500 words.
- * It is unclear how FLORS define words from which suffixes should be created
+ * In FLORS: 91,161 suffix features from PTB - I guess - and PTB has about 32.500 words.
+ 
+ 
+ It is unclear how FLORS defines words from which suffixes should be created
+-> for that reason I am using all tokens
+
+
 
 I currently use only labeled training data:
-	"/Users/gune00/data/MLDP/english/english-train-sents.txt"
-
-I try to compute suffixes only from words, so filter out
-- number expressions -> DONE
-- multi-character string like '', G-7
-
-Current result without filter:  #word: 32491 #suffixes: 98358
- 	
-With number filter: #word: 28481 #suffixes: 91144
-
-New training version ptb3-training: #suffixes 116752
-
-
+- "/Users/gune00/data/MLDP/english/english-train-sents.txt"
+	
+- since suffix features are binary, only those which are seen in training can be used for learning
+- so unlabeled data is not useful all suffixes from training
 
 
 Lower dimensions:

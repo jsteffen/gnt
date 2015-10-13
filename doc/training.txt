@@ -1,33 +1,9 @@
 2. Training of POS tagger and liblinear
 		
-Java object structure:
-
-- define trainer class
-	has a corpus object
-	defines window size l
-	loads or creates distributed vectors
-	loads or creates pre-computed suffixes
-	loads or creates pre-computed shape features
-
--> 	I can combine all in a class Alphabet initialized with corpus
-	- training word2index mapping
-	- label set -> incremental
-	- distributed word factory -> loaded initially
-	- suffix features 	-> incremental
-	- shape features	-> incremental
-	
-	process conll training file and create sentence internal forms: list of pairs (word, pos)
-	I need to define a label2num num2label file
-	
-	for each sentence, perform windows based processing, with pre-specified window size
-	fills feature vector parts  for each word
-	writes out liblinear model file (as gzipped)
-	
-	see http://stats.stackexchange.com/questions/61328/libsvm-data-format
+see http://stats.stackexchange.com/questions/61328/libsvm-data-format
 	
 Creating training data file:
 		
-Current approach:
 - load word vectors, suffixes, shapes
 	- seems that offline mode is ok, because then I can do experiments with ranked suffixes
 	
@@ -39,6 +15,7 @@ Current approach:
 
 - initialize offSets -> DONE
 
+Training phase:
 - loop through training sentences incrementally
 	- save label set in file
 
@@ -70,6 +47,17 @@ Current approach:
 	- modelfile: has all settings for problem
 	- save label set
 	- save windowSize
+
+- final model exists of following data needed for doing tagging later:
+	1. suffixList.txt -> the number-suffix mapping computed from the labeled training corpus
+	2. shapeList.txt -> the number-bitvector mapping of shape features computed from the labeled training corpus
+	3. iwDIM.txt -> indicator words used to create the distributed vector dimension
+	4. vocContentDIM.txt -> the distributed vectors; keeping left and right vectors separated by ###
+	5. vocFile.txt -> the mapping of words to distributed vectors as defined by means of all used unlabeled/labeled corpus
+	6. labelSet.txt -> the number-label mapping as defined by means of the training corpus
+	7. wordSet.txt -> the number-word mapping of all words of the labeled training corpus; used for computing unknown word tagging accuracy
+	8. the model file
+	
 
 
 NOTES on Alphabet:
@@ -143,12 +131,4 @@ when sentence count is -1 (max=39278) or > 39274;
 Everything works, but I cannot reproduce FLORS result so far; but the trend is ok;
 
 when not using distributed word vectors, I still have at least one distributed feature length of 1
-
-HIERIX
-Map current absolute index to integer enumeration 1, 2, ...
-This should reduce the necessary size of problem.n
-However, when done so I need to memorize the mappping as part of Alphabet or OffSet class for testing phase later
-and for restoring the absolute indices
-
-eventually like this: snippetRanks = websyntaxmlqaresultdto.getPredictedAnswers().keySet().toArray();
 

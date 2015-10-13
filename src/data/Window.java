@@ -27,7 +27,6 @@ public class Window {
 	// radius of the window
 	private int windowSize = 0;
 	private List<WordFeatures> elements = new ArrayList<WordFeatures>();
-	private boolean trainingPhase = true;
 	// Total length of the window by adding all features of each window element
 	private int windowLength = 0;
 	private int labelIndex = -1;
@@ -93,8 +92,7 @@ public class Window {
 	 * @param adjust
 	 */
 	public void fillWindow(boolean train, boolean adjust){
-		this.trainingPhase = train;
-
+		
 		// compute left/right borders of the size of the window elements, which depends on windowSize
 		int max = this.sentence.getWordArray().length-1;
 		int leftPads = (this.center < this.windowSize)?(this.windowSize-this.center):0;
@@ -117,12 +115,12 @@ public class Window {
 		// based on value this.size;
 		// NOTE Does not add label
 		
-		// Add left padding elements to sentence (if any); needed to later correctly compute global offSets
+		// Add left padding elements to sentence (if any); needed later to correctly compute global offSets
 
 		for (int i = 0 ; i < leftPads; i++){
 			wordString = "<BOUNDARY>";
 			// wordLoc does not matter here, because empty WordFeatures class is created
-			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
+			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, train, adjust);
 			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
@@ -132,7 +130,7 @@ public class Window {
 			// check position of word in sentence; if it is either at start or not; influences computation of shape feature
 			wordLoc = (i==0)?0:1;
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
-			WordFeatures wordFeatures = createWordFeatures(wordString, wordLoc, elementCnt, adjust);
+			WordFeatures wordFeatures = createWordFeatures(wordString, wordLoc, elementCnt, train, adjust);
 			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
@@ -140,7 +138,7 @@ public class Window {
 		// Add token center element
 		{	wordLoc = (this.center==0)?0:1;
 		wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center]);
-		WordFeatures wordFeatures = createWordFeatures(wordString, wordLoc, elementCnt, adjust);
+		WordFeatures wordFeatures = createWordFeatures(wordString, wordLoc, elementCnt, train, adjust);
 		windowLength+= wordFeatures.getLength();
 		elements.add(wordFeatures);
 		elementCnt++;
@@ -149,7 +147,7 @@ public class Window {
 		// set wordLoc always to 1, because can never be 0
 		for (int i = this.center+1 ; i < (this.center+1+rightContext); i++){
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
-			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
+			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, train, adjust);
 			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
@@ -159,7 +157,7 @@ public class Window {
 		for (int i = (this.center + rightContext) ; i < (this.center + rightContext + rightPads); i++) {
 			wordString = "<BOUNDARY>";
 			// wordLoc does not matter here, because empty WordFeatures class is created
-			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, adjust);
+			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, train, adjust);
 			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
@@ -175,7 +173,7 @@ public class Window {
 	 * @param adjust
 	 * @return
 	 */
-	private WordFeatures createWordFeatures(String word, int wordPosition, int elementCnt, boolean adjust) {
+	private WordFeatures createWordFeatures(String word, int wordPosition, int elementCnt, boolean train, boolean adjust) {
 		// create a new WordFeatures element
 		WordFeatures wordFeatures = new WordFeatures(word);
 		// set its index
@@ -186,7 +184,7 @@ public class Window {
 		// indicate whether relative feature names (indices) should be adjusted to global ones according to the rules of Liblinear
 		wordFeatures.setAdjust(adjust);
 		// fill all the window's elements
-		wordFeatures.fillWordFeatures(word, wordPosition, alphabet, this.trainingPhase);
+		wordFeatures.fillWordFeatures(word, wordPosition, alphabet, train);
 		return wordFeatures;
 	}
 

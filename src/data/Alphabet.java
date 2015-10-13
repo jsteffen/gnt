@@ -31,10 +31,10 @@ public class Alphabet {
 
 	// Methods
 
-	public void loadFeaturesFromFiles(int dim){
-		if (dim > 0) this.wordVectorFactory.readDistributedWordFeaturesSparse(dim);
-		this.wordSuffixFactory.testReadSuffixList();
-		this.wordShapeFactory.testReadShapeList();
+	public void loadFeaturesFromFiles(String taggerName, int dim){
+		if (dim > 0) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim);
+		this.wordSuffixFactory.readSuffixList(taggerName);
+		this.wordShapeFactory.readShapeList(taggerName);
 	}
 
 	public void clean(){

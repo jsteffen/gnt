@@ -18,7 +18,7 @@ I currently use only labeled training data:
 -> New training version ptb3-training: 52 shapes
 	
 If word cannot be mapped to one of the learned shape features, then its shape list is empty.
-Which means that the fetaure is actually not available for that work.
+Which means that the feataure is actually not available for that work.
 This works, because shape feature lists and suffix feature lists are dynamic in length.
 	
 Shape features are language and domain specific

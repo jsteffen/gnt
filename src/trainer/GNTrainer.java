@@ -6,14 +6,15 @@ import data.ModelInfo;
 import data.OffSets;
 import data.Window;
 import features.WordDistributedFeatureFactory;
-import features.WordFeatures;
+import features.WordShapeFeatureFactory;
+import features.WordSuffixFeatureFactory;
 
 public class GNTrainer {
 
 	private TrainerInMem trainer;
 	private long time1 ;
 	private long time2;
-	
+
 	//
 	public TrainerInMem getTrainer() {
 		return trainer;
@@ -22,26 +23,49 @@ public class GNTrainer {
 		this.trainer = trainer;
 	}
 
-	public GNTrainer(int dim) {
-		this.trainer = new TrainerInMem(dim);
-	}
+	// initialization
 
 	public GNTrainer(ModelInfo modelInfo, int dim) {
 		this.trainer = new TrainerInMem(modelInfo, dim);
 	}
 
-	// This is a method for on-demand creation of the distributed word vectors given the dimension dim.
+	// This is a method for on-demand creation of the feature files
 
-	private void createWordVectors(int dim) throws IOException{
-		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
-		dwvFactory.createAndWriteDistributedWordFeaturesSparse(dim);
+	private void createTrainingFeatureFiles(String trainingFileName, int dim)
+			throws IOException{
+		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
+
+		this.createWordVectors(taggerName, dim);
+		this.createShapeFeatures(taggerName, trainingFileName);
+		this.createSuffixFeatures(taggerName, trainingFileName);	
 	}
 
+	private void createWordVectors(String taggerName, int dim) throws IOException{
+		if (dim > 0){
+			WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
+			dwvFactory.createAndWriteDistributedWordFeaturesSparse(taggerName, dim);	
+		}
+	}
+
+	private void createShapeFeatures(String taggerName, String trainingFileName){
+		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
+		wordShapeFactory.createAndSaveShapeFeature(taggerName, trainingFileName);
+	}
+	
+	private void createSuffixFeatures(String taggerName, String trainingFileName){
+		WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
+		wordSuffixFactory.createAndSaveSuffixFeature(taggerName, trainingFileName);	
+	}
+
+
+
 	private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
-		System.out.println("Load feature files:");
+		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
+		
+		System.out.println("Load feature files for tagger " + taggerName + ":");
 		time1 = System.currentTimeMillis();
 
-		this.getTrainer().getAlphabet().loadFeaturesFromFiles(dim);
+		this.getTrainer().getAlphabet().loadFeaturesFromFiles(taggerName,dim);
 
 		System.out.println("Cleaning not used storage:");
 		this.getTrainer().getAlphabet().clean();
@@ -70,30 +94,14 @@ public class GNTrainer {
 	}
 
 	public void gntTrainingWithDimensionFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
-		System.out.println("Create wordVectors:");
+		System.out.println("Create feature files:");
 		time1 = System.currentTimeMillis();
 
-		if (dim > 0) this.createWordVectors(dim);
+		this.createTrainingFeatureFiles(trainingFileName+"-sents.txt", dim);
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 
-		this.gntTrainingFromConllFile(trainingFileName, dim, maxExamples);
+		this.gntTrainingFromConllFile(trainingFileName+".conll", dim, maxExamples);
 	}
-
-	public static void main(String[] args) throws IOException{
-		ModelInfo modelInfo = new ModelInfo("FLORS");
-		int windowSize = 2;
-		int numberOfSentences = -1; //39826;
-		int dim = 0;
-		WordFeatures.withWordFeats=false;
-		
-		modelInfo.createModelFileName(dim, numberOfSentences);
-		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
-		String trainingFileName = "resources/data/english/ptb3-training.conll";
-
-		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, dim, numberOfSentences);
-
-	}
-
 }

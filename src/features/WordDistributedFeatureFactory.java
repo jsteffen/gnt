@@ -209,10 +209,10 @@ public class WordDistributedFeatureFactory {
 		if (this.getIw2num().containsKey(word)) 
 			index = this.getIw2num().get(word);
 		else
-			// means also that dummy elements <s> and </s> count as unknown indicator words
+			// means also that dummy elements <BOUNDARY> and <BOUNDARY> count as unknown indicator words
 			// so return last dimension+1 as index for unknown words
 			index = this.getIw2num().size()+1;
-		//if (word.equals("<s>") || word.equals("</s>")) System.out.println("IW: " + word + " IwIdx: " + index);
+		//if (word.equals("<BOUNDARY>")) System.out.println("IW: " + word + " IwIdx: " + index);
 		return index;
 	}
 
@@ -248,12 +248,19 @@ public class WordDistributedFeatureFactory {
 	}
 
 	// A dummy for handling unknown words, if a word is tested in isolation
-	// Word is known to be unknown in test phase, that is it is not yet part of the distributed vector model
+	// Word is known to be unknown in test phase, that is, it is not yet part of the distributed vector model
+	// but if a unknown feature vector is computed then it is added to the distributed feature vector as a side effect
+	// so next time it is known; in some sense it is cached
 
 	public WordDistributedFeature handleUnknownWordWithoutContext(String word){
+		// initialize bigrams <BOUNDARY>/word, and word/<BOUNDARY>
+		// or incrementally update its counts
 		word2Bigram("<BOUNDARY>", word,"<BOUNDARY>");
+		// access it
 		int wordIndex = this.getWord2num().get(word);
+		// adjust its counts
 		this.getDistributedWordsTable().get(wordIndex).computeContextWeights();
+		// and return its word vector
 		return this.getDistributedWordsTable().get(wordIndex);
 	}
 
@@ -387,16 +394,16 @@ public class WordDistributedFeatureFactory {
 		}
 	}
 
-	public void writeFlorsCondensed(int maxIndicatorWords){
+	public void writeFlorsCondensed(String taggerName, int maxIndicatorWords){
 		System.out.println("Write GNT data condensed ...");
 		System.out.println("Write out used indicator words file.");
-		this.writeIndicatorWordFile("resources/features/iw"+maxIndicatorWords+".txt");
+		this.writeIndicatorWordFile("resources/features/iw"+taggerName+maxIndicatorWords+".txt");
 
 		System.out.println("Write out vocabulary file.");
-		this.writeVocabularyFile("resources/features/vocFile.txt");
+		this.writeVocabularyFile("resources/features/vocFile"+taggerName+".txt");
 		
 		System.out.println("Write out left/right context vector files.");
-		this.writeContextFile("resources/features/vocContext"+maxIndicatorWords+".txt");
+		this.writeContextFile("resources/features/vocContext"+taggerName+maxIndicatorWords+".txt");
 		System.out.println("Done!");
 	}
 
@@ -463,28 +470,32 @@ public class WordDistributedFeatureFactory {
 		}
 	}
 
-	public void readDistributedWordFeaturesSparse(int maxIndicatorWords){
+	public void readDistributedWordFeaturesSparse(String taggerName, int maxIndicatorWords){
 		System.out.println("Read GNT condensed ...");
-		System.out.println("Read used indicator words file.");
-		this.readIndicatorWordFile("resources/features/iw"+maxIndicatorWords+".txt");
+		String iwFile = "resources/features/iw"+taggerName+maxIndicatorWords+".txt";
+		System.out.println("Read used indicator words file: " + iwFile);
+		this.readIndicatorWordFile(iwFile);
 
-		System.out.println("Read vocabulary file.");
-		this.readVocabularyFile("resources/features/vocFile.txt");
-		System.out.println("Read left/right context vector files.");
-		this.readContextFile("resources/features/vocContext"+maxIndicatorWords+".txt");
+		String vocFile = "resources/features/vocFile"+taggerName+".txt";
+		System.out.println("Read vocabulary file: " + vocFile);
+		this.readVocabularyFile(vocFile);
+		
+		String dwvFile = "resources/features/vocContext"+taggerName+maxIndicatorWords+".txt";
+		System.out.println("Read left/right context vector from file: " + dwvFile);
+		this.readContextFile(dwvFile);
 		System.out.println("Done!");
 	}
 	
-	public void createAndWriteDistributedWordFeaturesSparse(int maxIndicatorWords) throws IOException {
+	public void createAndWriteDistributedWordFeaturesSparse(String taggerName, int maxIndicatorWords) throws IOException {
 		Corpus corpus = new Corpus();
-		System.out.println("Read  " + maxIndicatorWords + " indicator words sorted acoording to rank.");
+		System.out.println("Read  " + maxIndicatorWords + " indicator words sorted acoording to rank for tagger " + taggerName + "!");
 		this.initIndicatorMap("resources/features/iw_all.txt", maxIndicatorWords);
 
 		System.out.println("Read sentences from corpus and create word vectors.");
 		this.readGNTCorpus(corpus);
 		this.computeDistributedWordWeights();
 
-		this.writeFlorsCondensed(maxIndicatorWords);
+		this.writeFlorsCondensed(taggerName, maxIndicatorWords);
 	}
 
 	//***
@@ -503,9 +514,9 @@ public class WordDistributedFeatureFactory {
 	public static void main(String[] args) throws IOException {
 		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
 
-		dwvFactory.createAndWriteDistributedWordFeaturesSparse(250);
+		dwvFactory.createAndWriteDistributedWordFeaturesSparse("POS", 250);
 
-		dwvFactory.readDistributedWordFeaturesSparse(250);
+		dwvFactory.readDistributedWordFeaturesSparse("POS", 250);
 	}
 
 }

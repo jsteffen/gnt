@@ -41,7 +41,7 @@ public class WordSuffixFeatureFactory {
 	// stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
 	private Map<String, Integer> suffix2num = new HashMap<String, Integer>();
 	// stores rank -> indicator word -> is needed for indexing the context vectors using index rank-1 
-	
+
 	// TODO later only used for ppPrint
 	private Map<Integer, String> num2suffix = new TreeMap<Integer, String>();
 
@@ -60,119 +60,22 @@ public class WordSuffixFeatureFactory {
 	public void setNum2suffix(Map<Integer, String> num2suffix) {
 		this.num2suffix = num2suffix;
 	}
-
+	public int getWordCnt() {
+		return wordCnt;
+	}
+	public void setWordCnt(int wordCnt) {
+		this.wordCnt = wordCnt;
+	}
+	public int getSuffixCnt() {
+		return suffixCnt;
+	}
+	public void setSuffixCnt(int suffixCnt) {
+		this.suffixCnt = suffixCnt;
+	}
 	public void clean(){
 		num2suffix = new TreeMap<Integer, String>();
 	}
-	
-	public void createSuffixListFromFile(String fileName, int max){
-		BufferedReader reader;
-		int lineCnt = 0;
-		int mod = 10000;
-		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
 
-			// Each line consists of a sequence of words
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if  ((max > 0) && (lineCnt >= max)) break;
-				lineCnt++;
-				// lower case line and split off words
-				String[] words = line.toLowerCase().split(" ");
-				// then compute suffixes
-				computeSuffixesFromWords(words);
-				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
-			}
-			reader.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
-	}
-
-	public void readFlorsCorpus(Corpus corpus){
-		for (String fileName : corpus.trainingUnLabeledData){
-			System.out.println(fileName);
-			// read only first file
-			createSuffixListFromFile(fileName, -1);
-			break;
-		} 
-	}
-
-	private void computeSuffixesFromWords(String[] words) {
-		for (String word : words){
-			if (!isNumber(word)) 
-				computeSuffixesAndStore(word);
-		}
-	}
-
-	// A number is a string which starts and ends with a digit
-	// This is used to filter out strings for which we do not want to compute suffixes, e.g., numbers
-	private boolean isNumber(String word) {
-		char lastChar = word.charAt(word.length()-1);
-		char firstChar = word.charAt(0);
-		return (Character.isDigit(lastChar) &&
-				Character.isDigit(firstChar));
-	}
-
-	// compute all suffixes of a word starting from 0, which means the word is a suffix of itself
-	// 
-	private void computeSuffixesAndStore(String word) {
-		// Smallest suffix is just last character of a word
-		for (int i = 0; i < word.length(); i++){
-			String suffix = word.substring(i);
-			updateSuffixTable(suffix, i);
-		}
-	}
-
-	private void updateSuffixTable(String suffix, int i) {
-		if (!this.getSuffix2num().containsKey(suffix)){
-			if (i==0) wordCnt++;
-
-			this.suffixCnt++;
-			this.getSuffix2num().put(suffix, suffixCnt);
-			num2suffix.put(suffixCnt, suffix);
-		}
-	}
-
-	//**
-	// after the above has been done, write out vocabulary into files:
-	// Firstly, sort num2word according to natural order, and write value of entry key.
-	private void writeSuffixFile(String targetFileName){
-		BufferedWriter writer;
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
-			for(int key: num2suffix.keySet()){
-				writer.write(num2suffix.get(key)+"\n");
-			}
-			writer.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//***
-	// read preprocessed suffix list from file
-	private void readSuffixFile(String string) {
-		BufferedReader reader;
-		int cnt = 1;
-		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				this.getSuffix2num().put(line, cnt);
-				this.getNum2suffix().put(cnt,line);
-				cnt++;
-			}
-			reader.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//*** basic tests
 	/**
 	 * Given a word, find the index of the longest matching suffix from the known suffix list
 	 * @param word
@@ -197,23 +100,170 @@ public class WordSuffixFeatureFactory {
 	 */
 	public List<Integer> getAllKnownSuffixForWord(String word){
 		List<Integer> indices = new ArrayList<Integer>();
-		if (!isNumber(word))
-			for (int i = 0; i < word.length(); i++){
-				String suffix = word.substring(i);
+		for (int i = 0; i < word.length(); i++){
+			String suffix = word.substring(i);
+			if (!isNonWord(suffix)){
 				if (this.getSuffix2num().containsKey(suffix)) {
 					indices.add(this.getSuffix2num().get(suffix));
 				}
 			}
+		}
 		indices.sort(null);
 		return indices;
 	}
 
+	private void updateSuffixTable(String suffix, int i) {
+		if (!this.getSuffix2num().containsKey(suffix)){
+			if (i==0) wordCnt++;
+
+			this.suffixCnt++;
+			this.getSuffix2num().put(suffix, suffixCnt);
+			num2suffix.put(suffixCnt, suffix);
+		}
+	}
+	/** A number is a string which starts and ends with a digit.
+	 * This is used to filter out strings for which we do not want to compute suffixes, e.g., numbers
+	 * 
+	 * @param word
+	 * @return
+	 */
+	private boolean isNumber(String word) {
+		char lastChar = word.charAt(word.length()-1);
+		char firstChar = word.charAt(0);
+		return (Character.isDigit(lastChar) 
+				&& Character.isDigit(firstChar)
+				);
+	}
+
+	private boolean hasLastNonLetter(String word) {
+		char lastChar = word.charAt(word.length()-1);
+		return !Character.isLetter(lastChar);
+	}
+
+	private boolean hasOnlyNonLetters(String token){
+		boolean isValid = true;
+		for (int i=0 ; i < token.length(); i++){
+			char curChar = token.charAt(i);
+			if (Character.isLetter(curChar)) {
+				isValid = false; break;
+			}
+		}
+		return isValid;
+	}
+	/**
+	 * Returns true if token is not a word.
+	 * @param token
+	 * @return
+	 */
+	private boolean isNonWord(String token){
+		return (false
+				// hasLastNonLetter(token)
+				//				|| hasOnlyNonLetters(token) 
+				//				|| isNumber(token)
+				);
+	}
+
+	/** 
+	 * compute all suffixes of a word starting from 0, which means the word is a suffix of itself.
+	 * If suffix is not a word, then do not store it.
+	 * @param word
+	 */
+	private void computeSuffixesAndStore(String word) {
+		// Smallest suffix is just last character of a word
+		for (int i = 0; i < word.length(); i++){
+			String suffix = word.substring(i);
+			if (!isNonWord(suffix)) 
+				updateSuffixTable(suffix, i);
+		}
+	}
+	/**
+	 * Receives a list of token, and computes suffixes for each token.
+	 * @param words
+	 */
+	private void computeSuffixesFromWords(String[] words) {
+		for (String word : words){computeSuffixesAndStore(word);}
+	}
+	
+	public void createAndSaveSuffixFeature(String taggerName, String trainingFileName){
+		System.out.println("Create suffix list from: " + trainingFileName);
+		this.createSuffixListFromFile(trainingFileName, -1);
+		System.out.println("#word: " + this.getWordCnt()+" #suffixes: " + this.getSuffixCnt());
+		
+		String suffixFileName = "resources/features/suffixList"+"_"+taggerName+".txt";
+		System.out.println("Writing suffix list to: " + suffixFileName);
+		this.writeSuffixFile(suffixFileName);
+		System.out.println("... done");
+	}
+	
+	
+	private void createSuffixListFromFile(String fileName, int max){
+		BufferedReader reader;
+		int lineCnt = 0;
+		int mod = 10000;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
+
+			// Each line consists of a sequence of words
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if  ((max > 0) && (lineCnt >= max)) break;
+				lineCnt++;
+				// lower case line and split off words
+				String[] words = line.toLowerCase().split(" ");
+				// then compute suffixes
+				computeSuffixesFromWords(words);
+				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	//**
+	// after the above has been done, write out vocabulary into files:
+	// Firstly, sort num2word according to natural order, and write value of entry key.
+	private void writeSuffixFile(String targetFileName){
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
+			for(int key: num2suffix.keySet()){
+				writer.write(num2suffix.get(key)+"\n");
+			}
+			writer.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	//***
+	// read preprocessed suffix list from file
+	private void readSuffixFile(String string) {
+		BufferedReader reader;
+		int cnt = 1;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				this.getSuffix2num().put(line, cnt);
+				this.getNum2suffix().put(cnt,line);
+				cnt++;
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	//** tests methods
 	public void testWriteSuffixList(){
-		
+
 		createSuffixListFromFile("resources/data/english/ptb3-training-sents.txt", -1);
 		// createSuffixListFromFile("resources/data/ner/eng-train-sents.txt", -1);
-		
+		//createSuffixListFromFile("resources/data/english/english-train-sents.txt", -1);
+
 		System.out.println("#word: " + this.wordCnt + 
 				" #suffixes: " + this.suffixCnt);
 		System.out.println("Writing suffix list to: " + "resources/features/suffixList.txt");
@@ -221,9 +271,10 @@ public class WordSuffixFeatureFactory {
 		System.out.println("... done");
 	}
 
-	public void testReadSuffixList(){
-		System.out.println("Reading suffix list from: " + "resources/features/suffixList.txt");
-		this.readSuffixFile("resources/features/suffixList.txt");
+	public void readSuffixList(String taggerName){
+		String suffixFileName = "resources/features/suffixList"+"_"+taggerName+".txt";
+		System.out.println("Reading suffix list from: " + suffixFileName);
+		this.readSuffixFile(suffixFileName);
 		System.out.println("... done");
 	}
 
