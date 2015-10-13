@@ -89,4 +89,21 @@ public class Corpus {
 		this.setLabeledPosData();
 		this.setUnLabeledPosData();
 	}
+	
+	public Corpus(String taggerName){
+		if (taggerName.equals("POS")){
+			this.setLabeledPosData();
+			this.setUnLabeledPosData();
+		}
+		else
+			if (taggerName.equals("NER")){
+				this.setLabeledNerData();
+				this.setUnLabeledNerData();
+			}
+			else{
+				System.err.println("unknown taggername used: " + taggerName);
+				System.exit(0);
+			}
+		
+	}
 }

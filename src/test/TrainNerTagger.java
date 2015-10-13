@@ -15,7 +15,7 @@ public class TrainNerTagger {
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 50;
-		WordFeatures.withWordFeats=false;
+		WordFeatures.withWordFeats=true;
 
 		modelInfo.createModelFileName(dim, numberOfSentences);
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);

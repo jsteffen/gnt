@@ -26,6 +26,10 @@ public class ConllMapper {
 
 	private Corpus corpus = new Corpus();
 
+	public ConllMapper(String taggerName) {
+		corpus = new Corpus(taggerName);
+	}
+
 	public void transcode(String sourceFileName, String sourceEncoding,
 			String targetFileName, String targetEncoding)
 					throws IOException {
@@ -188,7 +192,8 @@ public class ConllMapper {
 	}
 
 	public static void main(String[] args) throws IOException {
-		ConllMapper mapper = new ConllMapper();
+		String taggerName = "POS";
+		ConllMapper mapper = new ConllMapper(taggerName);
 		mapper.transcodeFlorsFileList();
 		//mapper.transcodeNERfile("resources/data/ner/eng.testb", "utf-8", "resources/data/ner/eng-testb.conll", "utf-8");
 	}

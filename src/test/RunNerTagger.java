@@ -17,7 +17,7 @@ public class RunNerTagger {
 		
 		int windowSize = 2;
 		int numberOfSentences = -1;
-		int dim = 50;
+		int dim = 0;
 		WordFeatures.withWordFeats=false;
 
 		modelInfo.createModelFileName(dim, numberOfSentences);

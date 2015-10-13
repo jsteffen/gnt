@@ -487,7 +487,7 @@ public class WordDistributedFeatureFactory {
 	}
 	
 	public void createAndWriteDistributedWordFeaturesSparse(String taggerName, int maxIndicatorWords) throws IOException {
-		Corpus corpus = new Corpus();
+		Corpus corpus = new Corpus(taggerName);
 		System.out.println("Read  " + maxIndicatorWords + " indicator words sorted acoording to rank for tagger " + taggerName + "!");
 		this.initIndicatorMap("resources/features/iw_all.txt", maxIndicatorWords);
 

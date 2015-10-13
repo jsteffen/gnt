@@ -54,6 +54,9 @@
 - collect all data using taggerName as part of filenames -> DONE
 
 HIERIX:
+- got again the error when running Ner with distributed feature:
+	Exception in thread "main" java.lang.IllegalArgumentException: feature nodes must be sorted by index in ascending order
+	
 - generated compressed folder of all data that is necessary for tagging
 
 - unknown word handling: 

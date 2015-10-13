@@ -127,8 +127,16 @@ when sentence count is -1 (max=39278) or > 39274;
 -> I get lib-linear error that indices in problem instances are not correctly ordered 
 -> DONE ->  had to add additional window-size (windowSize*2+1)
 	OffSets.windowVectorSize = (tokenVectorSize * (windowSize*2+1))+(windowSize*2+1);
+-> NO: got error again
 
 Everything works, but I cannot reproduce FLORS result so far; but the trend is ok;
 
-when not using distributed word vectors, I still have at least one distributed feature length of 1
+HIERIX
+when distributed word vectors are not used, I still have at least one distributed feature length of 1
+
+I can test word vectors when using NER because feature set is smaller;
+
+But I should:
+- add NER unlabeled data from training, devel and test -> DONE
+- also others, maybe from google relations -> add to corpus part
 

@@ -58,7 +58,6 @@ import de.bwaldvogel.liblinear.SolverType;
  */
 
 public class TrainerInMem {
-	private Corpus corpus = new Corpus();
 	private Data data = new Data();
 	private Alphabet alphabet = new Alphabet();
 	private OffSets offSets = new OffSets();
@@ -77,12 +76,7 @@ public class TrainerInMem {
 	private Problem problem = new Problem();
 
 	// Setters and getters
-	public Corpus getCorpus() {
-		return corpus;
-	}
-	public void setCorpus(Corpus corpus) {
-		this.corpus = corpus;
-	}
+	
 	public Data getData() {
 		return data;
 	}
