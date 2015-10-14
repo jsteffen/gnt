@@ -123,11 +123,12 @@ average vector length * #window instances * 8 (double) + #window instances
 
 PROBLEM:
 
-when sentence count is -1 (max=39278) or > 39274; 
+when sentence count is -1: 
 -> I get lib-linear error that indices in problem instances are not correctly ordered 
--> DONE ->  had to add additional window-size (windowSize*2+1)
-	OffSets.windowVectorSize = (tokenVectorSize * (windowSize*2+1))+(windowSize*2+1);
--> NO: got error again
+-> found it: for some reason: two suffixes have same index
+-> I think I have it: 
+	features.WordFeatures.setOffSets()
+	error in computation of proper index adjustment
 
 Everything works, but I cannot reproduce FLORS result so far; but the trend is ok;
 

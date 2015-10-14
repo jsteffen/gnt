@@ -41,6 +41,7 @@ public class ProblemInstance {
 	// Methods
 	public void createProblemInstanceFromWindow(Window tokenWindow) {
 		this.setFeatureVector(new FeatureNode[tokenWindow.getWindowLength()]);
+		// Add to cummulative lenght: only needed for computing average lenght of window
 		ProblemInstance.cumLength+=featureVector.length;
 		
 		int offSet = 0;
@@ -66,6 +67,23 @@ public class ProblemInstance {
 			}
 			offSet += wordFeats.getSuffix().size();
 		}
+		
+		if (TrainerInMem.debug) this.checkFeatureVector(tokenWindow);
+
+	}
+	
+	public void checkFeatureVector(Window tokenWindow){
+		int lastValue = 0;
+		int fLen = this.featureVector.length-1;
+		for (int i = 0; i < fLen;i++){
+			FeatureNode x = this.featureVector[i];
+			if (x.getIndex() <= lastValue){
+				System.err.println(tokenWindow.toString());
+				throw new IllegalArgumentException("GN: feature nodes must be sorted by index in ascending order: " 
+			+ lastValue + "..." + x.getIndex() + " i= " + i + " value: " + x.getValue());
+			}
+			lastValue = x.getIndex();
+		}
 	}
 	
 	public String toString(){
@@ -79,4 +97,6 @@ public class ProblemInstance {
 				+":"+this.featureVector[fLen].getValue();
 		return output;
 	}
+	
+	
 }

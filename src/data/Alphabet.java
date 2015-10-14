@@ -1,6 +1,7 @@
 package data;
 
 import features.WordDistributedFeatureFactory;
+import features.WordFeatures;
 import features.WordShapeFeatureFactory;
 import features.WordSuffixFeatureFactory;
 
@@ -32,9 +33,9 @@ public class Alphabet {
 	// Methods
 
 	public void loadFeaturesFromFiles(String taggerName, int dim){
-		if (dim > 0) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim);
-		this.wordSuffixFactory.readSuffixList(taggerName);
-		this.wordShapeFactory.readShapeList(taggerName);
+		if (WordFeatures.withWordFeats) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim);
+		if (WordFeatures.withShapeFeats) this.wordSuffixFactory.readSuffixList(taggerName);
+		if (WordFeatures.withShapeFeats) this.wordShapeFactory.readShapeList(taggerName);
 	}
 
 	public void clean(){

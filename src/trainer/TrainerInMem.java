@@ -1,10 +1,15 @@
 package trainer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +68,7 @@ public class TrainerInMem {
 	private OffSets offSets = new OffSets();
 	private int windowSize = 2;
 	private ModelInfo modelInfo = new ModelInfo();
+	public static boolean debug = false;
 
 	// API/Values for Liblinear
 	// GN: used in MDP
@@ -260,11 +266,12 @@ public class TrainerInMem {
 	 * is added to problem.y
 	 * @param train
 	 * @param adjust
+	 * @throws IOException 
 	 */
-	private void constructProblem(boolean train, boolean adjust) {
+	private void constructProblem(boolean train, boolean adjust) throws IOException {
 		int mod = 10000;
 		int problemCnt = 0;
-
+		
 		// Initialize problem with potential feature vector size and number of training instances
 		// and size of x and y which uses training instance
 		// current element has index i
@@ -279,7 +286,7 @@ public class TrainerInMem {
 
 			this.getProblem().y[i]=nextWindow.getLabelIndex();
 			this.getProblem().x[i]=problemInstance.getFeatureVector();
-
+			
 			nextWindow.clean();
 
 			// Print how many problems are created so far
@@ -287,7 +294,8 @@ public class TrainerInMem {
 				System.out.println("************");
 				System.out.println("Problem instances created: " + problemCnt);
 			}
-		}	
+		}
+		
 	}
 
 	/**

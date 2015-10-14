@@ -105,8 +105,8 @@ public class Window {
 		// Use "<BOUNDARY>" as dummy for padding elements
 		String wordString ="";
 		// the location of the word in the sentence: 0 means "first word in sentence", 1 means "otherwise"
-		int wordLoc = 1;
-		// counts the dynamically created window elements and use it as index in WordFeatures
+		int wordLoc = 0;
+		// counts the dynamically created window element and use it as index in WordFeatures
 		int elementCnt = 0;
 
 		// printWindowIntervalInfo(max, lp, lc, rc, rp);

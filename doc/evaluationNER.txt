@@ -44,3 +44,36 @@ accuracy:  95.65%; precision:  71.23%; recall:  45.60%; FB1:  55.60
                 X: precision:   0.00%; recall:   0.00%; FB1:   0.00                
 
 Average FB1: 72,86
+
+ModelInfo modelInfo = new ModelInfo("FLORS");
+		modelInfo.setTaggerName("NER");
+		
+		int windowSize = 2;
+		int numberOfSentences = -1;
+		int dim = 50;
+		WordFeatures.withWordFeats=true;
+		WordFeatures.withShapeFeats=true;
+		WordFeatures.withSuffixFeats=true;
+		
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 9408 phrases; found: 6161 phrases; correct: 5110.
+accuracy:  97.63%; precision:  82.94%; recall:  54.32%; FB1:  65.64
+              LOC: precision:  89.81%; recall:  91.62%; FB1:  90.70
+             MISC: precision:  82.32%; recall:  79.28%; FB1:  80.77
+              ORG: precision:  70.44%; recall:  74.65%; FB1:  72.48
+              PER: precision:  85.69%; recall:  92.02%; FB1:  88.74
+                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
+
+Average FB1: 83,18
+
+
+./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 9332 phrases; found: 6033 phrases; correct: 4457.
+accuracy:  96.05%; precision:  73.88%; recall:  47.76%; FB1:  58.01
+              LOC: precision:  83.16%; recall:  84.95%; FB1:  84.05
+             MISC: precision:  68.42%; recall:  72.22%; FB1:  70.27
+              ORG: precision:  63.86%; recall:  69.78%; FB1:  66.69
+              PER: precision:  77.50%; recall:  84.97%; FB1:  81.06
+                X: precision:   0.00%; recall:   0.00%; FB1:   0.00
+                
+Average FB1: 75,52                

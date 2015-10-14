@@ -21,7 +21,7 @@ import data.Pair;
  */
 public class WordFeatures {
 	private String word = "";
-	private int index = -1;
+	private int index = 0;
 	private int elementOffset = 0;
 	private int leftOffset = 0;
 	private int rightOffset = 0;
@@ -92,11 +92,11 @@ public class WordFeatures {
 	// Methods
 
 	public void setOffSets() {
-		elementOffset = index * OffSets.tokenVectorSize;
-		leftOffset = elementOffset + 1; // Plus one here is needed to make sure that indices in Liblinear start from 1 and not 0
-		rightOffset = leftOffset + 1 + OffSets.wvLeftSize-1;
-		shapeOffset = rightOffset + 1 + OffSets.wvRightSize-1;
-		suffixOffset = shapeOffset + 1 + OffSets.shapeSize-1;
+		elementOffset = (index * OffSets.tokenVectorSize) + 1;
+		leftOffset = elementOffset + 0; // Plus one here is needed to make sure that indices in Liblinear start from 1 and not 0
+		rightOffset = leftOffset + 0 + OffSets.wvLeftSize;
+		shapeOffset = rightOffset + 0 + OffSets.wvRightSize;
+		suffixOffset = shapeOffset + 0 + OffSets.shapeSize - 1;
 	}
 
 	public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
@@ -121,7 +121,7 @@ public class WordFeatures {
 		String lowWord = word.toLowerCase();
 		WordDistributedFeature distributedWordVector = alphabet.getWordVectorFactory().getWordVector(lowWord, train);
 		for (int i = 0; i < distributedWordVector.getLeftContext().length; i++){
-			int index = (this.isAdjust())?(this.leftOffset+i):i;
+			int index = ((this.isAdjust())?(this.leftOffset+i):i);
 			double value = distributedWordVector.getLeftContext()[i];
 			if (value > 0) {
 				Pair<Integer,Double> node = new Pair<Integer,Double>(index, value);
@@ -137,7 +137,7 @@ public class WordFeatures {
 		String lowWord = word.toLowerCase();
 		WordDistributedFeature distributedWordVector = alphabet.getWordVectorFactory().getWordVector(lowWord, train);
 		for (int i = 0; i < distributedWordVector.getRightContext().length; i++){
-			int index = (this.isAdjust())?(this.rightOffset+i):i;
+			int index = ((this.isAdjust())?(this.rightOffset+i):i);
 			double value = distributedWordVector.getRightContext()[i];
 			if (value > 0) {
 				Pair<Integer,Double> node = new Pair<Integer,Double>(index, value);

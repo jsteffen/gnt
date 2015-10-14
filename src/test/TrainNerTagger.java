@@ -3,6 +3,7 @@ package test;
 import java.io.IOException;
 
 import trainer.GNTrainer;
+import trainer.TrainerInMem;
 import data.ModelInfo;
 import features.WordFeatures;
 
@@ -16,6 +17,10 @@ public class TrainNerTagger {
 		int numberOfSentences = -1;
 		int dim = 50;
 		WordFeatures.withWordFeats=true;
+		WordFeatures.withShapeFeats=true;
+		WordFeatures.withSuffixFeats=true;
+		
+		TrainerInMem.debug=false;
 
 		modelInfo.createModelFileName(dim, numberOfSentences);
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
