@@ -301,13 +301,12 @@ public class GNTagger {
 			List<String[]> tokens, Sentence sentence) throws IOException {
 		for (int i=0; i < tokens.size(); i++){
 			String[] token = tokens.get(i);
-			String label = this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i]);
+			String label = this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
 			String newConllToken=token[0]+" "+token[1]+" "+token[4]+" "+label+"\n";
 
 			conllWriter.write(newConllToken);
 		}
-		conllWriter.write("-X- -X- -X- -X-\n");
-
+		conllWriter.write("\n");
 	}
 
 	public void tagFromConllDevelFile(String sourceFileName, int max)
@@ -367,7 +366,5 @@ public class GNTagger {
 
 		System.out.println("Create eval file: " + evalFileName);
 		EvalConllFile.computeAccuracy(evalFileName);
-
-
 	}
 }

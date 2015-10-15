@@ -17,14 +17,15 @@ public class RunNerTagger {
 		
 		int windowSize = 2;
 		int numberOfSentences = -1;
-		int dim = 50;
-		WordFeatures.withWordFeats=true;
+		int dim = 0;
+		WordFeatures.withWordFeats=false;
 		WordFeatures.withShapeFeats=true;
 		WordFeatures.withSuffixFeats=true;
+		System.out.println(WordFeatures.toActiveFeatureString());
 
 		modelInfo.createModelFileName(dim, numberOfSentences);
-
 		System.out.println(modelInfo.toString());
+		
 		GNTagger nerTagger = new GNTagger(modelInfo);	
 		
 		
@@ -39,6 +40,7 @@ public class RunNerTagger {
 
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile.data.readWordSet(modelInfo.getTaggerName());
+		System.out.println(EvalConllFile.data.toString());
 		
 		for (Pair<String, String> pair : fileList){
 			nerTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());

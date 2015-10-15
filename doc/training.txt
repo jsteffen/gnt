@@ -57,7 +57,7 @@ Training phase:
 	6. labelSet.txt -> the number-label mapping as defined by means of the training corpus
 	7. wordSet.txt -> the number-word mapping of all words of the labeled training corpus; used for computing unknown word tagging accuracy
 	8. the model file
-	
+-> 14th October: add tagger-name suffix -> DONE
 
 
 NOTES on Alphabet:
@@ -99,16 +99,6 @@ public static boolean withShapeFeats = true;
 public static boolean withSuffixFeats = true;
 
 - now, when running:
-
-with w=2, d=0, m=GNT, s=39274 und features activated=FTT
-training time: 1801235
-model saving time: 38036
-model file: resources/models/model_0iw39274sent_FTT_L2R_LR.txt (467MB)
-
-same, but m=FLORS:
-System time (msec): 673170
-Save  model file: resources/models/model_0iw39274sent_FTT_L2R_L2LOSS_SVC.txt
-System time (msec): 39302
 
 training with new ptb3 training set of 39826 sentences: 11.5470167 minutes
 

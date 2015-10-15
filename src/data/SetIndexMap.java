@@ -65,15 +65,16 @@ public class SetIndexMap {
 	
 	public void readSetIndexMap(String string) {
 		BufferedReader reader;
-		int cnt = 1;
+		int cnt = 0;
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
 			String line;
 			while ((line = reader.readLine()) != null) {
+				cnt++;
 				this.getLabel2num().put(line, cnt);
 				this.getNum2label().put(cnt,line);
-				cnt++;
 			}
+			labelCnt = cnt++;
 			reader.close();
 
 		} catch (IOException e) {
@@ -88,4 +89,5 @@ public class SetIndexMap {
 		}
 		return output;
 	}
+	
 }

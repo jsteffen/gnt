@@ -91,12 +91,22 @@ public class WordFeatures {
 
 	// Methods
 
+//	public void setOffSets() {
+//		elementOffset = (index * OffSets.tokenVectorSize) + 1;
+//		leftOffset = elementOffset + 0; // Plus one here is needed to make sure that indices in Liblinear start from 1 and not 0
+//		rightOffset = leftOffset + 0 + OffSets.wvLeftSize;
+//		shapeOffset = rightOffset + 0 + OffSets.wvRightSize;
+//		suffixOffset = shapeOffset + 0 + OffSets.shapeSize - 1;
+//	}
+	
+	// GN on 14.10.2015
+	// I have to shift offset by OffSets.tokenVectorSize + 1, and so later have to remove the +1
 	public void setOffSets() {
 		elementOffset = (index * OffSets.tokenVectorSize) + 1;
-		leftOffset = elementOffset + 0; // Plus one here is needed to make sure that indices in Liblinear start from 1 and not 0
-		rightOffset = leftOffset + 0 + OffSets.wvLeftSize;
-		shapeOffset = rightOffset + 0 + OffSets.wvRightSize;
-		suffixOffset = shapeOffset + 0 + OffSets.shapeSize - 1;
+		leftOffset = elementOffset;
+		rightOffset = leftOffset + OffSets.wvLeftSize;
+		shapeOffset = rightOffset + OffSets.wvRightSize;
+		suffixOffset = shapeOffset + OffSets.shapeSize - 1;
 	}
 
 	public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
@@ -236,6 +246,14 @@ public class WordFeatures {
 
 	// String representations
 
+	public static String toActiveFeatureString(){
+		String output = "\nActive features\n";
+		output += "withWordFeats= 	" + withWordFeats +"\n";
+		output += "withShapeFeats=  " + withShapeFeats +"\n";
+		output += "withSuffixFeats= " + withSuffixFeats +"\n";
+		return output;	
+	}
+	
 	public String toOffSetsString(){
 		String output = "\nElement-"+this.getIndex()+"\n";
 		output += "OffSets:\n";

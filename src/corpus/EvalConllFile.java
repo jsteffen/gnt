@@ -30,10 +30,11 @@ public class EvalConllFile {
 					String predPos = tokenizedLine[3];
 					goldPosCnt++;
 					if (predPos.equals(goldPos)) correctPosCnt++;
-					// else System.out.println(line);
+					//else System.out.println(line);
 					
 					// Counting our of vocabulary words
-					//TODO: note I do not lower case words when counting OOV -> correct ?
+					//TODO: note I do not lower case words when counting OOV -> correct? 
+					// I guess so, because words in getWordSet() are also not lower-cased -> not sure, better try lowercase it as well
 					boolean knownWord = EvalConllFile.data.getWordSet().getLabel2num().containsKey(word);
 					if (!knownWord) goldOOVCnt++;
 					if (!knownWord && predPos.equals(goldPos)) correctOOVCnt++;

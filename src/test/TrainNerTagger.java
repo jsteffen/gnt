@@ -15,14 +15,17 @@ public class TrainNerTagger {
 		
 		int windowSize = 2;
 		int numberOfSentences = -1;
-		int dim = 50;
+		int dim = 150;
 		WordFeatures.withWordFeats=true;
 		WordFeatures.withShapeFeats=true;
 		WordFeatures.withSuffixFeats=true;
+		System.out.println(WordFeatures.toActiveFeatureString());
 		
 		TrainerInMem.debug=false;
 
 		modelInfo.createModelFileName(dim, numberOfSentences);
+		System.out.println(modelInfo.toString());
+		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
 		String trainingFileName = "resources/data/ner/eng-train";
 

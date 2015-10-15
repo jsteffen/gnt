@@ -35,6 +35,8 @@ public class GNTrainer {
 			throws IOException{
 		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
 
+		System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + taggerName);
+
 		this.createWordVectors(taggerName, dim);
 		this.createShapeFeatures(taggerName, trainingFileName);
 		this.createSuffixFeatures(taggerName, trainingFileName);	
@@ -94,7 +96,6 @@ public class GNTrainer {
 	}
 
 	public void gntTrainingWithDimensionFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
-		System.out.println("Create feature files:");
 		time1 = System.currentTimeMillis();
 
 		this.createTrainingFeatureFiles(trainingFileName+"-sents.txt", dim);

@@ -26,6 +26,9 @@ public class RunPosTagger {
 		int numberOfSentences = -1;
 		int dim = 0;
 		WordFeatures.withWordFeats=false;
+		WordFeatures.withShapeFeats=true;
+		WordFeatures.withSuffixFeats=true;
+		System.out.println(WordFeatures.toActiveFeatureString());
 
 		modelInfo.createModelFileName(dim, numberOfSentences);
 		System.out.println(modelInfo.toString());
@@ -57,6 +60,7 @@ public class RunPosTagger {
 
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile.data.readWordSet(modelInfo.getTaggerName());
+		System.out.println(EvalConllFile.data.toString());
 		
 		for (Pair<String, String> pair : fileList){
 			posTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());

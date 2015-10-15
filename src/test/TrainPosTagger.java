@@ -16,9 +16,13 @@ public class TrainPosTagger {
 		int numberOfSentences = -1;
 		int dim = 0;
 		WordFeatures.withWordFeats=false;
-		
+		WordFeatures.withShapeFeats=true;
+		WordFeatures.withSuffixFeats=true;
+		System.out.println(WordFeatures.toActiveFeatureString());
 		
 		modelInfo.createModelFileName(dim, numberOfSentences);
+		System.out.println(modelInfo.toString());
+		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
 		String trainingFileName = "resources/data/english/ptb3-training";
 
