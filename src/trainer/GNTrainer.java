@@ -5,6 +5,7 @@ import java.io.IOException;
 import data.ModelInfo;
 import data.OffSets;
 import data.Window;
+import features.IndicatorWordsCreator;
 import features.WordDistributedFeatureFactory;
 import features.WordShapeFeatureFactory;
 import features.WordSuffixFeatureFactory;
@@ -27,6 +28,19 @@ public class GNTrainer {
 
 	public GNTrainer(ModelInfo modelInfo, int dim) {
 		this.trainer = new TrainerInMem(modelInfo, dim);
+	}
+	
+	// This is a method for on-demand creation of the indicator words
+	
+	private void createIndicatorWords(){
+		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
+		String iwFilename = "resources/features/iw_all"+taggerName+".txt";
+		System.out.println("Create indictor words and save in file: " + iwFilename);
+		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
+		if (taggerName.equalsIgnoreCase("POS"))iwp.createIndicatorPosWordsFromFiles();
+		if (taggerName.equalsIgnoreCase("NER"))iwp.createIndicatorNerWordsFromFiles();
+		iwp.writeSortedIndicatorWords(iwFilename, 10000);
+		
 	}
 
 	// This is a method for on-demand creation of the feature files
@@ -98,6 +112,7 @@ public class GNTrainer {
 	public void gntTrainingWithDimensionFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
 		time1 = System.currentTimeMillis();
 
+		this.createIndicatorWords();
 		this.createTrainingFeatureFiles(trainingFileName+"-sents.txt", dim);
 
 		time2 = System.currentTimeMillis();

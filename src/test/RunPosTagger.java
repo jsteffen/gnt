@@ -63,7 +63,7 @@ public class RunPosTagger {
 		System.out.println(EvalConllFile.data.toString());
 		
 		for (Pair<String, String> pair : fileList){
-			posTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());
+			posTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR(), 1000);
 		}
 	}
 }

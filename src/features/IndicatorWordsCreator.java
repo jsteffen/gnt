@@ -14,7 +14,7 @@ import java.util.TreeMap;
 /**
  * A class for creating the indicator words for a given text corpus
  * - each line of a text file corresponds to a sentence of lower-cased words
- * - depending of the corpus sources, some cleaning has to be done 
+ * - depending on the corpus sources, some cleaning has to be done 
  * - then term frequency TF is computed and finally a ranked list is computed in decreasing order of TF
  * - the final list is then output - either completely or only N highest terms
  * 
@@ -152,7 +152,7 @@ public class IndicatorWordsCreator {
 	}
 
 	// TODO - check, but I think I have all source files that are also used in FLORS
-	private void createIndicatorPosWordsFromFiles(){
+	public void createIndicatorPosWordsFromFiles(){
 
 		// Training data labeled sentences
 		readAndProcessInputTextLineWise("resources/data/english/ptb3-training-sents.txt", "ptb", 100000);
@@ -188,7 +188,7 @@ public class IndicatorWordsCreator {
 	}
 
 	// TODO - check, but I think I have all source files that are also used in FLORS
-	private void createIndicatorNerWordsFromFiles(){
+	public void createIndicatorNerWordsFromFiles(){
 
 		// Training data unlabeled
 		readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);

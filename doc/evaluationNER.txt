@@ -1,5 +1,20 @@
 22.9.2015, GN:
 
+Note tagging with SVM-NER:
+*******************************************************************************
+
+tagging Conll 2003 types according to data define in
+
+/Users/gune00/dfki/TIM-Tools/SvenTagger/NERtests/conll2003
+
+models: trained on eng/deu.train.svm 
+EN2003 -  testb F1=79.90%
+DE2003 -  testb F1=61.37
+
+models: trained on eng/deu.traintesta.svm 
+EN2003 -  testb F1=80.56% (minus 11%)
+DE2003 -  testb F1=66.58  (minus 11%)
+
 Testing NER:
 -> had to update corpus data as well!
 
@@ -9,7 +24,6 @@ mapper.transcodeNERfile("resources/data/ner/eng.testb", "utf-8", "resources/data
 // I have adjusted the NER conll format to be consistent with the other conll formats, i.e.
 // LONDON NNP I-NP I-LOC -> 1	LONDON	NNP	I-NP	I-LOC
 // This is why I have 5 elements instead of 4 
-
 
 
 
@@ -39,6 +53,38 @@ accuracy:  95.63%; precision:  71.10%; recall:  75.32%; FB1:  73.15
               ORG: precision:  61.45%; recall:  68.33%; FB1:  64.71
               PER: precision:  73.35%; recall:  72.85%; FB1:  73.10
 
+dim=10
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6154 phrases; correct: 5112.
+accuracy:  97.59%; precision:  83.07%; recall:  86.03%; FB1:  84.52
+              LOC: precision:  89.79%; recall:  92.38%; FB1:  91.07
+             MISC: precision:  81.34%; recall:  73.75%; FB1:  77.36
+              ORG: precision:  69.30%; recall:  75.91%; FB1:  72.46
+              PER: precision:  87.65%; recall:  93.21%; FB1:  90.34
+lt-pool-225:resources gune00$ ./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 6078 phrases; correct: 4477.
+accuracy:  96.05%; precision:  73.66%; recall:  79.27%; FB1:  76.36
+              LOC: precision:  83.08%; recall:  86.27%; FB1:  84.65
+             MISC: precision:  69.27%; recall:  69.37%; FB1:  69.32
+              ORG: precision:  62.38%; recall:  70.08%; FB1:  66.01
+              PER: precision:  78.05%; recall:  85.78%; FB1:  81.73
+           
+dim=25:
+
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6170 phrases; correct: 5156.
+accuracy:  97.73%; precision:  83.57%; recall:  86.77%; FB1:  85.14
+              LOC: precision:  89.59%; recall:  91.34%; FB1:  90.46
+             MISC: precision:  83.67%; recall:  80.04%; FB1:  81.82
+              ORG: precision:  71.42%; recall:  77.33%; FB1:  74.26
+              PER: precision:  86.75%; recall:  92.45%; FB1:  89.51
+./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 6054 phrases; correct: 4515.
+accuracy:  96.17%; precision:  74.58%; recall:  79.94%; FB1:  77.17
+              LOC: precision:  83.33%; recall:  85.13%; FB1:  84.22
+             MISC: precision:  68.90%; recall:  73.22%; FB1:  70.99
+              ORG: precision:  65.05%; recall:  71.82%; FB1:  68.27
+              PER: precision:  78.42%; recall:  85.84%; FB1:  81.96   
 ModelInfo modelInfo = new ModelInfo("FLORS");
 		modelInfo.setTaggerName("NER");
 		
@@ -50,18 +96,73 @@ ModelInfo modelInfo = new ModelInfo("FLORS");
 		WordFeatures.withSuffixFeats=true;
 		
 ./conlleval < eval/eng-testa.txt 
-processed 51578 tokens with 5942 phrases; found: 6161 phrases; correct: 5110.
-accuracy:  97.63%; precision:  82.94%; recall:  86.00%; FB1:  84.44
-              LOC: precision:  89.81%; recall:  91.62%; FB1:  90.70
-             MISC: precision:  82.32%; recall:  79.28%; FB1:  80.77
-              ORG: precision:  70.44%; recall:  74.65%; FB1:  72.48
-              PER: precision:  85.69%; recall:  92.02%; FB1:  88.74
-
-
+processed 51578 tokens with 5942 phrases; found: 6144 phrases; correct: 5192.
+accuracy:  97.84%; precision:  84.51%; recall:  87.38%; FB1:  85.92
+              LOC: precision:  90.43%; recall:  92.54%; FB1:  91.47
+             MISC: precision:  83.85%; recall:  79.39%; FB1:  81.56
+              ORG: precision:  73.07%; recall:  77.11%; FB1:  75.04
+              PER: precision:  87.35%; recall:  93.70%; FB1:  90.41
 ./conlleval < eval/eng-testb.txt 
-processed 46666 tokens with 5648 phrases; found: 6033 phrases; correct: 4457.
-accuracy:  96.05%; precision:  73.88%; recall:  78.91%; FB1:  76.31
-              LOC: precision:  83.16%; recall:  84.95%; FB1:  84.05
-             MISC: precision:  68.42%; recall:  72.22%; FB1:  70.27
-              ORG: precision:  63.86%; recall:  69.78%; FB1:  66.69
-              PER: precision:  77.50%; recall:  84.97%; FB1:  81.06            
+processed 46666 tokens with 5648 phrases; found: 6027 phrases; correct: 4524.
+accuracy:  96.21%; precision:  75.06%; recall:  80.10%; FB1:  77.50
+              LOC: precision:  83.44%; recall:  86.39%; FB1:  84.89
+             MISC: precision:  68.01%; recall:  72.08%; FB1:  69.99
+              ORG: precision:  64.73%; recall:  71.04%; FB1:  67.74
+              PER: precision:  80.61%; recall:  86.39%; FB1:  83.40        
+              
+dim = 75
+
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6163 phrases; correct: 5158.
+accuracy:  97.75%; precision:  83.69%; recall:  86.81%; FB1:  85.22
+              LOC: precision:  89.96%; recall:  91.18%; FB1:  90.57
+             MISC: precision:  81.94%; recall:  78.74%; FB1:  80.31
+              ORG: precision:  71.69%; recall:  77.03%; FB1:  74.26
+              PER: precision:  87.34%; recall:  93.59%; FB1:  90.36
+./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 6017 phrases; correct: 4512.
+accuracy:  96.16%; precision:  74.99%; recall:  79.89%; FB1:  77.36
+              LOC: precision:  83.21%; recall:  84.95%; FB1:  84.07
+             MISC: precision:  70.25%; recall:  72.65%; FB1:  71.43
+              ORG: precision:  64.09%; recall:  71.88%; FB1:  67.76
+              PER: precision:  80.64%; recall:  86.02%; FB1:  83.24    
+
+		int dim = 150;
+		WordFeatures.withWordFeats=true;
+		WordFeatures.withShapeFeats=true;
+		WordFeatures.withSuffixFeats=true;              
+              
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6162 phrases; correct: 5111.
+accuracy:  97.64%; precision:  82.94%; recall:  86.01%; FB1:  84.45
+              LOC: precision:  88.89%; recall:  90.64%; FB1:  89.76
+             MISC: precision:  81.64%; recall:  77.66%; FB1:  79.60
+              ORG: precision:  71.15%; recall:  76.51%; FB1:  73.73
+              PER: precision:  86.50%; recall:  92.51%; FB1:  89.40               
+ ./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 6037 phrases; correct: 4480.
+accuracy:  96.07%; precision:  74.21%; recall:  79.32%; FB1:  76.68
+              LOC: precision:  81.40%; recall:  85.01%; FB1:  83.17
+             MISC: precision:  67.91%; recall:  69.94%; FB1:  68.91
+              ORG: precision:  63.77%; recall:  71.22%; FB1:  67.29
+              PER: precision:  80.84%; recall:  85.84%; FB1:  83.26  
+
+int dim = 250;
+
+
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6092 phrases; correct: 4990.
+accuracy:  97.29%; precision:  81.91%; recall:  83.98%; FB1:  82.93
+              LOC: precision:  88.01%; recall:  89.49%; FB1:  88.74
+             MISC: precision:  79.35%; recall:  74.19%; FB1:  76.68
+              ORG: precision:  69.84%; recall:  72.71%; FB1:  71.25
+              PER: precision:  85.81%; recall:  91.59%; FB1:  88.60       
+./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 5964 phrases; correct: 4360.
+accuracy:  95.77%; precision:  73.11%; recall:  77.20%; FB1:  75.09
+              LOC: precision:  80.47%; recall:  84.47%; FB1:  82.42
+             MISC: precision:  67.50%; recall:  69.52%; FB1:  68.49
+              ORG: precision:  61.31%; recall:  64.96%; FB1:  63.08
+              PER: precision:  80.00%; recall:  85.59%; FB1:  82.70  
+               
+-> increasing distributed word vectors hurt from 50 on

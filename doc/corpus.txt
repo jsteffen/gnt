@@ -19,8 +19,31 @@ Corpus used by FLORS:
 		
 also here:
 
-/home/neumann/excitement/data/flors
+All data is now in resources/data/ folder.
 
-Feature maps and models on DFKI computers:
+It seems that I have different data, especially for SANCL:
 
-/home/neumann/excitement/data/wordVectorTests
+resources/data/sancl-2012/sancl.all:
+
+ wc *.txt
+   27274  424300 2071300 gweb-answers.unlabeled.txt
+ 1194173 17046119 84702813 gweb-emails.unlabeled.txt
+ 1000000 18436320 92705255 gweb-newsgroups.unlabeled.txt
+ 1965350 29290473 143056071 gweb-reviews.unlabeled.txt
+  524834 10382533 54548261 gweb-weblogs.unlabeled.txt
+
+resources/data/sancl-2012/sancl.labeled:
+
+ wc *sents.txt
+    1745   25180  123859 gweb-answers-dev-sents.txt
+    1744   28823  138232 gweb-answers-test-sents.txt
+    2450   29131  151926 gweb-emails-dev-sents.txt
+    2450   28676  148854 gweb-emails-test-sents.txt
+    1196   22398  117591 gweb-newsgroups-dev-sents.txt
+    1195   20651  110315 gweb-newsgroups-test-sents.txt
+    1907   27504  135035 gweb-reviews-dev-sents.txt
+    1906   28086  137046 gweb-reviews-test-sents.txt
+    1016   24025  129363 gweb-weblogs-dev-sents.txt
+    1015   20356  109053 gweb-weblogs-test-sents.txt
+    1336   32092  171115 ontonotes-wsj-dev-sents.txt
+    1640   39590  210761 ontonotes-wsj-test-sents.txt

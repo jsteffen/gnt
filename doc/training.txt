@@ -111,7 +111,7 @@ Memory needed:
 n * m * 8 + m: 
 average vector length * #window instances * 8 (double) + #window instances
 
-PROBLEM:
+PROBLEM: SOLVED
 
 when sentence count is -1: 
 -> I get lib-linear error that indices in problem instances are not correctly ordered 
@@ -125,7 +125,11 @@ Everything works, but I cannot reproduce FLORS result so far; but the trend is o
 HIERIX
 when distributed word vectors are not used, I still have at least one distributed feature length of 1
 
-I can test word vectors when using NER because feature set is smaller;
+check implementation of IW and distributed vectors.
+-> I had an error: forgot to adapt indicator word creation to taggerName -> DONE
+
+
+I can test word vectors when using NER because label set is smaller;
 
 But I should:
 - add NER unlabeled data from training, devel and test -> DONE

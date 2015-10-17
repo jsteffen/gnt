@@ -169,7 +169,7 @@ public class GNT {
 		posTagger.initGNTagger(windowSize, dim);
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile.data.readWordSet();
-		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile);
+		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile, -1);
 	}
 
 

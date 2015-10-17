@@ -15,7 +15,7 @@ public class TrainNerTagger {
 		
 		int windowSize = 2;
 		int numberOfSentences = -1;
-		int dim = 150;
+		int dim = 25;
 		WordFeatures.withWordFeats=true;
 		WordFeatures.withShapeFeats=true;
 		WordFeatures.withSuffixFeats=true;
@@ -30,6 +30,5 @@ public class TrainNerTagger {
 		String trainingFileName = "resources/data/ner/eng-train";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, dim, numberOfSentences);
-
 	}
 }

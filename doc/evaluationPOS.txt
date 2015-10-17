@@ -175,3 +175,4 @@ All pos: 5017 Correct: 4476 Accuracy: 89,22%
 All OOV pos: 936 Correct: 542 Accuracy: 57,91%
 All InV pos: 4081 Correct: 3934 Accuracy: 96,40%
 
+Results when processing only first 1000 sentences

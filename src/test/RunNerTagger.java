@@ -17,8 +17,8 @@ public class RunNerTagger {
 		
 		int windowSize = 2;
 		int numberOfSentences = -1;
-		int dim = 0;
-		WordFeatures.withWordFeats=false;
+		int dim = 25;
+		WordFeatures.withWordFeats=true;
 		WordFeatures.withShapeFeats=true;
 		WordFeatures.withSuffixFeats=true;
 		System.out.println(WordFeatures.toActiveFeatureString());
@@ -43,7 +43,7 @@ public class RunNerTagger {
 		System.out.println(EvalConllFile.data.toString());
 		
 		for (Pair<String, String> pair : fileList){
-			nerTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR());
+			nerTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR(), -1);
 		}
 	}
 }

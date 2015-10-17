@@ -333,7 +333,7 @@ public class GNTagger {
 		System.out.println("Testing instances: " + Window.windowCnt);
 	}
 
-	public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName)
+	public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName, int sentenceCnt)
 			throws IOException {
 		long time1;
 		long time2;
@@ -351,7 +351,7 @@ public class GNTagger {
 
 		time1 = System.currentTimeMillis();
 		// -1 means: all sentences from file are processed
-		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, -1);
+		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, sentenceCnt);
 		// close the buffers
 		conllReader.close(); conllWriter.close();
 
