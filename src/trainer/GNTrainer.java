@@ -12,6 +12,7 @@ import features.WordSuffixFeatureFactory;
 
 public class GNTrainer {
 
+	private double threshold = 0.000000001;
 	private TrainerInMem trainer;
 	private long time1 ;
 	private long time2;
@@ -23,10 +24,19 @@ public class GNTrainer {
 	public void setTrainer(TrainerInMem trainer) {
 		this.trainer = trainer;
 	}
-
+	public double getThreshold() {
+		return threshold;
+	}
+	public void setThreshold(double threshold) {
+		this.threshold = threshold;
+	}
 	// initialization
 
 	public GNTrainer(ModelInfo modelInfo, int dim) {
+		this.trainer = new TrainerInMem(modelInfo, dim);
+	}
+	public GNTrainer(ModelInfo modelInfo, int dim, double threshold) {
+		this.threshold = threshold;
 		this.trainer = new TrainerInMem(modelInfo, dim);
 	}
 	
@@ -39,6 +49,7 @@ public class GNTrainer {
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
 		if (taggerName.equalsIgnoreCase("POS"))iwp.createIndicatorPosWordsFromFiles();
 		if (taggerName.equalsIgnoreCase("NER"))iwp.createIndicatorNerWordsFromFiles();
+		iwp.postProcessWords(this.getThreshold());
 		iwp.writeSortedIndicatorWords(iwFilename, 10000);
 		
 	}

@@ -1,11 +1,22 @@
 September, 15th, 2015:
 
+NER - soon test GNT for NER:
+
+-> DOING
+
+Integration of cluster in training and testing:
+	- corpus see: /Users/gune00/data/Marmot/Word
+
 NER - soon test GNT for NER and German
 
-Stemming
 
 Integration of NemexF and NemexA
 
 More unsupervised
 
 Parallel processing
+
+lemmatization learning
+
+Morphological tagging:
+-> with the help of the dictionaries in /Users/gune00/data/Marmot/Word

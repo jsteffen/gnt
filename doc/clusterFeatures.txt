@@ -1,0 +1,26 @@
+October, 2015:
+
+- integration of clusters from /Users/gune00/data/Marmot/Word
+
+- use preprocessed cluster first:
+
+- use cluster name as feature
+
+- create word2clusterID  map
+
+- unknown words are mapped to clusterID of word <RARE>|<Rare>
+
+-> DONE
+
+- how should I represent word-clusterID ?
+
+-> as binary ala shape feature
+
+-> should be able to reuse code of shape
+
+Integration of new feature into system:
+
+- as part of Alphabet load new mapping
+- adapt class Offsets
+- adapt class WordFeatures
+

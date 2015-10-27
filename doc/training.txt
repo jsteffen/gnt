@@ -130,6 +130,10 @@ check implementation of IW and distributed vectors.
 
 
 I can test word vectors when using NER because label set is smaller;
+It seems that DWV do bring much ! in case of NER only if dim=50 is used, and then only 3 percent.
+
+I am now defined a subsampling approach following Mikolov when indicator words are created.
+does not bring much for NER
 
 But I should:
 - add NER unlabeled data from training, devel and test -> DONE

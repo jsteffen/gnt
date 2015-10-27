@@ -183,19 +183,20 @@ public class WordSuffixFeatureFactory {
 	private void computeSuffixesFromWords(String[] words) {
 		for (String word : words){computeSuffixesAndStore(word);}
 	}
-	
+
 	public void createAndSaveSuffixFeature(String taggerName, String trainingFileName){
 		System.out.println("Create suffix list from: " + trainingFileName);
 		this.createSuffixListFromFile(trainingFileName, -1);
+
 		System.out.println("#word: " + this.getWordCnt()+" #suffixes: " + this.getSuffixCnt());
-		
+
 		String suffixFileName = "resources/features/suffixList"+"_"+taggerName+".txt";
 		System.out.println("Writing suffix list to: " + suffixFileName);
 		this.writeSuffixFile(suffixFileName);
 		System.out.println("... done");
 	}
-	
-	
+
+
 	private void createSuffixListFromFile(String fileName, int max){
 		BufferedReader reader;
 		int lineCnt = 0;
@@ -220,7 +221,7 @@ public class WordSuffixFeatureFactory {
 			e.printStackTrace();
 		}	
 	}
-	
+
 	//**
 	// after the above has been done, write out vocabulary into files:
 	// Firstly, sort num2word according to natural order, and write value of entry key.

@@ -17,13 +17,13 @@ public class RunNerTagger {
 		
 		int windowSize = 2;
 		int numberOfSentences = -1;
-		int dim = 25;
+		int dim = 50;
 		WordFeatures.withWordFeats=true;
 		WordFeatures.withShapeFeats=true;
 		WordFeatures.withSuffixFeats=true;
 		System.out.println(WordFeatures.toActiveFeatureString());
 
-		modelInfo.createModelFileName(dim, numberOfSentences);
+		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());
 		
 		GNTagger nerTagger = new GNTagger(modelInfo);	

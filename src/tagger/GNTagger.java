@@ -153,7 +153,6 @@ public class GNTagger {
 	 * Mainly the same as trainer.TrainerInMem.constructProblem(train, adjust), but uses predictor
 	 */
 	private void constructProblemAndTag(boolean train, boolean adjust) {
-		int problemCnt = 0;
 		int prediction = 0;
 
 		for (int i = 0; i < data.getInstances().size();i++){
@@ -165,7 +164,6 @@ public class GNTagger {
 			// Create the feature vector
 			ProblemInstance problemInstance = new ProblemInstance();
 			problemInstance.createProblemInstanceFromWindow(nextWindow);
-			problemCnt++;
 
 			// Call the learner to predict the label
 			prediction = (int) Linear.predict(this.getModel(), problemInstance.getFeatureVector());

@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import corpus.Corpus;
-
 /** 
  * For each word given, check all shape features and set bit vector map accordingly.
  * Maintain a map of word - bit vector, so that a output file for the training set can be created - really needed ?
@@ -48,7 +46,7 @@ public class WordShapeFeatureFactory {
 	 * - NOTE: before lower casing word (as usual) first check Upercase feature and the like
 	 */
 
-	private int wordCnt = 0;
+	// private int wordCnt = 0;
 	private int signatureCnt = 0;
 
 	// Setters and getters
@@ -73,12 +71,12 @@ public class WordShapeFeatureFactory {
 	}
 
 	// Instances
-
+	
 	public WordShapeFeatureFactory(){
 	}
 
 	// Methods
-
+	
 	public void clean(){
 		word2signature = new HashMap<String,WordShapeFeature>();
 		index2signature = new TreeMap<Integer,String>();
@@ -168,7 +166,7 @@ public class WordShapeFeatureFactory {
 		if (!word2signature.containsKey(word)){
 			// NOTE: here, I need to use the original word for creating its shape !
 			WordShapeFeature wordShapeVector = new WordShapeFeature(wordIn, wordIndex);
-			this.wordCnt++;
+			// this.wordCnt++;
 			//System.out.println("Word: " + word + " and Loc: " + wordIndex + " Sign: " + wordShapeVector.toString());
 			word2signature.put(word, wordShapeVector);
 		}

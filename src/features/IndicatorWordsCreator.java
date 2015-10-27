@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
+ * A indicator word is used to define a dimension of distributed word vectors
+ * a indicator word is selected on basis its rank.
+ *<p><p> 
  * A class for creating the indicator words for a given text corpus
  * - each line of a text file corresponds to a sentence of lower-cased words
  * - depending on the corpus sources, some cleaning has to be done 
@@ -125,12 +128,31 @@ public class IndicatorWordsCreator {
 		return sortedMap;
 	}
 
+	private Map<String, Integer> subSamplingEntries(double threshold) {
+		Map<String, Integer> newMap = new TreeMap<String, Integer>();
+		for (Map.Entry<String, Integer> entry : this.getWordToNum().entrySet()){
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+			double p = 1 - Math.sqrt(threshold/value);
+			if ((1-p) > threshold) {
+				//System.out.println("Key: " + key + " Value: " + value + " p: " + p);
+				newMap.put(key, value);	
+			}
+		}	
+		return newMap;
+	}
+
+	public void postProcessWords(double threshold){	
+		this.setWordToNum(this.subSamplingEntries(threshold));
+		this.setWordToNum(sortByValue(this.getWordToNum()));
+	}
+
 	private void writeSortedMap (int n, BufferedWriter writer){
 		int cnt = 1;
-		Map<String, Integer> sortedMap = sortByValue(wordToNum);
+		//Map<String, Integer> sortedMap = sortByValue(wordToNum);
 		try {
 			writer.write(tokenCnt + "\t" + this.getWordToNum().size());
-			for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+			for (Map.Entry<String, Integer> entry : this.getWordToNum().entrySet()) {
 				writer.write("\n" + entry.getKey() + "\t"+ entry.getValue());
 				if (cnt == n) break; cnt++;
 			}
@@ -205,6 +227,8 @@ public class IndicatorWordsCreator {
 		long time1 = System.currentTimeMillis();
 
 		iwp.createIndicatorPosWordsFromFiles();
+
+		iwp.postProcessWords(0.00001);
 
 		long time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));

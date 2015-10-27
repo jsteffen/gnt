@@ -99,14 +99,22 @@ public class ModelInfo {
 		return output;
 
 	}
-	public void createModelFileName(int dim, int numberOfSentences) {
+	
+	/**
+	 * A mode file name is build from
+	 * <p>modelFilePrefix + taggerName + windowSize + dimension + number of training sentences + wordFeat-flag + shapeFeat-flag + suffixFeat-flag
+	 * @param windowSize + ".txt"
+	 * @param dim
+	 * @param numberOfSentences
+	 */
+	public void createModelFileName(int windowSize, int dim, int numberOfSentences) {
 		String wordFeatString = (WordFeatures.withWordFeats)?"T":"F";
 		String shapeFeatString = (WordFeatures.withShapeFeats)?"T":"F";
 		String suffixFeatString = (WordFeatures.withShapeFeats)?"T":"F";
 		if (wordFeatString.equals("F")) dim=0;
 
 		this.modelFile = 
-				this.modelFilePrefix+this.getTaggerName()+"_"+dim+"iw"+numberOfSentences+"sent_"+
+				this.modelFilePrefix+this.getTaggerName()+"_"+windowSize+"_"+dim+"iw"+numberOfSentences+"sent_"+
 				wordFeatString+shapeFeatString+suffixFeatString+"_"+
 				this.getSolver()+".txt";
 	}

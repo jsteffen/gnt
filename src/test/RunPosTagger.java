@@ -30,7 +30,7 @@ public class RunPosTagger {
 		WordFeatures.withSuffixFeats=true;
 		System.out.println(WordFeatures.toActiveFeatureString());
 
-		modelInfo.createModelFileName(dim, numberOfSentences);
+		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());
 		
 		GNTagger posTagger = new GNTagger(modelInfo);	

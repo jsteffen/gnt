@@ -164,5 +164,4 @@ accuracy:  95.77%; precision:  73.11%; recall:  77.20%; FB1:  75.09
              MISC: precision:  67.50%; recall:  69.52%; FB1:  68.49
               ORG: precision:  61.31%; recall:  64.96%; FB1:  63.08
               PER: precision:  80.00%; recall:  85.59%; FB1:  82.70  
-               
--> increasing distributed word vectors hurt from 50 on
+             

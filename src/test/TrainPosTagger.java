@@ -15,15 +15,16 @@ public class TrainPosTagger {
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 0;
+		double subSamplingThreshold = 0.000000001;
 		WordFeatures.withWordFeats=false;
 		WordFeatures.withShapeFeats=true;
 		WordFeatures.withSuffixFeats=true;
 		System.out.println(WordFeatures.toActiveFeatureString());
 		
-		modelInfo.createModelFileName(dim, numberOfSentences);
+		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());
 		
-		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
+		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
 		String trainingFileName = "resources/data/english/ptb3-training";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, dim, numberOfSentences);

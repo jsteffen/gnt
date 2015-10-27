@@ -125,7 +125,7 @@ public class WordFeatures {
 
 	// boolean flag offline means: assume that features have been pre-loaded into to memory
 	// boolean train means: training phase, which means do not handle unknown words
-	// since word is from input stream, need to lower-case it first
+	// NOTE: since word is from input stream, need to lower-case it first
 	private void fillLeftDistributedWordFeatures(String word,
 			Alphabet alphabet, boolean train, boolean offline) {
 		String lowWord = word.toLowerCase();
@@ -161,6 +161,7 @@ public class WordFeatures {
 	 * boolean flag offline means: assume that known signatures have been pre-loaded into to memory
 	 * NOTE: even in training phase, signature are computed dynamically 
 	 * NOTE: we assume that a word has a unique signature so the list shape actually only contains a single element.
+	 * NOTE: word is case-sensitive, because otherwise shape feature can be computed reliable!
 	 * @param word
 	 * @param index
 	 * @param alphabet
@@ -188,6 +189,7 @@ public class WordFeatures {
 
 	// boolean flag offline means: assume that suffixes have been preprocessed 
 	// and pre-loaded into to memory
+	// NOTE: word is lowerCased!
 	private void fillSuffixFeatures(String word, Alphabet alphabet, boolean offline) {
 		/*
 		 * Lowercase word

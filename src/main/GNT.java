@@ -143,7 +143,7 @@ public class GNT {
 		int dim = Integer.valueOf(this.dimension);
 		int numberOfSentences = Integer.valueOf(this.sentences);
 
-		modelInfo.createModelFileName(dim, numberOfSentences);
+		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
 
@@ -162,7 +162,7 @@ public class GNT {
 		int dim = Integer.valueOf(this.dimension);
 		int numberOfSentences = Integer.valueOf(this.sentences);
 
-		modelInfo.createModelFileName(dim, numberOfSentences);
+		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 
 		GNTagger posTagger = new GNTagger(modelInfo);
 

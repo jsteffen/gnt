@@ -1,2 +1,31 @@
-Using POS as feature
+October, 2015:
 
+- using windowSize=1 hurts !
+- using windowSize=3 neutral
+
+- changes in suffix list does not improve either
+
+-> it seems that only dimension around 50 brings something
+-> also Turian et al. 2010 only uzse 50-dims for their word embedding stuff
+
+-> try out better unknown word features
+
+-> Acrually, it is unclear, whether GNT feature are usable for NER
+-> check again paper from Tkachenko & Simanovsky
+
+New possible features:
+
+POS
+
+previous predictions
+
+prefixes
+
+smaller suffixes/prefixes
+
+genrealization of number/date expressions
+
+context elements without certain features
+
+Anyway: 
+I script that could perform runs for a number of settings would be helpful
