@@ -2,21 +2,28 @@ September, 15th, 2015:
 
 NER - soon test GNT for NER:
 
--> DOING
+October, 15th, 2015:
 
 Integration of cluster in training and testing:
 	- corpus see: /Users/gune00/data/Marmot/Word
 
-NER - soon test GNT for NER and German
+- instead of suffix use trigrams -> is this similar to NemexA?
 
-
-Integration of NemexF and NemexA
+- more testing of liblinear itself ?
 
 More unsupervised
 
 Parallel processing
 
-lemmatization learning
-
 Morphological tagging:
 -> with the help of the dictionaries in /Users/gune00/data/Marmot/Word
+
+Can I use it as a generic tagging tool
+- opinion mining ?
+- other machine learning tools?
+
+
+
+THINK: about distributed vector representations
+	- currently, they are used for representing words
+	- the vectors are build on basis of indicator words, which define the dimension, i.e., the vector space

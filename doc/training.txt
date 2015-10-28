@@ -122,20 +122,26 @@ when sentence count is -1:
 
 Everything works, but I cannot reproduce FLORS result so far; but the trend is ok;
 
-HIERIX
+
 when distributed word vectors are not used, I still have at least one distributed feature length of 1
+-> maybe I need to use feature activation flags also in OffSets initialization phase
+-> DONE
 
 check implementation of IW and distributed vectors.
--> I had an error: forgot to adapt indicator word creation to taggerName -> DONE
-
-
-I can test word vectors when using NER because label set is smaller;
-It seems that DWV do bring much ! in case of NER only if dim=50 is used, and then only 3 percent.
+-> I had an error: forgot to adapt indicator word creation to taggerName 
+-> DONE
 
 I am now defined a subsampling approach following Mikolov when indicator words are created.
-does not bring much for NER
+(does not bring much for NER)
+-> DONE
 
-But I should:
-- add NER unlabeled data from training, devel and test -> DONE
-- also others, maybe from google relations -> add to corpus part
+
+HIERIX
+- testing with clusters
+- testing with ngrams instead of suffix
+
+I can test word vectors when using NER because label set is smaller;
+It seems that DWV do not bring much ! in case of NER only if dim=50 is used, and then only 3 percent.
+
+But also test with unsupervised data, maybe from google relations -> add to corpus part
 

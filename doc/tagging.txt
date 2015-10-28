@@ -84,5 +84,5 @@ Handling of unknown words:
 	- so unlabeled data is not usable if I actually use all suffixes from training
 
 -> Performance:
-	- between 66K - 100K tokens per second
+	- about 100K tokens per second
 

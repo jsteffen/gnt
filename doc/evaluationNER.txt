@@ -85,15 +85,9 @@ accuracy:  96.17%; precision:  74.58%; recall:  79.94%; FB1:  77.17
              MISC: precision:  68.90%; recall:  73.22%; FB1:  70.99
               ORG: precision:  65.05%; recall:  71.82%; FB1:  68.27
               PER: precision:  78.42%; recall:  85.84%; FB1:  81.96   
-ModelInfo modelInfo = new ModelInfo("FLORS");
-		modelInfo.setTaggerName("NER");
-		
-		int windowSize = 2;
-		int numberOfSentences = -1;
-		int dim = 50;
-		WordFeatures.withWordFeats=true;
-		WordFeatures.withShapeFeats=true;
-		WordFeatures.withSuffixFeats=true;
+              
+              
+dim=50
 		
 ./conlleval < eval/eng-testa.txt 
 processed 51578 tokens with 5942 phrases; found: 6144 phrases; correct: 5192.
@@ -164,4 +158,57 @@ accuracy:  95.77%; precision:  73.11%; recall:  77.20%; FB1:  75.09
              MISC: precision:  67.50%; recall:  69.52%; FB1:  68.49
               ORG: precision:  61.31%; recall:  64.96%; FB1:  63.08
               PER: precision:  80.00%; recall:  85.59%; FB1:  82.70  
-             
+              
+              
+Using modelInfo MDP seems also to be ok, but computes smaller model files.
+
+Using cluster IDs:
+
+ModelInfo modelInfo = new ModelInfo("MDP");
+		modelInfo.setTaggerName("NER");
+		
+		int windowSize = 2;
+		int numberOfSentences = -1;
+		int dim = 50;
+		Alphabet.withWordFeats=true;
+		Alphabet.withShapeFeats=true;
+		Alphabet.withSuffixFeats=true;
+		Alphabet.withClusterFeats=true;
+		
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6083 phrases; correct: 5332.
+accuracy:  98.28%; precision:  87.65%; recall:  89.73%; FB1:  88.68
+              LOC: precision:  91.94%; recall:  93.14%; FB1:  92.54
+             MISC: precision:  84.40%; recall:  83.30%; FB1:  83.84
+              ORG: precision:  78.26%; recall:  82.40%; FB1:  80.28
+              PER: precision:  92.00%; recall:  94.90%; FB1:  93.43
+            
+              
+./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 5941 phrases; correct: 4770.
+accuracy:  97.10%; precision:  80.29%; recall:  84.45%; FB1:  82.32
+              LOC: precision:  85.57%; recall:  88.85%; FB1:  87.18
+             MISC: precision:  68.73%; recall:  75.78%; FB1:  72.09
+              ORG: precision:  72.75%; recall:  78.45%; FB1:  75.49
+              PER: precision:  88.38%; recall:  89.86%; FB1:  89.11
+              
+Using modelinfo flors:
+
+./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6078 phrases; correct: 5319.
+accuracy:  98.24%; precision:  87.51%; recall:  89.52%; FB1:  88.50
+              LOC: precision:  91.91%; recall:  92.81%; FB1:  92.36
+             MISC: precision:  83.98%; recall:  81.89%; FB1:  82.92
+              ORG: precision:  77.92%; recall:  82.10%; FB1:  79.96
+              PER: precision:  91.99%; recall:  95.44%; FB1:  93.69
+
+./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 5919 phrases; correct: 4787.
+accuracy:  97.16%; precision:  80.88%; recall:  84.76%; FB1:  82.77
+              LOC: precision:  85.01%; recall:  88.73%; FB1:  86.83
+             MISC: precision:  71.66%; recall:  74.93%; FB1:  73.26
+              ORG: precision:  73.12%; recall:  79.41%; FB1:  76.13
+              PER: precision:  89.15%; recall:  90.41%; FB1:  89.78
+
+
+This is close to CRF  -> but without POS and Chunks -> still missing about 9% to the best NER for English

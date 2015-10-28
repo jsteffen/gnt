@@ -88,9 +88,9 @@ public class WordClusterFeatureFactory {
 				}
 	}
 
-	public void createAndSaveClusterIdFeature(String taggerName, String trainingFileName){
-		System.out.println("Create cluster ID list from: " + trainingFileName);
-		this.createWord2ClusterIdMapFromFile(trainingFileName, -1);
+	public void createAndSaveClusterIdFeature(String taggerName, String clusterIDfileName){
+		System.out.println("Create cluster ID list from: " + clusterIDfileName);
+		this.createWord2ClusterIdMapFromFile(clusterIDfileName, -1);
 
 		String fileName = "resources/features/clusterId"+"_"+taggerName+".txt";
 		System.out.println("Writing cluster ID list to: " + fileName);
@@ -141,7 +141,7 @@ public class WordClusterFeatureFactory {
 
 	private void addNewWord2liblinearId(String word, Integer liblinearIndex) {
 		if (!this.getWord2index().containsKey(word)){
-			getClusterId2num().put(word, liblinearIndex);
+			getWord2index().put(word, liblinearIndex);
 		}
 		else
 			System.err.println("Word " + word + " already in seen!");
@@ -151,8 +151,8 @@ public class WordClusterFeatureFactory {
 		BufferedWriter writer;
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
-			for(String word: this.getClusterId2num().keySet()){
-				writer.write(word+"\t"+this.getClusterId2num().get(word)+"\n");
+			for(String word: this.getWord2index().keySet()){
+				writer.write(word+"\t"+this.getWord2index().get(word)+"\n");
 			}
 			writer.close();
 
@@ -168,7 +168,9 @@ public class WordClusterFeatureFactory {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] entry = line.split("\t");
-				this.getWord2index().put(entry[0], Integer.parseInt(entry[1]));
+				int liblinearClusterId = Integer.parseInt(entry[1]);
+				clusterIdcnt = Math.max(liblinearClusterId, clusterIdcnt);
+				this.getWord2index().put(entry[0], liblinearClusterId);
 			}
 			reader.close();
 
@@ -179,6 +181,13 @@ public class WordClusterFeatureFactory {
 
 	public void readClusterIdList(String taggerName){
 		String fileName = "resources/features/clusterId"+"_"+taggerName+".txt";
+		System.out.println("Reading cluster ID list from: " + fileName);
+		this.readClusterIdFeatureFile(fileName);
+		System.out.println("... done");
+	}
+	
+	public void readClusterIdList(){
+		String fileName = "resources/features/clusterId"+"_"+".txt";
 		System.out.println("Reading cluster ID list from: " + fileName);
 		this.readClusterIdFeatureFile(fileName);
 		System.out.println("... done");

@@ -18,7 +18,11 @@ I currently use only labeled training data:
 -> New training version ptb3-training: 52 shapes
 	
 If word cannot be mapped to one of the learned shape features, then its shape list is empty.
-Which means that the feataure is actually not available for that work.
+Which means that the feature is actually not available for that work.
 This works, because shape feature lists and suffix feature lists are dynamic in length.
+
+So seen it does not make sense to computed shape features from unlabeled training data, 
+because they would not be used by the supervised training phase! Same as for suffixes.
+Only if shape features would be used to create vector representations for shapes
 	
 Shape features are language and domain specific

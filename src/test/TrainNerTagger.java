@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import trainer.GNTrainer;
 import trainer.TrainerInMem;
+import data.Alphabet;
 import data.ModelInfo;
-import features.WordFeatures;
 
 public class TrainNerTagger {
 
@@ -17,10 +17,11 @@ public class TrainNerTagger {
 		int numberOfSentences = -1;
 		int dim = 50;
 		double subSamplingThreshold = 0.000000001;
-		WordFeatures.withWordFeats=true;
-		WordFeatures.withShapeFeats=true;
-		WordFeatures.withSuffixFeats=true;
-		System.out.println(WordFeatures.toActiveFeatureString());
+		Alphabet.withWordFeats=true;
+		Alphabet.withShapeFeats=true;
+		Alphabet.withSuffixFeats=true;
+		Alphabet.withClusterFeats=true;
+		System.out.println(Alphabet.toActiveFeatureString());
 		
 		TrainerInMem.debug=false;
 
@@ -29,7 +30,8 @@ public class TrainNerTagger {
 		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
 		String trainingFileName = "resources/data/ner/eng-train";
+		String clusterIdSourceFileName = "/Users/gune00/data/Marmot/Word/en_marlin_cluster_1000";
 
-		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, dim, numberOfSentences);
+		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
 	}
 }

@@ -27,6 +27,7 @@ public class WordFeatures {
 	private int rightOffset = 0;
 	private int shapeOffset = 0;
 	private int suffixOffset = 0;
+	private int clusterIdOffset = 0;
 	private boolean adjust = false;
 	private int length = 0;
 
@@ -36,10 +37,7 @@ public class WordFeatures {
 	private List<Pair<Integer,Boolean>> suffix = new ArrayList<Pair<Integer,Boolean>>();
 	// I am using here a list although we only have always one shape
 	private List<Pair<Integer,Boolean>> shape = new ArrayList<Pair<Integer,Boolean>>();
-	
-	public static boolean withWordFeats = true;
-	public static boolean withShapeFeats = true;
-	public static boolean withSuffixFeats = true;
+	private List<Pair<Integer,Boolean>> cluster = new ArrayList<Pair<Integer,Boolean>>();
 
 	//Setters and getters
 	public List<Pair<Integer, Double>> getLeft() {
@@ -66,6 +64,12 @@ public class WordFeatures {
 	public void setShape(List<Pair<Integer, Boolean>> shape) {
 		this.shape = shape;
 	}
+	public List<Pair<Integer, Boolean>> getCluster() {
+		return cluster;
+	}
+	public void setCluster(List<Pair<Integer, Boolean>> cluster) {
+		this.cluster = cluster;
+	}
 	public int getIndex() {
 		return index;
 	}
@@ -91,36 +95,33 @@ public class WordFeatures {
 
 	// Methods
 
-//	public void setOffSets() {
-//		elementOffset = (index * OffSets.tokenVectorSize) + 1;
-//		leftOffset = elementOffset + 0; // Plus one here is needed to make sure that indices in Liblinear start from 1 and not 0
-//		rightOffset = leftOffset + 0 + OffSets.wvLeftSize;
-//		shapeOffset = rightOffset + 0 + OffSets.wvRightSize;
-//		suffixOffset = shapeOffset + 0 + OffSets.shapeSize - 1;
-//	}
-	
 	// GN on 14.10.2015
 	// I have to shift offset by OffSets.tokenVectorSize + 1, and so later have to remove the +1
+	// TODO: this is still wrong because it does not take into account that offsets changed when features are inactive
+	// THE problem is: I need to know which offset I need to substract the final -1
 	public void setOffSets() {
 		elementOffset = (index * OffSets.tokenVectorSize) + 1;
 		leftOffset = elementOffset;
 		rightOffset = leftOffset + OffSets.wvLeftSize;
 		shapeOffset = rightOffset + OffSets.wvRightSize;
-		suffixOffset = shapeOffset + OffSets.shapeSize - 1;
+		suffixOffset = shapeOffset + OffSets.shapeSize;
+		clusterIdOffset = suffixOffset + OffSets.suffixSize -1;
 	}
 
 	public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
 		// if word is a sentence padding element, then just return an empty WordFeatures
 		if (word.endsWith("<BOUNDARY>")) return;
-		
-		if (WordFeatures.withWordFeats) {
+
+		if (Alphabet.withWordFeats) {
 			fillLeftDistributedWordFeatures(word, alphabet, train, true);
 			fillRightDistributedWordFeatures(word, alphabet, train, true);
 		}
-		if (WordFeatures.withShapeFeats)
+		if (Alphabet.withShapeFeats)
 			fillShapeFeatures(word, index, alphabet, true);
-		if (WordFeatures.withSuffixFeats)
+		if (Alphabet.withSuffixFeats)
 			fillSuffixFeatures(word, alphabet, true);
+		if (Alphabet.withClusterFeats)
+			fillClusterIdFeatures(word, alphabet, true);
 	}
 
 	// boolean flag offline means: assume that features have been pre-loaded into to memory
@@ -167,7 +168,8 @@ public class WordFeatures {
 	 * @param alphabet
 	 * @param offline
 	 */
-	// TODO: it is an overhead to keep a list of shapes, because we always have a single element
+	// NOTE: it is an overhead to keep a list of shapes, because we always have a single element,
+	// but it keeps code more transparent
 	private void fillShapeFeatures(String word, int index, Alphabet alphabet, boolean offline) {
 		int wordShapeIndex = alphabet.getWordShapeFactory().getShapeFeature(word, index);
 		if (wordShapeIndex > -1) {
@@ -183,13 +185,14 @@ public class WordFeatures {
 			System.err.println("Word: " + word + " at loc: " + index + ": unknown signature!");
 
 		}
-		// is always 1
+		// should be always 1
 		length += shape.size();
 	}
 
-	// boolean flag offline means: assume that suffixes have been preprocessed 
-	// and pre-loaded into to memory
-	// NOTE: word is lowerCased!
+	/** boolean flag offline means: assume that suffixes have been preprocessed 
+	 * and pre-loaded into to memory
+	 * NOTE: word is lowerCased!
+	 */
 	private void fillSuffixFeatures(String word, Alphabet alphabet, boolean offline) {
 		/*
 		 * Lowercase word
@@ -210,52 +213,38 @@ public class WordFeatures {
 		length += suffix.size();
 	}
 
-	// This is a way to show the words/labels that correspond to a window
-	public void ppIthppWordFeaturesWindowElements(Alphabet alphabet){
-		System.out.println(" Word: " + word + "; Element: " + index + "; Length: " + length);
-		System.out.println("\nLeft:");
-		for (Pair<Integer,Double> pair : this.getLeft()){
-			int index = (this.isAdjust())?(pair.getL()-this.leftOffset):(pair.getL());
-			double value = pair.getR();
-			// index+1 plus is needed because left is a vector with index starting from 0, but I start iw words from 1
-			String label = alphabet.getWordVectorFactory().getNum2iw().get(index+1);
-			System.out.print(label+":"+index+":"+value+";");
+	/** 
+	 * boolean flag offline means: assume that known cluster IDs have been pre-loaded into to memory
+	 * NOTE: even in training phase, signature are computed dynamically 
+	 * NOTE: we assume that a word has a unique signature so the list shape actually only contains a single element.
+	 * NOTE: word is case-sensitive, because otherwise shape feature can be computed reliable!
+	 * @param word
+	 * @param alphabet
+	 * @param offline
+	 */
+	// NOTE: it is an overhead to keep a list of shapes, because we always have a single element,
+	// but it keeps code more transparent
+	private void fillClusterIdFeatures(String word, Alphabet alphabet, boolean offline) {
+		int wordClusterIndex = alphabet.getWordClusterFactory().getClusterIdFeature(word);
+		if (wordClusterIndex > -1) {
+			int realIndex = (this.isAdjust())?(this.clusterIdOffset+wordClusterIndex):wordClusterIndex;
+			//System.out.println("Word: " + word + " ClusterId: " + wordClusterIndex + " Realindex: " + realIndex);
+			Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
+			cluster.add(node);
 		}
-		System.out.println("\nRight:");
-		for (Pair<Integer,Double> pair : this.getRight()){
-			int index = (this.isAdjust())?(pair.getL()-this.rightOffset):(pair.getL());
-			double value = pair.getR();
-			// index+1 plus is needed because left is a vector with index starting from 0, but I start iw words from 1
-			String label = alphabet.getWordVectorFactory().getNum2iw().get(index+1);
-			System.out.print(label+":"+index+":"+value+";");
+		else
+		{
+			// we have an unknown word with no cluster Id,
+			// which basically means that shape-size() will remain 0
+			// It should not happen ! 
+			System.err.println("Word: " + word + ": unknown clusterID!");
 		}
-		System.out.println("\nShape:");
-		for (Pair<Integer,Boolean> pair : this.getShape()){
-			int index = (this.isAdjust())?(pair.getL()-this.shapeOffset):(pair.getL());
-			boolean value = pair.getR();
-			String label = alphabet.getWordShapeFactory().getIndex2signature().get(index);
-			System.out.print(label+":"+index+":"+value+";");
-		}
-		System.out.println("\nSuffix:");
-		for (Pair<Integer,Boolean> pair : this.getSuffix()){
-			int index = (this.isAdjust())?(pair.getL()-this.suffixOffset):(pair.getL());
-			boolean value = pair.getR();
-			String label = alphabet.getWordSuffixFactory().getNum2suffix().get(index);
-			System.out.print(label+":"+index+":"+value+";");
-		}
-		System.out.println("\n************");
+		// should be always 1
+		length += cluster.size();
 	}
 
 	// String representations
 
-	public static String toActiveFeatureString(){
-		String output = "\nActive features\n";
-		output += "withWordFeats= 	" + withWordFeats +"\n";
-		output += "withShapeFeats=  " + withShapeFeats +"\n";
-		output += "withSuffixFeats= " + withSuffixFeats +"\n";
-		return output;	
-	}
-	
 	public String toOffSetsString(){
 		String output = "\nElement-"+this.getIndex()+"\n";
 		output += "OffSets:\n";
@@ -265,6 +254,7 @@ public class WordFeatures {
 		output += "Right: " + this.rightOffset +"\n";
 		output += "Shape: " + this.shapeOffset +"\n";
 		output += "Suffix: " + this.suffixOffset +"\n";
+		output += "ClusterId: " + this.clusterIdOffset +"\n";
 		return output;	
 	}
 
@@ -285,6 +275,10 @@ public class WordFeatures {
 		}
 		output +="\nSuffix: ";
 		for (Pair<Integer,Boolean> pair : this.suffix){
+			output+=pair.toString();
+		}
+		output +="\nCluster: ";
+		for (Pair<Integer,Boolean> pair : this.cluster){
 			output+=pair.toString();
 		}
 		return output;

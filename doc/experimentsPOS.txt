@@ -36,3 +36,5 @@ Possible parameters for experiments:
 		(what is a domain specific good "long word")
 		
 - Mit Philip: twitter corpus fuer deutsch
+
+- Apply on uniform tagset 

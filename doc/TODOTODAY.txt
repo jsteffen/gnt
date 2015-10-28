@@ -54,6 +54,13 @@
 - collect all data using taggerName as part of filenames -> DONE
 
 HIERIX:
+
+- integrate cluster based features -> DONE!!
+
+-> correct but in features.WordFeatures.setOffSets()
+-> need to apdate GNT.java -> using "DUMMY" source cluster file
+
+- use ngrams instead of suffix (simulates NemexA)
 	
 - unknown word handling: 
 	- currently unknown words are considered as isolated words, 

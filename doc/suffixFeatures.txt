@@ -13,8 +13,10 @@ Goal is to compute all lower-case suffixes from a training set of words.
 I currently use only labeled training data:
 - "/Users/gune00/data/MLDP/english/english-train-sents.txt"
 	
-- since suffix features are binary, only those which are seen in training can be used for learning
-- so unlabeled data is not useful all suffixes from training
+- since suffix features are binary, only those which are seen in labeled training can be used for learning
+- so unlabeled data is not useful for suffixes from training, 
+	because they are NOT used for distributed representations of suffixes
+	
 
 
 Lower dimensions:
@@ -23,3 +25,5 @@ in previous paper, FLORS uses only 100 highest ranked suffixes
 -> TEST this as well
 
 - can also use other kinds of suffixes, e.g., for German just Morphix tree
+
+- or for NER, only upto N-suffixes

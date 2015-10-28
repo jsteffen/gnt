@@ -5,6 +5,7 @@ import java.io.IOException;
 import corpus.EvalConllFile;
 import tagger.GNTagger;
 import trainer.GNTrainer;
+import data.Alphabet;
 import data.ModelInfo;
 import features.WordFeatures;
 
@@ -61,9 +62,9 @@ public class GNT {
 		modelInfoType = "GNT";
 		inFile = "";
 		outFile = "";
-		WordFeatures.withWordFeats = true;
-		WordFeatures.withShapeFeats = true;
-		WordFeatures.withSuffixFeats = true;
+		Alphabet.withWordFeats = true;
+		Alphabet.withShapeFeats = true;
+		Alphabet.withSuffixFeats = true;
 	}
 	
 	private void initGNTArguments(String[] args){
@@ -80,21 +81,21 @@ public class GNT {
 			case "-e" 		: this.outFile = args[i+1]; break;
 			case "-wordFeats" : 
 				if (args[i+1].equalsIgnoreCase("F"))
-					WordFeatures.withWordFeats=false;
+					Alphabet.withWordFeats=false;
 				else
-					WordFeatures.withWordFeats=true;
+					Alphabet.withWordFeats=true;
 				; break;
 			case "-shapeFeats" : 
 				if (args[i+1].equalsIgnoreCase("F"))
-					WordFeatures.withShapeFeats=false;
+					Alphabet.withShapeFeats=false;
 				else
-					WordFeatures.withShapeFeats=true;
+					Alphabet.withShapeFeats=true;
 				; break;
 			case "-suffixFeats" : 
 				if (args[i+1].equalsIgnoreCase("F"))
-					WordFeatures.withSuffixFeats=false;
+					Alphabet.withSuffixFeats=false;
 				else
-					WordFeatures.withSuffixFeats=true;
+					Alphabet.withSuffixFeats=true;
 				; break;
 			}
 		}
@@ -122,9 +123,9 @@ public class GNT {
 		output += " -d "+ this.dimension ;
 		output += " -s "+ this.sentences ;
 		output += " -m "+ this.modelInfoType ;
-		output += " -wordFeats "+ ((WordFeatures.withWordFeats)?"T":"F");
-		output += " -shapeFeats "+ ((WordFeatures.withShapeFeats)?"T":"F");
-		output += " -suffixFeats "+ ((WordFeatures.withSuffixFeats)?"T":"F");
+		output += " -wordFeats "+ ((Alphabet.withWordFeats)?"T":"F");
+		output += " -shapeFeats "+ ((Alphabet.withShapeFeats)?"T":"F");
+		output += " -suffixFeats "+ ((Alphabet.withSuffixFeats)?"T":"F");
 		output += " -f "+ this.inFile ;
 		if (this.mode.equalsIgnoreCase("test"))
 			output += " -e "+ this.outFile ;
@@ -147,7 +148,7 @@ public class GNT {
 
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
 
-		gnTrainer.gntTrainingWithDimensionFromConllFile(this.inFile, dim, numberOfSentences);
+		gnTrainer.gntTrainingWithDimensionFromConllFile(this.inFile, "DUMMY", dim, numberOfSentences);
 
 	}
 

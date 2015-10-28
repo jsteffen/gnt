@@ -3,8 +3,8 @@ package test;
 import java.io.IOException;
 
 import trainer.GNTrainer;
+import data.Alphabet;
 import data.ModelInfo;
-import features.WordFeatures;
 
 public class TrainPosTagger {
 
@@ -16,18 +16,20 @@ public class TrainPosTagger {
 		int numberOfSentences = -1;
 		int dim = 0;
 		double subSamplingThreshold = 0.000000001;
-		WordFeatures.withWordFeats=false;
-		WordFeatures.withShapeFeats=true;
-		WordFeatures.withSuffixFeats=true;
-		System.out.println(WordFeatures.toActiveFeatureString());
+		Alphabet.withWordFeats=false;
+		Alphabet.withShapeFeats=true;
+		Alphabet.withSuffixFeats=true;
+		Alphabet.withClusterFeats=true;
+		System.out.println(Alphabet.toActiveFeatureString());
 		
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());
 		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
 		String trainingFileName = "resources/data/english/ptb3-training";
+		String clusterIdSourceFileName = "/Users/gune00/data/Marmot/Word/en_marlin_cluster_1000";
 
-		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, dim, numberOfSentences);
+		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
 
 	}
 

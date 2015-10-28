@@ -6,9 +6,9 @@ import java.util.List;
 
 import tagger.GNTagger;
 import corpus.EvalConllFile;
+import data.Alphabet;
 import data.ModelInfo;
 import data.Pair;
-import features.WordFeatures;
 
 /**
  * A test method for running GNT on same data set as FLORS and computing accuracies.
@@ -25,10 +25,11 @@ public class RunPosTagger {
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 0;
-		WordFeatures.withWordFeats=false;
-		WordFeatures.withShapeFeats=true;
-		WordFeatures.withSuffixFeats=true;
-		System.out.println(WordFeatures.toActiveFeatureString());
+		Alphabet.withWordFeats=false;
+		Alphabet.withShapeFeats=true;
+		Alphabet.withSuffixFeats=true;
+		Alphabet.withClusterFeats=true;
+		System.out.println(Alphabet.toActiveFeatureString());
 
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());

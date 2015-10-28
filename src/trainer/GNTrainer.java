@@ -6,6 +6,7 @@ import data.ModelInfo;
 import data.OffSets;
 import data.Window;
 import features.IndicatorWordsCreator;
+import features.WordClusterFeatureFactory;
 import features.WordDistributedFeatureFactory;
 import features.WordShapeFeatureFactory;
 import features.WordSuffixFeatureFactory;
@@ -56,7 +57,7 @@ public class GNTrainer {
 
 	// This is a method for on-demand creation of the feature files
 
-	private void createTrainingFeatureFiles(String trainingFileName, int dim)
+	private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim)
 			throws IOException{
 		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
 
@@ -64,7 +65,9 @@ public class GNTrainer {
 
 		this.createWordVectors(taggerName, dim);
 		this.createShapeFeatures(taggerName, trainingFileName);
-		this.createSuffixFeatures(taggerName, trainingFileName);	
+		this.createSuffixFeatures(taggerName, trainingFileName);
+		this.createClusterFeatures(taggerName, clusterIdSourceFileName);
+		
 	}
 
 	private void createWordVectors(String taggerName, int dim) throws IOException{
@@ -82,6 +85,11 @@ public class GNTrainer {
 	private void createSuffixFeatures(String taggerName, String trainingFileName){
 		WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
 		wordSuffixFactory.createAndSaveSuffixFeature(taggerName, trainingFileName);	
+	}
+	
+	private void createClusterFeatures(String taggerName, String clusterIdSourceFileName){
+		WordClusterFeatureFactory wordClusterFactory = new WordClusterFeatureFactory();
+		wordClusterFactory.createAndSaveClusterIdFeature(taggerName, clusterIdSourceFileName);	
 	}
 
 
@@ -120,11 +128,12 @@ public class GNTrainer {
 		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 	}
 
-	public void gntTrainingWithDimensionFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
+	public void gntTrainingWithDimensionFromConllFile(String trainingFileName, String clusterIdSourceFileName, int dim, int maxExamples) 
+			throws IOException{
 		time1 = System.currentTimeMillis();
 
 		this.createIndicatorWords();
-		this.createTrainingFeatureFiles(trainingFileName+"-sents.txt", dim);
+		this.createTrainingFeatureFiles(trainingFileName+"-sents.txt", clusterIdSourceFileName, dim);
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));

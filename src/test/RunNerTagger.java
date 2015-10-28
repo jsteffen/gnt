@@ -6,9 +6,9 @@ import java.util.List;
 
 import corpus.EvalConllFile;
 import tagger.GNTagger;
+import data.Alphabet;
 import data.ModelInfo;
 import data.Pair;
-import features.WordFeatures;
 
 public class RunNerTagger {
 	public static void main(String[] args) throws IOException{
@@ -18,10 +18,11 @@ public class RunNerTagger {
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 50;
-		WordFeatures.withWordFeats=true;
-		WordFeatures.withShapeFeats=true;
-		WordFeatures.withSuffixFeats=true;
-		System.out.println(WordFeatures.toActiveFeatureString());
+		Alphabet.withWordFeats=true;
+		Alphabet.withShapeFeats=true;
+		Alphabet.withSuffixFeats=true;
+		Alphabet.withClusterFeats=true;
+		System.out.println(Alphabet.toActiveFeatureString());
 
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());

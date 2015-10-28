@@ -66,6 +66,11 @@ public class ProblemInstance {
 				featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
 			}
 			offSet += wordFeats.getSuffix().size();
+			for (int i = 0; i < wordFeats.getCluster().size(); i++){
+				Pair<Integer, Boolean> pair = wordFeats.getCluster().get(i);
+				featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
+			}
+			offSet += wordFeats.getCluster().size();
 		}
 		
 		if (TrainerInMem.debug) this.checkFeatureVector(tokenWindow);

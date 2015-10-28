@@ -92,7 +92,7 @@ public class Window {
 	 * @param adjust
 	 */
 	public void fillWindow(boolean train, boolean adjust){
-		
+
 		// compute left/right borders of the size of the window elements, which depends on windowSize
 		int max = this.sentence.getWordArray().length-1;
 		int leftPads = (this.center < this.windowSize)?(this.windowSize-this.center):0;
@@ -114,7 +114,7 @@ public class Window {
 		// Based on the computed intervals above, this also indicates the number of window elements.
 		// based on value this.size;
 		// NOTE Does not add label
-		
+
 		// Add left padding elements to sentence (if any); needed later to correctly compute global offSets
 
 		for (int i = 0 ; i < leftPads; i++){
@@ -224,12 +224,6 @@ public class Window {
 		testString +="\n";
 
 		System.out.println(testString);
-	}
-
-	public void ppWindowElement(){
-		for (WordFeatures element : elements){
-			element.ppIthppWordFeaturesWindowElements(alphabet);
-		}
 	}
 
 	public String toString(){

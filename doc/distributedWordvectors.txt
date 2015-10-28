@@ -85,6 +85,5 @@ Steps:
 
 6. Integrate interface to word2vec, so that their vectors can also be loaded -> for comparison
 	- main problem seems to be the update of the iw2num/num2iw mapping: maybe create it online by means of a virtual indicator file
-		of entries: feat1, feat2, ..., 
+		of entries: feat1, feat2, ...,
 
-7. Multi-word training instances are not supported so far
