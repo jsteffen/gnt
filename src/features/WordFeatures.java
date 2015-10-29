@@ -97,8 +97,7 @@ public class WordFeatures {
 
 	// GN on 14.10.2015
 	// I have to shift offset by OffSets.tokenVectorSize + 1, and so later have to remove the +1
-	// TODO: this is still wrong because it does not take into account that offsets changed when features are inactive
-	// THE problem is: I need to know which offset I need to substract the final -1
+	// NOTE: I need to know which offset I need to substract the final -1
 	public void setOffSets() {
 		elementOffset = (index * OffSets.tokenVectorSize) + 1;
 		leftOffset = elementOffset;
@@ -131,6 +130,7 @@ public class WordFeatures {
 	private void fillLeftDistributedWordFeatures(String word,
 			Alphabet alphabet, boolean train, boolean offline) {
 		String lowWord = word.toLowerCase();
+		// This may return a dynamically created word vector for unknown words
 		WordDistributedFeature distributedWordVector = alphabet.getWordVectorFactory().getWordVector(lowWord, train);
 		for (int i = 0; i < distributedWordVector.getLeftContext().length; i++){
 			int index = ((this.isAdjust())?(this.leftOffset+i):i);

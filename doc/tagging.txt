@@ -82,7 +82,21 @@ Handling of unknown words:
 	- can eventually be empty, but then word is usually a number, because smallest suffix is a character
 	- since suffix features are binary, only those which are seen in training can be used for learning
 	- so unlabeled data is not usable if I actually use all suffixes from training
+	
+- for fillClusterIdFeatures()
+	- unknown words aremapped to word <RARE>|<Rare> and then to a corresponding clusterID
 
 -> Performance:
 	- about 100K tokens per second
 
+Handling unknown words:
+
+- add to data.Window.createWordFeatures(String, int, int, boolean, boolean):
+	- left and right word
+- add them to WordFeatures as slot variables when class is initialized, so that they can be used to be called with:
+- add them also to features.WordDistributedFeatureFactory.getWordVector(String, boolean)
+- add them also to features.WordDistributedFeatureFactory.handleUnknownWordWithoutContext(String)
+- and them to features.WordDistributedFeatureFactory.word2Bigram(String, String, String)
+	- then here, check whether word index of left/right is 0 -> then unknown word -> then "<BOUNDAR>", else wordIndex
+	- NOTE this means: unknown words, when seen several times, will be updated according to context, so get better weights eventually?
+		

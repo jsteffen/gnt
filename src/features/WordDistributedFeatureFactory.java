@@ -43,14 +43,14 @@ public class WordDistributedFeatureFactory {
 	// stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
 	private Map<String, Integer> iw2num = new HashMap<String, Integer>();
 
-	// TODO actually not needed, only in ppPrint methods
+	// actually not needed, only in ppPrint methods
 	// stores rank -> indicator word -> is needed for indexing the context vectors using index rank-1 
 	private Map<Integer, String> num2iw = new HashMap<Integer, String>();
 
 	// stores word -> num -> is needed for computing an index for each word type needed for accessing distributed word vector
 	private Map<String, Integer> word2num = new HashMap<String, Integer>();
 
-	// TODO after word features are created or loaded, not more used
+	// after word features are created or loaded, not more used
 	// stores num -> word -> is needed for creating the vocabulary file so that position in file corresponds to index and position 
 	// of left/right vector files
 	private Map<Integer, String> num2word = new HashMap<Integer, String>();
@@ -270,6 +270,7 @@ public class WordDistributedFeatureFactory {
 	 * @param unknown
 	 * @return
 	 */
+	//TODO: how can I make use of left/right context words here ?
 	public  WordDistributedFeature getWordVector(String word, boolean train){
 		if (getWord2num().containsKey(word))
 			return getDistributedWordsTable().get(getWord2num().get(word));

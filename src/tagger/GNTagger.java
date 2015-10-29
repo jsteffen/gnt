@@ -158,7 +158,7 @@ public class GNTagger {
 		for (int i = 0; i < data.getInstances().size();i++){
 			// For each window frame of a sentence
 			Window nextWindow = data.getInstances().get(i);
-			// Fill the frame with all availablel features. First boolean sets 
+			// Fill the frame with all available features. First boolean sets 
 			// training mode to false which means that unknown words are handled.
 			nextWindow.fillWindow(train, adjust);
 			// Create the feature vector

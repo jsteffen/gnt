@@ -45,5 +45,3 @@ Seems to be all classes to adapt
 -> First tests: worked! and shows improvement for NER of about 4,8% F1
 
 Try them with POS tagger as well -> OK, bring improvements
-	
-
