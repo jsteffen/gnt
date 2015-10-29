@@ -72,6 +72,9 @@ public class ConllMapper {
 		return sentenceString+tokens.get(tokens.size()-1);
 	}
 
+	/**
+	 * Used to map a connl file to a file of sentences/line !
+	 */
 	public void transcodeFlorsFileList(){
 		for (String fileName : corpus.trainingLabeledData){
 			try {
@@ -99,7 +102,6 @@ public class ConllMapper {
 			}
 		}	
 	}
-
 	public void transcode2(String sourceFileName, String sourceEncoding,
 			String targetFileName, String targetEncoding)
 					throws IOException {

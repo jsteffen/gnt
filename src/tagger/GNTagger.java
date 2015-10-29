@@ -362,7 +362,5 @@ public class GNTagger {
 		System.out.println("Sentences/sec: " + (this.getData().getSentenceCnt()*1000)/(time2-time1));
 		System.out.println("Words/sec: " + (Window.windowCnt*1000)/(time2-time1));
 
-		System.out.println("Create eval file: " + evalFileName);
-		EvalConllFile.computeAccuracy(evalFileName);
 	}
 }

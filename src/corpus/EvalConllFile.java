@@ -9,10 +9,40 @@ import java.text.DecimalFormat;
 import data.Data;
 
 public class EvalConllFile {
-	public static Data data = new Data();
+	private Data data = new Data();
+	private double acc;
+	private double accOOV;
+	private double accInV;
 
-	
-	public static void computeAccuracy(String  sourceFileName) throws IOException{
+	public Data getData() {
+		return data;
+	}
+	public void setData(Data data) {
+		this.data = data;
+	}
+	public double getAcc() {
+		return acc;
+	}
+	public void setAcc(double acc) {
+		this.acc = acc;
+	}
+	public double getAccOOV() {
+		return accOOV;
+	}
+	public void setAccOOV(double accOOV) {
+		this.accOOV = accOOV;
+	}
+	public double getAccInV() {
+		return accInV;
+	}
+
+
+	public void setAccInV(double accInV) {
+		this.accInV = accInV;
+	}
+
+
+	public void computeAccuracy(String  sourceFileName) throws IOException{
 		BufferedReader conllReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
 		int goldPosCnt = 0;
@@ -25,34 +55,34 @@ public class EvalConllFile {
 				if (!line.equals("-X- -X- -X- -X-")){
 					String[] tokenizedLine = line.split(" ");
 					String word = tokenizedLine[1];
-					
+
 					String goldPos = tokenizedLine[2];
 					String predPos = tokenizedLine[3];
 					goldPosCnt++;
 					if (predPos.equals(goldPos)) correctPosCnt++;
 					//else System.out.println(line);
-					
+
 					// Counting our of vocabulary words
 					//TODO: note I do not lower case words when counting OOV -> correct? 
 					// I guess so, because words in getWordSet() are also not lower-cased -> not sure, better try lowercase it as well
-					boolean knownWord = EvalConllFile.data.getWordSet().getLabel2num().containsKey(word);
+					boolean knownWord = data.getWordSet().getLabel2num().containsKey(word);
 					if (!knownWord) goldOOVCnt++;
 					if (!knownWord && predPos.equals(goldPos)) correctOOVCnt++;
-					
+
 				}
 			}
 		}
 		conllReader.close();
 
 		// accuracy for all words of test file
-		double acc = (double) correctPosCnt / (double) goldPosCnt;
+		acc = (double) correctPosCnt / (double) goldPosCnt;
 		// accuracy for all out of vocabulary words of test file
-		double accOOV  = (double) correctOOVCnt / (double) goldOOVCnt;
+		accOOV  = (double) correctOOVCnt / (double) goldOOVCnt;
 		// accuracy for known vocabulary words of test file
 		int correctKnownWords = (goldPosCnt - goldOOVCnt);
 		int correctFoundKnownWords = (correctPosCnt - correctOOVCnt);
-		double accInV  = (double) correctFoundKnownWords / (double) correctKnownWords;
-		
+		accInV  = (double) correctFoundKnownWords / (double) correctKnownWords;
+
 
 		DecimalFormat formatter = new DecimalFormat("#0.00");
 
@@ -64,11 +94,12 @@ public class EvalConllFile {
 				formatter.format(accInV*100) +"%");
 	}
 
-	
+
 	public static void main(String[] args) throws IOException{
 		// This reads saved vocabulary from training corpus
-		EvalConllFile.data.readWordSet();
+		EvalConllFile evalFile = new EvalConllFile();
+		evalFile.data.readWordSet();
 
-		EvalConllFile.computeAccuracy("resources/eval/gweb-answers-dev-flors.txt");
+		evalFile.computeAccuracy("resources/eval/gweb-answers-dev-flors.txt");
 	}
 }

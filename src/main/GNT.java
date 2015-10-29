@@ -20,17 +20,20 @@ import features.WordFeatures;
 /*
  * arguments:
  * 
- * -mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename>
- * -mode test -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename test> -e <evalFileName>
+ * -mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> 
+ * \ -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T -f <filename> -c <fileName>
+ * -mode test -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> 
+ * \ -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename test> -e <evalFileName>
  */
 public class GNT {
 	private String mode = "train";
 	private String taggerName = "POS";
 	private String windowSize = "2";
 	private String dimension = "50";
-	private String sentences = "100000";
+	private String sentences = "-1";
 	private String modelInfoType = "GNT";
 	private String inFile = "";
+	private String clusterIDfile = "";
 	private String outFile = "";
 
 	public GNT(){
@@ -40,12 +43,13 @@ public class GNT {
 	private void errorMessageAndExit(){
 		System.err.println("-mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> "
 				+ "-m <model info type> "
-				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T"
+				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T"
 				+ "-f <training file name in conll format>"
+				+ "-c <clusterID file name>"
 				+ "\nor ...");
 		System.err.println("-mode test -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> "
 				+ "-m <model info type> "
-				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T"
+				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T"
 				+ "-f <test file name in conll format> -e <merged output file for evaluation>");
 		System.err.println("Or use defaults by just calling -mode train|test ; Default values are:");
 		System.err.println(this.toString());
@@ -58,15 +62,17 @@ public class GNT {
 		taggerName = "POS";
 		windowSize = "2";
 		dimension = "500";
-		sentences = "39274";
-		modelInfoType = "GNT";
+		sentences = "-1";
+		modelInfoType = "FLORS";
 		inFile = "";
+		clusterIDfile = "/Users/gune00/data/Marmot/Word/en_marlin_cluster_1000";
 		outFile = "";
 		Alphabet.withWordFeats = true;
 		Alphabet.withShapeFeats = true;
 		Alphabet.withSuffixFeats = true;
+		Alphabet.withClusterFeats = true;
 	}
-	
+
 	private void initGNTArguments(String[] args){
 
 		for (int i=0; i < args.length;i++){
@@ -78,6 +84,7 @@ public class GNT {
 			case "-s" 		: this.sentences= args[i+1]; break;
 			case "-m" 		: this.modelInfoType= args[i+1]; break;
 			case "-f" 		: this.inFile= args[i+1]; break;
+			case "-c" 		: this.clusterIDfile= args[i+1]; break;
 			case "-e" 		: this.outFile = args[i+1]; break;
 			case "-wordFeats" : 
 				if (args[i+1].equalsIgnoreCase("F"))
@@ -96,6 +103,12 @@ public class GNT {
 					Alphabet.withSuffixFeats=false;
 				else
 					Alphabet.withSuffixFeats=true;
+				; break;
+			case "-clusterFeats" : 
+				if (args[i+1].equalsIgnoreCase("F"))
+					Alphabet.withClusterFeats=false;
+				else
+					Alphabet.withClusterFeats=true;
 				; break;
 			}
 		}
@@ -126,7 +139,10 @@ public class GNT {
 		output += " -wordFeats "+ ((Alphabet.withWordFeats)?"T":"F");
 		output += " -shapeFeats "+ ((Alphabet.withShapeFeats)?"T":"F");
 		output += " -suffixFeats "+ ((Alphabet.withSuffixFeats)?"T":"F");
+		output += " -clusterFeats "+ ((Alphabet.withClusterFeats)?"T":"F");
 		output += " -f "+ this.inFile ;
+		if (this.mode.equalsIgnoreCase("train"))
+			output += " -c "+ this.clusterIDfile;
 		if (this.mode.equalsIgnoreCase("test"))
 			output += " -e "+ this.outFile ;
 
@@ -148,7 +164,7 @@ public class GNT {
 
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
 
-		gnTrainer.gntTrainingWithDimensionFromConllFile(this.inFile, "DUMMY", dim, numberOfSentences);
+		gnTrainer.gntTrainingWithDimensionFromConllFile(this.inFile, this.clusterIDfile, dim, numberOfSentences);
 
 	}
 
@@ -169,15 +185,19 @@ public class GNT {
 
 		posTagger.initGNTagger(windowSize, dim);
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
-		EvalConllFile.data.readWordSet();
+		EvalConllFile evalFile = new EvalConllFile();
+		evalFile.getData().readWordSet(modelInfo.getTaggerName());
+		System.out.println(evalFile.getData().toString());
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile, -1);
+		System.out.println("Create eval file: " + this.outFile);
+		evalFile.computeAccuracy(this.outFile);
 	}
 
 
 	public static void main(String[] args) throws IOException{
 		GNT newGNT = new GNT();
 		newGNT.setArgValues(args);
-		
+
 		if (newGNT.mode.equalsIgnoreCase("train"))
 			newGNT.runGNTrainer(args);
 		else

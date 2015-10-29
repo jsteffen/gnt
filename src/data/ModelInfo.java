@@ -109,7 +109,7 @@ public class ModelInfo {
 	public void createModelFileName(int windowSize, int dim, int numberOfSentences) {
 		String wordFeatString = (Alphabet.withWordFeats)?"T":"F";
 		String shapeFeatString = (Alphabet.withShapeFeats)?"T":"F";
-		String suffixFeatString = (Alphabet.withShapeFeats)?"T":"F";
+		String suffixFeatString = (Alphabet.withSuffixFeats)?"T":"F";
 		String clusterFeatString = (Alphabet.withClusterFeats)?"T":"F";
 		if (wordFeatString.equals("F")) dim=0;
 

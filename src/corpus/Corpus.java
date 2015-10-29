@@ -15,9 +15,13 @@ public class Corpus {
 
 	private void setLabeledPosData(){
 		// It is assumed that all these files have suffix .conll
-		trainingLabeledData.add("resources/data/english/ptb3-training");
-		devLabeledData.add("resources/data/english/ptb3-devel");
-		testLabeledData.add("resources/data/english/ptb3-test");
+//		trainingLabeledData.add("resources/data/english/ptb3-training");
+//		devLabeledData.add("resources/data/english/ptb3-devel");
+//		testLabeledData.add("resources/data/english/ptb3-test");
+		
+		trainingLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train");
+		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev");
+		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test");
 		
 		devLabeledData.add("resources/data/pbiotb/dev/english_pbiotb_dev");
 		
@@ -26,22 +30,20 @@ public class Corpus {
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev");
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev");
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev");
-		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev");
 		
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-answers-test");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-emails-test");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-test");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-reviews-test");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-test");
-		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test");
 		
 	}
 
 	private void setUnLabeledPosData(){
 		// It is assumed that these filenames are complete
-		trainingUnLabeledData.add("resources/data/english/ptb3-training-sents.txt");
-		devUnLabeledData.add("resources/data/english/ptb3-devel-sents.txt");
-		testUnLabeledData.add("resources/data/english/ptb3-test-sents.txt");
+		trainingUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train-sents.txt");
+		devUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev-sents.txt");
+		testUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test-sents.txt");
 		
 		trainingUnLabeledData.add("resources/data/pbiotb/dev/english_pbiotb_dev-sents.txt");
 		

@@ -42,30 +42,14 @@ ptb3-std-training.conll:
 For current SOTA of POS from page: http://aclweb.org/aclwiki/index.php?title=POS_Tagging_%28State_of_the_art%29
 
 
-Current results: with trained ptb3-training.conll and Flors data sets
 Using: all tokens as suffix source, and no distributed word vectors
 
-*******
-
-Load model file: resources/models/model_0iw-1sent_FTT_L2R_L2LOSS_SVC.txt
-.... DONE!
-System time (msec): 23732
-Model bias=0.0 nr_class=45 nr_feature=621299 solverType=L2R_L2LOSS_SVC
-
-++++
-Load known vocabulary from training for evaluating OOV: 
-
-++++
-Do testing from file: resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev.conll
-System time (msec): 481
-Sentences: 1336
-Testing instances: 32092
-Sentences/sec: 2777
-Words/sec: 66719
-Create eval file: resources/eval/ontonotes-wsj-dev-flors.txt
-All pos: 32092 Correct: 30060 Accuracy: 93,67%
-All OOV pos: 993 Correct: 788 Accuracy: 79,36%
-All InV pos: 31099 Correct: 29272 Accuracy: 94,13%
+*******************************************************************************
+Training with resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train.conll
+(as used by Mueller and Schuetze, 2015)
+*******************************************************************************
+NOW testing without clusters:
+*****************************
 
 ++++
 Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll
@@ -75,9 +59,9 @@ Testing instances: 22398
 Sentences/sec: 5133
 Words/sec: 96128
 Create eval file: resources/eval/gweb-newsgroups-dev-flors.txt
-All pos: 22398 Correct: 19549 Accuracy: 87,28%
-All OOV pos: 2400 Correct: 1199 Accuracy: 49,96%
-All InV pos: 19998 Correct: 18350 Accuracy: 91,76%
+All pos: 22398 Correct: 19921 Accuracy: 88,94%
+All OOV pos: 2317 Correct: 1269 Accuracy: 54,77%
+All InV pos: 20081 Correct: 18652 Accuracy: 92,88%
 
 ++++
 Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll
@@ -89,39 +73,39 @@ Unknown signature: 0010010000000001
 Word: 2scompany at loc: 1: unknown signature!
 Unknown signature: 0010010000000001
 Word: 2scompany at loc: 1: unknown signature!
-System time (msec): 275
+System time (msec): 255
 Sentences: 1907
 Testing instances: 27504
-Sentences/sec: 6934
-Words/sec: 100014
+Sentences/sec: 7478
+Words/sec: 107858
 Create eval file: resources/eval/gweb-reviews-dev-flors.txt
-All pos: 27504 Correct: 24780 Accuracy: 90,10%
-All OOV pos: 1879 Correct: 1130 Accuracy: 60,14%
-All InV pos: 25625 Correct: 23650 Accuracy: 92,29%
+All pos: 27504 Correct: 25200 Accuracy: 91,62%
+All OOV pos: 1882 Correct: 1253 Accuracy: 66,58%
+All InV pos: 25622 Correct: 23947 Accuracy: 93,46%
 
 ++++
 Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll
-System time (msec): 241
+System time (msec): 242
 Sentences: 1016
 Testing instances: 24025
-Sentences/sec: 4215
-Words/sec: 99688
+Sentences/sec: 4198
+Words/sec: 99276
 Create eval file: resources/eval/gweb-weblogs-dev-flors.txt
-All pos: 24025 Correct: 21839 Accuracy: 90,90%
-All OOV pos: 2114 Correct: 1440 Accuracy: 68,12%
-All InV pos: 21911 Correct: 20399 Accuracy: 93,10%
+All pos: 24025 Correct: 22400 Accuracy: 93,24%
+All OOV pos: 2029 Correct: 1482 Accuracy: 73,04%
+All InV pos: 21996 Correct: 20918 Accuracy: 95,10%
 
 ++++
 Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll
-System time (msec): 230
+System time (msec): 232
 Sentences: 1745
 Testing instances: 25180
-Sentences/sec: 7586
-Words/sec: 109478
+Sentences/sec: 7521
+Words/sec: 108534
 Create eval file: resources/eval/gweb-answers-dev-flors.txt
-All pos: 25180 Correct: 22063 Accuracy: 87,62%
-All OOV pos: 2199 Correct: 1091 Accuracy: 49,61%
-All InV pos: 22981 Correct: 20972 Accuracy: 91,26%
+All pos: 25180 Correct: 22514 Accuracy: 89,41%
+All OOV pos: 2148 Correct: 1230 Accuracy: 57,26%
+All InV pos: 23032 Correct: 21284 Accuracy: 92,41%
 
 ++++
 Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll
@@ -129,50 +113,242 @@ Unknown signature: 0011000000000000
 Word: Jgerma5@aol.com at loc: 0: unknown signature!
 Unknown signature: 0011000000000000
 Word: Jgerma5@aol.com at loc: 0: unknown signature!
-System time (msec): 277
+System time (msec): 268
 Sentences: 2450
 Testing instances: 29131
-Sentences/sec: 8844
-Words/sec: 105166
+Sentences/sec: 9141
+Words/sec: 108697
 Create eval file: resources/eval/gweb-emails-dev-flors.txt
-All pos: 29131 Correct: 24884 Accuracy: 85,42%
-All OOV pos: 3347 Correct: 1682 Accuracy: 50,25%
-All InV pos: 25784 Correct: 23202 Accuracy: 89,99%
+All pos: 29131 Correct: 25661 Accuracy: 88,09%
+All OOV pos: 3076 Correct: 1781 Accuracy: 57,90%
+All InV pos: 26055 Correct: 23880 Accuracy: 91,65%
 
 ++++
-Do testing from file: resources/data/english/ptb3-devel.conll
-System time (msec): 406
-Sentences: 1700
-Testing instances: 40121
-Sentences/sec: 4187
-Words/sec: 98820
-Create eval file: resources/eval/ptb3-devel-flors.txt
-All pos: 40121 Correct: 38738 Accuracy: 96,55%
-All OOV pos: 1105 Correct: 987 Accuracy: 89,32%
-All InV pos: 39016 Correct: 37751 Accuracy: 96,76%
-
-++++
-Do testing from file: resources/data/english/ptb3-test.conll
-System time (msec): 575
-Sentences: 2416
-Testing instances: 56702
-Sentences/sec: 4201
-Words/sec: 98612
-Create eval file: resources/eval/ptb3-test-flors.txt
-All pos: 56702 Correct: 54946 Accuracy: 96,90%
-All OOV pos: 1390 Correct: 1182 Accuracy: 85,04%
-All InV pos: 55312 Correct: 53764 Accuracy: 97,20%
+Do testing from file: resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev.conll
+System time (msec): 322
+Sentences: 1336
+Testing instances: 32092
+Sentences/sec: 4149
+Words/sec: 99664
+Create eval file: resources/eval/ontonotes-wsj-dev-flors.txt
+All pos: 32092 Correct: 30869 Accuracy: 96,19%
+All OOV pos: 872 Correct: 767 Accuracy: 87,96%
+All InV pos: 31220 Correct: 30102 Accuracy: 96,42%
 
 ++++
 Do testing from file: resources/data/pbiotb/dev/english_pbiotb_dev.conll
-System time (msec): 56
+System time (msec): 51
 Sentences: 200
 Testing instances: 5017
-Sentences/sec: 3571
-Words/sec: 89589
+Sentences/sec: 3921
+Words/sec: 98372
 Create eval file: resources/eval/english_pbiotb_dev.txt
-All pos: 5017 Correct: 4476 Accuracy: 89,22%
-All OOV pos: 936 Correct: 542 Accuracy: 57,91%
-All InV pos: 4081 Correct: 3934 Accuracy: 96,40%
+All pos: 5017 Correct: 4300 Accuracy: 85,71%
+All OOV pos: 1122 Correct: 552 Accuracy: 49,20%
+All InV pos: 3895 Correct: 3748 Accuracy: 96,23%
 
-Results when processing only first 1000 sentences
+---> very close, OOV even better!
+
+*****************************
+NOW testing with clusters:
+*****************************
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev.conll
+System time (msec): 257
+Sentences: 1196
+Testing instances: 22398
+Sentences/sec: 4653
+Words/sec: 87151
+Create eval file: resources/eval/gweb-newsgroups-dev-flors.txt
+All pos: 22398 Correct: 20301 Accuracy: 90,64%
+All OOV pos: 2317 Correct: 1541 Accuracy: 66,51%
+All InV pos: 20081 Correct: 18760 Accuracy: 93,42%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev.conll
+Unknown signature: 0010010000000001
+Word: 2scompany at loc: 1: unknown signature!
+Unknown signature: 0010010000000001
+Word: 2scompany at loc: 1: unknown signature!
+Unknown signature: 0010010000000001
+Word: 2scompany at loc: 1: unknown signature!
+Unknown signature: 0010010000000001
+Word: 2scompany at loc: 1: unknown signature!
+System time (msec): 287
+Sentences: 1907
+Testing instances: 27504
+Sentences/sec: 6644
+Words/sec: 95832
+Create eval file: resources/eval/gweb-reviews-dev-flors.txt
+All pos: 27504 Correct: 25321 Accuracy: 92,06%
+All OOV pos: 1882 Correct: 1310 Accuracy: 69,61%
+All InV pos: 25622 Correct: 24011 Accuracy: 93,71%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev.conll
+System time (msec): 250
+Sentences: 1016
+Testing instances: 24025
+Sentences/sec: 4064
+Words/sec: 96100
+Create eval file: resources/eval/gweb-weblogs-dev-flors.txt
+All pos: 24025 Correct: 22730 Accuracy: 94,61%
+All OOV pos: 2029 Correct: 1711 Accuracy: 84,33%
+All InV pos: 21996 Correct: 21019 Accuracy: 95,56%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-answers-dev.conll
+System time (msec): 246
+Sentences: 1745
+Testing instances: 25180
+Sentences/sec: 7093
+Words/sec: 102357
+Create eval file: resources/eval/gweb-answers-dev-flors.txt
+All pos: 25180 Correct: 22625 Accuracy: 89,85%
+All OOV pos: 2148 Correct: 1279 Accuracy: 59,54%
+All InV pos: 23032 Correct: 21346 Accuracy: 92,68%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-emails-dev.conll
+Unknown signature: 0011000000000000
+Word: Jgerma5@aol.com at loc: 0: unknown signature!
+Unknown signature: 0011000000000000
+Word: Jgerma5@aol.com at loc: 0: unknown signature!
+System time (msec): 294
+Sentences: 2450
+Testing instances: 29131
+Sentences/sec: 8333
+Words/sec: 99085
+Create eval file: resources/eval/gweb-emails-dev-flors.txt
+All pos: 29131 Correct: 25984 Accuracy: 89,20%
+All OOV pos: 3076 Correct: 1963 Accuracy: 63,82%
+All InV pos: 26055 Correct: 24021 Accuracy: 92,19%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev.conll
+System time (msec): 325
+Sentences: 1336
+Testing instances: 32092
+Sentences/sec: 4110
+Words/sec: 98744
+Create eval file: resources/eval/ontonotes-wsj-dev-flors.txt
+All pos: 32092 Correct: 30955 Accuracy: 96,46%
+All OOV pos: 872 Correct: 789 Accuracy: 90,48%
+All InV pos: 31220 Correct: 30166 Accuracy: 96,62%
+
+++++
+Do testing from file: resources/data/pbiotb/dev/english_pbiotb_dev.conll
+System time (msec): 52
+Sentences: 200
+Testing instances: 5017
+Sentences/sec: 3846
+Words/sec: 96480
+Create eval file: resources/eval/english_pbiotb_dev.txt
+All pos: 5017 Correct: 4393 Accuracy: 87,56%
+All OOV pos: 1122 Correct: 630 Accuracy: 56,15%
+All InV pos: 3895 Correct: 3763 Accuracy: 96,61%
+
+*****************************
+Test files:
+*****************************
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-test.conll
+Unknown signature: 0010010010000000
+Word: 4gamer at loc: 1: unknown signature!
+Unknown signature: 0010010010000000
+Word: 4gamer at loc: 1: unknown signature!
+Unknown signature: 0010010010000000
+Word: 4gamer at loc: 1: unknown signature!
+Unknown signature: 0010010010000000
+Word: 4gamer at loc: 1: unknown signature!
+System time (msec): 223
+Sentences: 1195
+Testing instances: 20651
+Sentences/sec: 5358
+Words/sec: 92605
+Create eval file: resources/eval/gweb-newsgroups-test-flors.txt
+All pos: 20651 Correct: 19043 Accuracy: 92,21%
+All OOV pos: 1910 Correct: 1292 Accuracy: 67,64%
+All InV pos: 18741 Correct: 17751 Accuracy: 94,72%
+
+-> -0,19, +0,73
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-reviews-test.conll
+System time (msec): 337
+Sentences: 1906
+Testing instances: 28086
+Sentences/sec: 5655
+Words/sec: 83341
+Create eval file: resources/eval/gweb-reviews-test-flors.txt
+All pos: 28086 Correct: 25563 Accuracy: 91,02%
+All OOV pos: 2142 Correct: 1358 Accuracy: 63,40%
+All InV pos: 25944 Correct: 24205 Accuracy: 93,30%
+
+-> -1,5, -7,47
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-weblogs-test.conll
+System time (msec): 237
+Sentences: 1015
+Testing instances: 20356
+Sentences/sec: 4282
+Words/sec: 85890
+Create eval file: resources/eval/gweb-weblogs-test-flors.txt
+All pos: 20356 Correct: 18882 Accuracy: 92,76%
+All OOV pos: 1807 Correct: 1351 Accuracy: 74,76%
+All InV pos: 18549 Correct: 17531 Accuracy: 94,51%
+
+-> -0,38, -0,56
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-answers-test.conll
+Unknown signature: 0010010010000000
+Word: lo9nger at loc: 1: unknown signature!
+Unknown signature: 0010010010000000
+Word: lo9nger at loc: 1: unknown signature!
+Unknown signature: 0010010010000000
+Word: lo9nger at loc: 1: unknown signature!
+Unknown signature: 0010010010000000
+Word: lo9nger at loc: 1: unknown signature!
+Unknown signature: 0010010010000000
+Word: lo9nger at loc: 1: unknown signature!
+System time (msec): 293
+Sentences: 1744
+Testing instances: 28823
+Sentences/sec: 5952
+Words/sec: 98372
+Create eval file: resources/eval/gweb-answers-test-flors.txt
+All pos: 28823 Correct: 26064 Accuracy: 90,43%
+All OOV pos: 2142 Correct: 1339 Accuracy: 62,51%
+All InV pos: 26681 Correct: 24725 Accuracy: 92,67%
+
+-> -0,74, -5,42
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-emails-test.conll
+System time (msec): 286
+Sentences: 2450
+Testing instances: 28676
+Sentences/sec: 8566
+Words/sec: 100265
+Create eval file: resources/eval/gweb-emails-test-flors.txt
+All pos: 28676 Correct: 25354 Accuracy: 88,42%
+All OOV pos: 3079 Correct: 1843 Accuracy: 59,86%
+All InV pos: 25597 Correct: 23511 Accuracy: 91,85%
+
+-> -0,25, -1,23
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test.conll
+System time (msec): 449
+Sentences: 1640
+Testing instances: 39590
+Sentences/sec: 3652
+Words/sec: 88173
+Create eval file: resources/eval/ontonotes-wsj-test-flors.txt
+All pos: 39590 Correct: 38418 Accuracy: 97,04%
+All OOV pos: 983 Correct: 879 Accuracy: 89,42%
+All InV pos: 38607 Correct: 37539 Accuracy: 97,23%
+
+-> -0,07, +1,63
+
+-> TREND is as in FLORS, but basically lower performance; 
+-> BUT would be second best system!

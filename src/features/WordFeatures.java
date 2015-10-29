@@ -105,6 +105,7 @@ public class WordFeatures {
 		rightOffset = leftOffset + OffSets.wvLeftSize;
 		shapeOffset = rightOffset + OffSets.wvRightSize;
 		suffixOffset = shapeOffset + OffSets.shapeSize;
+		suffixOffset = (Alphabet.withClusterFeats)?suffixOffset:suffixOffset-1;
 		clusterIdOffset = suffixOffset + OffSets.suffixSize -1;
 	}
 

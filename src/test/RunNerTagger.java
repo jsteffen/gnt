@@ -40,11 +40,14 @@ public class RunNerTagger {
 				"resources/data/ner/eng-testb.conll", "resources/eval/eng-testb.txt"));
 
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
-		EvalConllFile.data.readWordSet(modelInfo.getTaggerName());
-		System.out.println(EvalConllFile.data.toString());
+		EvalConllFile evalFile = new EvalConllFile();
+		evalFile.getData().readWordSet(modelInfo.getTaggerName());
+		System.out.println(evalFile.getData().toString());
 		
 		for (Pair<String, String> pair : fileList){
 			nerTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR(), -1);
+			System.out.println("Create eval file: " + pair.getR());
+			evalFile.computeAccuracy(pair.getR());
 		}
 	}
 }

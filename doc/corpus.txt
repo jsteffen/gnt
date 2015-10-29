@@ -1,11 +1,12 @@
 Corpus used by FLORS:
 
+All data is now in resources/data/ folder.
+
+I am actually only using scancl-2012 data only for ID (In Domain) and OOD (OutOfDomain)
+
 - training: PTB-3, sec. 2-21 + PTB 1988 WSJ 100.000 unlabeled
-	/Users/gune00/data/MLDP/english (conll format of sec. 2-21 of PTB version 3 + extracted sentences)
-		- this should give 39,832 sentences -> I have 39,278
-		- I think it is, because I am ussing CONLL PTB and comments MLDP/2009/conll09-english/
-			"It matches sections 2 through 21 of Treebank. Note that a few sentences from the original 
-  			Treebank were removed due to merging problems between the input corpora."
+	I am using the ontonotes-wsj-training.conll file
+	
 	/Users/gune00/data/BioNLPdata/CoNLL2007/ptb/unlab (tokenized/sentence/line) 
 		-> only read first 100.000
 		-> in FLors, they say that they use the first 100Ksentence from PTB-2
@@ -14,36 +15,6 @@ Corpus used by FLORS:
 - test domain 
 	/Volumes/data1/sancl-2012/sancl.all -> labeled and unlabeled data (conll format and tokenized/sentence/line) 
 		-> it is said that unlabeled data has 100T sentences each which is not true
+		
 	/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb (conll format and tokenized/sentence/line) 
 		-> only read first 100.000
-		
-also here:
-
-All data is now in resources/data/ folder.
-
-It seems that I have different data, especially for SANCL:
-
-resources/data/sancl-2012/sancl.all:
-
- wc *.txt
-   27274  424300 2071300 gweb-answers.unlabeled.txt
- 1194173 17046119 84702813 gweb-emails.unlabeled.txt
- 1000000 18436320 92705255 gweb-newsgroups.unlabeled.txt
- 1965350 29290473 143056071 gweb-reviews.unlabeled.txt
-  524834 10382533 54548261 gweb-weblogs.unlabeled.txt
-
-resources/data/sancl-2012/sancl.labeled:
-
- wc *sents.txt
-    1745   25180  123859 gweb-answers-dev-sents.txt
-    1744   28823  138232 gweb-answers-test-sents.txt
-    2450   29131  151926 gweb-emails-dev-sents.txt
-    2450   28676  148854 gweb-emails-test-sents.txt
-    1196   22398  117591 gweb-newsgroups-dev-sents.txt
-    1195   20651  110315 gweb-newsgroups-test-sents.txt
-    1907   27504  135035 gweb-reviews-dev-sents.txt
-    1906   28086  137046 gweb-reviews-test-sents.txt
-    1016   24025  129363 gweb-weblogs-dev-sents.txt
-    1015   20356  109053 gweb-weblogs-test-sents.txt
-    1336   32092  171115 ontonotes-wsj-dev-sents.txt
-    1640   39590  210761 ontonotes-wsj-test-sents.txt

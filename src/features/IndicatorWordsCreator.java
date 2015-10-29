@@ -177,9 +177,9 @@ public class IndicatorWordsCreator {
 	public void createIndicatorPosWordsFromFiles(){
 
 		// Training data labeled sentences
-		readAndProcessInputTextLineWise("resources/data/english/ptb3-training-sents.txt", "ptb", 100000);
-		readAndProcessInputTextLineWise("resources/data/english/ptb3-devel-sents.txt", "ptb", 1000);
-		readAndProcessInputTextLineWise("resources/data/english/ptb3-test-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train-sents.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test-sents.txt", "ptb", 1000);
 
 		// Training data unlabeled
 		readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);

@@ -53,12 +53,15 @@
 - add to training phase generation of shape features and suffix list -> DONE
 - collect all data using taggerName as part of filenames -> DONE
 
-HIERIX:
-
 - integrate cluster based features -> DONE!!
 
--> correct but in features.WordFeatures.setOffSets()
--> need to apdate GNT.java -> using "DUMMY" source cluster file
+-> correct bug in features.WordFeatures.setOffSets() -> DONE
+-> need to apdate GNT.java -> using "DUMMY" source cluster file -> DONE
+
+
+HIERIX:
+
+- add FLORS accuracy to evaluation script
 
 - use ngrams instead of suffix (simulates NemexA)
 	

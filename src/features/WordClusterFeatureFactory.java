@@ -31,9 +31,7 @@ public class WordClusterFeatureFactory {
 	// Store resulting word2liblinear index map
 	// store words to clusterId mapping as provided by Marmot tool!
 	private Map<String,Integer> word2index = new HashMap<String,Integer>();
-
-	private int clusterIdcnt = 0;
-
+private int clusterIdcnt = 0;
 
 	// Getters and setters
 
@@ -67,7 +65,7 @@ public class WordClusterFeatureFactory {
 	}
 
 	/**
-	 * For CASE-SENSITIVE word, loop it up in word2liblinear index;
+	 * For CASE-SENSITIVE word, look it up in word2liblinear index;
 	 * If it exists, return index else return index of unknown word <RARE>|<Rare>
 	 * @param word
 	 * @return

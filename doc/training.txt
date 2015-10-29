@@ -121,6 +121,12 @@ when sentence count is -1:
 	error in computation of proper index adjustment
 
 Everything works, but I cannot reproduce FLORS result so far; but the trend is ok;
+-> OK? I think I used the wrong InDomain corpus (eng/ptb...)
+-> now, I am using the PTB version defined in sancl.labeled/ontonotes-wsj-*
+-> which means: I am using ID and OOD from complete sancl-2012 corpus PLUS biopt
+-> at least this is consistent and also comes close to what is used in MuellerSchuetze-2015
+-> Now, I get at least similar sizes for features AND results !
+-> DONE
 
 
 when distributed word vectors are not used, I still have at least one distributed feature length of 1
