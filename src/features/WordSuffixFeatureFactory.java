@@ -9,8 +9,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import corpus.Corpus;
@@ -42,7 +44,7 @@ public class WordSuffixFeatureFactory {
 	private Map<String, Integer> suffix2num = new HashMap<String, Integer>();
 	// stores rank -> indicator word -> is needed for indexing the context vectors using index rank-1 
 
-	// TODO later only used for ppPrint
+	// later only used for ppPrint
 	private Map<Integer, String> num2suffix = new TreeMap<Integer, String>();
 
 	private int wordCnt = 0;
@@ -75,30 +77,67 @@ public class WordSuffixFeatureFactory {
 	public void clean(){
 		num2suffix = new TreeMap<Integer, String>();
 	}
-
-	/**
-	 * Given a word, find the index of the longest matching suffix from the known suffix list
-	 * @param word
-	 * @return
+	
+	// A simple flag for switching between suffix and ngram computation
+	public static boolean ngram = false;
+	
+	/*
+	 * Methods
 	 */
-	public Integer getLongestKnownSuffixForWord(String word){
-		int suffixIndex = -1;
-		for (int i = 0; i < word.length(); i++){
-			String suffix = word.substring(i);
-			if (this.getSuffix2num().containsKey(suffix)) {
-				suffixIndex = this.getSuffix2num().get(suffix);
-				break;
+	
+	//*********************** Computation of ngrams *********************** 
+	/**
+	 * Compute ngrams from given word
+	 */
+	private Set<String> generateNgrams(String word, int gramSize) {
+		String realWord = "$$" + word + "$$";
+		int start = 0;
+		int end = start + gramSize - 1;
+		Set<String> ngrams = new HashSet<String>();
+
+		while (end < realWord.length()) {
+			ngrams.add(realWord.substring(start, end + 1));
+			start++;
+			end++;
+		}
+		return ngrams;
+	}
+	
+	public List<Integer> getAllKnownNgramsForWord(String word){
+		List<Integer> indices = new ArrayList<Integer>();
+		Set<String> ngrams = this.generateNgrams(word, 3);
+		for (String ngram : ngrams){
+			if (!isNonWord(ngram)){
+				if (this.getSuffix2num().containsKey(ngram)) {
+					indices.add(this.getSuffix2num().get(ngram));
+				}
 			}
 		}
-		return suffixIndex;
+		indices.sort(null);
+		return indices;
+	}
+	
+	private void computeNgramsAndStore(String word) {
+		int i = 0;
+		Set<String> ngrams = this.generateNgrams(word, 3);
+		for (String ngram : ngrams){
+			if (!isNonWord(ngram)) 
+				updateSuffixTable(ngram, i);
+			i++;
+		}
 	}
 
+
+	//*********************** Computation of suffixes *********************** 
+
 	/**
-	 * Given a word, find all matching suffixes from the known suffix list
+	 * Given a word, find all matching suffixes from the known suffix list.
+	 * Used in {@link features.WordSuffixFeatureFactory#getAllKnownSuffixForWord(String)}
 	 * @param word
 	 * @return
 	 */
-	public List<Integer> getAllKnownSuffixForWord(String word){
+	
+	private List<Integer> getAllKnownSuffixForWordIntern(String word){
 		List<Integer> indices = new ArrayList<Integer>();
 		for (int i = 0; i < word.length(); i++){
 			String suffix = word.substring(i);
@@ -111,16 +150,24 @@ public class WordSuffixFeatureFactory {
 		indices.sort(null);
 		return indices;
 	}
-
-	private void updateSuffixTable(String suffix, int i) {
-		if (!this.getSuffix2num().containsKey(suffix)){
-			if (i==0) wordCnt++;
-
-			this.suffixCnt++;
-			this.getSuffix2num().put(suffix, suffixCnt);
-			num2suffix.put(suffixCnt, suffix);
+	
+	/** 
+	 * compute all suffixes of a word starting from 0, which means the word is a suffix of itself.
+	 * If suffix is not a word, then do not store it.
+	 * @param word
+	 */
+	private void computeSuffixesAndStore(String word) {
+		// Smallest suffix is just last character of a word
+		for (int i = 0; i < word.length(); i++){
+			String suffix = word.substring(i);
+			if (!isNonWord(suffix)) 
+				updateSuffixTable(suffix, i);
 		}
 	}
+	
+
+	// ************************** Inserting or Updating extracted suffix/ngram **************************
+	
 	/** A number is a string which starts and ends with a digit.
 	 * This is used to filter out strings for which we do not want to compute suffixes, e.g., numbers
 	 * 
@@ -163,27 +210,45 @@ public class WordSuffixFeatureFactory {
 				);
 	}
 
-	/** 
-	 * compute all suffixes of a word starting from 0, which means the word is a suffix of itself.
-	 * If suffix is not a word, then do not store it.
-	 * @param word
-	 */
-	private void computeSuffixesAndStore(String word) {
-		// Smallest suffix is just last character of a word
-		for (int i = 0; i < word.length(); i++){
-			String suffix = word.substring(i);
-			if (!isNonWord(suffix)) 
-				updateSuffixTable(suffix, i);
+	private void updateSuffixTable(String suffix, int i) {
+		if (!this.getSuffix2num().containsKey(suffix)){
+			if (i==0) wordCnt++;
+
+			this.suffixCnt++;
+			this.getSuffix2num().put(suffix, suffixCnt);
+			num2suffix.put(suffixCnt, suffix);
 		}
 	}
+	
+	//*********************** generic caller *********************** 
+	
 	/**
 	 * Receives a list of token, and computes suffixes for each token.
 	 * @param words
 	 */
-	private void computeSuffixesFromWords(String[] words) {
-		for (String word : words){computeSuffixesAndStore(word);}
+	private void computeSubstringsFromWords(String[] words) {
+		for (String word : words){
+			if (WordSuffixFeatureFactory.ngram)
+				computeNgramsAndStore(word);
+			else
+				computeSuffixesAndStore(word);
+			}
+	}
+	
+	/**
+	 * Main caller that switches between suffix computation and ngram computation
+	 * @param word
+	 * @return
+	 */
+	public List<Integer> getAllKnownSubstringsForWord(String word){
+		List<Integer> indices =
+				(WordSuffixFeatureFactory.ngram)?getAllKnownNgramsForWord(word):
+					getAllKnownSuffixForWordIntern(word);
+		return indices;
 	}
 
+	//*********************** creating and storing *********************** 
+	
 	public void createAndSaveSuffixFeature(String taggerName, String trainingFileName){
 		System.out.println("Create suffix list from: " + trainingFileName);
 		this.createSuffixListFromFile(trainingFileName, -1);
@@ -212,7 +277,7 @@ public class WordSuffixFeatureFactory {
 				// lower case line and split off words
 				String[] words = line.toLowerCase().split(" ");
 				// then compute suffixes
-				computeSuffixesFromWords(words);
+				computeSubstringsFromWords(words);
 				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
 			}
 			reader.close();

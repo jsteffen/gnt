@@ -21,6 +21,8 @@ import data.Pair;
  */
 public class WordFeatures {
 	private String word = "";
+	private String leftWord = "";
+	private String rightWord = "";
 	private int index = 0;
 	private int elementOffset = 0;
 	private int leftOffset = 0;
@@ -88,6 +90,24 @@ public class WordFeatures {
 	public void setLength(int length) {
 		this.length = length;
 	}
+	public String getWord() {
+		return word;
+	}
+	public void setWord(String word) {
+		this.word = word;
+	}
+	public String getLeftWord() {
+		return leftWord;
+	}
+	public void setLeftWord(String leftWord) {
+		this.leftWord = leftWord;
+	}
+	public String getRightWord() {
+		return rightWord;
+	}
+	public void setRightWord(String rightWord) {
+		this.rightWord = rightWord;
+	}
 	// Instantiation
 	public WordFeatures(String word) {
 		this.word = word;
@@ -95,6 +115,11 @@ public class WordFeatures {
 
 	// Methods
 
+	public WordFeatures(String word2, String l, String r) {
+		this.word = word2;
+		this.leftWord = l;
+		this.rightWord = r;
+	}
 	// GN on 14.10.2015
 	// I have to shift offset by OffSets.tokenVectorSize + 1, and so later have to remove the +1
 	// NOTE: I need to know which offset I need to substract the final -1
@@ -130,8 +155,11 @@ public class WordFeatures {
 	private void fillLeftDistributedWordFeatures(String word,
 			Alphabet alphabet, boolean train, boolean offline) {
 		String lowWord = word.toLowerCase();
+		String lowLeftWord = this.getLeftWord().toLowerCase();
+		String lowRightWord = this.getRightWord().toLowerCase();
 		// This may return a dynamically created word vector for unknown words
-		WordDistributedFeature distributedWordVector = alphabet.getWordVectorFactory().getWordVector(lowWord, train);
+		WordDistributedFeature distributedWordVector = 
+				alphabet.getWordVectorFactory().getWordVector(lowWord, lowLeftWord, lowRightWord, train);
 		for (int i = 0; i < distributedWordVector.getLeftContext().length; i++){
 			int index = ((this.isAdjust())?(this.leftOffset+i):i);
 			double value = distributedWordVector.getLeftContext()[i];
@@ -147,7 +175,10 @@ public class WordFeatures {
 			Alphabet alphabet, boolean train, boolean offline) {
 		// since word is from input stream, need to lower-case it first
 		String lowWord = word.toLowerCase();
-		WordDistributedFeature distributedWordVector = alphabet.getWordVectorFactory().getWordVector(lowWord, train);
+		String lowLeftWord = this.getLeftWord().toLowerCase();
+		String lowRightWord = this.getRightWord().toLowerCase();
+		WordDistributedFeature distributedWordVector = 
+				alphabet.getWordVectorFactory().getWordVector(lowWord, lowLeftWord, lowRightWord, train);
 		for (int i = 0; i < distributedWordVector.getRightContext().length; i++){
 			int index = ((this.isAdjust())?(this.rightOffset+i):i);
 			double value = distributedWordVector.getRightContext()[i];
@@ -203,7 +234,7 @@ public class WordFeatures {
 		 */
 		// since word is from input stream, need to lower-case it first
 		String lowWord = word.toLowerCase();
-		List<Integer> suffixIndices = alphabet.getWordSuffixFactory().getAllKnownSuffixForWord(lowWord);
+		List<Integer> suffixIndices = alphabet.getWordSuffixFactory().getAllKnownSubstringsForWord(lowWord);
 		//if (suffixIndices.isEmpty()) System.err.println("No known suffixes: " + word);
 		for (int x : suffixIndices){
 			int realIndex = (this.isAdjust())?(this.suffixOffset+x):x;

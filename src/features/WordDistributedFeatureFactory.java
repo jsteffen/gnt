@@ -107,11 +107,11 @@ public class WordDistributedFeatureFactory {
 	}
 
 	// Methods
-	
+
 	public void clean(){
-		 num2iw = new HashMap<Integer, String>();
-		 num2word = new HashMap<Integer, String>();
-		 
+		num2iw = new HashMap<Integer, String>();
+		num2word = new HashMap<Integer, String>();
+
 	}
 
 	// read ranked list of indicators words from file and construct bijective mapping of word - rank
@@ -264,20 +264,30 @@ public class WordDistributedFeatureFactory {
 		return this.getDistributedWordsTable().get(wordIndex);
 	}
 
+	private WordDistributedFeature handleUnknownWordWithContext(String word, String leftWord, String rightWord){
+		System.err.println("Unknown word in context: " + leftWord+":"+word+":"+rightWord);
+		word2Bigram(leftWord, word, rightWord);
+		// access it
+		int wordIndex = this.getWord2num().get(word);
+		// adjust its counts
+		this.getDistributedWordsTable().get(wordIndex).computeContextWeights();
+		// and return its word vector
+		return this.getDistributedWordsTable().get(wordIndex);
+	}
+
 	/**
 	 * return the distributed word vector of a word. Only in non training phase handle unknown words phase
 	 * @param word
 	 * @param unknown
 	 * @return
 	 */
-	//TODO: how can I make use of left/right context words here ?
-	public  WordDistributedFeature getWordVector(String word, boolean train){
+	public  WordDistributedFeature getWordVector(String word, String leftWord, String rightWord, boolean train){
 		if (getWord2num().containsKey(word))
 			return getDistributedWordsTable().get(getWord2num().get(word));
 		else
 			if (!train)
 			{
-				WordDistributedFeature unknownWordVector = handleUnknownWordWithoutContext(word);
+				WordDistributedFeature unknownWordVector = handleUnknownWordWithContext(word, leftWord, rightWord);
 				return unknownWordVector;
 			}
 			else
@@ -402,7 +412,7 @@ public class WordDistributedFeatureFactory {
 
 		System.out.println("Write out vocabulary file.");
 		this.writeVocabularyFile("resources/features/vocFile"+taggerName+".txt");
-		
+
 		System.out.println("Write out left/right context vector files.");
 		this.writeContextFile("resources/features/vocContext"+taggerName+maxIndicatorWords+".txt");
 		System.out.println("Done!");
@@ -429,7 +439,7 @@ public class WordDistributedFeatureFactory {
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
 			String line;
-			
+
 			while ((line = reader.readLine()) != null) {
 				//System.out.println("IW: " + line + " cnt: " + cnt);
 				word2index.put(line, cnt);
@@ -480,13 +490,13 @@ public class WordDistributedFeatureFactory {
 		String vocFile = "resources/features/vocFile"+taggerName+".txt";
 		System.out.println("Read vocabulary file: " + vocFile);
 		this.readVocabularyFile(vocFile);
-		
+
 		String dwvFile = "resources/features/vocContext"+taggerName+maxIndicatorWords+".txt";
 		System.out.println("Read left/right context vector from file: " + dwvFile);
 		this.readContextFile(dwvFile);
 		System.out.println("Done!");
 	}
-	
+
 	public void createAndWriteDistributedWordFeaturesSparse(String taggerName, int maxIndicatorWords) throws IOException {
 		Corpus corpus = new Corpus(taggerName);
 		String iwFilename = "resources/features/iw_all"+taggerName+".txt";
@@ -501,7 +511,7 @@ public class WordDistributedFeatureFactory {
 	}
 
 	//***
-	
+
 
 	// Eventually
 	/* Define also word2vec and glove based output:

@@ -4,21 +4,19 @@ Goal is to compute all lower-case suffixes from a training set of words.
  * and to 0 otherwise. Note that w is a suffix of itself.
  * In FLORS: 91,161 suffix features from PTB - I guess - and PTB has about 32.500 words.
  
- 
  It is unclear how FLORS defines words from which suffixes should be created
 -> for that reason I am using all tokens
 
 
-
 I currently use only labeled training data:
-- "/Users/gune00/data/MLDP/english/english-train-sents.txt"
+- "resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train"
+
+which gives me 91,151 suffixes
 	
 - since suffix features are binary, only those which are seen in labeled training can be used for learning
 - so unlabeled data is not useful for suffixes from training, 
 	because they are NOT used for distributed representations of suffixes
 	
-
-
 Lower dimensions:
 
 in previous paper, FLORS uses only 100 highest ranked suffixes
@@ -27,3 +25,14 @@ in previous paper, FLORS uses only 100 highest ranked suffixes
 - can also use other kinds of suffixes, e.g., for German just Morphix tree
 
 - or for NER, only upto N-suffixes
+
+Computation of ngrams instead of suffixes:
+
+- map a word to a list of ngrams
+- adapt code in:
+	- features.WordSuffixFeatureFactory.computeSuffixesAndStore(String)
+	- features.WordSuffixFeatureFactory.getAllKnownSuffixForWord(String)
+- I think I only can use unique ngrams otherwise, my mapping does not work proper:
+	yes, seems to!
+- what I am actually computing is a signature then and use the signature elements as features
+- is this new for POS and NER?

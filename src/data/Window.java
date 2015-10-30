@@ -104,8 +104,6 @@ public class Window {
 		// the surface word string determined from the training examples
 		// Use "<BOUNDARY>" as dummy for padding elements
 		String wordString ="";
-		// the location of the word in the sentence: 0 means "first word in sentence", 1 means "otherwise"
-		int wordLoc = 0;
 		// counts the dynamically created window element and use it as index in WordFeatures
 		int elementCnt = 0;
 
@@ -120,25 +118,23 @@ public class Window {
 		for (int i = 0 ; i < leftPads; i++){
 			wordString = "<BOUNDARY>";
 			// wordLoc does not matter here, because empty WordFeatures class is created
-			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, train, adjust);
+			WordFeatures wordFeatures = createWordFeatures(sentence, wordString, i, elementCnt, train, adjust);
 			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
 		// Add left context elements
 		for (int i = (this.center-leftContext) ; i < this.center; i++){
-			// check position of word in sentence; if it is either at start or not; influences computation of shape feature
-			wordLoc = (i==0)?0:1;
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
-			WordFeatures wordFeatures = createWordFeatures(wordString, wordLoc, elementCnt, train, adjust);
+			WordFeatures wordFeatures = createWordFeatures(sentence, wordString, i, elementCnt, train, adjust);
 			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
 		// Add token center element
-		{	wordLoc = (this.center==0)?0:1;
-		wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center]);
-		WordFeatures wordFeatures = createWordFeatures(wordString, wordLoc, elementCnt, train, adjust);
+		{	
+			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center]);
+		WordFeatures wordFeatures = createWordFeatures(sentence, wordString, this.center, elementCnt, train, adjust);
 		windowLength+= wordFeatures.getLength();
 		elements.add(wordFeatures);
 		elementCnt++;
@@ -147,7 +143,7 @@ public class Window {
 		// set wordLoc always to 1, because can never be 0
 		for (int i = this.center+1 ; i < (this.center+1+rightContext); i++){
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
-			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, train, adjust);
+			WordFeatures wordFeatures = createWordFeatures(sentence, wordString, i, elementCnt, train, adjust);
 			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
@@ -157,7 +153,7 @@ public class Window {
 		for (int i = (this.center + rightContext) ; i < (this.center + rightContext + rightPads); i++) {
 			wordString = "<BOUNDARY>";
 			// wordLoc does not matter here, because empty WordFeatures class is created
-			WordFeatures wordFeatures = createWordFeatures(wordString, 1, elementCnt, train, adjust);
+			WordFeatures wordFeatures = createWordFeatures(sentence, wordString, i, elementCnt, train, adjust);
 			windowLength+= wordFeatures.getLength();
 			elements.add(wordFeatures);
 			elementCnt++;
@@ -173,9 +169,11 @@ public class Window {
 	 * @param adjust
 	 * @return
 	 */
-	private WordFeatures createWordFeatures(String word, int wordPosition, int elementCnt, boolean train, boolean adjust) {
+	private WordFeatures createWordFeatures(Sentence sentence, String word, int wordPosition, int elementCnt, boolean train, boolean adjust) {
+		// Get left and right word of word -> later used for handing unknown words
+		Pair<String, String> contextWords = getContextWords(sentence, wordPosition);
 		// create a new WordFeatures element
-		WordFeatures wordFeatures = new WordFeatures(word);
+		WordFeatures wordFeatures = new WordFeatures(word, contextWords.getL(), contextWords.getR());
 		// set its index
 		wordFeatures.setIndex(elementCnt);
 		// set its offsets using the values from OffSets which are pre-initialised after data has been loaded and before
@@ -186,6 +184,15 @@ public class Window {
 		// fill all the window's elements
 		wordFeatures.fillWordFeatures(word, wordPosition, alphabet, train);
 		return wordFeatures;
+	}
+	
+	private Pair<String, String> getContextWords(Sentence sentence, int wordIndex){
+		String leftWord = (wordIndex==0)?"<BOUNDARY>":
+			this.data.getWordSet().num2label.get(this.sentence.getWordArray()[wordIndex-1]);
+		String rightWord = (wordIndex>=sentence.getWordArray().length-1)?"<BOUNDARY>":
+			this.data.getWordSet().num2label.get(this.sentence.getWordArray()[wordIndex+1]);
+		
+		return new Pair<String, String>(leftWord,rightWord);
 	}
 
 	// Print functions

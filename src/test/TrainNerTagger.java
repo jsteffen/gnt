@@ -6,6 +6,7 @@ import trainer.GNTrainer;
 import trainer.TrainerInMem;
 import data.Alphabet;
 import data.ModelInfo;
+import features.WordSuffixFeatureFactory;
 
 public class TrainNerTagger {
 
@@ -24,6 +25,8 @@ public class TrainNerTagger {
 		System.out.println(Alphabet.toActiveFeatureString());
 		
 		TrainerInMem.debug=false;
+		
+		WordSuffixFeatureFactory.ngram = false;
 
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());

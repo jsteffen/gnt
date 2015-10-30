@@ -9,6 +9,7 @@ import corpus.EvalConllFile;
 import data.Alphabet;
 import data.ModelInfo;
 import data.Pair;
+import features.WordSuffixFeatureFactory;
 
 /**
  * A test method for running GNT on same data set as FLORS and computing accuracies.
@@ -30,6 +31,8 @@ public class RunPosTagger {
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;
 		System.out.println(Alphabet.toActiveFeatureString());
+		
+		WordSuffixFeatureFactory.ngram = false;
 
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());

@@ -5,6 +5,7 @@ import java.io.IOException;
 import trainer.GNTrainer;
 import data.Alphabet;
 import data.ModelInfo;
+import features.WordSuffixFeatureFactory;
 
 public class TrainPosTagger {
 
@@ -21,6 +22,8 @@ public class TrainPosTagger {
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;
 		System.out.println(Alphabet.toActiveFeatureString());
+		
+		WordSuffixFeatureFactory.ngram = false;
 		
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());

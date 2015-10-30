@@ -9,6 +9,7 @@ import tagger.GNTagger;
 import data.Alphabet;
 import data.ModelInfo;
 import data.Pair;
+import features.WordSuffixFeatureFactory;
 
 public class RunNerTagger {
 	public static void main(String[] args) throws IOException{
@@ -23,6 +24,8 @@ public class RunNerTagger {
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;
 		System.out.println(Alphabet.toActiveFeatureString());
+		
+		WordSuffixFeatureFactory.ngram = false;
 
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());
