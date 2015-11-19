@@ -5,4 +5,4 @@ analog zu /Users/gune00/dfki/DeepLearning/RelationExtraction/Gormley-EMNLP-2015.
 ich könnte versuchen, POS tagging, dependency parsing und word2vec feature zu integrieren
 entsprechende Vectoren zu berechnen.
 
-corpora müssten BIO analog getagged sein - semeval 2008 ?
+corpora müssten BIO analog getagged sein - semeval 2010 - check the data set
