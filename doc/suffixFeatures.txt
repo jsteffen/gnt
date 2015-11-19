@@ -26,13 +26,19 @@ in previous paper, FLORS uses only 100 highest ranked suffixes
 
 - or for NER, only upto N-suffixes
 
-Computation of ngrams instead of suffixes:
+Computation of ngrams instead of suffixes: DONE
+	switch off/on: WordSuffixFeatureFactory.ngram = false;
 
 - map a word to a list of ngrams
-- adapt code in:
-	- features.WordSuffixFeatureFactory.computeSuffixesAndStore(String)
-	- features.WordSuffixFeatureFactory.getAllKnownSuffixForWord(String)
-- I think I only can use unique ngrams otherwise, my mapping does not work proper:
-	yes, seems to!
-- what I am actually computing is a signature then and use the signature elements as features
-- is this new for POS and NER?
+	- only consider unique ngrams because of indexing
+	- computes a signature for word
+	- is this new for POS and NER?
+- adapt code in
+	- features.WordSuffixFeatureFactory.computeNgramsAndStore(String)
+	- features.WordSuffixFeatureFactory.getAllKnownNgramsForWord(String)
+-> both suffix and ngram are now covered by 
+	- features.WordSuffixFeatureFactory.computeSubstringsAndStore(String)
+	- features.WordSuffixFeatureFactory.getAllKnownSubstringsForWord(String)
+	
+Combine suffix and ngram by concatening both into same file
+	- not yet done

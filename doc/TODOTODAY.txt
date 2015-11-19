@@ -61,9 +61,18 @@
 - unknown word handling for distributed word vectors: cf. tagging.txt -> DONE
 	BUT none effective because all unlabeled data is used for computing distributed word vectors
 
+- use ngrams instead of suffix (simulates NemexA) -> DONE, but check again
+	switch off/on: WordSuffixFeatureFactory.ngram = false;
+
 HIERIX:
 
-- use ngrams instead of suffix (simulates NemexA)
+- run GNT with suffix AND ngram by concatenating both into one file
+
+- run GNT on German POS and NER
+
+- can I use GNT for relation extraction ?
+
+
 		
 - add FLORS accuracy to evaluation script
 

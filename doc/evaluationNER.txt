@@ -211,7 +211,8 @@ accuracy:  97.16%; precision:  80.88%; recall:  84.76%; FB1:  82.77
               PER: precision:  89.15%; recall:  90.41%; FB1:  89.78
 
 
-This is close to CRF  -> but without POS and Chunks -> still missing about 9% to the best NER for English
+This is close to CRF  -> but without POS and Chunks 
+-> still missing about 9% FB1 to the best NER for English
 
 With ngrams as suffixes:
 

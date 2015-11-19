@@ -13,7 +13,11 @@ Integration of cluster in training and testing:
 -> incremental adjustment of weights
 -> DONE- BUT only effective when words are not in unlabeled data
 
-- DONE: instead of suffix use trigrams -> is this similar to NemexA?
+- DONE: instead of suffix use trigrams
+
+- German data processing
+
+- relation extraction ?
 
 - more testing of liblinear itself ?
 

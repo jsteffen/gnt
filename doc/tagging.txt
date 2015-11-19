@@ -78,7 +78,7 @@ BUT:	I can check the performance of it when running without the devel/test unlab
 		from different domain words which are not covered by source labeled training because
 		only for the latter shape can be used as effective features
 	
-- for fillSuffixFeatures()
+- for fillSuffixFeatures() -> also covers NGRAMS via boolean flag
 	- for each word determine features.WordSuffixFeatureFactory.getAllKnownSuffixForWord(String)
 	- can eventually be empty, but then word is usually a number, because smallest suffix is a character
 	- since suffix features are binary, only those which are seen in training can be used for learning

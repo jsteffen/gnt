@@ -28,7 +28,7 @@ generalization of number/date expressions
 context elements without certain features
 
 Anyway: 
-I script that could perform runs for a number of settings would be helpful
+A script that could perform runs for a number of settings would be helpful
 
 Features: 
 Cf. http://www.cs.bgu.ac.il/~elhadad/nlp09/hw2.html#svm

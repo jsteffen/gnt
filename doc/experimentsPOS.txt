@@ -15,6 +15,7 @@ Possible parameters for experiments:
 
 - different suffix sets
 	- inflection
+	- ngrams
 
 - shape features
 	- Schnabel&Schütze 2013: maybe domain dependent
