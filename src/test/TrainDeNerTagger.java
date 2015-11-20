@@ -8,11 +8,11 @@ import data.Alphabet;
 import data.ModelInfo;
 import features.WordSuffixFeatureFactory;
 
-public class TrainNerTagger {
+public class TrainDeNerTagger {
 
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("FLORS");
-		modelInfo.setTaggerName("NER");
+		modelInfo.setTaggerName("DENER");
 
 		int windowSize = 2;
 		int numberOfSentences = -1;
@@ -32,8 +32,8 @@ public class TrainNerTagger {
 		System.out.println(modelInfo.toString());
 		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
-		String trainingFileName = "resources/data/ner/en/eng-train";
-		String clusterIdSourceFileName = "resources/data/ner/en/en_marlin_cluster_1000";
+		String trainingFileName = "resources/data/ner/de/deu-train";
+		String clusterIdSourceFileName = "resources/data/ner/de/de_marlin_cluster_1000";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
 	}

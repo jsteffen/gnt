@@ -1,4 +1,5 @@
 
+
 Goal is to compute all lower-case suffixes from a training set of words.
  * For suffix s, we set the dimension corresponding to s in f_suffix(w) to 1 if lowercased w ends in s 
  * and to 0 otherwise. Note that w is a suffix of itself.
@@ -40,5 +41,9 @@ Computation of ngrams instead of suffixes: DONE
 	- features.WordSuffixFeatureFactory.computeSubstringsAndStore(String)
 	- features.WordSuffixFeatureFactory.getAllKnownSubstringsForWord(String)
 	
-Combine suffix and ngram by concatening both into same file
-	- not yet done
+Combine suffix and ngram by concatenating both into same file
+	- 	simple concat does not help because it seems that I can not compute absolute enumeration for 
+		resulting features
+	-	eventually I need to define it as its own feature vector
+
+Compute prefixes - might be useful for NER (is used as feature their)

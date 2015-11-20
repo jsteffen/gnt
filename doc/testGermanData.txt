@@ -1,7 +1,28 @@
 November, 2015:
 
-Do it 
+Language as a parameter:
 
-POS 
+- I can create it via taggerName:
+	- currently available: POS and NER
+	- add prefix language id
+		- DEPOS, DENER
+- and then define language specific tagger train/test classes
 
-NER
+- Note: shape features are probably language specific
+
+Where to change:
+- corpus.Corpus -> ok
+- corpus.ConllMapper.main(String[]) -> ok
+
+- features.IndicatorWordsCreator -> ok
+
+- features.WordDistributedFeatureFactory -> nothing
+- features.WordShapeFeatureFactory -> nothing
+- features.WordSuffixFeatureFactory -> nothing
+- features.WordClusterFeatureFactory -> nothing
+
+First NER:
+- conll NER data
+- using fr.txt from Clef
+
+Then POS:

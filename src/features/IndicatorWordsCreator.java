@@ -30,6 +30,9 @@ public class IndicatorWordsCreator {
 	static int tokenCnt = 0;
 	private Map<String, Integer> wordToNum = new HashMap<String, Integer>();
 
+	public IndicatorWordsCreator(){
+	}
+
 	// Clean text line according to given type
 	// AND lower case text
 	// It is assumed that line is a tokenized sentence
@@ -174,7 +177,7 @@ public class IndicatorWordsCreator {
 	}
 
 	// TODO - check, but I think I have all source files that are also used in FLORS
-	public void createIndicatorPosWordsFromFiles(){
+	private void createIndicatorEnPosWordsFromFiles(){
 
 		// Training data labeled sentences
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train-sents.txt", "ptb", 100000);
@@ -209,15 +212,44 @@ public class IndicatorWordsCreator {
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt", "ptb", 100000);
 	}
 
-	// TODO - check, but I think I have all source files that are also used in FLORS
-	public void createIndicatorNerWordsFromFiles(){
+	// NER
+	// TODO - check what else
+	private void createIndicatorEnNerWordsFromFiles(){
 
 		// Training data unlabeled
 		readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);
 
-		readAndProcessInputTextLineWise("resources/data/ner/eng-train-sents.txt", "ptb", 1000);
-		readAndProcessInputTextLineWise("resources/data/ner/eng-testa-sents.txt", "ptb", 1000);
-		readAndProcessInputTextLineWise("resources/data/ner/eng-testb-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/en/eng-train-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/en/eng-testa-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/en/eng-testb-sents.txt", "ptb", 1000);
+
+	}
+
+	// TODO - check what else
+	private void createIndicatorDeNerWordsFromFiles(){
+
+		// Training data unlabeled
+		readAndProcessInputTextLineWise("resources/data/german/unlab/fr.txt", "ptb", 100000);
+
+		readAndProcessInputTextLineWise("resources/data/ner/de/deu-train-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/de/deu-testa-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/de/deu-testb-sents.txt", "ptb", 1000);
+
+	}
+
+	/**
+	 * A wrapper for calling the different taggerName specific methods.
+	 * @param taggerName
+	 */
+	public void createIndicatorTaggerNameWordsFromFile(String taggerName){
+		if (taggerName.equals("POS"))
+			createIndicatorEnPosWordsFromFiles();
+		else
+			if (taggerName.equals("NER"))
+				createIndicatorEnNerWordsFromFiles();
+			else
+				if (taggerName.equals("DENER"))
+					createIndicatorDeNerWordsFromFiles();
 
 	}
 	// Test  caller
@@ -226,7 +258,7 @@ public class IndicatorWordsCreator {
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
 		long time1 = System.currentTimeMillis();
 
-		iwp.createIndicatorPosWordsFromFiles();
+		iwp.createIndicatorTaggerNameWordsFromFile("POS");
 
 		iwp.postProcessWords(0.00001);
 

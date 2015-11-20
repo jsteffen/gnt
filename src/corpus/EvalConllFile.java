@@ -96,6 +96,7 @@ public class EvalConllFile {
 
 
 	public static void main(String[] args) throws IOException{
+		// This is for testing
 		// This reads saved vocabulary from training corpus
 		EvalConllFile evalFile = new EvalConllFile();
 		evalFile.data.readWordSet();

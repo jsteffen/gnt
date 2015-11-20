@@ -233,3 +233,21 @@ accuracy:  97.07%; precision:  80.25%; recall:  84.26%; FB1:  82.21
               PER: precision:  88.44%; recall:  90.35%; FB1:  89.39
               
 -> does not bring something
+
+Deutsch:
+
+./conlleval < eval/deu-testa.txt 
+processed 51645 tokens with 4833 phrases; found: 3603 phrases; correct: 2669.
+accuracy:  94.79%; precision:  74.08%; recall:  55.22%; FB1:  63.28
+              LOC: precision:  76.15%; recall:  71.38%; FB1:  73.69
+             MISC: precision:  72.80%; recall:  36.04%; FB1:  48.21
+              ORG: precision:  64.28%; recall:  49.88%; FB1:  56.17
+              PER: precision:  81.61%; recall:  60.17%; FB1:  69.27
+              
+./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 2827 phrases; correct: 2061.
+accuracy:  95.83%; precision:  72.90%; recall:  56.11%; FB1:  63.42
+              LOC: precision:  73.35%; recall:  67.83%; FB1:  70.48
+             MISC: precision:  66.21%; recall:  36.27%; FB1:  46.87
+              ORG: precision:  58.36%; recall:  40.62%; FB1:  47.90
+              PER: precision:  83.11%; recall:  67.11%; FB1:  74.26

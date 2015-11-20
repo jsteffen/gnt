@@ -70,6 +70,10 @@ HIERIX:
 
 - run GNT on German POS and NER
 
+- create input file for TORCH
+
+- compute all prefixes AND eventually combine with suffixes
+
 - can I use GNT for relation extraction ?
 
 - map GNT feature vector also to torch input and run neuronal networks

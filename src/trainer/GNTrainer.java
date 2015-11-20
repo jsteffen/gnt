@@ -48,8 +48,8 @@ public class GNTrainer {
 		String iwFilename = "resources/features/iw_all"+taggerName+".txt";
 		System.out.println("Create indictor words and save in file: " + iwFilename);
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
-		if (taggerName.equalsIgnoreCase("POS"))iwp.createIndicatorPosWordsFromFiles();
-		if (taggerName.equalsIgnoreCase("NER"))iwp.createIndicatorNerWordsFromFiles();
+		iwp.createIndicatorTaggerNameWordsFromFile(taggerName);
+		
 		iwp.postProcessWords(this.getThreshold());
 		iwp.writeSortedIndicatorWords(iwFilename, 10000);
 		

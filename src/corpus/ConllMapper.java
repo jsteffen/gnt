@@ -24,10 +24,18 @@ import java.util.List;
 
 public class ConllMapper {
 
-	private Corpus corpus = new Corpus();
+	private Corpus corpus = null;
+	private String taggerName = "";
+	public Corpus getCorpus() {
+		return corpus;
+	}
+	public void setCorpus(Corpus corpus) {
+		this.corpus = corpus;
+	}
 
 	public ConllMapper(String taggerName) {
-		corpus = new Corpus(taggerName);
+		this.taggerName = taggerName;
+		this.setCorpus(new Corpus(taggerName));
 	}
 
 	public void transcode(String sourceFileName, String sourceEncoding,
@@ -73,10 +81,10 @@ public class ConllMapper {
 	}
 
 	/**
-	 * Used to map a connl file to a file of sentences/line !
+	 * Used to map a conll file to a file of sentences/line !
 	 */
-	public void transcodeFlorsFileList(){
-		for (String fileName : corpus.trainingLabeledData){
+	public void transcodeConllToSentenceFiles(){
+		for (String fileName : this.getCorpus().trainingLabeledData){
 			try {
 				System.out.println(fileName);
 				transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
@@ -84,7 +92,7 @@ public class ConllMapper {
 				e.printStackTrace();
 			}
 		}
-		for (String fileName : corpus.devLabeledData){
+		for (String fileName : this.getCorpus().devLabeledData){
 			try {
 				System.out.println(fileName);
 				transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
@@ -93,7 +101,7 @@ public class ConllMapper {
 			}
 		}
 
-		for (String fileName : corpus.testLabeledData){
+		for (String fileName : this.getCorpus().testLabeledData){
 			try {
 				System.out.println(fileName);
 				transcode(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8");
@@ -102,49 +110,9 @@ public class ConllMapper {
 			}
 		}	
 	}
-	public void transcode2(String sourceFileName, String sourceEncoding,
-			String targetFileName, String targetEncoding)
-					throws IOException {
 
-		// init reader for CONLL style file
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(
-						new FileInputStream(sourceFileName),
-						sourceEncoding));
-
-		// init writer for line-wise file
-		BufferedWriter writer = new BufferedWriter(
-				new OutputStreamWriter(
-						new FileOutputStream(targetFileName),
-						targetEncoding));
-
-		String line = "";
-		while ((line = reader.readLine()) != null) {
-			if (line.isEmpty()) writer.newLine();
-			else
-			{
-				String[] tokenizedLine = line.split("\t");
-				// DUplicate pos at column 3 (start counting from 0) to column 4
-				tokenizedLine[4] = tokenizedLine[3];
-				writer.write(this.tokenToString(tokenizedLine));
-				writer.newLine();
-			}
-		}
-
-		reader.close();
-		writer.close();
-	}
-
-	private String tokenToString(String[] tokenizedLine) {
-		String output = "";
-		for (int i = 0; i < tokenizedLine.length-1; i++)
-			output += tokenizedLine[i]+"\t";
-		output +=tokenizedLine[tokenizedLine.length-1];
-		return output;
-
-	}
-
-	public void transcodeNERfile(String sourceFileName, String sourceEncoding,
+	// Processing NER files
+	private void transcodeNERfile(String sourceFileName, String sourceEncoding,
 			String targetFileName, String targetEncoding)
 					throws IOException{
 		// init reader for CONLL style file
@@ -168,12 +136,12 @@ public class ConllMapper {
 			}
 			else
 			{ //if (!line.equals("-DOCSTART- -X- O O"))
-			{
-				tokenCnt++;
-				String[] tokenizedLine = line.split(" ");
-				writer.write(this.nerTokenToString(tokenizedLine, tokenCnt));
-				writer.newLine();
-			}
+				{
+					tokenCnt++;
+					String[] tokenizedLine = line.split(" ");
+					writer.write(this.nerTokenToString(tokenizedLine, tokenCnt));
+					writer.newLine();
+				}
 			}
 		}
 
@@ -181,7 +149,8 @@ public class ConllMapper {
 		writer.close();
 	}
 
-	private String nerTokenToString(String[] tokenizedLine, int index) {
+	private String enNerTokenToString(String[] tokenizedLine, int index) {
+		// EN
 		// West NNP I-NP I-MISC
 		// index West NNP I-NP I-MISC
 		String output = index+"\t";
@@ -193,10 +162,71 @@ public class ConllMapper {
 
 	}
 
+	//HIERIX
+	private String deNerTokenToString(String[] tokenizedLine, int index) {
+		// DE
+		// Nordendler <unknown> NN I-NC I-ORG
+		// index Nordendler NN I-NC I-ORG
+		String output = index+"\t";
+		output +=tokenizedLine[0]+"\t";
+		output +=tokenizedLine[2]+"\t";
+		output +=tokenizedLine[3]+"\t";
+		output +=tokenizedLine[4];
+		return output;
+
+	}
+
+	private String nerTokenToString(String[] tokenizedLine, int index) {
+		String output = "";
+		if (this.taggerName.equals("NER"))
+			output = enNerTokenToString(tokenizedLine,index);
+		else
+			if (this.taggerName.equals("DENER"))
+				output = deNerTokenToString(tokenizedLine,index);
+		return output;
+
+	}
+
+	public void transCodeEnNerFiles() throws IOException{
+		transcodeNERfile(
+				"resources/data/ner/en/eng.train", "utf-8", 
+				"resources/data/ner/en/eng-train.conll", "utf-8");
+		transcodeNERfile(
+				"resources/data/ner/en/eng.testa", "utf-8", 
+				"resources/data/ner/en/eng-testa.conll", "utf-8");
+		transcodeNERfile(
+				"resources/data/ner/en/eng.testb", "utf-8", 
+				"resources/data/ner/en/eng-testb.conll", "utf-8");
+	}
+
+	public void transCodeDeNerFiles() throws IOException{
+		transcodeNERfile(
+				"resources/data/ner/de/deu.train", "utf-8", 
+				"resources/data/ner/de/deu-train.conll", "utf-8");
+		transcodeNERfile(
+				"resources/data/ner/de/deu.testa", "utf-8", 
+				"resources/data/ner/de/deu-testa.conll", "utf-8");
+		transcodeNERfile(
+				"resources/data/ner/de/deu.testb", "utf-8", 
+				"resources/data/ner/de/deu-testb.conll", "utf-8");
+	}
+
 	public static void main(String[] args) throws IOException {
-		String taggerName = "POS";
+		String taggerName = "DENER";
 		ConllMapper mapper = new ConllMapper(taggerName);
-		mapper.transcodeFlorsFileList();
-		//mapper.transcodeNERfile("resources/data/ner/eng.testb", "utf-8", "resources/data/ner/eng-testb.conll", "utf-8");
+		if (taggerName.equals("POS"))
+			mapper.transcodeConllToSentenceFiles();
+		else
+			if (taggerName.equals("NER")){
+				mapper.transCodeEnNerFiles();
+
+				mapper.transcodeConllToSentenceFiles();
+			}
+			else
+				if (taggerName.equals("DENER")){
+					mapper.transCodeDeNerFiles();
+
+					mapper.transcodeConllToSentenceFiles();
+				}
 	}
 }	

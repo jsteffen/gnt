@@ -75,8 +75,7 @@ public class RunPosTagger {
 		fileListTest.add(new Pair<String, String>(
 				"resources/data/sancl-2012/sancl.labeled/gweb-emails-test.conll", "resources/eval/gweb-emails-test-flors.txt"));
 		fileListTest.add(new Pair<String, String>(
-				"resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test.conll", "resources/eval/ontonotes-wsj-test-flors.txt"));
-		
+				"resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test.conll", "resources/eval/ontonotes-wsj-test-flors.txt"));	
 
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile evalFile = new EvalConllFile();

@@ -230,8 +230,10 @@ public class WordSuffixFeatureFactory {
 		for (String word : words){
 			if (WordSuffixFeatureFactory.ngram)
 				computeNgramsAndStore(word);
-			else
+			else{
 				computeSuffixesAndStore(word);
+				//computeNgramsAndStore(word);
+			}
 			}
 	}
 	
@@ -241,9 +243,14 @@ public class WordSuffixFeatureFactory {
 	 * @return
 	 */
 	public List<Integer> getAllKnownSubstringsForWord(String word){
-		List<Integer> indices =
-				(WordSuffixFeatureFactory.ngram)?getAllKnownNgramsForWord(word):
-					getAllKnownSuffixForWordIntern(word);
+		List<Integer> indices = new ArrayList<Integer>();
+		if (WordSuffixFeatureFactory.ngram)
+			indices = getAllKnownNgramsForWord(word);
+		else
+		{
+			indices = getAllKnownSuffixForWordIntern(word);
+			//indices.addAll(getAllKnownNgramsForWord(word));
+		}
 		return indices;
 	}
 

@@ -13,46 +13,46 @@ public class Corpus {
 	public  List<String> devUnLabeledData = new ArrayList<String>();
 	public  List<String> testUnLabeledData = new ArrayList<String>();
 
-	private void setLabeledPosData(){
+	// POS English
+	private void setLabeledEnPosData(){
 		// It is assumed that all these files have suffix .conll
-//		trainingLabeledData.add("resources/data/english/ptb3-training");
-//		devLabeledData.add("resources/data/english/ptb3-devel");
-//		testLabeledData.add("resources/data/english/ptb3-test");
-		
+		//		trainingLabeledData.add("resources/data/english/ptb3-training");
+		//		devLabeledData.add("resources/data/english/ptb3-devel");
+		//		testLabeledData.add("resources/data/english/ptb3-test");
+
 		trainingLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train");
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test");
-		
+
 		devLabeledData.add("resources/data/pbiotb/dev/english_pbiotb_dev");
-		
+
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-answers-dev");
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-emails-dev");
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev");
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev");
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev");
-		
+
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-answers-test");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-emails-test");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-test");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-reviews-test");
-		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-test");
-		
+		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-test");		
 	}
 
-	private void setUnLabeledPosData(){
+	private void setUnLabeledEnPosData(){
 		// It is assumed that these filenames are complete
 		trainingUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train-sents.txt");
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev-sents.txt");
 		testUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test-sents.txt");
-		
+
 		trainingUnLabeledData.add("resources/data/pbiotb/dev/english_pbiotb_dev-sents.txt");
-		
+
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-answers-dev-sents.txt");
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-emails-dev-sents.txt");
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-dev-sents.txt");
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-reviews-dev-sents.txt");
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-dev-sents.txt");
-		
+
 		// Unlabeled data
 		devUnLabeledData.add("resources/data/ptb/unlab/english_ptb_unlab");
 		devUnLabeledData.add("resources/data/pbiotb/unlab/all-unlab.txt");
@@ -61,51 +61,77 @@ public class Corpus {
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.all/gweb-newsgroups.unlabeled.txt");
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.all/gweb-reviews.unlabeled.txt");
 		devUnLabeledData.add("resources/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt");
-	
+
 		testUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-answers-test-sents.txt");
 		testUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-emails-test-sents.txt");
 		testUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-test-sents.txt");
 		testUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-reviews-test-sents.txt");
-		testUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-test-sents.txt");
-		
-	}
-	
-	private void setLabeledNerData(){
-		// It is assumed that all these files have suffix .conll
-		trainingLabeledData.add("resources/data/ner/eng-testa");
-		devLabeledData.add("resources/data/ner/eng-testb");
-		testLabeledData.add("resources/data/ner/eng-train");	
+		testUnLabeledData.add("resources/data/sancl-2012/sancl.labeled/gweb-weblogs-test-sents.txt");		
 	}
 
-	private void setUnLabeledNerData(){
+	// English NER
+	private void setLabeledEnNerData(){
+		// It is assumed that all these files have suffix .conll
+		trainingLabeledData.add("resources/data/ner/en/eng-testa");
+		devLabeledData.add("resources/data/ner/en/eng-testb");
+		testLabeledData.add("resources/data/ner/en/eng-train");	
+	}
+
+	private void setUnLabeledEnNerData(){
 		// It is assumed that these filenames are complete
-		trainingUnLabeledData.add("resources/data/ner/eng-testa-sents.txt");
-		devUnLabeledData.add("resources/data/ner/eng-testb-sents.txt");
-		testUnLabeledData.add("resources/data/ner/eng-train-sents.txt");
-			
+		trainingUnLabeledData.add("resources/data/ner/en/eng-testa-sents.txt");
+		devUnLabeledData.add("resources/data/ner/en/eng-testb-sents.txt");
+		testUnLabeledData.add("resources/data/ner/en/eng-train-sents.txt");
+
 		// Unlabeled data
 		devUnLabeledData.add("resources/data/ptb/unlab/english_ptb_unlab");		
 	}
 
-	public Corpus(){
-		this.setLabeledPosData();
-		this.setUnLabeledPosData();
+	// POS German
+	private void setLabeledDePosData(){
+
 	}
-	
+
+	private void setUnLabeledDePosData(){		
+	}
+
+	// German NER
+	private void setLabeledDeNerData(){
+		// It is assumed that all these files have suffix .conll
+		trainingLabeledData.add("resources/data/ner/de/deu-testa");
+		devLabeledData.add("resources/data/ner/de/deu-testb");
+		testLabeledData.add("resources/data/ner/de/deu-train");	
+	}
+
+	private void setUnLabeledDeNerData(){
+		// It is assumed that these filenames are complete
+		trainingUnLabeledData.add("resources/data/ner/de/deu-testa-sents.txt");
+		devUnLabeledData.add("resources/data/ner/de/deu-testb-sents.txt");
+		testUnLabeledData.add("resources/data/ner/de/deu-train-sents.txt");
+
+		// Unlabeled data
+		devUnLabeledData.add("resources/data/german/unlab/fr.txt");		
+	}
+
+
 	public Corpus(String taggerName){
 		if (taggerName.equals("POS")){
-			this.setLabeledPosData();
-			this.setUnLabeledPosData();
+			this.setLabeledEnPosData();
+			this.setUnLabeledEnPosData();
 		}
 		else
 			if (taggerName.equals("NER")){
-				this.setLabeledNerData();
-				this.setUnLabeledNerData();
+				this.setLabeledEnNerData();
+				this.setUnLabeledEnNerData();
 			}
-			else{
-				System.err.println("unknown taggername used: " + taggerName);
-				System.exit(0);
-			}
-		
+			else
+				if (taggerName.equals("DENER")){
+					this.setLabeledDeNerData();
+					this.setUnLabeledDeNerData();
+				}
+				else{
+					System.err.println("unknown taggername used: " + taggerName);
+					System.exit(0);
+				}	
 	}
 }
