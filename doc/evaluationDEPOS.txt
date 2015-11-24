@@ -64,3 +64,4 @@ All OOV pos: 9153 Correct: 8290 Accuracy: 90,57%
 All InV pos: 82851 Correct: 80602 Accuracy: 97,29%
 
 Testing smaller cluster size 100 (instead of 1000)
+- increases a bit error rat (about 0.01-0.02)

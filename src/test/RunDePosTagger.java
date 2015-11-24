@@ -32,7 +32,7 @@ public class RunDePosTagger {
 		Alphabet.withClusterFeats=true;
 		System.out.println(Alphabet.toActiveFeatureString());
 		
-		WordSuffixFeatureFactory.ngram = true;
+		WordSuffixFeatureFactory.ngram = false;
 
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());

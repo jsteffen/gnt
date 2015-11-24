@@ -30,7 +30,7 @@ public class TrainDePosTagger {
 		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
 		String trainingFileName = "resources/data/german/tiger2_train";
-		String clusterIdSourceFileName = "/Users/gune00/data/Marmot/Word/de_marlin_cluster_100";
+		String clusterIdSourceFileName = "/Users/gune00/data/Marmot/Word/de_marlin_cluster_1000";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
 

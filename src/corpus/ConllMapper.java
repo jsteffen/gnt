@@ -100,7 +100,6 @@ public class ConllMapper {
 				e.printStackTrace();
 			}
 		}
-
 		for (String fileName : this.getCorpus().testLabeledData){
 			try {
 				System.out.println(fileName);
@@ -201,18 +200,18 @@ public class ConllMapper {
 
 	public void transCodeDeNerFiles() throws IOException{
 		transcodeNERfile(
-				"resources/data/ner/de/deu.train", "utf-8", 
+				"resources/data/ner/de/deu.train", "ISO-8859-1", 
 				"resources/data/ner/de/deu-train.conll", "utf-8");
 		transcodeNERfile(
-				"resources/data/ner/de/deu.testa", "utf-8", 
+				"resources/data/ner/de/deu.testa", "ISO-8859-1", 
 				"resources/data/ner/de/deu-testa.conll", "utf-8");
 		transcodeNERfile(
-				"resources/data/ner/de/deu.testb", "utf-8", 
+				"resources/data/ner/de/deu.testb", "ISO-8859-1", 
 				"resources/data/ner/de/deu-testb.conll", "utf-8");
 	}
 
 	public static void main(String[] args) throws IOException {
-		String taggerName = "DEPOS";
+		String taggerName = "DENER";
 		ConllMapper mapper = new ConllMapper(taggerName);
 		if (taggerName.equals("POS"))
 			mapper.transcodeConllToSentenceFiles();

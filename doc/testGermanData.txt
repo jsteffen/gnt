@@ -44,5 +44,9 @@ BUT, to make it comparable with Müller et al.,
 -> done ! corpus.TigerToConllMapper; encoding looks ok
 
 works good with tiger data -> 0,47 behind SOTA
+CHECK encoding also here -> YES, was wrong; it should be iso-8859-1
 
-What could be done to get better ?
+What could be done to get better results ? 
+- shape features for German
+- prefixes and suffixes
+- mixed 3-gram, 2-grams, 1-grams

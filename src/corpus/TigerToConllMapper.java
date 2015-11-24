@@ -16,8 +16,12 @@ import java.util.List;
  * Next 5000 -> tiger2-devel.conll
  * Last 5000 -> tiger2-test.conll
  * 
+ * What encoding ? ISO-8859-1 
+ * 
  * Currently I will only map information needed for POS tagging, later also for
- * Chunk parsing, and eventually dependencies and NER
+ * Chunk parsing, and eventually dependencies and NER;
+ * 
+ * 
  * @author gune00
  *
  */
@@ -85,7 +89,7 @@ public class TigerToConllMapper {
 		BufferedReader reader = new BufferedReader(
 				new InputStreamReader(
 						new FileInputStream(sourceFileName),
-						"utf-8"));
+						"ISO-8859-1"));
 
 		BufferedWriter trainWriter = new BufferedWriter(
 				new OutputStreamWriter(
