@@ -212,7 +212,7 @@ public class ConllMapper {
 	}
 
 	public static void main(String[] args) throws IOException {
-		String taggerName = "DENER";
+		String taggerName = "DEPOS";
 		ConllMapper mapper = new ConllMapper(taggerName);
 		if (taggerName.equals("POS"))
 			mapper.transcodeConllToSentenceFiles();
@@ -228,5 +228,9 @@ public class ConllMapper {
 
 					mapper.transcodeConllToSentenceFiles();
 				}
+				else
+					if (taggerName.equals("DEPOS")){
+						mapper.transcodeConllToSentenceFiles();
+					}
 	}
 }	

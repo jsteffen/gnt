@@ -212,6 +212,14 @@ public class IndicatorWordsCreator {
 		readAndProcessInputTextLineWise("resources/data/sancl-2012/sancl.all/gweb-weblogs.unlabeled.txt", "ptb", 100000);
 	}
 
+	private void createIndicatorDePosWordsFromFiles(){
+
+		// Training data labeled sentences
+		readAndProcessInputTextLineWise("resources/data/german/tiger2_train-sents.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/german/tiger2_devel-sents.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/german/tiger2_test-sents.txt", "ptb", 100000);
+	}
+
 	// NER
 	// TODO - check what else
 	private void createIndicatorEnNerWordsFromFiles(){
@@ -229,11 +237,11 @@ public class IndicatorWordsCreator {
 	private void createIndicatorDeNerWordsFromFiles(){
 
 		// Training data unlabeled
-		readAndProcessInputTextLineWise("resources/data/german/unlab/fr.txt", "ptb", 100000);
+		//readAndProcessInputTextLineWise("resources/data/german/unlab/fr.txt", "ptb", 100000);
 
-		readAndProcessInputTextLineWise("resources/data/ner/de/deu-train-sents.txt", "ptb", 1000);
-		readAndProcessInputTextLineWise("resources/data/ner/de/deu-testa-sents.txt", "ptb", 1000);
-		readAndProcessInputTextLineWise("resources/data/ner/de/deu-testb-sents.txt", "ptb", 1000);
+		readAndProcessInputTextLineWise("resources/data/ner/de/deu-train-sents.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/ner/de/deu-testa-sents.txt", "ptb", 100000);
+		readAndProcessInputTextLineWise("resources/data/ner/de/deu-testb-sents.txt", "ptb", 100000);
 
 	}
 
@@ -250,6 +258,9 @@ public class IndicatorWordsCreator {
 			else
 				if (taggerName.equals("DENER"))
 					createIndicatorDeNerWordsFromFiles();
+				else
+					if (taggerName.equals("DEPOS"))
+						createIndicatorDePosWordsFromFiles();
 
 	}
 	// Test  caller

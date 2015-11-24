@@ -89,28 +89,33 @@ public class Corpus {
 
 	// POS German
 	private void setLabeledDePosData(){
-
+		trainingLabeledData.add("resources/data/german/tiger2_train");
+		devLabeledData.add("resources/data/german/tiger2_devel");
+		testLabeledData.add("resources/data/german/tiger2_test");
 	}
 
-	private void setUnLabeledDePosData(){		
+	private void setUnLabeledDePosData(){	
+		trainingUnLabeledData.add("resources/data/german/tiger2_train-sents.txt");
+		devUnLabeledData.add("resources/data/german/tiger2_devel-sents.txt");
+		testUnLabeledData.add("resources/data/german/tiger2_test-sents.txt");
 	}
 
 	// German NER
 	private void setLabeledDeNerData(){
 		// It is assumed that all these files have suffix .conll
-		trainingLabeledData.add("resources/data/ner/de/deu-testa");
-		devLabeledData.add("resources/data/ner/de/deu-testb");
-		testLabeledData.add("resources/data/ner/de/deu-train");	
+		devLabeledData.add("resources/data/ner/de/deu-testa");
+		testLabeledData.add("resources/data/ner/de/deu-testb");
+		trainingLabeledData.add("resources/data/ner/de/deu-train");	
 	}
 
 	private void setUnLabeledDeNerData(){
 		// It is assumed that these filenames are complete
-		trainingUnLabeledData.add("resources/data/ner/de/deu-testa-sents.txt");
-		devUnLabeledData.add("resources/data/ner/de/deu-testb-sents.txt");
-		testUnLabeledData.add("resources/data/ner/de/deu-train-sents.txt");
+		devUnLabeledData.add("resources/data/ner/de/deu-testa-sents.txt");
+		testUnLabeledData.add("resources/data/ner/de/deu-testb-sents.txt");
+		trainingUnLabeledData.add("resources/data/ner/de/deu-train-sents.txt");
 
 		// Unlabeled data
-		devUnLabeledData.add("resources/data/german/unlab/fr.txt");		
+		//devUnLabeledData.add("resources/data/german/unlab/fr.txt");		
 	}
 
 
@@ -129,9 +134,14 @@ public class Corpus {
 					this.setLabeledDeNerData();
 					this.setUnLabeledDeNerData();
 				}
-				else{
-					System.err.println("unknown taggername used: " + taggerName);
-					System.exit(0);
-				}	
+				else
+					if (taggerName.equals("DEPOS")){
+						this.setLabeledDePosData();
+						this.setUnLabeledDePosData();
+					}
+					else{
+						System.err.println("unknown taggername used: " + taggerName);
+						System.exit(0);
+					}	
 	}
 }

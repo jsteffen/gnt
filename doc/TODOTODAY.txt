@@ -67,12 +67,16 @@
 HIERIX:
 
 - run GNT with suffix AND ngram by concatenating both into one file
+	- DONE -> errors when concatenation
 
 - run GNT on German POS and NER
+	- DONE
 
 - create input file for TORCH
 
 - compute all prefixes AND eventually combine with suffixes
+
+- use GNT also for chunking
 
 - can I use GNT for relation extraction ?
 

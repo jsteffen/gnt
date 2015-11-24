@@ -7,22 +7,42 @@ Language as a parameter:
 	- add prefix language id
 		- DEPOS, DENER
 - and then define language specific tagger train/test classes
+-> LOOKS GOOD
 
 - Note: shape features are probably language specific
 
 Where to change:
+- define taggerName
 - corpus.Corpus -> ok
 - corpus.ConllMapper.main(String[]) -> ok
-
 - features.IndicatorWordsCreator -> ok
 
-- features.WordDistributedFeatureFactory -> nothing
-- features.WordShapeFeatureFactory -> nothing
-- features.WordSuffixFeatureFactory -> nothing
-- features.WordClusterFeatureFactory -> nothing
 
-First NER:
+NER:
 - conll NER data
-- using fr.txt from Clef
+- using fr.txt from Clef -> NO, seems to have bad encoding
+-> works, and 6,4% F1 (67,7%)  better than SVN-NER
+-> but still missing > 10% F-measure
 
-Then POS:
+- check encoding -> looks odd !
+- check shape features for German
+
+POS:
+- conll German data: resources/data/german
+- Corpus: ok
+- ConllMapper: ok
+- features.IndicatorWordsCreator -> ok
+
+- works! but using tiger1 data
+
+BUT, to make it comparable with Müller et al.,
+- extract CONLL POS info from tiger2 corpus directly:
+- training: first 40,474 sentences -> tiger-train.conll
+- development:  next 5000 sentences -> tiger-devel.conll 40,474 + 5000
+- testing: last 5000 sentences -> tiger-test.conll 45,474 + 5000
+
+-> done ! corpus.TigerToConllMapper; encoding looks ok
+
+works good with tiger data -> 0,47 behind SOTA
+
+What could be done to get better ?

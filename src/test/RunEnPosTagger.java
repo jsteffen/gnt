@@ -17,7 +17,7 @@ import features.WordSuffixFeatureFactory;
  * @author gune00
  *
  */
-public class RunPosTagger {
+public class RunEnPosTagger {
 
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("FLORS");
