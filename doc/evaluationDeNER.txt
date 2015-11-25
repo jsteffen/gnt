@@ -1,0 +1,70 @@
+22.9.2015, GN:
+
+Note tagging with SVM-NER:
+*******************************************************************************
+
+tagging Conll 2003 types according to data define in
+
+/Users/gune00/dfki/TIM-Tools/SvenTagger/NERtests/conll2003
+
+models: trained on eng/deu.train.svm 
+EN2003 -  testb F1=79.90%
+DE2003 -  testb F1=61.37
+
+models: trained on eng/deu.traintesta.svm 
+EN2003 -  testb F1=80.56% (minus 11%)
+DE2003 -  testb F1=66.58  (minus 11%)
+
+Deutsch:
+
+-> using 100T sentences from de-wikidump + Training/Devel/Test data:
+
+processed 51645 tokens with 4833 phrases; found: 3887 phrases; correct: 2911.
+accuracy:  95.30%; precision:  74.89%; recall:  60.23%; FB1:  66.77
+              LOC: precision:  75.72%; recall:  73.92%; FB1:  74.81
+             MISC: precision:  72.70%; recall:  43.76%; FB1:  54.64
+              ORG: precision:  62.15%; recall:  50.68%; FB1:  55.84
+              PER: precision:  86.80%; recall:  69.02%; FB1:  76.90
+
+lt-pool-183:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 3015 phrases; correct: 2236.
+accuracy:  96.23%; precision:  74.16%; recall:  60.88%; FB1:  66.87
+              LOC: precision:  73.48%; recall:  69.08%; FB1:  71.22
+             MISC: precision:  63.76%; recall:  40.45%; FB1:  49.50
+              ORG: precision:  59.97%; recall:  48.64%; FB1:  53.71
+              PER: precision:  88.28%; recall:  73.14%; FB1:  80.00
+
+Unlabeled sentences from Training/Devel/Test data only:
+
+./conlleval < eval/deu-testa.txt 
+processed 51645 tokens with 4833 phrases; found: 3915 phrases; correct: 2920.
+accuracy:  95.29%; precision:  74.58%; recall:  60.42%; FB1:  66.76
+              LOC: precision:  75.89%; recall:  73.84%; FB1:  74.85
+             MISC: precision:  71.60%; recall:  46.44%; FB1:  56.34
+              ORG: precision:  63.49%; recall:  51.01%; FB1:  56.57
+              PER: precision:  84.92%; recall:  67.52%; FB1:  75.23
+./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 3067 phrases; correct: 2283.
+accuracy:  96.27%; precision:  74.44%; recall:  62.16%; FB1:  67.74
+              LOC: precision:  74.25%; recall:  69.66%; FB1:  71.88
+             MISC: precision:  65.20%; recall:  46.42%; FB1:  54.23
+              ORG: precision:  60.61%; recall:  49.16%; FB1:  54.29
+              PER: precision:  87.80%; recall:  72.89%; FB1:  79.65
+-> missing 10% F1
+              
+Without any unlabeled data:
+./conlleval < eval/deu-testa.txt 
+processed 51645 tokens with 4833 phrases; found: 4087 phrases; correct: 2887.
+accuracy:  95.10%; precision:  70.64%; recall:  59.74%; FB1:  64.73
+              LOC: precision:  71.71%; recall:  71.46%; FB1:  71.59
+             MISC: precision:  65.72%; recall:  48.22%; FB1:  55.63
+              ORG: precision:  59.08%; recall:  50.85%; FB1:  54.66
+              PER: precision:  84.01%; recall:  66.02%; FB1:  73.94
+./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 3196 phrases; correct: 2282.
+accuracy:  96.18%; precision:  71.40%; recall:  62.13%; FB1:  66.44
+              LOC: precision:  73.33%; recall:  69.08%; FB1:  71.14
+             MISC: precision:  59.66%; recall:  46.57%; FB1:  52.31
+              ORG: precision:  55.68%; recall:  50.71%; FB1:  53.08
+              PER: precision:  86.82%; recall:  72.22%; FB1:  78.85
+              

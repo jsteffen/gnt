@@ -1,18 +1,9 @@
 November, 2015:
 
-Language as a parameter:
-
-- I can create it via taggerName:
-	- currently available: POS and NER
-	- add prefix language id
-		- DEPOS, DENER
-- and then define language specific tagger train/test classes
--> LOOKS GOOD
-
-- Note: shape features are probably language specific
+Language setting via taggerName
 
 Where to change:
-- define taggerName
+- define taggerName: DEPOS, DENER
 - corpus.Corpus -> ok
 - corpus.ConllMapper.main(String[]) -> ok
 - features.IndicatorWordsCreator -> ok
@@ -39,28 +30,28 @@ POS:
 - ConllMapper: ok
 - features.IndicatorWordsCreator -> ok
 
-- works! but using tiger1 data
-
-BUT, to make it comparable with Müller et al.,
-- extract CONLL POS info from tiger2 corpus directly:
+German Tiger corpus ala Müller et al., 2013
+- extract CONLL POS info from tiger2 corpus export format:
 - training: first 40,474 sentences -> tiger-train.conll
 - development:  next 5000 sentences -> tiger-devel.conll 40,474 + 5000
 - testing: last 5000 sentences -> tiger-test.conll 45,474 + 5000
 
 -> done ! corpus.TigerToConllMapper; encoding looks ok
-
-works good with tiger data -> 0,47 behind SOTA
-CHECK encoding also here -> YES, was wrong; it should be iso-8859-1
--> now with correct encoding: 0,39 behind SOTA
+-> now with correct encoding: 0,39 behind SOTA (corrupted: 0,47 behind SOTA)
 
 NEXT:
 encode numbers as in Müller et al., ACL 2015
 
 What could be done to get better results ? 
+
+POS:
 - investe a bit outcome from devel file
 	Damit KOUS PROAV
 	enthalten ADJD VVPP
 	erhalten VVINF VVPP
+	
+NER:
+
 
 - distributed word vectors -> using de-wikidump sentences
 - shape features for German
