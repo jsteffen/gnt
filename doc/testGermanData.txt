@@ -17,6 +17,10 @@ Where to change:
 - corpus.ConllMapper.main(String[]) -> ok
 - features.IndicatorWordsCreator -> ok
 
+-> I think this should work for other languages as well
+
+Now, testing NER and POS
+-------------------------
 
 NER:
 - conll NER data
@@ -24,7 +28,9 @@ NER:
 -> works, and 6,4% F1 (67,7%)  better than SVN-NER
 -> but still missing > 10% F-measure
 
-- check encoding -> looks odd !
+- check encoding -> checked -> using iso-8859-1 when creating conll format
+	-> transcode fr.txt from iso to utf-8
+	-> NO, I am using Marmots wikipedia sentences
 - check shape features for German
 
 POS:
@@ -45,8 +51,19 @@ BUT, to make it comparable with Müller et al.,
 
 works good with tiger data -> 0,47 behind SOTA
 CHECK encoding also here -> YES, was wrong; it should be iso-8859-1
+-> now with correct encoding: 0,39 behind SOTA
+
+NEXT:
+encode numbers as in Müller et al., ACL 2015
 
 What could be done to get better results ? 
+- investe a bit outcome from devel file
+	Damit KOUS PROAV
+	enthalten ADJD VVPP
+	erhalten VVINF VVPP
+
+- distributed word vectors -> using de-wikidump sentences
 - shape features for German
 - prefixes and suffixes
 - mixed 3-gram, 2-grams, 1-grams
+- patterns for some suffixes, e.g., numbers

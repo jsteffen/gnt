@@ -80,6 +80,7 @@ public class WordSuffixFeatureFactory {
 	
 	// A simple flag for switching between suffix and ngram computation
 	public static boolean ngram = false;
+	private int ngramSize = 3;
 	
 	/*
 	 * Methods
@@ -105,7 +106,7 @@ public class WordSuffixFeatureFactory {
 	
 	public List<Integer> getAllKnownNgramsForWord(String word){
 		List<Integer> indices = new ArrayList<Integer>();
-		Set<String> ngrams = this.generateNgrams(word, 3);
+		Set<String> ngrams = this.generateNgrams(word, ngramSize);
 		for (String ngram : ngrams){
 			if (!isNonWord(ngram)){
 				if (this.getSuffix2num().containsKey(ngram)) {
@@ -119,7 +120,7 @@ public class WordSuffixFeatureFactory {
 	
 	private void computeNgramsAndStore(String word) {
 		int i = 0;
-		Set<String> ngrams = this.generateNgrams(word, 3);
+		Set<String> ngrams = this.generateNgrams(word, ngramSize);
 		for (String ngram : ngrams){
 			if (!isNonWord(ngram)) 
 				updateSuffixTable(ngram, i);
@@ -242,6 +243,9 @@ public class WordSuffixFeatureFactory {
 	 * @param word
 	 * @return
 	 */
+	
+	//TODO
+	// after adding also ngrams, indices must be sorted again!!
 	public List<Integer> getAllKnownSubstringsForWord(String word){
 		List<Integer> indices = new ArrayList<Integer>();
 		if (WordSuffixFeatureFactory.ngram)

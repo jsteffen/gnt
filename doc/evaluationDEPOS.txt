@@ -6,62 +6,32 @@ German POS Tagging with tiger test:
 
 ++++
 Do testing from file: resources/data/german/tiger2_devel.conll
-System time (msec): 1354
+System time (msec): 1292
 Sentences: 5000
 Testing instances: 76704
-Sentences/sec: 3692
-Words/sec: 56649
+Sentences/sec: 3869
+Words/sec: 59368
 Create eval file: resources/eval/tiger2_devel.txt
-All pos: 76704 Correct: 74803 Accuracy: 97,52%
-All OOV pos: 5855 Correct: 5385 Accuracy: 91,97%
-All InV pos: 70849 Correct: 69418 Accuracy: 97,98%
+All pos: 76704 Correct: 74870 Accuracy: 97,61%
+All OOV pos: 5863 Correct: 5409 Accuracy: 92,26%
+All InV pos: 70841 Correct: 69461 Accuracy: 98,05%
 
 Error rate: 
-2.48 - 2.06 (best Müller et al., 2013) -> 0.42
-2.48 - 1,90 (Müller et al., 2015) -> 0.58
+2.39 - 2.06 (best Müller et al., 2013) -> 0.33
+2.39 - 1,90 (Müller et al., 2015) -> 0.49
 
 ++++
 Do testing from file: resources/data/german/tiger2_test.conll
-System time (msec): 1392
+System time (msec): 1294
 Sentences: 5000
 Testing instances: 92004
-Sentences/sec: 3591
-Words/sec: 66094
+Sentences/sec: 3863
+Words/sec: 71100
 Create eval file: resources/eval/tiger2_test.txt
-All pos: 92004 Correct: 89217 Accuracy: 96,97%
-All OOV pos: 9153 Correct: 8336 Accuracy: 91,07%
-All InV pos: 82851 Correct: 80881 Accuracy: 97,62%
+All pos: 92004 Correct: 89289 Accuracy: 97,05%
+All OOV pos: 9168 Correct: 8372 Accuracy: 91,32%
+All InV pos: 82836 Correct: 80917 Accuracy: 97,68%
 
 Error rate: 
-3.03 - 2.56 (best Müller et al., 2013) -> 0.47
-3.03 - 2,27 (Müller et al., 2015) -> 0,76
-
-
-Using 3-GRAMS instead of suffixes: -> increases error rate slightly
-
-++++
-Do testing from file: resources/data/german/tiger2_devel.conll
-System time (msec): 2010
-Sentences: 5000
-Testing instances: 76704
-Sentences/sec: 2487
-Words/sec: 38161
-Create eval file: resources/eval/tiger2_devel.txt
-All pos: 76704 Correct: 74530 Accuracy: 97,17%
-All OOV pos: 5855 Correct: 5340 Accuracy: 91,20%
-All InV pos: 70849 Correct: 69190 Accuracy: 97,66%
-
-++++
-Do testing from file: resources/data/german/tiger2_test.conll
-System time (msec): 1565
-Sentences: 5000
-Testing instances: 92004
-Sentences/sec: 3194
-Words/sec: 58788
-Create eval file: resources/eval/tiger2_test.txt
-All pos: 92004 Correct: 88892 Accuracy: 96,62%
-All OOV pos: 9153 Correct: 8290 Accuracy: 90,57%
-All InV pos: 82851 Correct: 80602 Accuracy: 97,29%
-
-Testing smaller cluster size 100 (instead of 1000)
-- increases a bit error rat (about 0.01-0.02)
+2.95 - 2.56 (best Müller et al., 2013) -> 0.39
+2.95 - 2,27 (Müller et al., 2015) -> 0,68

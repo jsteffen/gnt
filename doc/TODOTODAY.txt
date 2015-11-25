@@ -66,14 +66,17 @@
 
 HIERIX:
 
-- run GNT with suffix AND ngram by concatenating both into one file
-	- DONE -> errors when concatenation
+- normalize digits to 0
 
 - run GNT on German POS and NER
 	- DONE
 
 - create input file for TORCH
 
+- run GNT with suffix AND ngram by concatenating both into one file
+	- DONE -> errors when concatenation -> I forgot to sort again after adding indices in 
+		features.WordSuffixFeatureFactory.getAllKnownSubstringsForWord(String)
+		
 - compute all prefixes AND eventually combine with suffixes
 
 - use GNT also for chunking

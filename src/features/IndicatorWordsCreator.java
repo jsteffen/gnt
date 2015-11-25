@@ -214,6 +214,9 @@ public class IndicatorWordsCreator {
 
 	private void createIndicatorDePosWordsFromFiles(){
 
+
+		// Training data unlabeled
+		readAndProcessInputTextLineWise("resources/data/german/unlab/de-wikidump-sents500000.txt", "ptb", 100000);
 		// Training data labeled sentences
 		readAndProcessInputTextLineWise("resources/data/german/tiger2_train-sents.txt", "ptb", 100000);
 		readAndProcessInputTextLineWise("resources/data/german/tiger2_devel-sents.txt", "ptb", 100000);
@@ -226,7 +229,7 @@ public class IndicatorWordsCreator {
 
 		// Training data unlabeled
 		readAndProcessInputTextLineWise("resources/data/ptb/unlab/english_ptb_unlab", "ptb", 100000);
-
+		// Training data labeled sentences
 		readAndProcessInputTextLineWise("resources/data/ner/en/eng-train-sents.txt", "ptb", 1000);
 		readAndProcessInputTextLineWise("resources/data/ner/en/eng-testa-sents.txt", "ptb", 1000);
 		readAndProcessInputTextLineWise("resources/data/ner/en/eng-testb-sents.txt", "ptb", 1000);
@@ -237,8 +240,8 @@ public class IndicatorWordsCreator {
 	private void createIndicatorDeNerWordsFromFiles(){
 
 		// Training data unlabeled
-		//readAndProcessInputTextLineWise("resources/data/german/unlab/fr.txt", "ptb", 100000);
-
+		readAndProcessInputTextLineWise("resources/data/german/unlab/de-wikidump-sents500000.txt", "ptb", 100000);
+		// Training data labeled sentences
 		readAndProcessInputTextLineWise("resources/data/ner/de/deu-train-sents.txt", "ptb", 100000);
 		readAndProcessInputTextLineWise("resources/data/ner/de/deu-testa-sents.txt", "ptb", 100000);
 		readAndProcessInputTextLineWise("resources/data/ner/de/deu-testb-sents.txt", "ptb", 100000);

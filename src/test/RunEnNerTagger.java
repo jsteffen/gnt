@@ -11,7 +11,7 @@ import data.ModelInfo;
 import data.Pair;
 import features.WordSuffixFeatureFactory;
 
-public class RunNerTagger {
+public class RunEnNerTagger {
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("FLORS");
 		modelInfo.setTaggerName("NER");
