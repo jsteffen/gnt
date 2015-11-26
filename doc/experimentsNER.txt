@@ -23,6 +23,17 @@ I use this for both EN and DE
 -	shape feature methods from POS applied on training
 -	all suffix features from training
 -	1000 clusterIDs from Marmot
+	- NOTE: Marmot cluserID are based on digit-normalized wiki-dumps
+
+OBACHT:
+- ich hatte vergessen, test unlabeled data zu laden, was dazu führt, dass ich viele unknown word habe
+	wenn ich distributed vector baue -> das hat zu Verlusten geführt
+- Now, i get better results again, but missing 1% in case of eng-testb.conll
+-> Now, the differences with previous tests is that I now use all sentences from unlabeded data, not only the first 1000
+-> trie again with fewer unlabeled data
+	- not using unlabeled large corpus PTB
+	- NEXT: try out: load only 1000
+-> THUS: it seems that size of unlabeled data is important, maybe even domain ?
 
 
 New possible features:

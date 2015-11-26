@@ -95,9 +95,7 @@ public class CorpusProcessor {
 		}
 		return sentenceString+tokens.get(tokens.size()-1);
 	}
-
 	
-
 	// Processing NER files
 	private void transcodeNERfile(String sourceFileName, String sourceEncoding,
 			String targetFileName, String targetEncoding)

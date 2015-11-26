@@ -70,7 +70,23 @@ accuracy:  95.97%; precision:  66.59%; recall:  63.98%; FB1:  65.26
               ORG: precision:  47.95%; recall:  46.83%; FB1:  47.38
               PER: precision:  83.29%; recall:  75.06%; FB1:  78.96
               
--> MINUS 2,5 %
+-> MINUS 2,5 % -> JO, weil ich vergessen habe, test unlabeled data zu laden
+
+-> corrected: AND loading all sentence from unlabeled data
+processed 51645 tokens with 4833 phrases; found: 3991 phrases; correct: 3012.
+accuracy:  95.49%; precision:  75.47%; recall:  62.32%; FB1:  68.27
+              LOC: precision:  77.21%; recall:  74.85%; FB1:  76.01
+             MISC: precision:  72.55%; recall:  49.21%; FB1:  58.64
+              ORG: precision:  64.24%; recall:  51.81%; FB1:  57.36
+              PER: precision:  85.17%; recall:  70.52%; FB1:  77.16
+lt-pool-183:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 3092 phrases; correct: 2314.
+accuracy:  96.36%; precision:  74.84%; recall:  63.00%; FB1:  68.41
+              LOC: precision:  74.20%; recall:  69.47%; FB1:  71.76
+             MISC: precision:  65.90%; recall:  47.31%; FB1:  55.08
+              ORG: precision:  60.28%; recall:  49.68%; FB1:  54.47
+              PER: precision:  88.96%; recall:  74.81%; FB1:  81.27
+-> MY BEST RESULT SO FAR!
               
 Without any unlabeled data:
 lt-pool-183:resources gune00$ ./conlleval < eval/deu-testa.txt 

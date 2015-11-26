@@ -19,7 +19,7 @@ public class RunEnNerTagger {
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 50;
-		Alphabet.withWordFeats=false;
+		Alphabet.withWordFeats=true;
 		Alphabet.withShapeFeats=true;
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;

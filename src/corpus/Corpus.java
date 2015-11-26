@@ -141,19 +141,19 @@ public class Corpus {
 	
 	private void setLabeledEnNerData(){
 		// It is assumed that all these files have suffix .conll
-		trainingLabeledData.add("resources/data/ner/en/eng-testa");
+		trainingLabeledData.add("resources/data/ner/en/eng-train");
 		devLabeledData.add("resources/data/ner/en/eng-testb");
-		testLabeledData.add("resources/data/ner/en/eng-train");	
+		testLabeledData.add("resources/data/ner/en/eng-testa");	
 	}
 
 	private void setUnLabeledEnNerData(){
 		// It is assumed that these filenames are complete
-		trainingUnLabeledData.add("resources/data/ner/en/eng-testa-sents.txt");
-		devUnLabeledData.add("resources/data/ner/en/eng-testb-sents.txt");
-		testUnLabeledData.add("resources/data/ner/en/eng-train-sents.txt");
+		trainingUnLabeledData.add("resources/data/ner/en/eng-train-sents.txt");
+		devUnLabeledData.add("resources/data/ner/en/eng-testa-sents.txt");
+		testUnLabeledData.add("resources/data/ner/en/eng-testb-sents.txt");
 
 		// Unlabeled data
-		devUnLabeledData.add("resources/data/ptb/unlab/english_ptb_unlab");		
+		//devUnLabeledData.add("resources/data/ptb/unlab/english_ptb_unlab");		
 	}
 
 	// POS German

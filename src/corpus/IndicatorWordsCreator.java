@@ -193,7 +193,7 @@ public class IndicatorWordsCreator {
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
 		}
-		for (String fileName : corpus.getTrainingUnLabeledData()){
+		for (String fileName : corpus.getTestUnLabeledData()){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
