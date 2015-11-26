@@ -18,7 +18,7 @@ public class TrainDeNerTagger {
 		int numberOfSentences = -1;
 		int dim = 50;
 		double subSamplingThreshold = 0.000000001;
-		Alphabet.withWordFeats=true;
+		Alphabet.withWordFeats=false;
 		Alphabet.withShapeFeats=true;
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;

@@ -9,12 +9,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * The idea of this class is to process all (or nearly all) files from Corpus and normalize
+ * The idea of this class is to process all files from Corpus and normalize
  * the content.
  * Currently normalization will be restricted to numbers:
  * - map each digit to 0
@@ -47,7 +48,8 @@ public class CorpusNormalizer {
 	public void setCorpus(Corpus corpus) {
 		this.corpus = corpus;
 	}
-
+	
+	// Code for normalization of all corpus files
 	/**
 	 * Copy the file named fileNameOrig to fileNameOrig.orig if it does not exist.
 	 * it is assumed that fileNameOrig is complete name.
@@ -170,7 +172,7 @@ public class CorpusNormalizer {
 			CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileNameComplete);
 		}
 	}
-	
+
 	private void normalizeUnLabeledFilesFromCorpus() throws IOException{
 		for (String fileNameComplete : this.getCorpus().getTrainingUnLabeledData()){
 			System.out.println("Copy and normalize: " + fileNameComplete);
@@ -188,23 +190,23 @@ public class CorpusNormalizer {
 			CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileNameComplete);
 		}
 	}
-	
+
 	public void normalizeCorpus() throws IOException{
-		
+
 		this.normalizeLabeledFilesFromCorpus();
 		this.normalizeUnLabeledFilesFromCorpus();		
 	}
-	
+
 	public void normalizeAlltaggerNameCorpora() throws IOException{
 		for (String taggerName : Corpus.knownTaggerNames){
 			this.setCorpus(new Corpus(taggerName));
 			this.normalizeCorpus();
-			}
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
 		CorpusNormalizer normalizer = new CorpusNormalizer();
 		normalizer.normalizeAlltaggerNameCorpora();
-		
+
 	}
 }

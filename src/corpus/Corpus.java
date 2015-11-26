@@ -193,7 +193,7 @@ public class Corpus {
 		trainingUnLabeledData.add("resources/data/ner/de/deu-train-sents.txt");
 
 		// Unlabeled data
-		devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");		
+		//devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");		
 	}
 	
 	public Corpus(String taggerName){

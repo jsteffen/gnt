@@ -38,3 +38,33 @@ Error rate:
 
 With normalized digits:
 
+++++
+Load known vocabulary from training for evaluating OOV: 
+Sentences: 0 words: 75740 labels: 0
+
+
+++++
+Do testing from file: resources/data/german/tiger2_devel.conll
+System time (msec): 1319
+Sentences: 5000
+Testing instances: 76704
+Sentences/sec: 3790
+Words/sec: 58153
+Create eval file: resources/eval/tiger2_devel.txt
+All pos: 76704 Correct: 74857 Accuracy: 97,59%
+All OOV pos: 5682 Correct: 5234 Accuracy: 92,12%
+All InV pos: 71022 Correct: 69623 Accuracy: 98,03%
+
+++++
+Do testing from file: resources/data/german/tiger2_test.conll
+System time (msec): 1291
+Sentences: 5000
+Testing instances: 92004
+Sentences/sec: 3872
+Words/sec: 71265
+Create eval file: resources/eval/tiger2_test.txt
+All pos: 92004 Correct: 89281 Accuracy: 97,04%
+All OOV pos: 9044 Correct: 8258 Accuracy: 91,31%
+All InV pos: 82960 Correct: 81023 Accuracy: 97,67%
+
+-> nix bringing

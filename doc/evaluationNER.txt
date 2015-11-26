@@ -29,30 +29,6 @@ mapper.transcodeNERfile("resources/data/ner/eng.testb", "utf-8", "resources/data
 
 Actual results using settings:
 
-ModelInfo modelInfo = new ModelInfo("FLORS");
-		modelInfo.setTaggerName("NER");
-		
-		int windowSize = 2;
-		int numberOfSentences = -1;
-		int dim = 0;
-		WordFeatures.withWordFeats=false;
-		
-./conlleval < eval/eng-testa.txt 
-processed 51578 tokens with 5942 phrases; found: 6069 phrases; correct: 5031.
-accuracy:  97.52%; precision:  82.90%; recall:  84.67%; FB1:  83.77
-              LOC: precision:  89.11%; recall:  90.85%; FB1:  89.97
-             MISC: precision:  81.59%; recall:  80.26%; FB1:  80.92
-              ORG: precision:  71.19%; recall:  75.91%; FB1:  73.48
-              PER: precision:  86.28%; recall:  87.08%; FB1:  86.68
-                
-./conlleval < eval/eng-testb.txt 
-processed 46666 tokens with 5648 phrases; found: 5983 phrases; correct: 4254.
-accuracy:  95.63%; precision:  71.10%; recall:  75.32%; FB1:  73.15
-              LOC: precision:  81.06%; recall:  84.95%; FB1:  82.96
-             MISC: precision:  67.01%; recall:  74.64%; FB1:  70.62
-              ORG: precision:  61.45%; recall:  68.33%; FB1:  64.71
-              PER: precision:  73.35%; recall:  72.85%; FB1:  73.10
-
 dim=10
 ./conlleval < eval/eng-testa.txt 
 processed 51578 tokens with 5942 phrases; found: 6154 phrases; correct: 5112.
@@ -163,6 +139,7 @@ accuracy:  95.77%; precision:  73.11%; recall:  77.20%; FB1:  75.09
 Using modelInfo MDP seems also to be ok, but computes smaller model files.
 
 Using cluster IDs:
+*******************
 
 ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("NER");
@@ -214,22 +191,19 @@ accuracy:  97.16%; precision:  80.88%; recall:  84.76%; FB1:  82.77
 This is close to CRF  -> but without POS and Chunks 
 -> still missing about 9% FB1 to the best NER for English
 
-With ngrams as suffixes:
+Without word features:
 
-./conlleval < eval/eng-testa.txt 
-processed 51578 tokens with 5942 phrases; found: 6098 phrases; correct: 5293.
-accuracy:  98.20%; precision:  86.80%; recall:  89.08%; FB1:  87.92
-              LOC: precision:  91.42%; recall:  92.81%; FB1:  92.11
-             MISC: precision:  83.35%; recall:  81.45%; FB1:  82.39
-              ORG: precision:  76.15%; recall:  81.21%; FB1:  78.60
-              PER: precision:  91.90%; recall:  94.90%; FB1:  93.38
-
-./conlleval < eval/eng-testb.txt 
-processed 46666 tokens with 5648 phrases; found: 5930 phrases; correct: 4759.
-accuracy:  97.07%; precision:  80.25%; recall:  84.26%; FB1:  82.21
-              LOC: precision:  84.57%; recall:  88.07%; FB1:  86.28
-             MISC: precision:  71.99%; recall:  75.07%; FB1:  73.50
-              ORG: precision:  71.97%; recall:  78.39%; FB1:  75.04
-              PER: precision:  88.44%; recall:  90.35%; FB1:  89.39
-              
--> nix good
+lt-pool-183:resources gune00$ ./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6050 phrases; correct: 5303.
+accuracy:  98.22%; precision:  87.65%; recall:  89.25%; FB1:  88.44
+              LOC: precision:  91.89%; recall:  92.49%; FB1:  92.19
+             MISC: precision:  85.45%; recall:  84.06%; FB1:  84.75
+              ORG: precision:  78.07%; recall:  82.55%; FB1:  80.25
+              PER: precision:  91.79%; recall:  93.49%; FB1:  92.63
+lt-pool-183:resources gune00$ ./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 5913 phrases; correct: 4716.
+accuracy:  96.95%; precision:  79.76%; recall:  83.50%; FB1:  81.58
+              LOC: precision:  84.23%; recall:  87.41%; FB1:  85.79
+             MISC: precision:  70.10%; recall:  76.50%; FB1:  73.16
+              ORG: precision:  71.97%; recall:  77.12%; FB1:  74.46
+              PER: precision:  88.02%; recall:  89.05%; FB1:  88.53

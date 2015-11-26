@@ -258,7 +258,7 @@ public class CorpusProcessor {
 	}
 
 	public static void main(String[] args) throws IOException {
-		CorpusProcessor mapper = new CorpusProcessor("DENER");
+		CorpusProcessor mapper = new CorpusProcessor("NER");
 		mapper.processConllFiles();
 	}
 }	

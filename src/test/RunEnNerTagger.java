@@ -19,7 +19,7 @@ public class RunEnNerTagger {
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 50;
-		Alphabet.withWordFeats=true;
+		Alphabet.withWordFeats=false;
 		Alphabet.withShapeFeats=true;
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;
@@ -38,9 +38,9 @@ public class RunEnNerTagger {
 		List<Pair<String, String>> fileList = new ArrayList<Pair<String, String>>();
 
 		fileList.add(new Pair<String, String>(
-				"resources/data/ner/eng-testa.conll", "resources/eval/eng-testa.txt"));
+				"resources/data/ner/en/eng-testa.conll", "resources/eval/eng-testa.txt"));
 		fileList.add(new Pair<String, String>(
-				"resources/data/ner/eng-testb.conll", "resources/eval/eng-testb.txt"));
+				"resources/data/ner/en/eng-testb.conll", "resources/eval/eng-testb.txt"));
 
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile evalFile = new EvalConllFile();
