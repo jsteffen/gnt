@@ -1,14 +1,20 @@
 package corpus;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
 /**
  * From (Müller et al., ACL, 2015):
@@ -84,15 +90,31 @@ public class WikiPediaConllReader {
 	 * @param targetEncoding
 	 * @throws IOException
 	 */
+	
+	// From http://stackoverflow.com/questions/4834721/java-read-bz2-file-and-uncompress-parse-on-the-fly
+	// Reads in a compressed file
+	// Note: the accepted formats are: gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z. 
+	// As seen in the link, the correct one is automatically assigned – Danielson Aug 15 at 10:01 
+	public static BufferedReader getBufferedReaderForCompressedFile(String fileIn) 
+			throws FileNotFoundException, CompressorException {
+	    FileInputStream fin = new FileInputStream(fileIn);
+	    BufferedInputStream bis = new BufferedInputStream(fin);
+	    CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis);
+	    BufferedReader br2 = new BufferedReader(new InputStreamReader(input));
+	    return br2;
+	}
+	
 	private void transcodeConllToSentenceFile(String sourceFileName, String sourceEncoding,
 			String targetFileName, String targetEncoding, int maxSent)
-					throws IOException {
+					throws IOException, CompressorException {
 
 		// init reader for CONLL style file
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(
-						new FileInputStream(sourceFileName),
-						sourceEncoding));
+//		BufferedReader reader = new BufferedReader(
+//				new InputStreamReader(
+//						new FileInputStream(sourceFileName),
+//						sourceEncoding));
+		
+		BufferedReader reader = WikiPediaConllReader.getBufferedReaderForCompressedFile(sourceFileName);
 
 		// init writer for line-wise file
 		BufferedWriter writer = new BufferedWriter(
@@ -135,13 +157,13 @@ public class WikiPediaConllReader {
 		return sentenceString+tokens.get(tokens.size()-1);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, CompressorException {
 		WikiPediaConllReader mapper = new WikiPediaConllReader();
 		
 		mapper.transcodeConllToSentenceFile(
-				"/Users/gune00/data/Marmot/de.wikidump", "utf-8", 
-				"/Users/gune00/data/Marmot/de-wikidump-sents500000.txt", "utf-8", 
-				500000);
+				"/Users/gune00/data/Marmot/en.wikidump.bz2", "dummy", 
+				"/Users/gune00/data/Marmot/en-wikidump-sentsAll.txt", "utf-8", 
+				-1);
 		
 	}
 }

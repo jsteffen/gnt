@@ -64,12 +64,15 @@
 - use ngrams instead of suffix (simulates NemexA) -> DONE, but check again
 	switch off/on: WordSuffixFeatureFactory.ngram = false;
 
+November, 2015:
+
+- normalize digits to 0 -> DONE
+
+- run GNT on German POS and NER -> DONE
+
+
 HIERIX:
 
-- normalize digits to 0
-
-- run GNT on German POS and NER
-	- DONE
 
 - create input file for TORCH
 

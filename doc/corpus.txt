@@ -18,3 +18,18 @@ I am actually only using scancl-2012 data only for ID (In Domain) and OOD (OutOf
 		
 	/Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb (conll format and tokenized/sentence/line) 
 		-> only read first 100.000
+
+		
+Normalization:
+
+- to normalize corpus files run 
+	- for all taggerNames corpus.CorpusNormalizer.normalizeAlltaggerNameCorpora()
+	- for given taggerName corpus.CorpusNormalizer.normalizeCorpus()
+-> both also create copies of the original files
+	
+- Usually only need to be done one time;
+- Same for corpus.CorpusProcessor.processConllFiles()
+	- creates sentence files from conll files and also creates proper conll files if necessary
+
+Both can be comoned
+

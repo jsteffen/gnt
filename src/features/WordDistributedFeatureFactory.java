@@ -388,17 +388,17 @@ public class WordDistributedFeatureFactory {
 	// I call the resulting files condensed because only non-zero weights are stored. This helps reducing space
 	// very much !
 	public void readGNTCorpus(Corpus corpus){
-		for (String fileName : corpus.trainingUnLabeledData){
+		for (String fileName : corpus.getTrainingUnLabeledData()){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
 		}
-		for (String fileName : corpus.devUnLabeledData){
+		for (String fileName : corpus.getDevUnLabeledData()){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);
 		}
-		for (String fileName : corpus.testUnLabeledData){
+		for (String fileName : corpus.getTrainingUnLabeledData()){
 			System.out.println(fileName);
 			// read in first 100.000 sentences from each file
 			readAndProcessInputTextLineWise(fileName, "ptb", 100000);

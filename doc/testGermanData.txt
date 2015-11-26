@@ -5,8 +5,6 @@ Language setting via taggerName
 Where to change:
 - define taggerName: DEPOS, DENER
 - corpus.Corpus -> ok
-- corpus.ConllMapper.main(String[]) -> ok
-- features.IndicatorWordsCreator -> ok
 
 -> I think this should work for other languages as well
 
@@ -40,7 +38,7 @@ German Tiger corpus ala Müller et al., 2013
 -> now with correct encoding: 0,39 behind SOTA (corrupted: 0,47 behind SOTA)
 
 NEXT:
-encode numbers as in Müller et al., ACL 2015
+encode numbers as in Müller et al., ACL 2015 -> DONE
 
 What could be done to get better results ? 
 

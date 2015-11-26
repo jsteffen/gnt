@@ -333,6 +333,13 @@ public class WordSuffixFeatureFactory {
 			e.printStackTrace();
 		}
 	}
+	
+	public void readSuffixList(String taggerName){
+		String suffixFileName = "resources/features/suffixList"+"_"+taggerName+".txt";
+		System.out.println("Reading suffix list from: " + suffixFileName);
+		this.readSuffixFile(suffixFileName);
+		System.out.println("... done");
+	}
 
 	//** tests methods
 	public void testWriteSuffixList(){
@@ -348,12 +355,7 @@ public class WordSuffixFeatureFactory {
 		System.out.println("... done");
 	}
 
-	public void readSuffixList(String taggerName){
-		String suffixFileName = "resources/features/suffixList"+"_"+taggerName+".txt";
-		System.out.println("Reading suffix list from: " + suffixFileName);
-		this.readSuffixFile(suffixFileName);
-		System.out.println("... done");
-	}
+	
 
 	public static void main(String[] args){
 		WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();

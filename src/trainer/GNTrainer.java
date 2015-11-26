@@ -2,10 +2,10 @@ package trainer;
 
 import java.io.IOException;
 
+import corpus.IndicatorWordsCreator;
 import data.ModelInfo;
 import data.OffSets;
 import data.Window;
-import features.IndicatorWordsCreator;
 import features.WordClusterFeatureFactory;
 import features.WordDistributedFeatureFactory;
 import features.WordShapeFeatureFactory;
@@ -48,7 +48,7 @@ public class GNTrainer {
 		String iwFilename = "resources/features/iw_all"+taggerName+".txt";
 		System.out.println("Create indictor words and save in file: " + iwFilename);
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
-		iwp.createIndicatorTaggerNameWordsFromFile(taggerName);
+		iwp.createIndicatorTaggerNameWordsFromCorpus(taggerName);
 		
 		iwp.postProcessWords(this.getThreshold());
 		iwp.writeSortedIndicatorWords(iwFilename, 10000);

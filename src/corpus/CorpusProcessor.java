@@ -10,22 +10,13 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * reads in a file of sentences in conll format and reads out each sentence lines-wise in a output file.
- * CONLL format:
- * - each word a line, sentence ends with newline
- * - word is at second position:
- * 1       The     _       DT      DT      _       2       NMOD 
- * Files to process for FLORS experiments:
- * - /Users/gune00/data/MLDP/english/english-train.conll
- * - /Users/gune00/data/sancl-2012/sancl.labeled/*-dev.conll
- * - /Users/gune00/data/BioNLPdata/CoNLL2007/pbiotb/english_pbiotb_dev.conll
- */
 
-public class ConllMapper {
+
+public class CorpusProcessor {
 
 	private Corpus corpus = null;
 	private String taggerName = "";
+	
 	public Corpus getCorpus() {
 		return corpus;
 	}
@@ -33,11 +24,18 @@ public class ConllMapper {
 		this.corpus = corpus;
 	}
 
-	public ConllMapper(String taggerName) {
+	public CorpusProcessor(String taggerName) {
 		this.taggerName = taggerName;
 		this.setCorpus(new Corpus(taggerName));
 	}
 
+	/*
+	 * reads in a file of sentences in conll format and reads out each sentence lines-wise in a output file.
+	 * CONLL format:
+	 * - each word a line, sentence ends with newline
+	 * - word is at second position:
+	 * 1       The     _       DT      DT      _       2       NMOD 
+	 */
 	/**
 	 * Receives a file in CONLL format and maps each CONLL sentence to a sentence, where each sentence
 	 * is a line of words extracted from the CONLL sentence.
@@ -98,35 +96,7 @@ public class ConllMapper {
 		return sentenceString+tokens.get(tokens.size()-1);
 	}
 
-	/**
-	 * This is a wrapper to process a set of files! -1 means: all files
-	 */
-	private void transcodeConllToSentenceFiles(){
-		for (String fileName : this.getCorpus().trainingLabeledData){
-			try {
-				System.out.println(fileName);
-				transcodeConllToSentenceFile(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8", -1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		for (String fileName : this.getCorpus().devLabeledData){
-			try {
-				System.out.println(fileName);
-				transcodeConllToSentenceFile(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8", -1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		for (String fileName : this.getCorpus().testLabeledData){
-			try {
-				System.out.println(fileName);
-				transcodeConllToSentenceFile(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8", -1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}	
-	}
+	
 
 	// Processing NER files
 	private void transcodeNERfile(String sourceFileName, String sourceEncoding,
@@ -179,7 +149,6 @@ public class ConllMapper {
 
 	}
 
-	//HIERIX
 	private String deNerTokenToString(String[] tokenizedLine, int index) {
 		// DE
 		// Nordendler <unknown> NN I-NC I-ORG
@@ -204,28 +173,66 @@ public class ConllMapper {
 
 	}
 
-	private void transCodeEnNerFiles() throws IOException{
-		transcodeNERfile(
-				"resources/data/ner/en/eng.train", "utf-8", 
-				"resources/data/ner/en/eng-train.conll", "utf-8");
-		transcodeNERfile(
-				"resources/data/ner/en/eng.testa", "utf-8", 
-				"resources/data/ner/en/eng-testa.conll", "utf-8");
-		transcodeNERfile(
-				"resources/data/ner/en/eng.testb", "utf-8", 
-				"resources/data/ner/en/eng-testb.conll", "utf-8");
+	// Main wrappers for processing all files defined in corpus for current used taggerName
+	
+	/**
+	 * This is a wrapper to process a set of NER files. Currently, assuming conll 2003 format
+	 */
+	private void transcodeSourceFileToProperConllFormatFiles(){
+		for (String fileName : this.getCorpus().getTrainingLabeledSourceFiles()){
+			try {
+				System.out.println(fileName+".src");
+				transcodeNERfile(fileName+".src", "ISO-8859-1", fileName+".conll", "utf-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		for (String fileName : this.getCorpus().getDevLabeledData()){
+			try {
+				System.out.println(fileName+".src");
+				transcodeNERfile(fileName+".src", "ISO-8859-1", fileName+".conll", "utf-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		for (String fileName : this.getCorpus().getTestLabeledData()){
+			try {
+				System.out.println(fileName+".src");
+				transcodeNERfile(fileName+".src", "ISO-8859-1", fileName+".conll", "utf-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}	
 	}
-
-	private void transCodeDeNerFiles() throws IOException{
-		transcodeNERfile(
-				"resources/data/ner/de/deu.train", "ISO-8859-1", 
-				"resources/data/ner/de/deu-train.conll", "utf-8");
-		transcodeNERfile(
-				"resources/data/ner/de/deu.testa", "ISO-8859-1", 
-				"resources/data/ner/de/deu-testa.conll", "utf-8");
-		transcodeNERfile(
-				"resources/data/ner/de/deu.testb", "ISO-8859-1", 
-				"resources/data/ner/de/deu-testb.conll", "utf-8");
+	
+	/**
+	 * This is a wrapper to process a set of files! -1 means: all files
+	 */
+	private void transcodeConllToSentenceFiles(){
+		for (String fileName : this.getCorpus().getTrainingLabeledData()){
+			try {
+				System.out.println(fileName+".conll");
+				transcodeConllToSentenceFile(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8", -1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		for (String fileName : this.getCorpus().getDevLabeledData()){
+			try {
+				System.out.println(fileName+".conll");
+				transcodeConllToSentenceFile(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8", -1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		for (String fileName : this.getCorpus().getTestLabeledData()){
+			try {
+				System.out.println(fileName+".conll");
+				transcodeConllToSentenceFile(fileName+".conll","utf-8", fileName+"-sents.txt", "utf-8", -1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}	
 	}
 
 	// A simple main caller 
@@ -234,13 +241,13 @@ public class ConllMapper {
 			this.transcodeConllToSentenceFiles();
 		else
 			if (taggerName.equals("NER")){
-				this.transCodeEnNerFiles();
+				this.transcodeSourceFileToProperConllFormatFiles();
 
 				this.transcodeConllToSentenceFiles();
 			}
 			else
 				if (taggerName.equals("DENER")){
-					this.transCodeDeNerFiles();
+					this.transcodeSourceFileToProperConllFormatFiles();
 
 					this.transcodeConllToSentenceFiles();
 				}
@@ -251,7 +258,7 @@ public class ConllMapper {
 	}
 
 	public static void main(String[] args) throws IOException {
-		ConllMapper mapper = new ConllMapper("DENER");
+		CorpusProcessor mapper = new CorpusProcessor("DENER");
 		mapper.processConllFiles();
 	}
 }	

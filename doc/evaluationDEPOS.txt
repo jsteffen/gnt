@@ -35,3 +35,6 @@ All InV pos: 82836 Correct: 80917 Accuracy: 97,68%
 Error rate: 
 2.95 - 2.56 (best Müller et al., 2013) -> 0.39
 2.95 - 2,27 (Müller et al., 2015) -> 0,68
+
+With normalized digits:
+
