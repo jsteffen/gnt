@@ -26,6 +26,7 @@ in previous paper, FLORS uses only 100 highest ranked suffixes
 - can also use other kinds of suffixes, e.g., for German just Morphix tree
 
 - or for NER, only upto N-suffixes
+	- easy to implement as part of features.WordSuffixFeatureFactory.isNonWord(String)
 
 Computation of ngrams instead of suffixes: DONE
 	switch off/on: WordSuffixFeatureFactory.ngram = false;
@@ -44,6 +45,6 @@ Computation of ngrams instead of suffixes: DONE
 Combine suffix and ngram by concatenating both into same file
 	- 	simple concat does not help because it seems that I can not compute absolute enumeration for 
 		resulting features
-	-	eventually I need to define it as its own feature vector
+	->	I simply forgot to resort the resulting concatenated lists!
 
 Compute prefixes - might be useful for NER (is used as feature their)

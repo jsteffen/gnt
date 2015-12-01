@@ -25,18 +25,27 @@ I use this for both EN and DE
 -	1000 clusterIDs from Marmot
 	- NOTE: Marmot cluserID are based on digit-normalized wiki-dumps
 
-OBACHT:
-- ich hatte vergessen, test unlabeled data zu laden, was dazu führt, dass ich viele unknown word habe
+OBACHT: applies to both EN and DE:
+- ich hatte vergessen, test unlabeled data zu laden, was dazu führte, dass ich viele unknown word habe
 	wenn ich distributed vector baue -> das hat zu Verlusten geführt
 - Now, i get better results again, but missing 1% in case of eng-testb.conll
 -> Now, the differences with previous tests is that I now use all sentences from unlabeded data, not only the first 1000
 -> trie again with fewer unlabeled data
 	- not using unlabeled large corpus PTB
 	- NEXT: try out: load only 1000
--> THUS: it seems that size of unlabeled data is important, maybe even domain ?
+-> THUS: it seems that size of unlabeled data is important, maybe even domain wrt. NER types to classify?
+
+
+Alternative indicator words:
+- What if I select indicator words those that occur in training data
+	- select the context words from annotated strings and choose the highest ranked words found in all indicator words
 
 
 New possible features:
+
+NER lexicons
+
+character embeddings
 
 POS
 
@@ -45,36 +54,10 @@ previous predictions
 prefixes
 
 smaller suffixes/prefixes
+-> initial test with token <= 5 brings a bit for EN, but hurts for DE
+-> token <= 3 hurts for EN and DE
 
 generalization of number/date expressions
+-> not useful so far (cf. doc/corpus.txt)
 
 context elements without certain features
-
-Anyway: 
-A script that could perform runs for a number of settings would be helpful
-
-Features: 
-Cf. http://www.cs.bgu.ac.il/~elhadad/nlp09/hw2.html#svm
-
-Lexical features:
-1. The word form (the string as it appears in the sentence)
-2. The POS of the word
-3. ORT - a feature that captures the orthographic (letter) structure of the word. It
-   can have any of the following values: number, contains-digit, contains-hyphen,
-   capitalized, all-capitals, URL, punctuation, regular.
-4. prefix1: first letter of the word
-5. prefix2: first two letters of the word
-6. prefix3: first three letters of the word
-7. suffix1: last letter of the word
-8. suffix2: last two letters of the word
-9. suffix3: last three letters of the word
-
-Lookup features:
-	gazetters
-	similarity
-	simstring
-
-context features: 
-	-2, -1, 0, 1, 2
-
-

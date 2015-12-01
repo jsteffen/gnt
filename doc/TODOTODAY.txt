@@ -67,6 +67,7 @@
 November, 2015:
 
 - normalize digits to 0 -> DONE
+	- /GNT/doc/corpus.txt
 
 - run GNT on German POS and NER -> DONE
 
@@ -75,6 +76,10 @@ HIERIX:
 
 
 - create input file for TORCH
+
+- NER-lexikons
+
+- character embeddings
 
 - run GNT with suffix AND ngram by concatenating both into one file
 	- DONE -> errors when concatenation -> I forgot to sort again after adding indices in 

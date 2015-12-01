@@ -39,6 +39,7 @@ German Tiger corpus ala Müller et al., 2013
 
 NEXT:
 encode numbers as in Müller et al., ACL 2015 -> DONE
+-> details in /GNT/doc/corpus.txt
 -> NIX bringing, neither for DEPOS nor DENER
 
 What could be done to get better results ? 

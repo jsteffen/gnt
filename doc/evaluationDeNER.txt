@@ -72,7 +72,7 @@ accuracy:  95.97%; precision:  66.59%; recall:  63.98%; FB1:  65.26
               
 -> MINUS 2,5 % -> JO, weil ich vergessen habe, test unlabeled data zu laden
 
--> corrected: AND loading all sentence from unlabeled data
+-> corrected: AND loading all sentence from CONLL-based unlabeled data
 processed 51645 tokens with 4833 phrases; found: 3991 phrases; correct: 3012.
 accuracy:  95.49%; precision:  75.47%; recall:  62.32%; FB1:  68.27
               LOC: precision:  77.21%; recall:  74.85%; FB1:  76.01
@@ -86,6 +86,7 @@ accuracy:  96.36%; precision:  74.84%; recall:  63.00%; FB1:  68.41
              MISC: precision:  65.90%; recall:  47.31%; FB1:  55.08
               ORG: precision:  60.28%; recall:  49.68%; FB1:  54.47
               PER: precision:  88.96%; recall:  74.81%; FB1:  81.27
+              
 -> MY BEST RESULT SO FAR!
               
 Without any unlabeled data:
@@ -104,4 +105,19 @@ accuracy:  96.23%; precision:  70.89%; recall:  62.97%; FB1:  66.70
               ORG: precision:  54.01%; recall:  49.68%; FB1:  51.75
               PER: precision:  87.70%; recall:  73.97%; FB1:  80.25
 
+suffixes with <= 4:
 
+lt-pool-183:resources gune00$ ./conlleval < eval/deu-testa.txt 
+processed 51645 tokens with 4833 phrases; found: 4035 phrases; correct: 2991.
+accuracy:  95.31%; precision:  74.13%; recall:  61.89%; FB1:  67.46
+              LOC: precision:  74.70%; recall:  74.51%; FB1:  74.61
+             MISC: precision:  67.93%; recall:  49.50%; FB1:  57.27
+              ORG: precision:  63.91%; recall:  51.09%; FB1:  56.78
+              PER: precision:  86.54%; recall:  69.74%; FB1:  77.23
+lt-pool-183:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 3128 phrases; correct: 2276.
+accuracy:  96.19%; precision:  72.76%; recall:  61.97%; FB1:  66.93
+              LOC: precision:  71.71%; recall:  69.57%; FB1:  70.62
+             MISC: precision:  61.60%; recall:  45.97%; FB1:  52.65
+              ORG: precision:  58.03%; recall:  47.22%; FB1:  52.07
+              PER: precision:  88.74%; recall:  73.89%; FB1:  80.64

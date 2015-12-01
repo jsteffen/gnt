@@ -204,7 +204,9 @@ public class WordSuffixFeatureFactory {
 	 * @return
 	 */
 	private boolean isNonWord(String token){
-		return (false
+		return (
+				false
+				//(token.length() > 3)
 				// hasLastNonLetter(token)
 				//				|| hasOnlyNonLetters(token) 
 				//				|| isNumber(token)

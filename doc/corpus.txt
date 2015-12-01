@@ -31,5 +31,5 @@ Normalization:
 - Same for corpus.CorpusProcessor.processConllFiles()
 	- creates sentence files from conll files and also creates proper conll files if necessary
 
-Both can be comoned
+Both can be combined
 
