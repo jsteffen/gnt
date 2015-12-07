@@ -74,6 +74,8 @@ November, 2015:
 
 HIERIX:
 
+- create property file
+- save and move it to model file folder
 
 - create input file for TORCH
 
