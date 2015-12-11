@@ -17,62 +17,8 @@ DE2003 -  testb F1=66.58  (minus 11%)
 
 Deutsch:
 
--> using 100T sentences from de-wikidump + Training/Devel/Test data:
+***** With all sentences from CONLL-based unlabeled data:
 
-processed 51645 tokens with 4833 phrases; found: 3887 phrases; correct: 2911.
-accuracy:  95.30%; precision:  74.89%; recall:  60.23%; FB1:  66.77
-              LOC: precision:  75.72%; recall:  73.92%; FB1:  74.81
-             MISC: precision:  72.70%; recall:  43.76%; FB1:  54.64
-              ORG: precision:  62.15%; recall:  50.68%; FB1:  55.84
-              PER: precision:  86.80%; recall:  69.02%; FB1:  76.90
-
-lt-pool-183:resources gune00$ ./conlleval < eval/deu-testb.txt 
-processed 52098 tokens with 3673 phrases; found: 3015 phrases; correct: 2236.
-accuracy:  96.23%; precision:  74.16%; recall:  60.88%; FB1:  66.87
-              LOC: precision:  73.48%; recall:  69.08%; FB1:  71.22
-             MISC: precision:  63.76%; recall:  40.45%; FB1:  49.50
-              ORG: precision:  59.97%; recall:  48.64%; FB1:  53.71
-              PER: precision:  88.28%; recall:  73.14%; FB1:  80.00
-
-Unlabeled sentences from Training/Devel/Test data only:
-BUT only first 1000 sentences used
-
-./conlleval < eval/deu-testa.txt 
-processed 51645 tokens with 4833 phrases; found: 3915 phrases; correct: 2920.
-accuracy:  95.29%; precision:  74.58%; recall:  60.42%; FB1:  66.76
-              LOC: precision:  75.89%; recall:  73.84%; FB1:  74.85
-             MISC: precision:  71.60%; recall:  46.44%; FB1:  56.34
-              ORG: precision:  63.49%; recall:  51.01%; FB1:  56.57
-              PER: precision:  84.92%; recall:  67.52%; FB1:  75.23
-./conlleval < eval/deu-testb.txt 
-processed 52098 tokens with 3673 phrases; found: 3067 phrases; correct: 2283.
-accuracy:  96.27%; precision:  74.44%; recall:  62.16%; FB1:  67.74
-              LOC: precision:  74.25%; recall:  69.66%; FB1:  71.88
-             MISC: precision:  65.20%; recall:  46.42%; FB1:  54.23
-              ORG: precision:  60.61%; recall:  49.16%; FB1:  54.29
-              PER: precision:  87.80%; recall:  72.89%; FB1:  79.65
--> missing 10% F1
-
-With all sentences:
-
-lt-pool-183:resources gune00$ ./conlleval < eval/deu-testa.txt 
-processed 51645 tokens with 4833 phrases; found: 3973 phrases; correct: 2953.
-accuracy:  95.34%; precision:  74.33%; recall:  61.10%; FB1:  67.07
-              LOC: precision:  74.66%; recall:  74.09%; FB1:  74.37
-             MISC: precision:  69.87%; recall:  48.91%; FB1:  57.54
-              ORG: precision:  64.04%; recall:  49.80%; FB1:  56.03
-              PER: precision:  85.56%; recall:  68.95%; FB1:  76.36
-lt-pool-183:resources gune00$ ./conlleval < eval/deu-testb.txt 
-processed 52098 tokens with 3673 phrases; found: 3529 phrases; correct: 2350.
-accuracy:  95.97%; precision:  66.59%; recall:  63.98%; FB1:  65.26
-              LOC: precision:  65.50%; recall:  72.46%; FB1:  68.81
-             MISC: precision:  61.78%; recall:  50.90%; FB1:  55.81
-              ORG: precision:  47.95%; recall:  46.83%; FB1:  47.38
-              PER: precision:  83.29%; recall:  75.06%; FB1:  78.96
-              
--> MINUS 2,5 % -> JO, weil ich vergessen habe, test unlabeled data zu laden
-
--> corrected: AND loading all sentence from CONLL-based unlabeled data
 processed 51645 tokens with 4833 phrases; found: 3991 phrases; correct: 3012.
 accuracy:  95.49%; precision:  75.47%; recall:  62.32%; FB1:  68.27
               LOC: precision:  77.21%; recall:  74.85%; FB1:  76.01
@@ -87,9 +33,19 @@ accuracy:  96.36%; precision:  74.84%; recall:  63.00%; FB1:  68.41
               ORG: precision:  60.28%; recall:  49.68%; FB1:  54.47
               PER: precision:  88.96%; recall:  74.81%; FB1:  81.27
               
--> MY BEST RESULT SO FAR!
+***** -> MY BEST RESULT SO FAR!
+
+***** Subsampling: 0.01
+processed 52098 tokens with 3673 phrases; found: 3083 phrases; correct: 2310.
+accuracy:  96.34%; precision:  74.93%; recall:  62.89%; FB1:  68.38
+              LOC: precision:  74.18%; recall:  69.66%; FB1:  71.85
+             MISC: precision:  65.22%; recall:  47.01%; FB1:  54.64
+              ORG: precision:  61.25%; recall:  49.29%; FB1:  54.62
+              PER: precision:  88.77%; recall:  74.73%; FB1:  81.14
               
-Without any unlabeled data:
+***** -> subsampling not so important
+              
+***** Without unlabeled data:
 lt-pool-183:resources gune00$ ./conlleval < eval/deu-testa.txt 
 processed 51645 tokens with 4833 phrases; found: 4190 phrases; correct: 2993.
 accuracy:  95.28%; precision:  71.43%; recall:  61.93%; FB1:  66.34
@@ -97,6 +53,7 @@ accuracy:  95.28%; precision:  71.43%; recall:  61.93%; FB1:  66.34
              MISC: precision:  65.94%; recall:  50.99%; FB1:  57.51
               ORG: precision:  60.43%; recall:  52.05%; FB1:  55.93
               PER: precision:  84.85%; recall:  68.74%; FB1:  75.95
+              
 lt-pool-183:resources gune00$ ./conlleval < eval/deu-testb.txt 
 processed 52098 tokens with 3673 phrases; found: 3263 phrases; correct: 2313.
 accuracy:  96.23%; precision:  70.89%; recall:  62.97%; FB1:  66.70
@@ -104,20 +61,77 @@ accuracy:  96.23%; precision:  70.89%; recall:  62.97%; FB1:  66.70
              MISC: precision:  60.37%; recall:  48.66%; FB1:  53.88
               ORG: precision:  54.01%; recall:  49.68%; FB1:  51.75
               PER: precision:  87.70%; recall:  73.97%; FB1:  80.25
+              
+***** -> unlabeded data is important (see below) but not so important as cluster features
 
-suffixes with <= 4:
+***** without cluster feature but anything else:
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-testa.txt 
+processed 51645 tokens with 4833 phrases; found: 3479 phrases; correct: 2382.
+accuracy:  94.11%; precision:  68.47%; recall:  49.29%; FB1:  57.31
+              LOC: precision:  75.24%; recall:  60.20%; FB1:  66.89
+             MISC: precision:  67.30%; recall:  34.85%; FB1:  45.92
+              ORG: precision:  59.75%; recall:  46.41%; FB1:  52.24
+              PER: precision:  70.96%; recall:  53.03%; FB1:  60.70
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 2800 phrases; correct: 1994.
+accuracy:  95.67%; precision:  71.21%; recall:  54.29%; FB1:  61.61
+              LOC: precision:  74.63%; recall:  63.38%; FB1:  68.55
+             MISC: precision:  62.72%; recall:  37.16%; FB1:  46.67
+              ORG: precision:  57.31%; recall:  44.11%; FB1:  49.85
+              PER: precision:  80.52%; recall:  62.59%; FB1:  70.43
+              
+***** -> cluster features are important
+              
+***** Only with resources from training data: no unlabeled data and cluster data:
 
-lt-pool-183:resources gune00$ ./conlleval < eval/deu-testa.txt 
-processed 51645 tokens with 4833 phrases; found: 4035 phrases; correct: 2991.
-accuracy:  95.31%; precision:  74.13%; recall:  61.89%; FB1:  67.46
-              LOC: precision:  74.70%; recall:  74.51%; FB1:  74.61
-             MISC: precision:  67.93%; recall:  49.50%; FB1:  57.27
-              ORG: precision:  63.91%; recall:  51.09%; FB1:  56.78
-              PER: precision:  86.54%; recall:  69.74%; FB1:  77.23
-lt-pool-183:resources gune00$ ./conlleval < eval/deu-testb.txt 
-processed 52098 tokens with 3673 phrases; found: 3128 phrases; correct: 2276.
-accuracy:  96.19%; precision:  72.76%; recall:  61.97%; FB1:  66.93
-              LOC: precision:  71.71%; recall:  69.57%; FB1:  70.62
-             MISC: precision:  61.60%; recall:  45.97%; FB1:  52.65
-              ORG: precision:  58.03%; recall:  47.22%; FB1:  52.07
-              PER: precision:  88.74%; recall:  73.89%; FB1:  80.64
+processed 51645 tokens with 4833 phrases; found: 3719 phrases; correct: 2298.
+accuracy:  93.79%; precision:  61.79%; recall:  47.55%; FB1:  53.74
+              LOC: precision:  69.72%; recall:  57.32%; FB1:  62.92
+             MISC: precision:  61.10%; recall:  41.68%; FB1:  49.56
+              ORG: precision:  52.16%; recall:  43.76%; FB1:  47.59
+              PER: precision:  64.54%; recall:  46.90%; FB1:  54.32
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 2969 phrases; correct: 1926.
+accuracy:  95.38%; precision:  64.87%; recall:  52.44%; FB1:  57.99
+              LOC: precision:  70.48%; recall:  61.35%; FB1:  65.60
+             MISC: precision:  57.82%; recall:  41.94%; FB1:  48.62
+              ORG: precision:  52.06%; recall:  47.48%; FB1:  49.66
+              PER: precision:  73.32%; recall:  53.81%; FB1:  62.07
+              
+***** -> extra knowledge is important
+              
+***** Without shape features, but anything else:
+
+processed 51645 tokens with 4833 phrases; found: 3757 phrases; correct: 2890.
+accuracy:  95.18%; precision:  76.92%; recall:  59.80%; FB1:  67.29
+              LOC: precision:  76.52%; recall:  73.41%; FB1:  74.94
+             MISC: precision:  76.69%; recall:  45.94%; FB1:  57.46
+              ORG: precision:  66.02%; recall:  49.48%; FB1:  56.56
+              PER: precision:  86.78%; recall:  67.45%; FB1:  75.90
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 2960 phrases; correct: 2235.
+accuracy:  96.23%; precision:  75.51%; recall:  60.85%; FB1:  67.39
+              LOC: precision:  75.56%; recall:  68.99%; FB1:  72.12
+             MISC: precision:  68.57%; recall:  42.99%; FB1:  52.84
+              ORG: precision:  59.93%; recall:  46.44%; FB1:  52.33
+              PER: precision:  87.75%; recall:  73.14%; FB1:  79.78
+              
+***** -> shape features are not so important -> maybe the wrong ones?
+
+***** Without suffix features, but anything else:
+
+processed 51645 tokens with 4833 phrases; found: 3680 phrases; correct: 2714.
+accuracy:  94.77%; precision:  73.75%; recall:  56.16%; FB1:  63.76
+              LOC: precision:  71.22%; recall:  69.35%; FB1:  70.27
+             MISC: precision:  76.24%; recall:  38.12%; FB1:  50.83
+              ORG: precision:  60.42%; recall:  46.74%; FB1:  52.70
+              PER: precision:  87.32%; recall:  66.38%; FB1:  75.43
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 2816 phrases; correct: 1990.
+accuracy:  95.57%; precision:  70.67%; recall:  54.18%; FB1:  61.33
+              LOC: precision:  65.75%; recall:  57.49%; FB1:  61.34
+             MISC: precision:  63.46%; recall:  34.48%; FB1:  44.68
+              ORG: precision:  54.25%; recall:  40.49%; FB1:  46.37
+              PER: precision:  87.73%; recall:  71.21%; FB1:  78.61
+              
+***** -> suffix feature is important

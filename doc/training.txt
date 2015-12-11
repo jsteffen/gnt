@@ -4,7 +4,7 @@ see http://stats.stackexchange.com/questions/61328/libsvm-data-format
 	
 Creating training data file:
 		
-- load word vectors, suffixes, shapes
+- load word vectors, suffixes, shapes, cluster
 	- seems that offline mode is ok, because then I can do experiments with ranked suffixes
 	
 -> but running and creating all the data before training starts is also possible, because creating the
@@ -57,6 +57,7 @@ Training phase:
 	6. labelSet.txt -> the number-label mapping as defined by means of the training corpus
 	7. wordSet.txt -> the number-word mapping of all words of the labeled training corpus; used for computing unknown word tagging accuracy
 	8. the model file
+	9. word-clusterId map
 -> 14th October: add tagger-name suffix -> DONE
 
 
@@ -81,9 +82,6 @@ NOTES on in memory training
 		define a method Window.clean()
 
 -> DONE; looks good ! get my first trained models ! 11.9.2015
-
--> NEXT
-	- store all file in compressed folder automatically
 
 Before training, create features:
 
@@ -148,9 +146,6 @@ I am now defined a subsampling approach following Mikolov when indicator words a
 	- in some cases for OOD POS it helps for unknown words, but not much
 
 HIERIX:
-
-run on German POS and NER data
--> NEED language flag as part of feature file names or subdir
 
 combined suffix and ngram
 

@@ -3,14 +3,19 @@ October, 2015:
 - using windowSize=1 hurts !
 - using windowSize=3 neutral
 
-- changes in suffix list does not improve either
+- neither 1grams nor 3grams bring anything
 
--> it seems that only dimension around 50 brings something
+- smaller suffixes
+-> initial test with suffix <= 5 brings a bit for EN, but hurts for DE
+-> suffix <= 3 hurts for EN and DE
+
+- generalization of number/date expressions
+-> not useful so far (cf. doc/corpus.txt)
+
+- it seems that only dimension around 50 brings something
 -> also Turian et al. 2010 only use 50-dims for their word embedding stuff
 
--> try out better unknown word features
-
--> Actually, it is unclear, whether GNT features are usable for NER
+- Actually, it is unclear, whether GNT features are usable for NER
 -> check again paper from Tkachenko & Simanovsky
 
 So, actually, what do I use:
@@ -18,46 +23,52 @@ So, actually, what do I use:
 I use this for both EN and DE
 
 -	normalized text: lower case
+-	no digit normalization
 -	window size: 2
--	no distributed word features or 50 dim indicator words
--	shape feature methods from POS applied on training
+-	no subsampling
+-	50 dim indicator words
+-	all but only conll-data as unlabeled data
+-	shape feature methods from POS tagger for EN and DE
 -	all suffix features from training
 -	1000 clusterIDs from Marmot
 	- NOTE: Marmot cluserID are based on digit-normalized wiki-dumps
 
-OBACHT: applies to both EN and DE:
-- ich hatte vergessen, test unlabeled data zu laden, was dazu führte, dass ich viele unknown word habe
-	wenn ich distributed vector baue -> das hat zu Verlusten geführt
-- Now, i get better results again, but missing 1% in case of eng-testb.conll
--> Now, the differences with previous tests is that I now use all sentences from unlabeded data, not only the first 1000
--> trie again with fewer unlabeled data
-	- not using unlabeled large corpus PTB
-	- NEXT: try out: load only 1000
--> THUS: it seems that size of unlabeled data is important, maybe even domain wrt. NER types to classify?
+Test on DE:
+-> best result: 68,41 F1
 
+-> ablation tests (testb):
+	cluster and 
+	unlabeled features:	-10,42
+	cluster features:	-6,87
+	unlabeled features: -1,71
+	suffix features:	-7,08	
+	shape features:		-1,02
 
-Alternative indicator words:
-- What if I select indicator words those that occur in training data
-	- select the context words from annotated strings and choose the highest ranked words found in all indicator words
+Test on EN:
+-> best result: 82.14 F1 (82.84 with suffix-length <= 5):
+
+-> ablation tests (testb):
+	cluster and 
+	unlabeled features:	-8,99
+	cluster features:	-5,58	
+	unlabeled features:	-0,56
+	suffix features:	-2,7	
+	shape features:		-2,47	
+
 
 
 New possible features:
 
+Alternative indicator words:
+- What if I select indicator words those that occur in training data
+	- select the context words from annotated strings 
+	and choose the highest ranked words found in all indicator words
+	
 NER lexicons
-
-character embeddings
 
 POS
 
-previous predictions
-
 prefixes
 
-smaller suffixes/prefixes
--> initial test with token <= 5 brings a bit for EN, but hurts for DE
--> token <= 3 hurts for EN and DE
 
-generalization of number/date expressions
--> not useful so far (cf. doc/corpus.txt)
 
-context elements without certain features

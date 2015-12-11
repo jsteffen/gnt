@@ -117,8 +117,8 @@ public class GNTrainer {
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 
-		this.getTrainer().getProblem().n = OffSets.windowVectorSize;
-		this.getTrainer().getProblem().l=Window.windowCnt;
+//		this.getTrainer().getProblem().n = OffSets.windowVectorSize;
+//		this.getTrainer().getProblem().l=Window.windowCnt;
 
 		System.out.println("Offsets: " + this.getTrainer().getOffSets().toString());
 		System.out.println("Sentences: " + this.getTrainer().getData().getSentenceCnt());

@@ -53,7 +53,7 @@ public class Alphabet {
 	
 	public void loadFeaturesFromFiles(String taggerName, int dim){
 		if (Alphabet.withWordFeats) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim);
-		if (Alphabet.withShapeFeats) this.wordSuffixFactory.readSuffixList(taggerName);
+		if (Alphabet.withSuffixFeats) this.wordSuffixFactory.readSuffixList(taggerName);
 		if (Alphabet.withShapeFeats) this.wordShapeFactory.readShapeList(taggerName);
 		if (Alphabet.withClusterFeats) this.wordClusterFactory.readClusterIdList(taggerName);
 	}

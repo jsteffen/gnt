@@ -27,6 +27,7 @@ public class TrainDeNerTagger {
 		TrainerInMem.debug=false;
 		
 		WordSuffixFeatureFactory.ngram = false;
+		WordSuffixFeatureFactory.ngramSize = 1;
 
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());

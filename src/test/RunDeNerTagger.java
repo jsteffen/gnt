@@ -26,6 +26,7 @@ public class RunDeNerTagger {
 		System.out.println(Alphabet.toActiveFeatureString());
 		
 		WordSuffixFeatureFactory.ngram = false;
+		WordSuffixFeatureFactory.ngramSize = 1;
 
 		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
 		System.out.println(modelInfo.toString());

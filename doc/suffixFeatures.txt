@@ -29,7 +29,10 @@ in previous paper, FLORS uses only 100 highest ranked suffixes
 	- easy to implement as part of features.WordSuffixFeatureFactory.isNonWord(String)
 
 Computation of ngrams instead of suffixes: DONE
-	switch off/on: WordSuffixFeatureFactory.ngram = false;
+	switch off/on: 
+		WordSuffixFeatureFactory.ngram = false; 
+		WordSuffixFeatureFactory.ngramSize = <SIZE>
+-> using ngrams instead of suffixes is not helpful rather hurts
 
 - map a word to a list of ngrams
 	- only consider unique ngrams because of indexing

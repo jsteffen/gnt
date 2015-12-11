@@ -1,6 +1,6 @@
 September, 15th, 2015:
 
-NER - soon test GNT for NER:
+NER - soon test GNT for NER - DONE
 
 October, 15th, 2015:
 
@@ -15,7 +15,7 @@ Integration of cluster in training and testing:
 
 - DONE: instead of suffix use trigrams
 
-- German data processing
+- German data processing -> DONE
 
 - relation extraction ?
 

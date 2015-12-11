@@ -30,25 +30,25 @@ import de.bwaldvogel.liblinear.SolverType;
 /**
  * General usage of API (from http://liblinear.bwaldvogel.de/ & https://github.com/bwaldvogel/liblinear-java):
 
-	Problem problem = new Problem();
-	problem.l = ... // number of training examples
-	problem.n = ... // number of features
-	problem.x = ... // feature nodes
-	problem.y = ... // target values
+	<p>Problem problem = new Problem();
+	<p>problem.l = ... // number of training examples
+	<p>problem.n = ... // number of features
+	<p>problem.x = ... // feature nodes
+	<p>problem.y = ... // target values
 
-	SolverType solver = SolverType.L2R_LR; // -s 0
-	double C = 1.0;    // cost of constraints violation
-	double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
+	<p>SolverType solver = SolverType.L2R_LR; // -s 0
+	<p>double C = 1.0;    // cost of constraints violation
+	<p>double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
 
-	Parameter parameter = new Parameter(solver, C, eps);
-	Model model = Linear.train(problem, parameter);
-	File modelFile = new File("model");
-	model.save(modelFile);
-	// load model or use it directly
-	model = Model.load(modelFile);
-
-	Feature[] instance = { new FeatureNode(1, 4), new FeatureNode(2, 2) };
-	double prediction = Linear.predict(model, instance);
+	<p>Parameter parameter = new Parameter(solver, C, eps);
+	<p>Model model = Linear.train(problem, parameter);
+	<p>File modelFile = new File("model");
+	<p>model.save(modelFile);
+	<p>// load model or use it directly
+	<p>model = Model.load(modelFile);
+<p>
+	<p>Feature[] instance = { new FeatureNode(1, 4), new FeatureNode(2, 2) };
+	<p>double prediction = Linear.predict(model, instance);
 
  *<p>
  * My idea is to create directly a FeatureNode list from a training instance
@@ -71,7 +71,7 @@ public class TrainerInMem {
 	public static boolean debug = false;
 
 	// API/Values for Liblinear
-	// GN: used in MDP
+	// GN: biased -> used in Problem() -> if <= 0 add extra feature
 	private double bias = -1;
 	// GN: default values as used in Flors
 	// C -> cost of constraints violation
@@ -82,7 +82,7 @@ public class TrainerInMem {
 	private Problem problem = new Problem();
 
 	// Setters and getters
-	
+
 	public Data getData() {
 		return data;
 	}
@@ -205,6 +205,12 @@ public class TrainerInMem {
 	/**
 	 * Loops through a file where each line is conll encoded, collect tokens to a sentence 
 	 * and call windows creator on sentence.
+	 * Steps involved:
+	 * <p>- collect conll tokens in list
+	 * <p>- create internal sentence object and label maps
+	 * <p>- create window frames and store in list (non-feature filled windows): 
+	 *      I do this, because each window is then filled iteratively when calling the trainer; it actually saves space
+	 * <p>-	Finally, feature files for label set and word set lists are created and stored for taggerName
 	 * @param conllReader
 	 * @param max if -1 then infinite else max sentences are processed and then methods stops
 	 * @throws IOException
@@ -217,16 +223,16 @@ public class TrainerInMem {
 			if (line.isEmpty()) {
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 
-					// create internal sentence object and label maps
-					data.generateSentenceObjectFromConllLabeledSentence(tokens);
+				// create internal sentence object and label maps
+				data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
-					// System.out.println("In:  " + this.taggedSentenceToString());
+				// System.out.println("In:  " + this.taggedSentenceToString());
 
-					// create window frames and store in list
-					createWindowFramesFromSentence();
+				// create window frames and store in list
+				createWindowFramesFromSentence();
 
-					// reset tokens
-					tokens = new ArrayList<String[]>();
+				// reset tokens
+				tokens = new ArrayList<String[]>();
 			}
 			else {
 				String[] tokenizedLine = line.split("\t");
@@ -250,6 +256,7 @@ public class TrainerInMem {
 		//problem.n = OffSets.windowVectorSize;
 		problem.x = new FeatureNode[problem.l][];
 		problem.y = new double[problem.l];
+		problem.bias = this.getBias();
 
 		this.setProblem(problem);
 
@@ -271,7 +278,7 @@ public class TrainerInMem {
 	private void constructProblem(boolean train, boolean adjust) throws IOException {
 		int mod = 10000;
 		int problemCnt = 0;
-		
+
 		// Initialize problem with potential feature vector size and number of training instances
 		// and size of x and y which uses training instance
 		// current element has index i
@@ -286,7 +293,7 @@ public class TrainerInMem {
 
 			this.getProblem().y[i]=nextWindow.getLabelIndex();
 			this.getProblem().x[i]=problemInstance.getFeatureVector();
-			
+
 			nextWindow.clean();
 
 			// Print how many problems are created so far
@@ -294,8 +301,12 @@ public class TrainerInMem {
 				System.out.println("************");
 				System.out.println("Problem instances created: " + problemCnt);
 			}
-		}
-		
+		}	
+
+		// Number of feature can be set here, because we know the number of examples now.
+		System.out.println("Window lenght: " + this.getProblem().x[0].length);
+		this.getProblem().n = OffSets.windowVectorSize;
+
 	}
 
 	/**
@@ -363,8 +374,6 @@ public class TrainerInMem {
 		long time2;
 		Linear.disableDebugOutput();
 		time1 = System.currentTimeMillis();
-		// Number of feature can be set here
-		this.getProblem().n = OffSets.windowVectorSize;
 		System.out.println("problem.n: " + this.getProblem().n);
 		Model model = Linear.train(this.getProblem(), this.getParameter());
 		time2 = System.currentTimeMillis();
