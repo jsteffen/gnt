@@ -248,13 +248,13 @@ public class WordFeatures {
 	/** 
 	 * boolean flag offline means: assume that known cluster IDs have been pre-loaded into to memory
 	 * NOTE: even in training phase, signature are computed dynamically 
-	 * NOTE: we assume that a word has a unique signature so the list shape actually only contains a single element.
-	 * NOTE: word is case-sensitive, because otherwise shape feature can be computed reliable!
+	 * NOTE: we assume that a word has a unique signature so the list cluster IDs actually only contains a single element.
+	 * NOTE: word is case-sensitive, because otherwise cluster IDs feature can be computed reliable!
 	 * @param word
 	 * @param alphabet
 	 * @param offline
 	 */
-	// NOTE: it is an overhead to keep a list of shapes, because we always have a single element,
+	// NOTE: it is an overhead to keep a list of cluster IDs, because we always have a single element,
 	// but it keeps code more transparent
 	private void fillClusterIdFeatures(String word, Alphabet alphabet, boolean offline) {
 		int wordClusterIndex = alphabet.getWordClusterFactory().getClusterIdFeature(word);

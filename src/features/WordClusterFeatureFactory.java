@@ -18,7 +18,7 @@ import java.util.Map;
  * And then create a clusterId to index hash needed for liblinear encoding.
  * NOTE: words are case-sensitive !!
  * 
- * Then create a new dictionary word2liblinearClusterId which directly maops a word to the integer representation
+ * Then create a new dictionary word2liblinearClusterId which directly maps a word to the integer representation
  * of liblinear;
  * This file should be saved and loaded for use in training and application phase.
  * This file should be part of Alphabet class.
@@ -31,7 +31,7 @@ public class WordClusterFeatureFactory {
 	// Store resulting word2liblinear index map
 	// store words to clusterId mapping as provided by Marmot tool!
 	private Map<String,Integer> word2index = new HashMap<String,Integer>();
-private int clusterIdcnt = 0;
+	private int clusterIdcnt = 0;
 
 	// Getters and setters
 
@@ -71,8 +71,9 @@ private int clusterIdcnt = 0;
 	 * @return
 	 */
 	public int getClusterIdFeature(String word){
-		if (this.getWord2index().containsKey(word))
-			return this.getWord2index().get(word);
+		String normalizedDigitString = word.replaceAll("\\d", "0");
+		if (this.getWord2index().containsKey(normalizedDigitString))
+			return this.getWord2index().get(normalizedDigitString);
 		else
 			if (this.getWord2index().containsKey("<RARE>"))
 				return this.getWord2index().get("<RARE>");
@@ -183,7 +184,7 @@ private int clusterIdcnt = 0;
 		this.readClusterIdFeatureFile(fileName);
 		System.out.println("... done");
 	}
-	
+
 	public void readClusterIdList(){
 		String fileName = "resources/features/clusterId"+"_"+".txt";
 		System.out.println("Reading cluster ID list from: " + fileName);
@@ -205,6 +206,6 @@ private int clusterIdcnt = 0;
 		wordClusterIdFactory.readClusterIdFeatureFile("resources/features/clusterId.txt");
 		System.out.println("... done");
 		String word = "The";
-;		System.out.println(word + " : " + wordClusterIdFactory.getClusterIdFeature(word));
+		;		System.out.println(word + " : " + wordClusterIdFactory.getClusterIdFeature(word));
 	}
 }

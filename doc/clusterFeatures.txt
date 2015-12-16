@@ -14,9 +14,10 @@ October, 2015:
 
 - how should I represent word-clusterID ?
 
--> as binary ala shape feature
+-> as binary ala shape feature reusing code of shape
 
--> should be able to reuse code of shape
+-> since Marmot uses digit normalization, 
+	I also use when accessing liblinear cluster id with word w
 
 Integration of new feature into system:
 
@@ -40,8 +41,8 @@ Integration of new feature into system:
 	- load cluster data
 	- DONE
 
-The set of classes seem to be all that have to be changed/adapted when a new feature is to be integrated
+This set of classes seems to be all that have to be changed/adapted when a new feature is to be integrated
 
 -> First tests: worked! and shows improvement for NER of about 4,8% F1
 
-Try them with POS tagger as well -> OK, bring improvements
+Try them with POS tagger as well -> OK, brings improvements

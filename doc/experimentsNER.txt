@@ -55,8 +55,6 @@ Test on EN:
 	suffix features:	-2,7	
 	shape features:		-2,47	
 
-
-
 New possible features:
 
 Alternative indicator words:

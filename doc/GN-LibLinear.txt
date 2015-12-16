@@ -60,7 +60,10 @@ Using LibLinear in GNT:
 	- scaling
 	
 - if bias is set to value b > 0, then extra feature with value b is added to each problem instance
-- I guess it is done automatically -> bias value b is in model file ... but I do not see any effect.
+	- I guess it is done automatically -> bias value b is in model file ... but I do not see any effect.
+-> scaling
+	according to Georg, because liblinear uses Newton strategy for optimization (which performs second derivatives)
+	scaling is done automatically
 
 - But because I do not do scaling, does it mean that binary features are most important?
 	- I used scaling in trainer.ProblemInstance.createProblemInstanceFromWindow(Window) 
