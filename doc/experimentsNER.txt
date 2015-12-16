@@ -62,7 +62,10 @@ Alternative indicator words:
 	- select the context words from annotated strings 
 	and choose the highest ranked words found in all indicator words
 	
-NER lexicons
+NER lexicons:
+	- although I have word clusters, it might be too low
+	- so very large NE lists could make sense
+	- or retraining of Marmot cluster using own data files
 
 POS
 
