@@ -1,0 +1,34 @@
+18.12.2015:
+
+SVM-based tagger in Nemex:
+APRIL, 2015:
+62,16 % F1
+
+Testing with konvens 204 data - only outer NE span classes:
+
+Best result: 
+ExB 80.67 77.55 79.08 acc: 96,91
+UKP 79.90 74.13 76.91 acc: 96,69
+MoSTNER 79.71 67.74 73.24 acc: 96,39
+
+
+Training von GNT with tagger namer DENERKONV:
+
+86,20316667 minutes
+
+***** result:
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-konv-test.txt 
+processed 96483 tokens with 6177 phrases; found: 4926 phrases; correct: 3755.
+accuracy:  95.96%; precision:  76.23%; recall:  60.79%; FB1:  67.64
+              LOC: precision:  83.30%; recall:  73.09%; FB1:  77.86
+         LOCderiv: precision:  79.96%; recall:  76.83%; FB1:  78.36
+          LOCpart: precision:  58.33%; recall:   6.42%; FB1:  11.57
+              ORG: precision:  61.08%; recall:  45.04%; FB1:  51.85
+         ORGderiv: precision:   0.00%; recall:   0.00%; FB1:   0.00
+          ORGpart: precision:  58.21%; recall:  22.67%; FB1:  32.64
+              OTH: precision:  58.90%; recall:  30.85%; FB1:  40.49
+         OTHderiv: precision:  71.43%; recall:  25.64%; FB1:  37.74
+          OTHpart: precision:  66.67%; recall:   9.52%; FB1:  16.67
+              PER: precision:  81.52%; recall:  78.39%; FB1:  79.93
+         PERderiv: precision:   0.00%; recall:   0.00%; FB1:   0.00
+          PERpart: precision:   0.00%; recall:   0.00%; FB1:   0.00

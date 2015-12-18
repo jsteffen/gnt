@@ -16,7 +16,7 @@ public class CorpusProcessor {
 
 	private Corpus corpus = null;
 	private String taggerName = "";
-	
+
 	public Corpus getCorpus() {
 		return corpus;
 	}
@@ -68,13 +68,15 @@ public class CorpusProcessor {
 			if (line.isEmpty()) {
 				// If ew read a newline it means we know we have just extracted the words
 				// of a sentence, so write them to file
-				writer.write(sentenceToString(tokens)+"\n");
-				tokens = new ArrayList<String>();
-				// Increase sentence counter
-				sentCnt++;
-				// Stop if maxSent has been processed
-				// if maxSent is < 0 this means: read until end of file.
-				if  ((maxSent > 0) && (sentCnt >= maxSent)) break;
+				if (!tokens.isEmpty()){
+					writer.write(sentenceToString(tokens)+"\n");
+					tokens = new ArrayList<String>();
+					// Increase sentence counter
+					sentCnt++;
+					// Stop if maxSent has been processed
+					// if maxSent is < 0 this means: read until end of file.
+					if  ((maxSent > 0) && (sentCnt >= maxSent)) break;
+				}
 			}
 			else
 			{
@@ -95,7 +97,7 @@ public class CorpusProcessor {
 		}
 		return sentenceString+tokens.get(tokens.size()-1);
 	}
-	
+
 	// Processing NER files
 	private void transcodeNERfile(String sourceFileName, String sourceEncoding,
 			String targetFileName, String targetEncoding)
@@ -172,7 +174,7 @@ public class CorpusProcessor {
 	}
 
 	// Main wrappers for processing all files defined in corpus for current used taggerName
-	
+
 	/**
 	 * This is a wrapper to process a set of NER files. Currently, assuming conll 2003 format
 	 */
@@ -202,7 +204,7 @@ public class CorpusProcessor {
 			}
 		}	
 	}
-	
+
 	/**
 	 * This is a wrapper to process a set of files! -1 means: all files
 	 */
@@ -250,13 +252,17 @@ public class CorpusProcessor {
 					this.transcodeConllToSentenceFiles();
 				}
 				else
-					if (taggerName.equals("DEPOS")){
+					if (taggerName.equals("DENERKONV")){
 						this.transcodeConllToSentenceFiles();
 					}
+					else
+						if (taggerName.equals("DEPOS")){
+							this.transcodeConllToSentenceFiles();
+						}
 	}
 
 	public static void main(String[] args) throws IOException {
-		CorpusProcessor mapper = new CorpusProcessor("NER");
+		CorpusProcessor mapper = new CorpusProcessor("DENERKONV");
 		mapper.processConllFiles();
 	}
 }	

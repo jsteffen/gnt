@@ -14,6 +14,11 @@ public class Data {
 	private String labelMapFileName = "resources/features/labelSet.txt";
 	private String wordMapFileName = "resources/features/wordSet.txt";
 	
+	// counted form 0, 2nd column in conll in case of POS, else 0 for NER
+	public static int wordFormIndex = 1;
+	// counted form 0, 5th column in conll
+	public static int posTagIndex = 4;
+	
 	// Setters and getters
 
 	public List<Window> getInstances() {
@@ -96,15 +101,13 @@ public class Data {
 		// tokens are of form
 		// "1	The	The	DT	DT	_	2	NMOD"
 		// NOTE: No lower case here of word
-		int wordFormIndex = 1; // counted form 0, 2nd column in conll in case of POS, else 0 for NER
-		int posTagIndex = 4; // counted form 0, 5th column in conll
 		Sentence sentence = new Sentence(tokens.size());
 		for (int i=0; i < tokens.size(); i++){
 			// Extract word and pos from conll sentence, create index for both
 			// and create sentence using word/pos index
 			sentence.addNextToken(i,
-					updateWordMap(tokens.get(i)[wordFormIndex]),
-					updateLabelMap(tokens.get(i)[posTagIndex]));
+					updateWordMap(tokens.get(i)[Data.wordFormIndex]),
+					updateLabelMap(tokens.get(i)[Data.posTagIndex]));
 		}
 		this.setSentence(sentence);
 		this.sentenceCnt++;
@@ -118,13 +121,12 @@ public class Data {
 	 * @param tokens
 	 */
 	public void generateSentenceObjectFromConllUnLabeledSentence(List<String[]> tokens) {
-		int wordFormIndex = 1; // counted form 0, 2nd column in conll
 		Sentence sentence = new Sentence(tokens.size());
 		for (int i=0; i < tokens.size(); i++){
 			// Extract word and pos from conll sentence, create index for both
 			// and create sentence using word/pos index
 			sentence.addNextToken(i,
-					updateWordMap(tokens.get(i)[wordFormIndex]),
+					updateWordMap(tokens.get(i)[Data.wordFormIndex]),
 					-1);
 		}
 		this.setSentence(sentence);
@@ -139,14 +141,13 @@ public class Data {
 	 * @param tokens
 	 */
 	public void generateSentenceObjectFromUnlabeledTokens(String[] tokens){
-		int wordFormIndex = 1; // counted form 0, 2nd column in conll
 		Sentence sentence = new Sentence(tokens.length);
 		for (int i=0; i < tokens.length; i++){
 			// tokens are strings
 			// NOTE: No lower case here of word
 			// Using a dummy POS -1
 			sentence.addNextToken(i,
-					updateWordMap(tokens[wordFormIndex]), -1);
+					updateWordMap(tokens[Data.wordFormIndex]), -1);
 		}
 		this.setSentence(sentence);
 		this.sentenceCnt++;

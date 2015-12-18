@@ -300,7 +300,11 @@ public class GNTagger {
 		for (int i=0; i < tokens.size(); i++){
 			String[] token = tokens.get(i);
 			String label = this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
-			String newConllToken=token[0]+" "+token[1]+" "+token[4]+" "+label+"\n";
+			String newConllToken=token[0]+" "
+					+token[Data.wordFormIndex]+" "
+					+token[Data.posTagIndex]+" "
+					+label
+					+"\n";
 
 			conllWriter.write(newConllToken);
 		}

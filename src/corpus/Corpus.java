@@ -8,11 +8,11 @@ import java.util.List;
 public class Corpus {
 	public static List<String> knownTaggerNames = 
 			new ArrayList<String>(Arrays.asList("POS", "NER", "DEPOS", "DENER"));
-	
+
 	private  List<String> trainingLabeledSourceFiles = new ArrayList<String>();
 	private  List<String> devLabeledSourceFiles = new ArrayList<String>();
 	private  List<String> testLabeledSourceFiles = new ArrayList<String>();
-	
+
 	private  List<String> trainingLabeledData = new ArrayList<String>();
 	private  List<String> devLabeledData = new ArrayList<String>();
 	private  List<String> testLabeledData = new ArrayList<String>();
@@ -20,7 +20,7 @@ public class Corpus {
 	private  List<String> trainingUnLabeledData = new ArrayList<String>();
 	private  List<String> devUnLabeledData = new ArrayList<String>();
 	private  List<String> testUnLabeledData = new ArrayList<String>();
-	
+
 	public List<String> getTrainingLabeledData() {
 		return trainingLabeledData;
 	}
@@ -76,12 +76,12 @@ public class Corpus {
 	public void setTestLabeledSourceFiles(List<String> testLabeledSourceFiles) {
 		this.testLabeledSourceFiles = testLabeledSourceFiles;
 	}
-	
-	
+
+
 	// POS English
 	private void setLabeledEnPosData(){
 		// It is assumed that all these files have suffix .conll
-		
+
 		trainingLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train");
 		devLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-dev");
 		testLabeledData.add("resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test");
@@ -138,7 +138,7 @@ public class Corpus {
 		devLabeledSourceFiles.add("resources/data/ner/en/eng-testa");
 		testLabeledSourceFiles.add("resources/data/ner/en/eng-testb");	
 	}
-	
+
 	private void setLabeledEnNerData(){
 		// It is assumed that all these files have suffix .conll
 		trainingLabeledData.add("resources/data/ner/en/eng-train");
@@ -171,14 +171,14 @@ public class Corpus {
 		devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");
 	}
 
-	// German NER
+	// German NER CONLL
 	private void setLabeledDeNerSourceFiles(){
 		// It is assumed that all these files have suffix .src
 		trainingLabeledSourceFiles.add("resources/data/ner/de/deu-train");
 		devLabeledSourceFiles.add("resources/data/ner/de/deu-testa");
 		testLabeledSourceFiles.add("resources/data/ner/de/deu-testb");	
 	}
-	
+
 	private void setLabeledDeNerData(){
 		// It is assumed that all these files have suffix .conll
 		devLabeledData.add("resources/data/ner/de/deu-testa");
@@ -195,7 +195,25 @@ public class Corpus {
 		// Unlabeled data
 		//devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");		
 	}
-	
+
+	// German NER KONVENS 2014 data
+	private void setLabeledDeNerKonvData(){
+		// It is assumed that all these files have suffix .conll
+		devLabeledData.add("resources/data/ner/dekonvens/deu.konvens.dev");
+		testLabeledData.add("resources/data/ner/dekonvens/deu.konvens.test");
+		trainingLabeledData.add("resources/data/ner/dekonvens/deu.konvens.train");	
+	}
+
+	private void setUnLabeledDeNerKonvData(){
+		// It is assumed that these filenames are complete
+		devUnLabeledData.add("resources/data/ner/dekonvens/deu.konvens.dev-sents.txt");
+		testUnLabeledData.add("resources/data/ner/dekonvens/deu.konvens.test-sents.txt");
+		trainingUnLabeledData.add("resources/data/ner/dekonvens/deu.konvens.train-sents.txt");
+
+		// Unlabeled data
+		//devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");		
+	}
+
 	public Corpus(String taggerName){
 		if (taggerName.equals("POS")){
 			this.setLabeledEnPosData();
@@ -214,13 +232,18 @@ public class Corpus {
 					this.setUnLabeledDeNerData();
 				}
 				else
-					if (taggerName.equals("DEPOS")){
-						this.setLabeledDePosData();
-						this.setUnLabeledDePosData();
+					if (taggerName.equals("DENERKONV")){
+						this.setLabeledDeNerKonvData();
+						this.setUnLabeledDeNerKonvData();
 					}
-					else{
-						System.err.println("unknown taggername used: " + taggerName);
-						System.exit(0);
-					}	
+					else
+						if (taggerName.equals("DEPOS")){
+							this.setLabeledDePosData();
+							this.setUnLabeledDePosData();
+						}
+						else{
+							System.err.println("unknown taggername used: " + taggerName);
+							System.exit(0);
+						}	
 	}
 }

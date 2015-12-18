@@ -9,14 +9,14 @@ import data.Data;
 import data.ModelInfo;
 import features.WordSuffixFeatureFactory;
 
-public class TrainDeNerTagger {
+public class TrainDeNerKonvTagger {
 
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("FLORS");
-		modelInfo.setTaggerName("DENER");
+		modelInfo.setTaggerName("DENERKONV");
 		Data.wordFormIndex = 1;
-		// For conll 2003 NER data NE label is at 4 column (counted from 0)
-		Data.posTagIndex = 4;
+		// For konvens 2014 data labels are at column 2 (outer NE labels) or 3 (inner NE label)
+		Data.posTagIndex = 2;
 
 		int windowSize = 2;
 		int numberOfSentences = -1;
@@ -37,7 +37,8 @@ public class TrainDeNerTagger {
 		System.out.println(modelInfo.toString());
 		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
-		String trainingFileName = "resources/data/ner/de/deu-train";
+		String trainingFileName = "resources/data/ner/dekonvens/deu.konvens.train";
+		// I am using same cluster ids as for DE conll
 		String clusterIdSourceFileName = "resources/data/ner/de/de_marlin_cluster_1000";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
