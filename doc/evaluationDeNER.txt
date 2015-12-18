@@ -135,3 +135,35 @@ accuracy:  95.57%; precision:  70.67%; recall:  54.18%; FB1:  61.33
               PER: precision:  87.73%; recall:  71.21%; FB1:  78.61
               
 ***** -> suffix feature is important
+
+***** Without suffix-shape features, but anything else:
+
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-testa.txt 
+processed 51645 tokens with 4833 phrases; found: 3929 phrases; correct: 2985.
+accuracy:  95.45%; precision:  75.97%; recall:  61.76%; FB1:  68.14
+              LOC: precision:  77.72%; recall:  74.43%; FB1:  76.04
+             MISC: precision:  73.45%; recall:  48.22%; FB1:  58.22
+              ORG: precision:  64.87%; recall:  52.38%; FB1:  57.96
+              PER: precision:  85.53%; recall:  69.16%; FB1:  76.48
+              
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 3040 phrases; correct: 2299.
+accuracy:  96.33%; precision:  75.62%; recall:  62.59%; FB1:  68.49
+              LOC: precision:  75.50%; recall:  69.08%; FB1:  72.15
+             MISC: precision:  65.80%; recall:  45.07%; FB1:  53.50
+              ORG: precision:  62.05%; recall:  50.97%; FB1:  55.97
+              PER: precision:  88.89%; recall:  74.31%; FB1:  80.95
+-> brings something for testb (+0.08) but not for testa (-0,13)
+
+***** Using deu.traintesta.conll:
+
+lt-pool-223:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 3200 phrases; correct: 2438.
+accuracy:  96.61%; precision:  76.19%; recall:  66.38%; FB1:  70.94
+              LOC: precision:  76.51%; recall:  70.82%; FB1:  73.56
+             MISC: precision:  66.33%; recall:  48.81%; FB1:  56.23
+              ORG: precision:  61.88%; recall:  52.91%; FB1:  57.04
+              PER: precision:  89.06%; recall:  81.09%; FB1:  84.89
+-> brings +2,45            
+              
+              

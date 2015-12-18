@@ -149,16 +149,7 @@ Paper by Turian et al., 2010, ACL
 - Capitalization pattern in the window c
 - Conjunction of c and yi−1.
 
-When using the lexical features, we normalize
-dates and numbers. For example, 1980 becomes
-*DDDD* and 212-325-4751 becomes *DDD*-
-*DDD*-*DDDD*. This allows a degree of abstraction
-to years, phone numbers, etc. This delexicalization
-is performed separately from using the
-word representation. That is, if we have induced
-an embedding for 12/3/2008 , we will use the embedding
-of 12/3/2008 , and *DD*/*D*/*DDDD*
-in the baseline features listed above.
+89.41 % F1
 
 ***********
 Paper at http://arxiv.org/pdf/1312.5542v1.pdf:

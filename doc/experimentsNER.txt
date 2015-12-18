@@ -45,7 +45,7 @@ Test on DE:
 	shape features:		-1,02
 
 Test on EN:
--> best result: 82.14 F1 (82.84 with suffix-length <= 5):
+-> best result: 82.14 F1 (82.84 with suffix-length <= 5, without suffix-shape features: 83.29)
 
 -> ablation tests (testb):
 	cluster and 
@@ -55,7 +55,26 @@ Test on EN:
 	suffix features:	-2,7	
 	shape features:		-2,47	
 
+Why is GNT-NER so bad compared to GNT-POS ? 
+(Basically about -10% F1 for DE and EN, where for GNT-POS it is near state-of-the-art)
+
+HIERIX:
+
+extend training with testa and check how good results are on testb
+-> indicates whether extending training would be helpful:
+
+For English:
+cat eng-train.conll eng-testa.conll > eng-traintesta.conll
+cat eng-train-sents.txt eng-testa-sents.txt > eng-traintesta-sents.txt
+For German:
+cat deu-train.conll deu-testa.conll > deu-traintesta.conll
+cat deu-train-sents.txt deu-testa-sents.txt > deu-traintesta-sents.txt
+
 New possible features:
+
+Shape features 
+	-> Try out: remove/deactivate suffix features because they already part of suffix features
+	-> DONE: brings a bit, so I deactivate that part of the features
 
 Alternative indicator words:
 - What if I select indicator words those that occur in training data
@@ -66,8 +85,6 @@ NER lexicons:
 	- although I have word clusters, it might be too low
 	- so very large NE lists could make sense
 	- or retraining of Marmot cluster using own data files
-
-POS
 
 prefixes
 

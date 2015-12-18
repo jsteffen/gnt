@@ -26,3 +26,8 @@ because they would not be used by the supervised training phase! Same as for suf
 Only if shape features would be used to create vector representations for shapes
 	
 Shape features are language and domain specific.
+
+When deleting suffix-based shape features, I get improvements:
+	NER: 0.08 (DE) - 1,15 (EN)
+	POS: 0.03 (DE) - 0.03 (EN)
+

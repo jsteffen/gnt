@@ -7,7 +7,7 @@ package features;
  * https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeature.java
  * 
  * Each word is mapped to a bit string encompassing 16 binary indicators that correspond to different orthographic 
- * (e.g., does the word contain a digit, hyphen, uppercase character) and morphological (e.g., does the
+ * (e.g., does the word contain a digit, hyphen, upper case character) and morphological (e.g., does the
  * word end in -ed or -ing) features. 
  * There are 50 unique signatures in WSJ. 
  * We set the dimension of f_shape(w) that corresponds to the signature of w to 1 and all other dimensions to 0. 
@@ -17,8 +17,11 @@ package features;
  */
 
 public class WordShapeFeature {
-	// I guess: ALL_CAPS means: always initial capital (as for NE ion English); INIT_CAP means:
-	// only capital in initial sentence position.
+	/** I guess: ALL_CAPS means: always initial capital (as for NE in English); INIT_CAP means:
+	 * only capital in initial sentence position.
+	 * @author gune00
+	 *
+	 */
 	public static enum MorphFeature {
 		ALL_CAPS, HAS_DASH, HAS_DIGIT, INIT_CAP, KNOWNLC, LOWER_CASE, SUFF_AL, SUFF_ED, 
 		SUFF_ER, SUFF_EST, SUFF_ING, SUFF_ION,  SUFF_ITY, SUFF_LY, SUFF_S, SUFF_Y, 
@@ -40,7 +43,7 @@ public class WordShapeFeature {
 			false,false, false, false};
 
 	private String bitVectorString = "0000000000000000";
-	
+
 	// getters and setters
 	public MorphFeature[] getNum2MorphFeature() {
 		return num2MorphFeature;
@@ -69,7 +72,7 @@ public class WordShapeFeature {
 	public WordShapeFeature(String word, int wordIndex) {
 		createShapeVectorFromWord(word, wordIndex);
 	}
-	
+
 	private void bitVectorflip(int i) {
 		if (this.bitVector[i])
 			this.bitVector[i]=false;
@@ -131,35 +134,37 @@ public class WordShapeFeature {
 		boolean hasDigit = false;
 		boolean hasDash = false;
 		boolean hasLower = false;
-		
+
 		// scan the word
 		for (int i = 0; i < wlen; i++) {
 			char ch = word.charAt(i);
 			if (Character.isDigit(ch)) {
 				hasDigit = true;
-			} else if (ch == '-') {
-				hasDash = true;
-			} else if (Character.isLetter(ch)) {
-				if (Character.isLowerCase(ch)) {
-					hasLower = true;
-				} else if (Character.isTitleCase(ch)) {
-					hasLower = true;
-					numCaps++;
-				} else {
-					numCaps++;
+			} else 
+				if (ch == '-')
+				{
+					hasDash = true;
+				} else if (Character.isLetter(ch)) {
+					if (Character.isLowerCase(ch)) {
+						hasLower = true;
+					} else if (Character.isTitleCase(ch)) {
+						hasLower = true;
+						numCaps++;
+					} else {
+						numCaps++;
+					}
 				}
-			}
 		}
 		// Remember first char
 		char ch0 = word.charAt(0);
 		// and the lowercase it
 		String lowered = word.toLowerCase();
-		
+
 		// Now, analyse the different cases, and set the relevant bits in the bitVector
 		if (Character.isUpperCase(ch0) || Character.isTitleCase(ch0)) {
 			if (wordIndex == 0 && numCaps == 1) {
 				this.setBit(MorphFeature.INIT_CAP);
-				
+
 			} else {
 				this.setBit(MorphFeature.ALL_CAPS);
 			}
@@ -174,47 +179,47 @@ public class WordShapeFeature {
 		if (hasDash) {
 			this.setBit(MorphFeature.HAS_DASH);
 		}
-		if (lowered.endsWith("s") && wlen >= 3) {
-			// here length 3, so you don't miss out on ones like 80s
-			char ch2 = lowered.charAt(wlen - 2);
-			// not -ess suffixes or greek/latin -us, -is
-			if (ch2 != 's' && ch2 != 'i' && ch2 != 'u') {
-				this.setBit(MorphFeature.SUFF_S);
-			}
-		} else if (word.length() >= 5 && !hasDash && !(hasDigit && numCaps > 0)) {
-			// don't do for very short words;
-			// Implement common discriminating suffixes
-			/*
-			 * if (Corpus.myLanguage==Corpus.GERMAN){
-			 * sb.append(lowered.substring(lowered.length()-1)); }else{
-			 */
-			if (lowered.endsWith("ed")) {
-				this.setBit(MorphFeature.SUFF_ED);
-			} else if (lowered.endsWith("ing")) {
-				this.setBit(MorphFeature.SUFF_ING);
-			} else if (lowered.endsWith("ion")) {
-				this.setBit(MorphFeature.SUFF_ION);
-			} else if (lowered.endsWith("er")) {
-				this.setBit(MorphFeature.SUFF_ER);
-			} else if (lowered.endsWith("est")) {
-				this.setBit(MorphFeature.SUFF_EST);
-			} else if (lowered.endsWith("ly")) {
-				this.setBit(MorphFeature.SUFF_LY);
-			} else if (lowered.endsWith("ity")) {
-				this.setBit(MorphFeature.SUFF_ITY);
-			} else if (lowered.endsWith("y")) {
-				this.setBit(MorphFeature.SUFF_Y);
-			} else if (lowered.endsWith("al")) {
-				this.setBit(MorphFeature.SUFF_AL);
-			}
-		}	
-		
+		//		if (lowered.endsWith("s") && wlen >= 3) {
+		//			// here length 3, so you don't miss out on ones like 80s
+		//			char ch2 = lowered.charAt(wlen - 2);
+		//			// not -ess suffixes or greek/latin -us, -is
+		//			if (ch2 != 's' && ch2 != 'i' && ch2 != 'u') {
+		//				this.setBit(MorphFeature.SUFF_S);
+		//			}
+		//		} else if (word.length() >= 5 && !hasDash && !(hasDigit && numCaps > 0)) {
+		//			// don't do for very short words;
+		//			// Implement common discriminating suffixes
+		//			/*
+		//			 * if (Corpus.myLanguage==Corpus.GERMAN){
+		//			 * sb.append(lowered.substring(lowered.length()-1)); }else{
+		//			 */
+		//			if (lowered.endsWith("ed")) {
+		//				this.setBit(MorphFeature.SUFF_ED);
+		//			} else if (lowered.endsWith("ing")) {
+		//				this.setBit(MorphFeature.SUFF_ING);
+		//			} else if (lowered.endsWith("ion")) {
+		//				this.setBit(MorphFeature.SUFF_ION);
+		//			} else if (lowered.endsWith("er")) {
+		//				this.setBit(MorphFeature.SUFF_ER);
+		//			} else if (lowered.endsWith("est")) {
+		//				this.setBit(MorphFeature.SUFF_EST);
+		//			} else if (lowered.endsWith("ly")) {
+		//				this.setBit(MorphFeature.SUFF_LY);
+		//			} else if (lowered.endsWith("ity")) {
+		//				this.setBit(MorphFeature.SUFF_ITY);
+		//			} else if (lowered.endsWith("y")) {
+		//				this.setBit(MorphFeature.SUFF_Y);
+		//			} else if (lowered.endsWith("al")) {
+		//				this.setBit(MorphFeature.SUFF_AL);
+		//			}
+		//		}	
+
 		//Finally
 		this.bitVectorString = this.toBinaryString();
 	}
-	
+
 	// Define: make binary string and use this for signature cache -> eventually is faster -> YES
-	
+
 	public String toBinaryString(){
 		String bitsetString = "";
 		for (int i=0; i < bitVector.length; i++){
@@ -223,13 +228,13 @@ public class WordShapeFeature {
 		}
 		return bitsetString;
 	}
-	
+
 	public String toString(){
 		return this.bitVectorString;
 	}
-	
+
 	public static void main(String[] args){
-		WordShapeFeature test = new WordShapeFeature("G-7", 0);
+		WordShapeFeature test = new WordShapeFeature("PETER", 0);
 		System.out.println(test.toString());
 	}
 }

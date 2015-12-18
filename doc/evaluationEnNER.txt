@@ -156,3 +156,21 @@ accuracy:  96.48%; precision:  80.10%; recall:  79.25%; FB1:  79.67
               
 ***** shape features are important
               
+***** Without suffix-shape features:
+
+lt-pool-223:resources gune00$ ./conlleval < eval/eng-testa.txt 
+processed 51578 tokens with 5942 phrases; found: 6077 phrases; correct: 5332.
+accuracy:  98.31%; precision:  87.74%; recall:  89.73%; FB1:  88.73
+              LOC: precision:  92.31%; recall:  93.41%; FB1:  92.86
+             MISC: precision:  83.99%; recall:  83.08%; FB1:  83.53
+              ORG: precision:  78.55%; recall:  81.36%; FB1:  79.93
+              PER: precision:  91.76%; recall:  95.49%; FB1:  93.59
+lt-pool-223:resources gune00$ ./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 5905 phrases; correct: 4811.
+accuracy:  97.24%; precision:  81.47%; recall:  85.18%; FB1:  83.29
+              LOC: precision:  85.65%; recall:  88.73%; FB1:  87.16
+             MISC: precision:  72.43%; recall:  76.35%; FB1:  74.34
+              ORG: precision:  74.86%; recall:  79.77%; FB1:  77.24
+              PER: precision:  88.18%; recall:  90.91%; FB1:  89.52
+
+***** -> some improvement (+1.15%) -> best result for EN

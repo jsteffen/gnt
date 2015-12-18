@@ -33,7 +33,7 @@ public class TrainDeNerTagger {
 		System.out.println(modelInfo.toString());
 		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
-		String trainingFileName = "resources/data/ner/de/deu-train";
+		String trainingFileName = "resources/data/ner/de/deu-traintesta";
 		String clusterIdSourceFileName = "resources/data/ner/de/de_marlin_cluster_1000";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
