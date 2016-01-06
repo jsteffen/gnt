@@ -54,6 +54,7 @@ Steps:
 	- read in words and count using hash array
 		- what is a word ? every token ?
 	- write out to file sorted according to TF
+	
 -> IDEA: check 500 wordlist 
 	-> maybe also possible: just use closed class words as indicator words and others as zero-counts
 	-> would be highly domain independent
@@ -79,6 +80,7 @@ Steps:
 ->	DO experiments: compute distributed vectors without devel/test files of OOD, and then check how
 	good incremental creation of unknown word vectors are
 
+HIERIX
 6. Integrate interface to word2vec, so that their vectors can also be loaded -> for comparison
 	- main problem seems to be the update of the iw2num/num2iw mapping: maybe create it online by means of a virtual indicator file
 		of entries: feat1, feat2, ...,

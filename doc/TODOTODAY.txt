@@ -74,7 +74,10 @@ November, 2015:
 
 HIERIX:
 
+- use other word embedding -> word2vec
+
 - create property file
+
 - save and move it to model file folder
 
 - create input file for TORCH
