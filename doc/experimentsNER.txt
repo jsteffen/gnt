@@ -45,7 +45,7 @@ Test on DE:
 	shape features:		-1,02
 
 Test on EN:
--> best result: 82.14 F1 (82.84 with suffix-length <= 5, without suffix-shape features: 83.29)
+-> best result: 83.29 F1
 
 -> ablation tests (testb):
 	cluster and 
@@ -73,14 +73,17 @@ cat deu-train-sents.txt deu-testa-sents.txt > deu-traintesta-sents.txt
 -> helpful for DE (+2,45% F1) but not for EN
 
 
-
 Shape features 
-	-> Try out: remove/deactivate suffix features because they already part of suffix features
+	-> Try out: remove/deactivate suffix features as part of shapw-features
+		because they already part of suffix features
 	-> DONE: brings a bit for POS and NER, so I deactivate that part of the features
+	-> cf. features.WordShapeFeature.createShapeVectorFromWord(String, int)
 	
 HIERIX: still I am missing about 8%F1 for CONLL
 
-Evaluation with Konvens 2014 DE NER data:
+Evaluation with Konvens 2014 DE NER data: DONE
+
+add prefixes as features
 
 Alternative indicator words:
 - What if I select indicator words those that occur in training data
@@ -88,11 +91,11 @@ Alternative indicator words:
 	and choose the highest ranked words found in all indicator words
 	
 NER lexicons:
-	- although I have word clusters, it might be too low
+	- although I have word clusters, it might be too small
 	- so very large NE lists could make sense
 	- or retraining of Marmot cluster using own NER relevant data files
 
-prefixes
+
 
 
 

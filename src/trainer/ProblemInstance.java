@@ -86,11 +86,28 @@ public class ProblemInstance {
 			offSet += wordFeats.getCluster().size();
 		}
 
+		//this.normalizeFeatureVectorToUnitLenght();
+		
 		if (TrainerInMem.debug) this.checkFeatureVector(tokenWindow);
 
 	}
 
-	public void checkFeatureVector(Window tokenWindow){
+	private void normalizeFeatureVectorToUnitLenght(){
+		double vecLength = computeUnitLength();
+		for (FeatureNode node : this.featureVector) {
+			node.setValue(node.getValue()/vecLength);
+		}
+	}
+	
+	
+	private double computeUnitLength() {
+		double vecLength = 0.0;
+		for (FeatureNode node : this.featureVector){
+			vecLength += node.getValue()*node.getValue();	
+		}
+		return Math.sqrt(vecLength);
+	}
+	private void checkFeatureVector(Window tokenWindow){
 		int lastValue = 0;
 		int fLen = this.featureVector.length-1;
 		for (int i = 0; i < fLen;i++){

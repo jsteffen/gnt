@@ -1,11 +1,13 @@
 Implementing FLORS, Schnabel & Schütze, TACL, 2014
+My extensions: 
+cluster features, adaptation to NER
 
 
 Idea is to train a one-vs-all POS-tagger and NE-tagger.
 
 One-vs-all means: 
 - for each tag train a model. Then, apply all models on new word and select best tag.
-- Should be part of the Liblinear package.
+- is part of the Liblinear package.
 
 Background from paper:
 
@@ -21,10 +23,11 @@ Representation of feature F for token v_i
 	F(v_i) = f(v_i-l) conc ... conc f(v_i+l)
 	
 	
-Word features: each word w is represented by four components
-(normalized by unit vector):
+Word features: each word w is represented by max five components (components can be switched off/on)
+(normalize each of the  component vectors to unit length. 
+Calculate length of vector and then divide each component by length of vector) - do I do that ?:
 
-f(w) = f_left(w) + f_right(w) + f_suffix(x) + f_shape(w)
+f(w) = f_left(w) + f_right(w) + f_suffix(x) + f_shape(w) + f_cluster(w)
 
 1. Distributed word feature:
 
@@ -54,3 +57,8 @@ text is preprocessed by lowercasing everything.
 
 -> https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeatureExtractor.java
 -> https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeature.java
+
+4. Cluster features:
+	I am using teh preprocessed clusters from Marmot (Mueller&Schuetze, ACL, 2015)
+	use cluster ID as feature -> upto 1000 cluster ID names
+	unknown words are mapped to clusterID of word <RARE>|<Rare>

@@ -74,6 +74,12 @@ November, 2015:
 
 HIERIX:
 
+- check to normalize/scale each component vector
+	to unit length (compute length of vector, and then divide each component)
+	I think I for got it 
+	-> I am doing it now on complete feature vector in 
+		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
+
 - use other word embedding -> word2vec
 
 - create property file
