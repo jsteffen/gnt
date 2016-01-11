@@ -51,8 +51,6 @@ POS:
 	erhalten VVINF VVPP
 	
 NER:
-
-
 - distributed word vectors -> using de-wikidump sentences
 - shape features for German
 - prefixes and suffixes

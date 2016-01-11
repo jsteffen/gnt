@@ -1,3 +1,9 @@
+Current results:
+
+- EN - error rate: 2,93 % EN test; best reported: 2,45%
+
+- DE - error rate: 2,92 % DE test; best reported: 2,56% or 2,27%
+
 Possible parameters for experiments:
 
 - dimension of indicator words -> size of distributed feature of words
@@ -7,25 +13,24 @@ Possible parameters for experiments:
 - different word vectors (word2vec)
 	
 - dimension of suffixes
-	- n-most ranked (Schnabel&Schütze 2013 used n=100)
+	- n-most ranked (Schnabel&Schütze 2013 used n=100) -> DONE: not useful
 	- Schnabel&Schütze 2013: use all (also means: no parameter necessary)
 	
 - different source of indicator words
-	- also together with training set filter
+	- also together with training set filter -> DONE: via subsampling: not useful
 
 - different suffix sets
 	- inflection
-	- ngrams
+	- ngrams -> DONE: not useful
 
 - shape features
-	- Schnabel&Schütze 2013: maybe domain dependent
+	- Schnabel&Schütze 2013: maybe domain dependent -> DONE: ignoring suffix bits useful
 
 - normalization
 	- digits to 0
-	- Schnabel&Schütze 2015: might be useful
-	- BUT: is this not yet covered by the shape features?
+	- Schnabel&Schütze 2015: might be useful -> not useful
 
-- ablation tests on feature sets
+- ablation tests on feature sets -> DONE
 
 - different liblinear classifiers
 
