@@ -1,0 +1,58 @@
+HIERIX: January 2016
+
+- check to normalize/scale each component vector
+	to unit length (compute length of vector, and then divide each component)
+	I think I for got it 
+	-> I am doing it now on complete feature vector in 
+		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
+	-> try it on relevant component feature!
+		
+-	POS tags as feature
+	- how can I define a kind of pipeline model for GNT ?
+
+- NER-lexikons
+	- could be done by defining a NE-type-based feature similar to cluster-ID
+	- but using dictionary lookup 
+	- I could use a class OTHR for all words not covered by NE-lists
+	
+	- distant supervision using NER-lists
+		- in principle: automatically tagged corpus PLUS some verification heuristics/context
+	
+	-> problem for both: ambiguity of NE-type in context
+	- REALLY -> I could run NEMEXF or dtree-based tagger to get longest matching trees PLUS threshold
+	
+- use other word embedding -> word2vec
+
+- character and other embeddings
+
+- run GNT with suffix AND ngram by concatenating both into one file
+	- DONE -> errors when concatenation -> I forgot to sort again after adding indices in 
+		features.WordSuffixFeatureFactory.getAllKnownSubstringsForWord(String)
+		
+- compute all prefixes AND eventually combine with suffixes
+
+Additional application:
+- GNT also for chunking
+	- should be very simple, but would eventually need POS tagging
+
+- GNT for relation extraction
+	- maybe use a specific BIO-like annotation schema
+	- check semantic role annotation
+	
+- GNT for morphological tagging
+	- combine POS and MORPH tags
+
+
+For software package:
+- create property file
+- save and move it to model file folder
+- add FLORS accuracy to evaluation script
+- create input file for TORCH
+- generated compressed folder of all data that is necessary for tagging
+- define logger
+- define parallel processing
+
+
+	
+
+	
