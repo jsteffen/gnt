@@ -35,7 +35,7 @@ German Tiger corpus ala Müller et al., 2013
 - testing: last 5000 sentences -> tiger-test.conll 45,474 + 5000
 
 -> done ! corpus.TigerToConllMapper; encoding looks ok
--> now with correct encoding: 0,39 behind SOTA (corrupted: 0,47 behind SOTA)
+-> now with correct encoding: 0,36 behind SOTA (corrupted: 0,47 behind SOTA)
 
 NEXT:
 encode numbers as in Müller et al., ACL 2015 -> DONE
@@ -51,7 +51,8 @@ POS:
 	erhalten VVINF VVPP
 	
 NER:
-- distributed word vectors -> using de-wikidump sentences
+- distributed word vectors -> using de-wikidump sentences -> but I use it currently only for NER
+- new cluster models for Marmot -> for NER ?
 - shape features for German
 - prefixes and suffixes
 - mixed 3-gram, 2-grams, 1-grams

@@ -1,4 +1,58 @@
-October, 2015:
+Current results:
+
+Test on DE conll2003:
+-> best result: 68,41 F1
+-> Speed: ~47T tokens/sec; training: ~10 minutes
+
+-> ablation tests (testb):
+	cluster and 
+	unlabeled features:	-10,42
+	cluster features:	-6,87
+	unlabeled features: -1,71
+	suffix features:	-7,08	
+	shape features:		-1,02
+	
+-> combing training and development data: 
+	+2,45% F1 (but not usable for EN)
+
+Test on EN conll2003:
+-> best result: 83.29 F1
+-> Speed: ~47T tokens/sec; training: ~10 minutes
+
+-> ablation tests (testb):
+	cluster and 
+	unlabeled features:	-8,99
+	cluster features:	-5,58	
+	unlabeled features:	-0,56
+	suffix features:	-2,7	
+	shape features:		-2,47
+	
+(Basically about -10% F1 for DE and EN)
+	
+Test on DE Konvens2014 - only outer NE span classes:
+-> best results: 67.64% F1
+(about -12% compared to best, -5.5% compared with 3rd)
+-> Speed: ~35T tokens /sec. ; training: ~86 minutes
+
+
+
+Used features:
+
+-	normalized text: lower case
+-	no digit normalization
+-	window size: 2
+-	no subsampling
+-	50 dim indicator words
+-	all but only conll-data as unlabeled data
+-	shape feature methods from POS tagger for EN and DE
+-	all suffix features from training
+-	1000 clusterIDs from Marmot
+	- NOTE: Marmot cluserID are based on digit-normalized wiki-dumps
+
+For possible other features:
+https://github.com/clir/clearnlp-guidelines/blob/master/md/components/named_entity_recognition.md
+
+Testing:
 
 - using windowSize=1 hurts !
 - using windowSize=3 neutral
@@ -18,45 +72,7 @@ October, 2015:
 - Actually, it is unclear, whether GNT features are usable for NER
 -> check again paper from Tkachenko & Simanovsky
 
-So, actually, what do I use:
 
-I use this for both EN and DE
-
--	normalized text: lower case
--	no digit normalization
--	window size: 2
--	no subsampling
--	50 dim indicator words
--	all but only conll-data as unlabeled data
--	shape feature methods from POS tagger for EN and DE
--	all suffix features from training
--	1000 clusterIDs from Marmot
-	- NOTE: Marmot cluserID are based on digit-normalized wiki-dumps
-
-Test on DE:
--> best result: 68,41 F1
-
--> ablation tests (testb):
-	cluster and 
-	unlabeled features:	-10,42
-	cluster features:	-6,87
-	unlabeled features: -1,71
-	suffix features:	-7,08	
-	shape features:		-1,02
-
-Test on EN:
--> best result: 83.29 F1
-
--> ablation tests (testb):
-	cluster and 
-	unlabeled features:	-8,99
-	cluster features:	-5,58	
-	unlabeled features:	-0,56
-	suffix features:	-2,7	
-	shape features:		-2,47	
-
-Why is GNT-NER so bad compared to GNT-POS ? 
-(Basically about -10% F1 for DE and EN, where for GNT-POS it is near state-of-the-art)
 
 HIERIX:
 
@@ -74,7 +90,7 @@ cat deu-train-sents.txt deu-testa-sents.txt > deu-traintesta-sents.txt
 
 
 Shape features 
-	-> Try out: remove/deactivate suffix features as part of shapw-features
+	-> Try out: remove/deactivate suffix features as part of shape-features
 		because they already part of suffix features
 	-> DONE: brings a bit for POS and NER, so I deactivate that part of the features
 	-> cf. features.WordShapeFeature.createShapeVectorFromWord(String, int)

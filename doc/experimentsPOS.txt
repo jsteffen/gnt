@@ -1,10 +1,17 @@
 Current results:
 
 - EN - error rate: 2,93 % EN test; best reported: 2,45%
+	Acc=97.07%, 89,73%OOV; Speed: 75.000/seconds, Training = ~15 minutes
+	NO word vectors used ! i.e., no domain modeling, but generalized model
+		BUT word clusters
+	-> also ClearNLP -> generalized model as good as domain adaptive models
 
 - DE - error rate: 2,92 % DE test; best reported: 2,56% or 2,27%
 
 Possible parameters for experiments:
+
+- for possible other features:
+	https://github.com/clir/clearnlp-guidelines/blob/master/md/components/pos_tagging.md
 
 - dimension of indicator words -> size of distributed feature of words
 	- means that distributed word features have to be pre-processed with maxIndicatorWords
