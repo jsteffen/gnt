@@ -46,18 +46,30 @@ HIERIX: January 2016
 Feature learning:
 - Idea: extract POS/NER dictionary of tagged tokens or sequences from training file
 	- without any (?) preprocessing of token spelling
-- Apply dictionary on training file
+	
+- Extract and apply dictionary on training file
 	- should re-cover training file
 	- analyze positive matches, partial matches and negative matches
-- Extract possible feature functions
-	- it is also a learning approach
-- Apply extracted feature functions in supervised way
+	- check autoencoder for automatic feature generation
 
-- Could also be used with NemexA
-- Could also use specific learning approach for this
-	- evolutionary programming
-	- reinforcement learning
-	- function learning
+- Use previous predicted tag as feature for POS/NER
+
+- Generalisation:
+	- filter out low frequencies of terms/suffixes
+	
+- Use of gazetteers:
+	- instead of using it as feature, use it as pre/postfilter
+	- use nemexa for exact match
+	- learn to obtain optimal threshold for nemexf via regression analysis on training analysis
+	- get NEs also from Wikidata
+
+- Use BIOES schema
+	- see code in /nereid/src/main/java/de/dfki/lt/nereid/nep/BIO2BILOUtransformer.java
+	
+- Test with uniform tag set
+	- reuse java code in cf. /MDP/src/de/dfki/lt/nep/ConllNERmapper.java
+	
+- Cluster from Jon Dehardy
 
 ***
 Additional applications:

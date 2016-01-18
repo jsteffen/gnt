@@ -97,6 +97,6 @@ All OOV pos: 9168 Correct: 8378 Accuracy: 91,38%
 All InV pos: 82836 Correct: 80936 Accuracy: 97,71%
 
 -> small improvement of about +0,03
--> error rate: 2,92 %
+-> error rate: 2,92 % -> 0.36 behind SOTA
 
 
