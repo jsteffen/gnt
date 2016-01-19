@@ -11,7 +11,7 @@ HIERIX: January 2016
 	-> try it on relevant component feature!
 	
 - other shape features
-	- cf. LiblinearNER.txt
+	- cf. doc/LiblinearNER.txt
 
 - use other word embedding -> word2vec -> 
 	but actually only used in NER -> so check, whether really usable
@@ -39,6 +39,8 @@ HIERIX: January 2016
 		
 - compute all prefixes AND eventually combine with suffixes
 	- or use as separate feature
+	
+- set un-frequent features to 0 -> cf. comments in MDP/doc/GN-TODO.txt
 
 - Interface to TORCH
 
@@ -73,6 +75,18 @@ Feature learning:
 
 ***
 Additional applications:
+- GNT for morphological tagging
+	- combine POS and MORPH tags
+	- according to Georg: simple concatenation
+	- according to paper in Labeau et al., EMNLP, 2015, there are 619 items
+	- current SOTA in Müller&Schütze, ACL, 2015: 
+		89,18% (MarLin) and 89,32% (FST-based MA from Charles University, Hajic) 
+		
+->	DONE; files are defined; DONE: insert into corpus
+->  I get 876 different classes -> LIBLINEAR exists with OoutOfMemoryError
+
+- GNT for lemmatization
+	
 - GNT also for chunking
 	- should be very simple, but would eventually need POS tagging
 
@@ -82,11 +96,10 @@ Additional applications:
 	- maybe use a specific BIO-like annotation schema
 	- check semantic role annotation
 	
-- GNT for morphological tagging
-	- combine POS and MORPH tags
-
 ***
 For software package:
+- Do splitting
+
 - create property file
 - save and move it to model file folder
 - add FLORS accuracy to evaluation script

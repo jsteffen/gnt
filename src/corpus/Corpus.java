@@ -7,7 +7,7 @@ import java.util.List;
 // The class that holds all corpus files for training, testing etc.
 public class Corpus {
 	public static List<String> knownTaggerNames = 
-			new ArrayList<String>(Arrays.asList("POS", "NER", "DEPOS", "DENER"));
+			new ArrayList<String>(Arrays.asList("POS", "NER", "DEPOS", "DENER", "DEPOSMORPH"));
 
 	private  List<String> trainingLabeledSourceFiles = new ArrayList<String>();
 	private  List<String> devLabeledSourceFiles = new ArrayList<String>();
@@ -158,6 +158,12 @@ public class Corpus {
 
 	// POS German
 	private void setLabeledDePosData(){
+		trainingLabeledData.add("resources/data/german/tiger2_posmorph_train");
+		devLabeledData.add("resources/data/german/tiger2_posmorph_devel");
+		testLabeledData.add("resources/data/german/tiger2_posmorph_test");
+	}
+
+	private void setLabeledDePosMorphData(){
 		trainingLabeledData.add("resources/data/german/tiger2_train");
 		devLabeledData.add("resources/data/german/tiger2_devel");
 		testLabeledData.add("resources/data/german/tiger2_test");
@@ -167,6 +173,14 @@ public class Corpus {
 		trainingUnLabeledData.add("resources/data/german/tiger2_train-sents.txt");
 		devUnLabeledData.add("resources/data/german/tiger2_devel-sents.txt");
 		testUnLabeledData.add("resources/data/german/tiger2_test-sents.txt");
+		// Unlabeled data
+		devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");
+	}
+	
+	private void setUnLabeledDePosMorphData(){	
+		trainingUnLabeledData.add("resources/data/german/tiger2_posmorph_train-sents.txt");
+		devUnLabeledData.add("resources/data/german/tiger2_posmorph_devel-sents.txt");
+		testUnLabeledData.add("resources/data/german/tiger2_posmorph_test-sents.txt");
 		// Unlabeled data
 		devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");
 	}
@@ -215,35 +229,37 @@ public class Corpus {
 	}
 
 	public Corpus(String taggerName){
-		if (taggerName.equals("POS")){
+		switch (taggerName){
+		case "POS": 
 			this.setLabeledEnPosData();
 			this.setUnLabeledEnPosData();
+			break;
+		case "NER":
+			this.setLabeledEnNerSourceFiles();
+			this.setLabeledEnNerData();
+			this.setUnLabeledEnNerData();
+			break;
+		case "DENER":
+			this.setLabeledDeNerSourceFiles();
+			this.setLabeledDeNerData();
+			this.setUnLabeledDeNerData();
+			break;
+		case "DENERKONV":
+			this.setLabeledDeNerKonvData();
+			this.setUnLabeledDeNerKonvData();
+			break;
+		case "DEPOS":
+			this.setLabeledDePosData();
+			this.setUnLabeledDePosData();
+			break;
+		case "DEPOSMORPH":
+			this.setLabeledDePosMorphData();
+			this.setUnLabeledDePosMorphData();
+			break;
+		default :
+			System.err.println("unknown taggername used: " + taggerName);
+			System.exit(0);
+			break;
 		}
-		else
-			if (taggerName.equals("NER")){
-				this.setLabeledEnNerSourceFiles();
-				this.setLabeledEnNerData();
-				this.setUnLabeledEnNerData();
-			}
-			else
-				if (taggerName.equals("DENER")){
-					this.setLabeledDeNerSourceFiles();
-					this.setLabeledDeNerData();
-					this.setUnLabeledDeNerData();
-				}
-				else
-					if (taggerName.equals("DENERKONV")){
-						this.setLabeledDeNerKonvData();
-						this.setUnLabeledDeNerKonvData();
-					}
-					else
-						if (taggerName.equals("DEPOS")){
-							this.setLabeledDePosData();
-							this.setUnLabeledDePosData();
-						}
-						else{
-							System.err.println("unknown taggername used: " + taggerName);
-							System.exit(0);
-						}	
 	}
 }

@@ -84,6 +84,7 @@ public class TigerToConllMapper {
 	 * @param testFile
 	 * @throws IOException
 	 */
+	public static String whatTags = "pos"; // "posmorph", "morph"
 	private void transcodeSourcefile(String sourceFileName, String trainFile, String develFile, String testFile)
 			throws IOException{
 		BufferedReader reader = new BufferedReader(
@@ -161,7 +162,7 @@ public class TigerToConllMapper {
 
 	/**
 	 * gets a line which represents the token information in tiger export format
-	 * Splitting the string is a but complex, because the token elements are not always
+	 * Splitting the string is a bit complex, because the token elements are not always
 	 * separated by a \t as I expected. Sometimes a tab can be empty, so I need to check this carefully.
 	 * Currently, I do not take into account other information than POS.
 	 * @param line
@@ -182,7 +183,9 @@ public class TigerToConllMapper {
 		for (int i = ptr; i < tokenizedLine.length;i++){
 			if (!tokenizedLine[i].isEmpty()) {ptr=i; break;}
 		}
-		String posTag = tokenizedLine[ptr];
+		String morphTag = tokenizedLine[ptr+1];
+
+		String posTag = createPosTag(tokenizedLine[ptr], morphTag);
 
 		String output = index+"\t"; 	// token id
 		output +=word+"\t"; // word 0
@@ -191,16 +194,62 @@ public class TigerToConllMapper {
 		output +=posTag+"\t";	// POS 6
 		output +="_";		// ptr+1morphology 7
 		return output;
-
 	}
 
-	public static void main(String[] args) throws IOException {
-		TigerToConllMapper mapper = new TigerToConllMapper();
+	/**
+	 * Create tags:
+	 * for POS just POSTag
+	 * for Morph: if MorphTag = -- then POSTag else MorphTag
+	 * for POS and Morph make POS+MORPH
+	 * @param string
+	 * @param morphTagIn
+	 * @return
+	 */
+	
+	private String createPosTag(String string, String morphTagIn) {
+		String posTag = string;
+		String morphTag = morphTagIn.equals("--")?posTag:morphTagIn;
+		
+		switch (TigerToConllMapper.whatTags.toLowerCase()) {
+		case "pos" : break;
+		case "morph" : posTag = morphTag; break;
+		case "posmorph" : posTag += morphTag; break;
+		default: break;
+		}
+		return posTag;
+	}
 
-		mapper.transcodeSourcefile(
+	private void makePOSconll() throws IOException{
+		TigerToConllMapper.whatTags = "pos";
+		this.transcodeSourcefile(
 				"/Users/gune00/data/tigercorpus2/corpus/tiger_release_dec05.export", 
 				"resources/data/german/tiger2_train.conll", 
 				"resources/data/german/tiger2_devel.conll",
 				"resources/data/german/tiger2_test.conll");
+	}
+
+	private void makeMorphconll() throws IOException{
+		TigerToConllMapper.whatTags = "morph";
+		this.transcodeSourcefile(
+				"/Users/gune00/data/tigercorpus2/corpus/tiger_release_dec05.export", 
+				"resources/data/german/tiger2_morph_train.conll", 
+				"resources/data/german/tiger2_morph_devel.conll",
+				"resources/data/german/tiger2_morph_test.conll");
+	}
+
+	private void makePOSandMorphconll() throws IOException{
+		TigerToConllMapper.whatTags = "posmorph";
+		this.transcodeSourcefile(
+				"/Users/gune00/data/tigercorpus2/corpus/tiger_release_dec05.export", 
+				"resources/data/german/tiger2_posmorph_train.conll", 
+				"resources/data/german/tiger2_posmorph_devel.conll",
+				"resources/data/german/tiger2_posmorph_test.conll");
+	}
+
+	public static void main(String[] args) throws IOException {
+		TigerToConllMapper mapper = new TigerToConllMapper();
+		mapper.makePOSconll(); 
+		mapper.makeMorphconll(); 
+		mapper.makePOSandMorphconll();
 	}
 }

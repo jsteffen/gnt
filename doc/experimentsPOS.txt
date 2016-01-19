@@ -1,45 +1,61 @@
 Current results:
 
-- EN - error rate: 2,93 % EN test; best reported: 2,45%
-	Acc=97.07%, 89,73%OOV; Speed: 75.000/seconds, Training = ~15 minutes
+- EN - error rate: 2,67 % EN test; best reported: 2,45%
+	Acc=97.33%, 90,34% OOV; Speed: 75.000/seconds, Training = ~5 minutes
 	NO word vectors used ! i.e., no domain modeling, but generalized model
-		BUT word clusters
+		BUT with Wikipedia-based word clusters
 	-> also ClearNLP -> generalized model as good as domain adaptive models
+	
+-> out of domain results are similar to Flors; 
+	a bit lower but in akll cases better than the other taggers (but not WSJ)
 
-- DE - error rate: 2,92 % DE test; best reported: 2,56% or 2,27%
+- DE - error rate: 2,82 % DE test; best reported: 2,56% or 2,27%
 
 Possible parameters for experiments:
 
 - for possible other features:
 	https://github.com/clir/clearnlp-guidelines/blob/master/md/components/pos_tagging.md
 
+word vectors:
 - dimension of indicator words -> size of distributed feature of words
 	- means that distributed word features have to be pre-processed with maxIndicatorWords
 	- Schnabel&Schütze 2013: use all iw (the larger the better)
 	
 - different word vectors (word2vec)
 	
+- different source of indicator words
+	- also together with training set filter -> DONE: via subsampling: not useful
+
+Affixes
 - dimension of suffixes
 	- n-most ranked (Schnabel&Schütze 2013 used n=100) -> DONE: not useful
 	- Schnabel&Schütze 2013: use all (also means: no parameter necessary)
 	
-- different source of indicator words
-	- also together with training set filter -> DONE: via subsampling: not useful
-
 - different suffix sets
 	- inflection
 	- ngrams -> DONE: not useful
 
-- shape features
-	- Schnabel&Schütze 2013: maybe domain dependent -> DONE: ignoring suffix bits useful
+- prefix
 
-- normalization
+- ngrams
+
+shapes
+- shape features
+	- Schnabel&Schütze 2013: maybe domain dependent 
+-> DONE: ignoring suffix bits useful
+
+normalization
 	- digits to 0
-	- Schnabel&Schütze 2015: might be useful -> not useful
+	- Schnabel&Schütze 2015: might be useful 
+-> not useful
 
 - ablation tests on feature sets -> DONE
 
-- different liblinear classifiers
+- different liblinear classifiers 
+	-> MCSVM_CS for DE POS -> brings 0.1% more compared to Flors setting
+	-> MCSVM_CS for EN POS -> brings 0.26% -"-
+-> SO, I get better results here, with smaller model files and faster training !
+-> WHY ?
 
 - training set filtering (idea: make domain more similar)
 	- filter short words: seems to be useful

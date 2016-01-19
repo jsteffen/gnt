@@ -20,7 +20,7 @@ import features.WordSuffixFeatureFactory;
 public class RunDePosTagger {
 
 	public static void main(String[] args) throws IOException{
-		ModelInfo modelInfo = new ModelInfo("FLORS");
+		ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("DEPOS");
 		
 		int windowSize = 2;

@@ -10,7 +10,7 @@ import features.WordSuffixFeatureFactory;
 public class TrainEnPosTagger {
 
 	public static void main(String[] args) throws IOException{
-		ModelInfo modelInfo = new ModelInfo("FLORS");
+		ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("POS");
 		
 		int windowSize = 2;

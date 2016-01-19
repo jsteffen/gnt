@@ -1,0 +1,66 @@
+January, 2016:
+
+Comments by Alexander:
+so wie Sie es beschreiben ist vermutlich der Arbeitsspeicher das Problem. 
+Deswegen macht es Sinn eine große Datei in viele kleine Dateien aufzuteilen 
+und für jede Datei ein Modell zu lernen. Das habe ich immer "splitting" genannt. 
+
+Die Idee habe ich mir vom MaltParser abgeschaut, dort ist es sogar soweit konfigurierbar, 
+dass man sagen konnte nach welchem Feature man splittet. 
+
+Das Problem ist ja, dass man später im Anwendungsfall wissen muss, welches der vielen 
+Modelle man konsultieren muss wenn man eine neue Instanz hat, 
+daher hat man eigentlich nicht so viele Möglichkeiten und ich habe es im MDParser nicht so gemacht. 
+
+Ich habe immer nur nach dem POS-Tag gesplittet. D.h. es gab z.b. ein Modell für Nomen, 
+eins für Verben usw. 
+Es existierte eine minimale Größe des Modells, so dass für einige kleine Wortarten 
+ein gemeinsames Modell trainiert wurde. Die Parallelisierung bietet sich an, 
+weil man dann praktisch  ca. 40 voneinander unabhängige Modelle erstellen muss 
+und es wesentlich schneller geht, wenn man dies parallel macht.
+Im Anwendungsfall habe ich anders parallelisiert. 
+
+Da habe ich den Input in n Teile aufgeteilt und pro Prozessorkern dann einen Teil 
+der Eingabe parsen lassen. Z.B. der erste Prozessorkern parst die Sätze 1-1000, der zweite 1001-2000 usw.
+
+Es ist nicht egal wie man splittet, es entstehen unterschiedliche Modelle unterschiedlicher Größe usw. 
+also variiert ihre Qualität. In meinen Experimenten war ich mit POS am zufriedensten. 
+Man muss auch bedenken, dass sonst nicht viele andere Merkmale gegeben sind 
+und wenn man diese noch vorhersagen müsste bevor man das relevante Modell auswählt, 
+wäre es garantiert keine gute Wahl.
+
+Ich verkünpfe die Modelle nicht zu einem. 
+Am Ende hat man viele Modelle und man muss dann immer wissen für welche Instanz man welches konsultiert
+(z.B. mit POS ist es ja dann ziemlich einfach). 
+Die vielen Modelle habe ich dann in eine ZIP-Datei gepackt, damit man nur eine Datei für ein Modell hat. 
+In Java hat man gute Reader-Klassen, um aus ZIP-Dateien zu lesen (.jar ist ja nichts anderes als ZIP), 
+bringt also keinen Nachteil und ist übersichtlicher.
+
+Günter:
+Was das Splitten angeht, habe ich das jetzt so verstanden, dass man praktisch 
+nach einer Information splitten kann, die man in der Eingabe hat, 
+also  etwa ein spezifisches Feature (in Deinem Falle ja POS). 
+Ist es dann so, dass dann die Modelle untereinander unabhängig sind? 
+Also zB so, dass, wenn das aktuelle Wort ein Nomen ist (für das man das Label bestimmen will), 
+dann wählt man das Nomen-Model aus und dieses berechnet ein Label dann für das Wort. 
+Das heisst dann in der Anwendungsphase, ich muss alle POS-spezifischen Modelle geladen haben 
+(und entsprechend auf Prozesse verteilen?) oder lade ich alle Modelle in einem Prozess in den RAM? 
+Ich frage hier, weil Du ja gesagt hast, dass Du in der Anwendungsphase 
+die Sätze auf verschiedene Prozesse aufteilst. 
+Oder teilst Du Sätze und Modelle auf verschiedene Prozesse auf, sodass ein Prozess 
+einige einige POS-Modelle haben und einige Sätze ? 
+Das würde aber eigentlich keinen Sinn machen, 
+denn dann würden diese Sätze ja nur für die entsprechenden POS gelabelt werden.
+FRAGE: Allerdings wüsste ich aktuell nicht, was man im Falle meines POS taggers am besten zum splitten nimmt 
+(POS habe ich ja nicht :-)
+
+Alexander:
+Beim Splitten gibt es dann n völlig unabhängige unterschiedliche 
+Trainingsdateien, Modelle und Alphabete. 
+Beim Parallelisieren werden alle Modelle in jedem Prozess geladen, 
+d.h. sie sind mehrfach im Arbeitsspeicher drin. 
+
+
+Günter Ideas:
+
+- I could split using the clusterIDs, because I use them in both POS and NER

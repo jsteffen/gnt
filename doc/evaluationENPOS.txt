@@ -428,3 +428,79 @@ Create eval file: resources/eval/ontonotes-wsj-test-flors.txt
 All pos: 39590 Correct: 38429 Accuracy: 97,07%
 All OOV pos: 983 Correct: 882 Accuracy: 89,73%
 All InV pos: 38607 Correct: 37547 Accuracy: 97,25%
+
+************
+++++ 
+with solver=MCSVM_CS -> leads to my current best results !
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-newsgroups-test.conll
+System time (msec): 357
+Sentences: 1195
+Testing instances: 20651
+Sentences/sec: 3347
+Words/sec: 57845
+Create eval file: resources/eval/gweb-newsgroups-test-flors.txt
+All pos: 20651 Correct: 19080 Accuracy: 92,39%
+All OOV pos: 1910 Correct: 1293 Accuracy: 67,70%
+All InV pos: 18741 Correct: 17787 Accuracy: 94,91%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-reviews-test.conll
+System time (msec): 381
+Sentences: 1906
+Testing instances: 28086
+Sentences/sec: 5002
+Words/sec: 73716
+Create eval file: resources/eval/gweb-reviews-test-flors.txt
+All pos: 28086 Correct: 25629 Accuracy: 91,25%
+All OOV pos: 2142 Correct: 1377 Accuracy: 64,29%
+All InV pos: 25944 Correct: 24252 Accuracy: 93,48%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-weblogs-test.conll
+System time (msec): 300
+Sentences: 1015
+Testing instances: 20356
+Sentences/sec: 3383
+Words/sec: 67853
+Create eval file: resources/eval/gweb-weblogs-test-flors.txt
+All pos: 20356 Correct: 18931 Accuracy: 93,00%
+All OOV pos: 1807 Correct: 1358 Accuracy: 75,15%
+All InV pos: 18549 Correct: 17573 Accuracy: 94,74%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-answers-test.conll
+System time (msec): 371
+Sentences: 1744
+Testing instances: 28823
+Sentences/sec: 4700
+Words/sec: 77690
+Create eval file: resources/eval/gweb-answers-test-flors.txt
+All pos: 28823 Correct: 26114 Accuracy: 90,60%
+All OOV pos: 2142 Correct: 1357 Accuracy: 63,35%
+All InV pos: 26681 Correct: 24757 Accuracy: 92,79%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/gweb-emails-test.conll
+System time (msec): 600
+Sentences: 2450
+Testing instances: 28676
+Sentences/sec: 4083
+Words/sec: 47793
+Create eval file: resources/eval/gweb-emails-test-flors.txt
+All pos: 28676 Correct: 25406 Accuracy: 88,60%
+All OOV pos: 3079 Correct: 1863 Accuracy: 60,51%
+All InV pos: 25597 Correct: 23543 Accuracy: 91,98%
+
+++++
+Do testing from file: resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-test.conll
+System time (msec): 706
+Sentences: 1640
+Testing instances: 39590
+Sentences/sec: 2322
+Words/sec: 56076
+Create eval file: resources/eval/ontonotes-wsj-test-flors.txt
+All pos: 39590 Correct: 38533 Accuracy: 97,33%
+All OOV pos: 983 Correct: 888 Accuracy: 90,34%
+All InV pos: 38607 Correct: 37645 Accuracy: 97,51%
