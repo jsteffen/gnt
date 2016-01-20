@@ -50,7 +50,7 @@ public class RunEnNerTagger {
 		for (Pair<String, String> pair : fileList){
 			nerTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR(), -1);
 			System.out.println("Create eval file: " + pair.getR());
-			evalFile.computeAccuracy(pair.getR());
+			evalFile.computeAccuracy(pair.getR(), false);
 		}
 	}
 }

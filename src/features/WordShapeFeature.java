@@ -141,7 +141,7 @@ public class WordShapeFeature {
 			if (Character.isDigit(ch)) {
 				hasDigit = true;
 			} else 
-				if (ch == '-')
+				if ( (ch == '-') )
 				{
 					hasDash = true;
 				} else if (Character.isLetter(ch)) {
@@ -157,7 +157,7 @@ public class WordShapeFeature {
 		}
 		// Remember first char
 		char ch0 = word.charAt(0);
-		// and the lowercase it
+		// and then lowercase it
 		String lowered = word.toLowerCase();
 
 		// Now, analyse the different cases, and set the relevant bits in the bitVector

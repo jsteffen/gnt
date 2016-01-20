@@ -30,12 +30,9 @@ POS:
 
 German Tiger corpus ala Müller et al., 2013
 - extract CONLL POS info from tiger2 corpus export format:
-- training: first 40,474 sentences -> tiger-train.conll
-- development:  next 5000 sentences -> tiger-devel.conll 40,474 + 5000
-- testing: last 5000 sentences -> tiger-test.conll 45,474 + 5000
-
--> done ! corpus.TigerToConllMapper; encoding looks ok
--> now with correct encoding: 0,36 behind SOTA (corrupted: 0,47 behind SOTA)
+- training: first 40,472 sentences -> tiger-train.conll
+- development:  next 5000 sentences -> tiger-devel.conll 40,472 + 5000
+- testing: last 5000 sentences -> tiger-test.conll 45,472 + 5000
 
 NEXT:
 encode numbers as in Müller et al., ACL 2015 -> DONE
@@ -44,12 +41,6 @@ encode numbers as in Müller et al., ACL 2015 -> DONE
 
 What could be done to get better results ? 
 
-POS:
-- investe a bit outcome from devel file
-	Damit KOUS PROAV
-	enthalten ADJD VVPP
-	erhalten VVINF VVPP
-	
 NER:
 - distributed word vectors -> using de-wikidump sentences -> but I use it currently only for NER
 - new cluster models for Marmot -> for NER ?
@@ -57,3 +48,56 @@ NER:
 - prefixes and suffixes
 - mixed 3-gram, 2-grams, 1-grams
 - patterns for some suffixes, e.g., numbers
+
+POS:
+ 
+ I have ID=97,30% and OD=91,76% -> best official: ID=97,73% and OD=92,00% -> my OD is already second best!
+ 
+ Call to see POS-individual F1:
+ lt-pool-229:resources gune00$ ./conlleval -r < eval/tiger2_devel.txt 
+
+
+Error analysis: eval/tiger2_devel.txt.debug
+- lowest F1:
+- 	FM tagged as NE or vice versa -> FM = "fremdsprachliches Material"
+- 	PTKANT = "Antwortpartikel" 
+	-> occurs two times in devel, in both times wrongly tagged
+- 	können VMINF VMFIN, können VMFIN VMINF, sollen VMINF VMFIN, müssen VMFIN VMINF, dürfen VMINF VMFIN
+	-> VMINF = "Infinitiv, modal"
+- 	an APZR APPR, her APZR ADV, aus APZR APPR, hinaus APZR PTKVZ, an APPR APZR
+	-> APZR = "Zirkumposition rechts"
+	
+- error with tagging of NE and NN:
+  NE tagged as NN -> 349 cases
+  NN tagged as NE -> 104 cases
+ 
+- XY often as NE: 3 druckreif ADJD XY
+2 rtr XY NE
+25 HL NE XY
+4 B XY NE
+5 + XY KON
+3 B XY NE
+4 + XY KON
+5 S XY NE
+2 + XY KON
+3 S XY NE
+11 F XY NE
+1 kat XY VAFIN
+4 fr XY NE
+3 to XY NE
+4 sp NE XY
+2 whp NE XY
+16 B XY NE
+11 B. XY NE
+2 B XY NE
+15 B XY NE
+14 B XY NE
+2 zba NE XY
+1 kna XY NE
+7 pid XY NE
+5 pid-nie XY PRELS
+
+Current tendency: 
+
+shape features might be important or character-based embeddings ? 1-grams ?
+-> I need ako of "letter structure" to recognize foreign or so?

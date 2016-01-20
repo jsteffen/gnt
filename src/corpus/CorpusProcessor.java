@@ -259,10 +259,14 @@ public class CorpusProcessor {
 						if (taggerName.equals("DEPOS")){
 							this.transcodeConllToSentenceFiles();
 						}
+						else
+							if (taggerName.equals("DEPOSMORPH")){
+								this.transcodeConllToSentenceFiles();
+							}
 	}
 
 	public static void main(String[] args) throws IOException {
-		CorpusProcessor mapper = new CorpusProcessor("DENERKONV");
+		CorpusProcessor mapper = new CorpusProcessor("DEPOS");
 		mapper.processConllFiles();
 	}
 }	

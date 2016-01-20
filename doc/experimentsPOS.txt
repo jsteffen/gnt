@@ -1,15 +1,20 @@
 Current results:
 
 - EN - error rate: 2,67 % EN test; best reported: 2,45%
-	Acc=97.33%, 90,34% OOV; Speed: 75.000/seconds, Training = ~5 minutes
+	Acc=97.33%, 90,34% OOV; Speed: 75.000/seconds
+	Training = MORE PRECISE
 	NO word vectors used ! i.e., no domain modeling, but generalized model
 		BUT with Wikipedia-based word clusters
 	-> also ClearNLP -> generalized model as good as domain adaptive models
 	
 -> out of domain results are similar to Flors; 
-	a bit lower but in akll cases better than the other taggers (but not WSJ)
+	a bit lower but in all cases 2nd best result (but not WSJ)
 
-- DE - error rate: 2,82 % DE test; best reported: 2,56% or 2,27%
+- DE - error rate: 2,70 % DE test; best reported: 2,56% or 2,27%
+	Acc=97,30%, OOV=91,76%
+	Training = MORE PRECISE
+	
+	
 
 Possible parameters for experiments:
 

@@ -1,9 +1,13 @@
 package corpus;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 
 import data.Data;
@@ -42,9 +46,12 @@ public class EvalConllFile {
 	}
 
 
-	public void computeAccuracy(String  sourceFileName) throws IOException{
+	public void computeAccuracy(String  sourceFileName, boolean debug) throws IOException{
 		BufferedReader conllReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
+		File debugFileName = new File(sourceFileName+".debug");
+		BufferedWriter debugWriter = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
 		int goldPosCnt = 0;
 		int correctPosCnt = 0;
 		int goldOOVCnt = 0;
@@ -60,7 +67,8 @@ public class EvalConllFile {
 					String predPos = tokenizedLine[3];
 					goldPosCnt++;
 					if (predPos.equals(goldPos)) correctPosCnt++;
-					//else System.out.println(line);
+					else
+						if (debug) debugWriter.write(line+"\n");
 
 					// Counting our of vocabulary words
 					//TODO: note I do not lower case words when counting OOV -> correct? 
@@ -73,6 +81,8 @@ public class EvalConllFile {
 			}
 		}
 		conllReader.close();
+		debugWriter.close();
+		if (!debug) debugFileName.delete();
 
 		// accuracy for all words of test file
 		acc = (double) correctPosCnt / (double) goldPosCnt;
@@ -101,6 +111,6 @@ public class EvalConllFile {
 		EvalConllFile evalFile = new EvalConllFile();
 		evalFile.data.readWordSet();
 
-		evalFile.computeAccuracy("resources/eval/gweb-answers-dev-flors.txt");
+		evalFile.computeAccuracy("resources/eval/gweb-answers-dev-flors.txt", true);
 	}
 }

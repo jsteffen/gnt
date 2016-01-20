@@ -190,7 +190,7 @@ public class GNT {
 		System.out.println(evalFile.getData().toString());
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile, -1);
 		System.out.println("Create eval file: " + this.outFile);
-		evalFile.computeAccuracy(this.outFile);
+		evalFile.computeAccuracy(this.outFile, false);
 	}
 
 

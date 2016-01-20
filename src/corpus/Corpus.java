@@ -158,12 +158,6 @@ public class Corpus {
 
 	// POS German
 	private void setLabeledDePosData(){
-		trainingLabeledData.add("resources/data/german/tiger2_posmorph_train");
-		devLabeledData.add("resources/data/german/tiger2_posmorph_devel");
-		testLabeledData.add("resources/data/german/tiger2_posmorph_test");
-	}
-
-	private void setLabeledDePosMorphData(){
 		trainingLabeledData.add("resources/data/german/tiger2_train");
 		devLabeledData.add("resources/data/german/tiger2_devel");
 		testLabeledData.add("resources/data/german/tiger2_test");
@@ -175,6 +169,13 @@ public class Corpus {
 		testUnLabeledData.add("resources/data/german/tiger2_test-sents.txt");
 		// Unlabeled data
 		devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");
+	}
+	
+	// POS and Morph
+	private void setLabeledDePosMorphData(){
+		trainingLabeledData.add("resources/data/german/tiger2_posmorph_train");
+		devLabeledData.add("resources/data/german/tiger2_posmorph_devel");
+		testLabeledData.add("resources/data/german/tiger2_posmorph_test");
 	}
 	
 	private void setUnLabeledDePosMorphData(){	

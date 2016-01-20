@@ -1,5 +1,7 @@
 HIERIX: January 2016
 
+- Create LibLinear Input file, so that C++ version can be called
+
 - Other corpora for DE-POS and DE-NER
 	- Mannheim, google books, ...
 
@@ -17,7 +19,7 @@ HIERIX: January 2016
 	but actually only used in NER -> so check, whether really usable
 	maybe better clustering or other co-occurrence  models (WebQA?)
 
--	POS tags as feature for NER
+- POS tags as feature for NER
 	- how can I define a kind of pipeline model for GNT ?
 
 - NER-lexikons
@@ -83,7 +85,8 @@ Additional applications:
 		89,18% (MarLin) and 89,32% (FST-based MA from Charles University, Hajic) 
 		
 ->	DONE; files are defined; DONE: insert into corpus
-->  I get 876 different classes -> LIBLINEAR exists with OoutOfMemoryError
+->  I get 681 different items -> LIBLINEAR exists with OoutOfMemoryError ********************************************
+	-> initialized array will get too long in liblinear train;
 
 - GNT for lemmatization
 	

@@ -45,11 +45,9 @@ public class RunDePosTagger {
 		List<Pair<String, String>> fileListDevel = new ArrayList<Pair<String, String>>();
 		List<Pair<String, String>> fileListTest = new ArrayList<Pair<String, String>>();
 
-		fileListDevel.add(new Pair<String, String>(
-				"resources/data/german/tiger2_devel.conll", "resources/eval/tiger2_devel.txt"));
+		fileListDevel.add(new Pair<String, String>("resources/data/german/tiger2_devel.conll", "resources/eval/tiger2_devel.txt"));
 		
-		fileListTest.add(new Pair<String, String>(
-				"resources/data/german/tiger2_test.conll", "resources/eval/tiger2_test.txt"));	
+		fileListTest.add(new Pair<String, String>("resources/data/german/tiger2_test.conll", "resources/eval/tiger2_test.txt"));	
 
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile evalFile = new EvalConllFile();
@@ -59,13 +57,13 @@ public class RunDePosTagger {
 		for (Pair<String, String> pair : fileListDevel){
 			posTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR(), -1);
 			System.out.println("Create eval file: " + pair.getR());
-			evalFile.computeAccuracy(pair.getR());
+			evalFile.computeAccuracy(pair.getR(), true);
 		}
 		
 		for (Pair<String, String> pair : fileListTest){
 			posTagger.tagAndWriteFromConllDevelFile(pair.getL(), pair.getR(), -1);
 			System.out.println("Create eval file: " + pair.getR());
-			evalFile.computeAccuracy(pair.getR());
+			evalFile.computeAccuracy(pair.getR(), false);
 		}
 	}
 }

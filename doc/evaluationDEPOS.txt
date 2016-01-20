@@ -126,4 +126,30 @@ All pos: 92004 Correct: 89411 Accuracy: 97,18%
 All OOV pos: 9168 Correct: 8393 Accuracy: 91,55%
 All InV pos: 82836 Correct: 81018 Accuracy: 97,81%
 
--> best result so far
+++++
+
+Training and testing with tiger2.2:
+
+++++
+Do testing from file: resources/data/german/tiger2_devel.conll
+System time (msec): 1469
+Sentences: 5000
+Testing instances: 76684
+Sentences/sec: 3403
+Words/sec: 52201
+Create eval file: resources/eval/tiger2_devel.txt
+All pos: 76684 Correct: 75000 Accuracy: 97,80%
+All OOV pos: 5861 Correct: 5410 Accuracy: 92,31%
+All InV pos: 70823 Correct: 69590 Accuracy: 98,26%
+
+++++
+Do testing from file: resources/data/german/tiger2_test.conll
+System time (msec): 1327
+Sentences: 4998
+Testing instances: 91970
+Sentences/sec: 3766
+Words/sec: 69306
+Create eval file: resources/eval/tiger2_test.txt
+All pos: 91970 Correct: 89490 Accuracy: 97,30%
+All OOV pos: 9166 Correct: 8411 Accuracy: 91,76%
+All InV pos: 82804 Correct: 81079 Accuracy: 97,92%
