@@ -16,4 +16,7 @@ January, 2016:
 	cross-validation: 	./train -v 10 heart_scale 
 	create model file: 	./train heart_scale heart_model
 	prediction:			./predict heart_scale_t heart_model label-outputs.txt
-	
+
+-	install multi-core  version of liblinear
+
+GNT-to-liblinearC:
