@@ -115,7 +115,7 @@ public class GNTrainer {
 		this.getTrainer().trainFromConllTrainingFileInMemory(trainingFileName, maxExamples);
 
 		time2 = System.currentTimeMillis();
-		System.out.println("System time (msec): " + (time2-time1));
+		System.out.println("Total training time: " + (time2-time1));
 
 //		this.getTrainer().getProblem().n = OffSets.windowVectorSize;
 //		this.getTrainer().getProblem().l=Window.windowCnt;

@@ -269,6 +269,7 @@ public class GNTagger {
 
 		while ((line = conllReader.readLine()) != null) {
 			if (line.isEmpty()) {
+				// For found sentence, do tagging:
 				// Stop if max sentences have been processed
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 
@@ -285,6 +286,7 @@ public class GNTagger {
 				tokens = new ArrayList<String[]>();
 			}
 			else {
+				// Collect all the words of a conll sentence
 				String[] tokenizedLine = line.split("\t");
 				tokens.add(tokenizedLine);
 			}
@@ -311,7 +313,8 @@ public class GNTagger {
 		conllWriter.write("\n");
 	}
 
-	public void tagFromConllDevelFile(String sourceFileName, int max)
+	// TODO NOT USED
+	private void tagFromConllDevelFile(String sourceFileName, int max)
 			throws IOException {
 		long time1;
 		long time2;
@@ -335,6 +338,7 @@ public class GNTagger {
 		System.out.println("Testing instances: " + Window.windowCnt);
 	}
 
+	// This is the current main caller for the GNTagger
 	public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName, int sentenceCnt)
 			throws IOException {
 		long time1;
@@ -349,8 +353,7 @@ public class GNTagger {
 		// Reset some data to make sure each file has same change
 		this.getData().setSentenceCnt(0);
 		Window.windowCnt=0;
-
-
+		
 		time1 = System.currentTimeMillis();
 		// -1 means: all sentences from file are processed
 		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, sentenceCnt);
@@ -359,7 +362,6 @@ public class GNTagger {
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
-
 
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
 		System.out.println("Testing instances: " + Window.windowCnt);

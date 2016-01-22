@@ -349,10 +349,10 @@ public class TrainerInMem {
 		System.out.println("Average window vector lenght: " + ProblemInstance.cumLength/Window.windowCnt);
 		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 
-		System.out.println("Construct model:");
+		time1 = System.currentTimeMillis();
 		this.runLiblinearTrainer();
-
-		System.out.println("... done");
+		time2 = System.currentTimeMillis();
+		System.out.println("Complete time for training and writing model (msec): " + (time2-time1));	
 	}
 
 	public String taggedSentenceToString(){
@@ -375,6 +375,7 @@ public class TrainerInMem {
 		Linear.disableDebugOutput();
 		time1 = System.currentTimeMillis();
 		System.out.println("problem.n: " + this.getProblem().n);
+		System.out.println("Do training:");
 		Model model = Linear.train(this.getProblem(), this.getParameter());
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));

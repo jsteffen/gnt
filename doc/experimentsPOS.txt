@@ -12,8 +12,7 @@ Current results:
 
 - DE - error rate: 2,70 % DE test; best reported: 2,56% or 2,27%
 	Acc=97,30%, OOV=91,76%
-	Training = MORE PRECISE
-	
+	Training = 97952 msec (1,67 minutes)
 	
 
 Possible parameters for experiments:

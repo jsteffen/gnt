@@ -1,9 +1,24 @@
 HIERIX: January 2016
 
 - Create LibLinear Input file, so that C++ version can be called
+	- here is  the place of the GNTagger: tagger.GNTagger.constructProblemAndTag(boolean, boolean)
+	- and for the trainer trainer.TrainerInMem.constructProblem(boolean, boolean)
+	- I think, I define a writer method for trainer.ProblemInstance, which
+		- is called for the current feature vector and receives the label and the writerBuffer
+		- called it right after trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
+		- in training mode: also store label
+		- in tagging mode: do not store label, I GUESS SO!
+
+- Cluster from Jon Dehardy -> under clarification
+
+
+- labeled: I have the twitter data from Ines Rehbein
+	- XML format stehen in data/twitter_gold
+	-> müssen noch nach CONLL transformiert werden
 
 - Other corpora for DE-POS and DE-NER
-	- Mannheim, google books, ...
+	- Unlabeled Mannheim, google books, ...
+
 
 - check to normalize/scale each component vector
 	to unit length (compute length of vector, and then divide each component)
@@ -14,26 +29,32 @@ HIERIX: January 2016
 	
 - other shape features
 	- cf. doc/LiblinearNER.txt
+	- I think that this could be a source for improvement, and hence, do some research here
 
 - use other word embedding -> word2vec -> 
 	but actually only used in NER -> so check, whether really usable
 	maybe better clustering or other co-occurrence  models (WebQA?)
+	- character and other embeddings
 
 - POS tags as feature for NER
 	- how can I define a kind of pipeline model for GNT ?
 
-- NER-lexikons
-	- could be done by defining a NE-type-based feature similar to cluster-ID
-	- but using dictionary lookup 
-	- I could use a class OTHR for all words not covered by NE-lists
+- Use previous predicted tag as feature for POS/NER
+
+- Generalisation:
+	- filter out low frequencies of terms/suffixes
 	
-	- distant supervision using NER-lists
-		- in principle: automatically tagged corpus PLUS some verification heuristics/context
+- Use of gazetteers:
+	- instead of using it as feature, use it as pre/postfilter
+	- use nemexa for exact match
+	- learn to obtain optimal threshold for nemexf via regression analysis on training analysis
+	- get NEs also from Wikidata
+
+- Use BIOES schema
+	- see code in /nereid/src/main/java/de/dfki/lt/nereid/nep/BIO2BILOUtransformer.java
 	
-	-> problem for both: ambiguity of NE-type in context
-	- REALLY -> I could run NEMEXF or dtree-based tagger to get longest matching trees PLUS threshold
-	
-- character and other embeddings
+- Test with uniform tag set
+	- reuse java code in cf. /MDP/src/de/dfki/lt/nep/ConllNERmapper.java
 
 - run GNT with suffix AND ngram by concatenating both into one file
 	- DONE -> errors when concatenation -> I forgot to sort again after adding indices in 
@@ -56,32 +77,13 @@ Feature learning:
 	- analyze positive matches, partial matches and negative matches
 	- check autoencoder for automatic feature generation
 
-- Use previous predicted tag as feature for POS/NER
-
-- Generalisation:
-	- filter out low frequencies of terms/suffixes
-	
-- Use of gazetteers:
-	- instead of using it as feature, use it as pre/postfilter
-	- use nemexa for exact match
-	- learn to obtain optimal threshold for nemexf via regression analysis on training analysis
-	- get NEs also from Wikidata
-
-- Use BIOES schema
-	- see code in /nereid/src/main/java/de/dfki/lt/nereid/nep/BIO2BILOUtransformer.java
-	
-- Test with uniform tag set
-	- reuse java code in cf. /MDP/src/de/dfki/lt/nep/ConllNERmapper.java
-	
-- Cluster from Jon Dehardy
-
 ***
 Additional applications:
 - GNT for morphological tagging
 	- combine POS and MORPH tags
 	- according to Georg: simple concatenation
-	- according to paper in Labeau et al., EMNLP, 2015, there are 619 items
-	- current SOTA in Müller&Schütze, ACL, 2015: 
+	- according to paper in Müller et al., EMNLP 2013: 681 labels
+	- current SOTA for pos+morph in Müller&Schütze, ACL, 2015: 
 		89,18% (MarLin) and 89,32% (FST-based MA from Charles University, Hajic) 
 		
 ->	DONE; files are defined; DONE: insert into corpus
