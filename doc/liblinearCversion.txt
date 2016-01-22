@@ -1,0 +1,19 @@
+January, 2016:
+
+- Create LibLinear Input file, so that Cversion can be called
+	- here is  the place of the GNTagger: tagger.GNTagger.constructProblemAndTag(boolean, boolean)
+	- and for the trainer trainer.TrainerInMem.constructProblem(boolean, boolean)
+	- I think, I define a writer method for trainer.ProblemInstance, which
+		- is called for the current feature vector and receives the label and the writerBuffer
+		- called it right after trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
+		- in training mode: also store label
+		- in tagging mode: do not store label -> I think: can be used because it will be ignore in predict mode
+		
+- liblinear version:
+	/Users/gune00/dfki/src/liblinear-2.1
+	compilation works:
+	called it 
+	cross-validation: 	./train -v 10 heart_scale 
+	create model file: 	./train heart_scale heart_model
+	prediction:			./predict heart_scale_t heart_model label-outputs.txt
+	

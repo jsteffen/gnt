@@ -1,13 +1,6 @@
 HIERIX: January 2016
 
-- Create LibLinear Input file, so that C++ version can be called
-	- here is  the place of the GNTagger: tagger.GNTagger.constructProblemAndTag(boolean, boolean)
-	- and for the trainer trainer.TrainerInMem.constructProblem(boolean, boolean)
-	- I think, I define a writer method for trainer.ProblemInstance, which
-		- is called for the current feature vector and receives the label and the writerBuffer
-		- called it right after trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
-		- in training mode: also store label
-		- in tagging mode: do not store label, I GUESS SO!
+- Create LibLinear Input file, so that C version can be called
 
 - Cluster from Jon Dehardy -> under clarification
 
