@@ -14,7 +14,7 @@ import features.WordSuffixFeatureFactory;
 
 public class RunDeNerKonvTagger {
 	public static void main(String[] args) throws IOException{
-		ModelInfo modelInfo = new ModelInfo("FLORS");
+		ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("DENERKONV");
 		Data.wordFormIndex = 1;
 		// For konvens 2014 data labels are at column 2 (outer NE labels) or 3 (inner NE label)
@@ -23,7 +23,7 @@ public class RunDeNerKonvTagger {
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 50;
-		Alphabet.withWordFeats=true;
+		Alphabet.withWordFeats=false;
 		Alphabet.withShapeFeats=true;
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;

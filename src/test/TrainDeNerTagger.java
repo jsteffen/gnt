@@ -12,7 +12,7 @@ import features.WordSuffixFeatureFactory;
 public class TrainDeNerTagger {
 
 	public static void main(String[] args) throws IOException{
-		ModelInfo modelInfo = new ModelInfo("FLORS");
+		ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("DENER");
 		Data.wordFormIndex = 1;
 		// For conll 2003 NER data NE label is at 4 column (counted from 0)
@@ -22,7 +22,7 @@ public class TrainDeNerTagger {
 		int numberOfSentences = -1;
 		int dim = 50;
 		double subSamplingThreshold = 0.000000001;
-		Alphabet.withWordFeats=true;
+		Alphabet.withWordFeats=false;
 		Alphabet.withShapeFeats=true;
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;
@@ -37,8 +37,8 @@ public class TrainDeNerTagger {
 		System.out.println(modelInfo.toString());
 		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
-		String trainingFileName = "resources/data/ner/de/deu-train";
-		String clusterIdSourceFileName = "resources/data/ner/de/de_marlin_cluster_1000";
+		String trainingFileName = "resources/data/ner/de/deu-traintesta";
+		String clusterIdSourceFileName = "/Users/gune00/data/Marmot/Word/de_marlin_cluster_1000";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
 	}

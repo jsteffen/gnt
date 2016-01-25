@@ -2,7 +2,18 @@ HIERIX: January 2016
 
 - Create LibLinear Input file, so that C version can be called
 
-- Cluster from Jon Dehardy -> under clarification
+- Use BIOES schema
+	- see code in /nereid/src/main/java/de/dfki/lt/nereid/nep/BIO2BILOUtransformer.java
+	- should be useful for NER
+
+- Cluster from Jon Dehardy - clusterCat
+	- run on source text on clusterCat and Marlin
+	- use same parameters
+		- number of cluster, frequency threshold, iterations
+	- difference between clusterCat and Marlin:
+		clusterCat uses "leftWord word rightWord bigrams" (similar to word clusters in GNT)
+		Marlin uses "leftWord leftWord word" trigrams
+	- Jon proposed to use clusters and cluster size as additional feature
 
 
 - labeled: I have the twitter data from Ines Rehbein
@@ -11,7 +22,6 @@ HIERIX: January 2016
 
 - Other corpora for DE-POS and DE-NER
 	- Unlabeled Mannheim, google books, ...
-
 
 - check to normalize/scale each component vector
 	to unit length (compute length of vector, and then divide each component)
@@ -42,10 +52,11 @@ HIERIX: January 2016
 	- use nemexa for exact match
 	- learn to obtain optimal threshold for nemexf via regression analysis on training analysis
 	- get NEs also from Wikidata
-
-- Use BIOES schema
-	- see code in /nereid/src/main/java/de/dfki/lt/nereid/nep/BIO2BILOUtransformer.java
 	
+	- add to clusters entries which belong to 
+		NE classes, e.g., cluserID 417 seems to cover first names
+		define them as additional dictionaries and insert them when reading in clusterIds
+		
 - Test with uniform tag set
 	- reuse java code in cf. /MDP/src/de/dfki/lt/nep/ConllNERmapper.java
 

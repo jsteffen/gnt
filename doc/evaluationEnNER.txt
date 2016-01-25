@@ -138,3 +138,19 @@ accuracy:  96.48%; precision:  80.10%; recall:  79.25%; FB1:  79.67
               PER: precision:  88.51%; recall:  87.14%; FB1:  87.82
               
 ***** shape features are important
+
+*****
+Test with modelInfo="FLORS" and 1000 clusters, no word embedding
+
+Training: 6491 msec, = 6 sec.
+
+lt-pool-229:resources gune00$ ./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 5911 phrases; correct: 4742.
+accuracy:  97.04%; precision:  80.22%; recall:  83.96%; FB1:  82.05
+
+*****
+Test with modelInfo="FLORS" and 500 clusters, no word embedding
+
+lt-pool-229:resources gune00$ ./conlleval < eval/eng-testb.txt 
+processed 46666 tokens with 5648 phrases; found: 5910 phrases; correct: 4763.
+accuracy:  97.11%; precision:  80.59%; recall:  84.33%; FB1:  82.42

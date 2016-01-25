@@ -149,5 +149,13 @@ accuracy:  96.61%; precision:  76.19%; recall:  66.38%; FB1:  70.94
               ORG: precision:  61.88%; recall:  52.91%; FB1:  57.04
               PER: precision:  89.06%; recall:  81.09%; FB1:  84.89
 -> brings +2,45            
-              
+
+Uisng modelinfo MDP: training time = 10 sec.
+lt-pool-229:resources gune00$ ./conlleval < eval/deu-testb.txt 
+processed 52098 tokens with 3673 phrases; found: 3399 phrases; correct: 2492.
+accuracy:  96.57%; precision:  73.32%; recall:  67.85%; FB1:  70.48
+              LOC: precision:  74.55%; recall:  72.46%; FB1:  73.49
+             MISC: precision:  63.91%; recall:  53.13%; FB1:  58.03
+              ORG: precision:  57.14%; recall:  52.78%; FB1:  54.88
+              PER: precision:  87.17%; recall:  81.84%; FB1:  84.42              
               

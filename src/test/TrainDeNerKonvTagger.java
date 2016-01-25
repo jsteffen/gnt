@@ -22,7 +22,7 @@ public class TrainDeNerKonvTagger {
 		int numberOfSentences = -1;
 		int dim = 50;
 		double subSamplingThreshold = 0.000000001;
-		Alphabet.withWordFeats=true;
+		Alphabet.withWordFeats=false;
 		Alphabet.withShapeFeats=true;
 		Alphabet.withSuffixFeats=true;
 		Alphabet.withClusterFeats=true;
@@ -39,7 +39,7 @@ public class TrainDeNerKonvTagger {
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
 		String trainingFileName = "resources/data/ner/dekonvens/deu.konvens.train";
 		// I am using same cluster ids as for DE conll
-		String clusterIdSourceFileName = "resources/data/ner/de/de_marlin_cluster_1000";
+		String clusterIdSourceFileName = "/Users/gune00/data/Marmot/Word/de_marlin_cluster_1000";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
 	}

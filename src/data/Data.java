@@ -14,7 +14,10 @@ public class Data {
 	private String labelMapFileName = "resources/features/labelSet.txt";
 	private String wordMapFileName = "resources/features/wordSet.txt";
 	
-	// counted form 0, 2nd column in conll in case of POS, else 0 for NER
+	// counted from 0, 2nd column in conll in case of POS, else 0 for NER
+	/**
+	 * Index of wordform in conll format
+	 */
 	public static int wordFormIndex = 1;
 	// counted form 0, 5th column in conll
 	public static int posTagIndex = 4;

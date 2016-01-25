@@ -4,7 +4,7 @@ SVM-based tagger in Nemex:
 APRIL, 2015:
 62,16 % F1
 
-Testing with konvens 204 data - only outer NE span classes:
+Testing with konvens 2014 data - only outer NE span classes:
 
 Best result at konvens 2014 for outer NE span:
 ExB 80.67 77.55 79.08 acc: 96,91
@@ -31,3 +31,88 @@ accuracy:  95.96%; precision:  76.23%; recall:  60.79%; FB1:  67.64
               PER: precision:  81.52%; recall:  78.39%; FB1:  79.93
          PERderiv: precision:   0.00%; recall:   0.00%; FB1:   0.00
           PERpart: precision:   0.00%; recall:   0.00%; FB1:   0.00
+
+*****
+Test with modelInfo="MDP" and 100 clusters, no word embedding
+
+Training times: 36997 msec = 0,61 Minutes
+
+lt-pool-229:resources gune00$ ./conlleval < eval/deu-konv-test.txt 
+processed 96483 tokens with 6177 phrases; found: 5818 phrases; correct: 4039.
+accuracy:  96.09%; precision:  69.42%; recall:  65.39%; FB1:  67.34
+              LOC: precision:  78.65%; recall:  75.56%; FB1:  77.07
+         LOCderiv: precision:  81.77%; recall:  82.35%; FB1:  82.06
+          LOCpart: precision:  67.65%; recall:  21.10%; FB1:  32.17
+              ORG: precision:  53.84%; recall:  53.04%; FB1:  53.44
+         ORGderiv: precision: 100.00%; recall:  12.50%; FB1:  22.22
+          ORGpart: precision:  52.59%; recall:  35.47%; FB1:  42.36
+              OTH: precision:  44.54%; recall:  38.59%; FB1:  41.35
+         OTHderiv: precision:  66.67%; recall:  46.15%; FB1:  54.55
+          OTHpart: precision:  50.00%; recall:  14.29%; FB1:  22.22
+              PER: precision:  77.26%; recall:  79.24%; FB1:  78.24
+         PERderiv: precision: 100.00%; recall:   9.09%; FB1:  16.67
+          PERpart: precision:  16.67%; recall:   2.27%; FB1:   4.00
+
+*****
+Test with modelInfo="MDP" and 200 clusters, no word embedding
+
+lt-pool-229:resources gune00$ ./conlleval < eval/deu-konv-test.txt 
+processed 96483 tokens with 6177 phrases; found: 5852 phrases; correct: 4132.
+accuracy:  96.19%; precision:  70.61%; recall:  66.89%; FB1:  68.70
+              LOC: precision:  79.02%; recall:  78.37%; FB1:  78.69
+         LOCderiv: precision:  83.36%; recall:  83.96%; FB1:  83.66
+          LOCpart: precision:  56.25%; recall:  16.51%; FB1:  25.53
+              ORG: precision:  56.42%; recall:  55.39%; FB1:  55.90
+         ORGderiv: precision: 100.00%; recall:  12.50%; FB1:  22.22
+          ORGpart: precision:  50.91%; recall:  32.56%; FB1:  39.72
+              OTH: precision:  46.54%; recall:  39.60%; FB1:  42.79
+         OTHderiv: precision:  68.00%; recall:  43.59%; FB1:  53.13
+          OTHpart: precision:  45.45%; recall:  11.90%; FB1:  18.87
+              PER: precision:  77.77%; recall:  80.10%; FB1:  78.92
+         PERderiv: precision:  50.00%; recall:   9.09%; FB1:  15.38
+          PERpart: precision:  20.00%; recall:   2.27%; FB1:   4.08
+          
+*****
+Test with modelInfo="MDP" and 500 clusters, no word embedding
+
+lt-pool-229:resources gune00$ ./conlleval < eval/deu-konv-test.txt 
+processed 96483 tokens with 6177 phrases; found: 5872 phrases; correct: 4168.
+accuracy:  96.27%; precision:  70.98%; recall:  67.48%; FB1:  69.18
+              LOC: precision:  79.30%; recall:  77.90%; FB1:  78.59
+         LOCderiv: precision:  82.75%; recall:  84.67%; FB1:  83.70
+          LOCpart: precision:  58.06%; recall:  16.51%; FB1:  25.71
+              ORG: precision:  57.21%; recall:  56.61%; FB1:  56.91
+         ORGderiv: precision: 100.00%; recall:  12.50%; FB1:  22.22
+          ORGpart: precision:  49.57%; recall:  33.72%; FB1:  40.14
+              OTH: precision:  47.31%; recall:  40.32%; FB1:  43.53
+         OTHderiv: precision:  64.29%; recall:  46.15%; FB1:  53.73
+          OTHpart: precision:  66.67%; recall:  14.29%; FB1:  23.53
+              PER: precision:  78.39%; recall:  81.07%; FB1:  79.71
+         PERderiv: precision:  66.67%; recall:  18.18%; FB1:  28.57
+          PERpart: precision:  14.29%; recall:   2.27%; FB1:   3.92
+
+*****
+Test with modelInfo="MDP" and 1000 clusters, no word embedding
+          
+lt-pool-229:resources gune00$ ./conlleval < eval/deu-konv-test.txt 
+processed 96483 tokens with 6177 phrases; found: 5853 phrases; correct: 4209.
+accuracy:  96.33%; precision:  71.91%; recall:  68.14%; FB1:  69.98
+              LOC: precision:  80.17%; recall:  78.43%; FB1:  79.29
+         LOCderiv: precision:  83.63%; recall:  84.67%; FB1:  84.15
+          LOCpart: precision:  57.58%; recall:  17.43%; FB1:  26.76
+              ORG: precision:  59.33%; recall:  58.35%; FB1:  58.83
+         ORGderiv: precision:  50.00%; recall:  12.50%; FB1:  20.00
+          ORGpart: precision:  50.88%; recall:  33.72%; FB1:  40.56
+              OTH: precision:  48.81%; recall:  41.18%; FB1:  44.67
+         OTHderiv: precision:  67.86%; recall:  48.72%; FB1:  56.72
+          OTHpart: precision:  43.75%; recall:  16.67%; FB1:  24.14
+              PER: precision:  78.57%; recall:  81.26%; FB1:  79.89
+         PERderiv: precision:  33.33%; recall:   9.09%; FB1:  14.29
+          PERpart: precision:  28.57%; recall:   4.55%; FB1:   7.84
+
+*****
+Test with modelInfo="FLORS" and 1000 clusters, no word embedding
+
+Training: 576466 msec = 9,7 minutes
+
+-> accuracy:  96.04%; precision:  68.65%; recall:  66.18%; FB1:  67.39

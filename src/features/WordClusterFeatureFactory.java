@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class WordClusterFeatureFactory {
 	// store mapping of clusterID to liblinear indexing
-	private Map<String, Integer> clusterId2num = new HashMap<String, Integer>();
+//	private Map<String, Integer> clusterId2num = new HashMap<String, Integer>();
 	// Store resulting word2liblinear index map
 	// store words to clusterId mapping as provided by Marmot tool!
 	private Map<String,Integer> word2index = new HashMap<String,Integer>();
@@ -35,12 +35,12 @@ public class WordClusterFeatureFactory {
 
 	// Getters and setters
 
-	public Map<String, Integer> getClusterId2num() {
-		return clusterId2num;
-	}
-	public void setClusterId2num(Map<String, Integer> clusterId2num) {
-		this.clusterId2num = clusterId2num;
-	}
+//	public Map<String, Integer> getClusterId2num() {
+//		return clusterId2num;
+//	}
+//	public void setClusterId2num(Map<String, Integer> clusterId2num) {
+//		this.clusterId2num = clusterId2num;
+//	}
 	public Map<String, Integer> getWord2index() {
 		return word2index;
 	}
@@ -128,14 +128,20 @@ public class WordClusterFeatureFactory {
 		addNewWord2liblinearId(word, liblinearIndex);
 	}
 
+//	private Integer getLiblinearIndexOld(String clusterId) {
+//		if (!this.getClusterId2num().containsKey(clusterId)){
+//			clusterIdcnt++;
+//			getClusterId2num().put(clusterId, clusterIdcnt);
+//			return clusterIdcnt;
+//		}
+//		else
+//			return getClusterId2num().get(clusterId);
+//	}
+	
+	// This is to make sure that clusterId start from 1, because in Marlin they start from 0
+	// so they have to be adjusted
 	private Integer getLiblinearIndex(String clusterId) {
-		if (!this.getClusterId2num().containsKey(clusterId)){
-			clusterIdcnt++;
-			getClusterId2num().put(clusterId, clusterIdcnt);
-			return clusterIdcnt;
-		}
-		else
-			return getClusterId2num().get(clusterId);
+		return Integer.valueOf(clusterId)+1;
 	}
 
 	private void addNewWord2liblinearId(String word, Integer liblinearIndex) {

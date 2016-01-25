@@ -7,7 +7,7 @@ import data.Alphabet;
 import data.ModelInfo;
 import features.WordSuffixFeatureFactory;
 
-public class TrainDePosMorphTagger2 {
+public class TrainDePosMorphTagger {
 
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("MDP");
