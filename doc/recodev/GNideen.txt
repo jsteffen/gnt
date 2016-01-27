@@ -1,0 +1,42 @@
+Ideen für RecoDev:
+
+Corpus:
+
+RecoDevGN/eclipse_jdt_new
+
+each class is a folder name, each file name inside folder is a document and source of feature;
+
+For using liblinear, I need to create a data file of form:
+
+classID 1:value 2:value ... n:value
+
+value can be integer or real, but should be in any case > 0
+
+natural numbers are the feature names;
+
+What features:
+
+Dictionary:
+
+create dictionary;
+compute tf/idf
+
+subsampling
+
+then
+baseline1 training:
+- loop across all labels: map to integer
+- load dictionary map to natural order
+- for each document
+	- create binary feature vector for all words in doc
+- add labek and make problem and save in output file
+
+baseline2:
+- create count feature vector
+
+ETC.
+
+what if I run files with GNT and create conll files; preprocessed
+
+then, I could run for training:
+- for each class directory, collect all documents and run GNT
