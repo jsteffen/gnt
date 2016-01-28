@@ -93,6 +93,12 @@ Additional applications:
 ->	DONE; files are defined; DONE: insert into corpus
 ->  I get 681 different items -> LIBLINEAR exists with OoutOfMemoryError ********************************************
 	-> initialized array will get too long in liblinear train;
+	Size of needed array for MCM:
+		Prob.N * N-Class -> 1,738,161 * 681 -> 1183687641 -> bits ?
+		* double=64bits 
+-> running on lns-87247 with Xmx=64g
+-> DONE and WORKS:
+- current results: devel = 89,13% (MarLin=90,78%), test = 86,94% (MarLin=89,18%, -2,24)
 
 - GNT for lemmatization
 	

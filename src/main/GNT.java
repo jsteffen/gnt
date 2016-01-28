@@ -130,8 +130,8 @@ public class GNT {
 	public String toString (){
 		String output = "";
 
-		output += "-mode "+ this.mode ;
-		output += "-tagger "+ this.taggerName;
+		output += " -mode "+ this.mode ;
+		output += " -tagger "+ this.taggerName;
 		output += " -w "+ this.windowSize ;
 		output += " -d "+ this.dimension ;
 		output += " -s "+ this.sentences ;

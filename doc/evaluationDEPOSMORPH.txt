@@ -1,0 +1,50 @@
+January, 2016:
+
+
+German POS + Morphx Tagging with tiger test:
+**********************************
+
+Running on lns-87427 with Xmx64g
+from directory: /home/neumann/excitement/gnt
+
+Training:
+
+Training time: 	1216931 msec = 20.28218333 minutes (Marmot:~9 minutes)
+Saving time: 	2931528 msec = 48.8588 minutes
+Complete time:	4148472 msec = 69.1412 minutes
+Modle file size:	~2,6GB
+
+Testing:
+Loading model file:	221964 msec = 3.6994 minutes
+
+Acc for devel file:
+++++
+Do testing from file: resources/data/german/tiger2_posmorph_devel.conll
+System time (msec): 7894
+Sentences: 5000
+Testing instances: 76704
+Sentences/sec: 633
+Words/sec: 9716
+Create eval file: resources/eval/tiger2_posmorph_devel.txt
+All pos: 76704 Correct: 68370 Accuracy: 89,13%
+All OOV pos: 5863 Correct: 4207 Accuracy: 71,76%
+All InV pos: 70841 Correct: 64163 Accuracy: 90,57%
+
+Marlin: 90,78%
+
+Acc for test file:
+++++
+Do testing from file: resources/data/german/tiger2_posmorph_test.conll
+System time (msec): 9227
+Sentences: 5000
+Testing instances: 92004
+Sentences/sec: 541
+Words/sec: 9971
+Create eval file: resources/eval/tiger2_posmorph_test.txt
+All pos: 92004 Correct: 79989 Accuracy: 86,94%
+All OOV pos: 9168 Correct: 6288 Accuracy: 68,59%
+All InV pos: 82836 Correct: 73701 Accuracy: 88,97%
+
+Marlin: 89,18%
+
+My current result lies between PCRF1 und PCRF2 of MarMot (devel-best: 90,60%; test-best: 88,58%; -1,64% behind them)
