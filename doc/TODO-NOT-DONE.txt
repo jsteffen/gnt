@@ -2,6 +2,8 @@ HIERIX: January 2016
 
 - Create LibLinear Input file, so that C version can be called
 
+- Try out POS+MORPH for other languages
+
 - Use BIOES schema
 	- see code in /nereid/src/main/java/de/dfki/lt/nereid/nep/BIO2BILOUtransformer.java
 	- should be useful for NER
@@ -83,22 +85,6 @@ Feature learning:
 
 ***
 Additional applications:
-- GNT for morphological tagging
-	- combine POS and MORPH tags
-	- according to Georg: simple concatenation
-	- according to paper in Müller et al., EMNLP 2013: 681 labels
-	- current SOTA for pos+morph in Müller&Schütze, ACL, 2015: 
-		89,18% (MarLin) and 89,32% (FST-based MA from Charles University, Hajic) 
-		
-->	DONE; files are defined; DONE: insert into corpus
-->  I get 681 different items -> LIBLINEAR exists with OoutOfMemoryError ********************************************
-	-> initialized array will get too long in liblinear train;
-	Size of needed array for MCM:
-		Prob.N * N-Class -> 1,738,161 * 681 -> 1183687641 -> bits ?
-		* double=64bits 
--> running on lns-87247 with Xmx=64g
--> DONE and WORKS:
-- current results: devel = 89,13% (MarLin=90,78%), test = 86,94% (MarLin=89,18%, -2,24)
 
 - GNT for lemmatization
 	

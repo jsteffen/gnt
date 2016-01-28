@@ -10,9 +10,9 @@ from directory: /home/neumann/excitement/gnt
 Training:
 
 Training time: 	1216931 msec = 20.28218333 minutes (Marmot:~9 minutes)
-Saving time: 	2931528 msec = 48.8588 minutes
+Saving model time: 	2931528 msec = 48.8588 minutes
 Complete time:	4148472 msec = 69.1412 minutes
-Modle file size:	~2,6GB
+Model file size:	~2,6GB
 
 Testing:
 Loading model file:	221964 msec = 3.6994 minutes
@@ -45,6 +45,7 @@ All pos: 92004 Correct: 79989 Accuracy: 86,94%
 All OOV pos: 9168 Correct: 6288 Accuracy: 68,59%
 All InV pos: 82836 Correct: 73701 Accuracy: 88,97%
 
-Marlin: 89,18%
+Marlin: 89,18% (-2,24 behind them)
 
-My current result lies between PCRF1 und PCRF2 of MarMot (devel-best: 90,60%; test-best: 88,58%; -1,64% behind them)
+My current result lies between PCRF1 und PCRF2 of MarMot 
+(devel-best: 90,60%; test-best: 88,58%; -1,64% behind them)

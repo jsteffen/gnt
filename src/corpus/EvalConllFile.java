@@ -44,6 +44,13 @@ public class EvalConllFile {
 	public void setAccInV(double accInV) {
 		this.accInV = accInV;
 	}
+	
+	public EvalConllFile(){	
+	}
+	
+	public EvalConllFile(String taggerName){
+		this.setData(new Data(taggerName));	
+	}
 
 
 	public void computeAccuracy(String  sourceFileName, boolean debug) throws IOException{
@@ -65,6 +72,7 @@ public class EvalConllFile {
 
 					String goldPos = tokenizedLine[2];
 					String predPos = tokenizedLine[3];
+					
 					goldPosCnt++;
 					if (predPos.equals(goldPos)) correctPosCnt++;
 					else
@@ -108,9 +116,9 @@ public class EvalConllFile {
 	public static void main(String[] args) throws IOException{
 		// This is for testing
 		// This reads saved vocabulary from training corpus
-		EvalConllFile evalFile = new EvalConllFile();
+		EvalConllFile evalFile = new EvalConllFile("DEPOSMORPH");
 		evalFile.data.readWordSet();
 
-		evalFile.computeAccuracy("resources/eval/gweb-answers-dev-flors.txt", true);
+		evalFile.computeAccuracy("resources/eval/tiger2_posmorph_devel.txt", true);
 	}
 }

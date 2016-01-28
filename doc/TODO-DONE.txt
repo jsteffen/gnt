@@ -75,3 +75,8 @@ November, 2015:
 - adapt shape features -> 
 	delete suffix feature properties, because they should be part of suffix feature
 	DONE: some improvement
+	
+January, 2016:
+
+- POS+Morph tagging -> DONE
+	- /GNT/doc/experimentsPOS+MORPH.txt

@@ -1,8 +1,8 @@
 Current results:
 
-- EN - error rate: 2,67 % EN test; best reported: 2,45%
+- EN - error rate: 2,67 % EN test; best reported: 2,45% (97,55%)
 	Acc=97.33%, 90,34% OOV; Speed: 75.000/seconds
-	Training = MORE PRECISE
+	Training = 1 minute
 	NO word vectors used ! i.e., no domain modeling, but generalized model
 		BUT with Wikipedia-based word clusters
 	-> also ClearNLP -> generalized model as good as domain adaptive models
@@ -10,7 +10,7 @@ Current results:
 -> out of domain results are similar to Flors; 
 	a bit lower but in all cases 2nd best result (but not WSJ)
 
-- DE - error rate: 2,70 % DE test; best reported: 2,56% or 2,27%
+- DE - error rate: 2,70 % DE test; best reported: 2,56% (97,44%) or 2,27% (97,73%)
 	Acc=97,30%, OOV=91,76%
 	Training = 97952 msec (1,67 minutes)
 	
