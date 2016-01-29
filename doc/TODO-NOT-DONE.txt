@@ -1,5 +1,16 @@
 HIERIX: January 2016
 
+- test liblinearC 
+
+- check to normalize/scale each component vector
+	to unit length (compute length of vector, and then divide each component)
+	I think I forgot it 
+	-> I am doing it now on complete feature vector in 
+		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
+	-> try it on relevant component feature!
+
+- Interface to TORCH should be quite easy now
+
 - Try out POS+MORPH for other languages
 
 - Use BIOES schema
@@ -23,12 +34,7 @@ HIERIX: January 2016
 - Other corpora for DE-POS and DE-NER
 	- Unlabeled Mannheim, google books, ...
 
-- check to normalize/scale each component vector
-	to unit length (compute length of vector, and then divide each component)
-	I think I for got it 
-	-> I am doing it now on complete feature vector in 
-		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
-	-> try it on relevant component feature!
+
 	
 - other shape features
 	- cf. doc/LiblinearNER.txt
@@ -69,7 +75,7 @@ HIERIX: January 2016
 	
 - set un-frequent features to 0 -> cf. comments in MDP/doc/GN-TODO.txt
 
-- Interface to TORCH
+
 
 ***
 Feature learning:
