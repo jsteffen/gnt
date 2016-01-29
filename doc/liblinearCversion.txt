@@ -1,13 +1,19 @@
 January, 2016:
 
 - Create LibLinear Input file, so that Cversion can be called
-	- here is  the place of the GNTagger: tagger.GNTagger.constructProblemAndTag(boolean, boolean)
-	- and for the trainer trainer.TrainerInMem.constructProblem(boolean, boolean)
+	- GNTagger:		tagger.GNTagger.constructProblemAndTag(boolean, boolean)
+	- GNTrainer:	trainer trainer.TrainerInMem.constructProblem(boolean, boolean)
+	
 	- I think, I define a writer method for trainer.ProblemInstance, which
 		- is called for the current feature vector and receives the label and the writerBuffer
-		- called it right after trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
+		- call it right after trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
 		- in training mode: also store label
-		- in tagging mode: do not store label -> I think: can be used because it will be ignore in predict mode
+		- in tagging mode: do not store label 
+			-> I think: can be used because it will be ignored in predict mode, but can be used for evaluation
+			
+	- the writer buffer and name of the modelInputFile will be defined as part of ModelInfo
+		- because I define here the model-output file. so I have that name already
+		- I can also define/create a specific modelInputFileDir
 		
 - liblinear version:
 	/Users/gune00/dfki/src/liblinear-2.1
@@ -22,3 +28,29 @@ January, 2016:
 -	install multi-core  version of liblinear
 
 GNT-to-liblinearC:
+
+- training phase implementation: -> DONE
+	- use major variables in ModelInfo
+		- file names -> stored in resources/modelInoutFiles/modelInoutFile_WIE-MODEL-FILE
+		- global switch via ModelInfo.saveModelInputFile
+		- when TRUE, noe training but creation of modelInputFile
+  	- current call for modelInfo=MDP settings:
+  		- cd /Users/gune00/dfki/workspaceKepler/GNT/resources/modelInputFiles
+  		- ~/dfki/src/liblinear-2.1/train -s 4 -c 0.1 -e 0.3 modelInputFile_POS_2_0iw-1sent_FTTT_MCSVM_CS.txt model_POS_2_0iw-1sent_FTTT_MCSVM_CS.txt
+  	- created model file can be used in GNT application phase
+
+- testing phase implementation: -> DONE
+	- make sure to use the conll devel/test file as basis for modelInputFile writer buffer !
+	- concat conll devel/test file with ModelInfo.modelInputFilePrefix and use it in
+		ModelInfo.setModelInputFileWriter()
+	- define/close it in tagger.GNTagger.tagAndWriteFromConllDevelFile(String, String, int)
+	- save instances in tagger.GNTagger.constructProblemAndTag(boolean, boolean) same way as in training
+	- have to make sure that POS tag from given devel/test file is used even in case of prediction
+		so that liblinearC prediction can do accuracy computation
+
+NEXT:
+- add flag to main GNT.java caller
+
+- define a version that creates all files from training, devel, and test directly
+
+- perform many experiments with liblinearC version

@@ -1,5 +1,11 @@
 package data;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+
 import de.bwaldvogel.liblinear.SolverType;
 
 public class ModelInfo {
@@ -8,9 +14,18 @@ public class ModelInfo {
 	private double C = 1.0;    // cost of constraints violation
 	private double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
 
+	private String taggerName = "";
+
 	private String modelFilePrefix = "resources/models/model_";
 	private String modelFile = "";
-	private String taggerName = "";
+
+	/**
+	 * This is a global flag to trigger saving of model input file;
+	 */
+	public static boolean saveModelInputFile = false;
+	private String modelInputFilePrefix = "resources/modelInputFiles/modelInputFile_";
+	private String modelInputFile = "";
+	private BufferedWriter modelInputFileWriter = null;
 
 
 	public SolverType getSolver() {
@@ -31,6 +46,14 @@ public class ModelInfo {
 	public void setEps(double eps) {
 		this.eps = eps;
 	}
+
+	public String getTaggerName() {
+		return taggerName;
+	}
+	public void setTaggerName(String taggerName) {
+		this.taggerName = taggerName.toUpperCase();
+	}
+
 	public String getModelFilePrefix() {
 		return modelFilePrefix;
 	}
@@ -43,11 +66,24 @@ public class ModelInfo {
 	public void setModelFile(String modelFile) {
 		this.modelFile = modelFile;
 	}
-	public String getTaggerName() {
-		return taggerName;
+
+	public String getModelInputFilePrefix() {
+		return modelInputFilePrefix;
 	}
-	public void setTaggerName(String taggerName) {
-		this.taggerName = taggerName.toUpperCase();
+	public void setModelInputFilePrefix(String modelInputFilePrefix) {
+		this.modelInputFilePrefix = modelInputFilePrefix;
+	}
+	public String getModelInputFile() {
+		return modelInputFile;
+	}
+	public void setModelInputFile(String modelInputFile) {
+		this.modelInputFile = modelInputFile;
+	}
+	public BufferedWriter getModelInputFileWriter() {
+		return modelInputFileWriter;
+	}
+	public void setModelInputFileWriter(BufferedWriter modelInputFileWriter) {
+		this.modelInputFileWriter = modelInputFileWriter;
 	}
 	//
 	public ModelInfo(){
@@ -98,7 +134,7 @@ public class ModelInfo {
 		return output;
 
 	}
-	
+
 	/**
 	 * A mode file name is build from
 	 * <p>modelFilePrefix + taggerName + windowSize + dimension + number of training sentences + wordFeat-flag + shapeFeat-flag + suffixFeat-flag
@@ -113,9 +149,22 @@ public class ModelInfo {
 		String clusterFeatString = (Alphabet.withClusterFeats)?"T":"F";
 		if (wordFeatString.equals("F")) dim=0;
 
-		this.modelFile = 
-				this.modelFilePrefix+this.getTaggerName()+"_"+windowSize+"_"+dim+"iw"+numberOfSentences+"sent_"+
+		String fileSuffix = this.getTaggerName()+"_"+windowSize+"_"+dim+"iw"+numberOfSentences+"sent_"+
 				wordFeatString+shapeFeatString+suffixFeatString+clusterFeatString+"_"+
 				this.getSolver()+".txt";
+		
+		this.modelFile = this.modelFilePrefix + fileSuffix;
+		
+		if (ModelInfo.saveModelInputFile){
+			//Only if ModelInfo.saveModelInputFile=true then save the modelInputFile
+			this.modelInputFile = this.modelInputFilePrefix + fileSuffix;
+			// And create and open the writerBuffer
+			try {
+				this.setModelInputFileWriter(new BufferedWriter(
+						new OutputStreamWriter(new FileOutputStream(this.modelInputFile),"UTF-8")));
+			} catch (UnsupportedEncodingException | FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

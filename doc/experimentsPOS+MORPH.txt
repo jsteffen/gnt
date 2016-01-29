@@ -24,7 +24,7 @@ For GERMAN:
 		
 -> running on lns-87247 with Xmx=64g
 	-> DONE and WORKS:
-	- current results: devel = 89,13% (MarLin=90,78%), test = 86,94% (MarLin=89,18%, -2,24)
+	- current results: devel = 89,13% (MarLin=90,78%; -1,65), test = 86,94% (MarLin=89,18%; -2,24)
 	
 -> test with FLORS and other settings
 	

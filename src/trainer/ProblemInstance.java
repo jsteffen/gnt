@@ -1,5 +1,8 @@
 package trainer;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+
 import data.Pair;
 import data.Window;
 import de.bwaldvogel.liblinear.FeatureNode;
@@ -12,7 +15,7 @@ import features.WordFeatures;
  * together with the max feature size
  * a problem is actually created; 
  * From de.dfki.lt.mdparser.parser.Trainer.constructProblem(List<Integer>, List<FeatureNode[]>, int)
- * problem.y is a array of size problem.l and each element keeps the label index of that training instance i
+ * problem.y is an array of size problem.l and each element keeps the label index of that training instance i
  * problem.x is a parallel array where each element keeps the FeatureNode[]
  * the size of each  FeatureNode[] depends on non-zero values; each element is a feature node.
  * so, in order to use a similar approach, I would need to collect all labels and feature vectors of
@@ -92,13 +95,17 @@ public class ProblemInstance {
 
 	}
 
+	/**
+	 * TODO
+	 * This method is used to normaliuze a feature vector. It is yet not used, because
+	 * not yet clear whether it is correctly defined.
+	 */
 	private void normalizeFeatureVectorToUnitLenght(){
 		double vecLength = computeUnitLength();
 		for (FeatureNode node : this.featureVector) {
 			node.setValue(node.getValue()/vecLength);
 		}
 	}
-	
 	
 	private double computeUnitLength() {
 		double vecLength = 0.0;
@@ -107,6 +114,14 @@ public class ProblemInstance {
 		}
 		return Math.sqrt(vecLength);
 	}
+	
+	/**
+	 * This is a method that checks whether a feature vector is well-formed
+	 * wrt. to the definition of liblinear which requires that the features in the vector are in natural order.
+	 * <p>
+	 * It is activated when TrainerInMem.debug = true;
+	 * @param tokenWindow
+	 */
 	private void checkFeatureVector(Window tokenWindow){
 		int lastValue = 0;
 		int fLen = this.featureVector.length-1;
@@ -119,6 +134,21 @@ public class ProblemInstance {
 			}
 			lastValue = x.getIndex();
 		}
+	}
+	
+	/**
+	 * This method save the feature vector of the current window plus its given label directly
+	 * as liblinear vector
+	 * @param instanceWriter
+	 * @param labelIndex
+	 */
+	public void saveProblemInstance(BufferedWriter instanceWriter, int labelIndex){
+		try {
+			instanceWriter.write(labelIndex+" "+this.toString());
+			instanceWriter.newLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 
 	public String toString(){

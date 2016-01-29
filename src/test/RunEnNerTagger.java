@@ -16,6 +16,8 @@ public class RunEnNerTagger {
 		ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("NER");
 		
+		ModelInfo.saveModelInputFile=false;
+		
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 50;

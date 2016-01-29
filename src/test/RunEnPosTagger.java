@@ -23,6 +23,8 @@ public class RunEnPosTagger {
 		ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("POS");
 		
+		ModelInfo.saveModelInputFile=false;
+		
 		int windowSize = 2;
 		int numberOfSentences = -1;
 		int dim = 0;

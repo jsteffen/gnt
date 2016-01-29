@@ -165,14 +165,21 @@ public class GNTagger {
 			ProblemInstance problemInstance = new ProblemInstance();
 			problemInstance.createProblemInstanceFromWindow(nextWindow);
 
-			// Call the learner to predict the label
-			prediction = (int) Linear.predict(this.getModel(), problemInstance.getFeatureVector());
-			//			System.out.println("Word: " + this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i]) +
-			//			"\tPrediction: " + this.getData().getLabelSet().getNum2label().get(prediction));
+			if (ModelInfo.saveModelInputFile){
+				problemInstance.saveProblemInstance(
+						this.getModelInfo().getModelInputFileWriter(),
+						nextWindow.getLabelIndex());
+			} else {
+				// Call the learner to predict the label
+				prediction = (int) Linear.predict(this.getModel(), problemInstance.getFeatureVector());
+				//			System.out.println("Word: " + this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i]) +
+				//			"\tPrediction: " + this.getData().getLabelSet().getNum2label().get(prediction));
 
-			//	Here, I am assuming that sentence length equals # of windows
-			// So store predicted label i to word i
-			this.getData().getSentence().getLabelArray()[i]=prediction;
+				//	Here, I am assuming that sentence length equals # of windows
+				// So store predicted label i to word i
+				this.getData().getSentence().getLabelArray()[i]=prediction;
+			}
+
 			// Free space by resetting filled window to unfilled-window
 			nextWindow.clean();
 		}	
@@ -245,7 +252,8 @@ public class GNTagger {
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 
 				// create internal sentence object and label maps
-				// I use this here although labels will be late overwritten - but can u8se it in eval modus as well
+				// I use this here although labels will be later overwritten 
+				// - but can use it in eval modus as well
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
 				// tag sentence object
@@ -274,7 +282,8 @@ public class GNTagger {
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 
 				// create internal sentence object and label maps
-				data.generateSentenceObjectFromConllUnLabeledSentence(tokens);
+				// Use specified label from conll file for evaluation purposes leter
+				data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
 				// tag sentence object
 				this.tagSentenceObject();
@@ -349,16 +358,29 @@ public class GNTagger {
 		BufferedWriter conllWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(evalFileName),"UTF-8"));
 
+		/*
+		 * Set the writer buffer for the model input file based on the given sourceFileName
+		 */
+		if (ModelInfo.saveModelInputFile){
+			String fileName = new File(sourceFileName).getName();
+			this.getModelInfo().setModelInputFileWriter(
+					new BufferedWriter(
+							new OutputStreamWriter(
+									new FileOutputStream(
+											this.getModelInfo().getModelInputFilePrefix() + fileName+ ".txt"),"UTF-8")));
+		} 
 		System.out.println("\n++++\nDo testing from file: " + sourceFileName);
 		// Reset some data to make sure each file has same change
 		this.getData().setSentenceCnt(0);
 		Window.windowCnt=0;
-		
+
 		time1 = System.currentTimeMillis();
 		// -1 means: all sentences from file are processed
 		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, sentenceCnt);
 		// close the buffers
 		conllReader.close(); conllWriter.close();
+		if (ModelInfo.saveModelInputFile)
+			this.getModelInfo().getModelInputFileWriter().close();
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
@@ -367,6 +389,5 @@ public class GNTagger {
 		System.out.println("Testing instances: " + Window.windowCnt);
 		System.out.println("Sentences/sec: " + (this.getData().getSentenceCnt()*1000)/(time2-time1));
 		System.out.println("Words/sec: " + (Window.windowCnt*1000)/(time2-time1));
-
 	}
 }

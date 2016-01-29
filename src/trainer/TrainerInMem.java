@@ -71,7 +71,7 @@ public class TrainerInMem {
 	public static boolean debug = false;
 
 	// API/Values for Liblinear
-	// GN: biased -> used in Problem() -> if <= 0 add extra feature
+	// GN: biased -> used in Problem() -> if => 0 add extra feature
 	private double bias = -1;
 	// GN: default values as used in Flors
 	// C -> cost of constraints violation
@@ -294,7 +294,13 @@ public class TrainerInMem {
 			this.getProblem().y[i]=nextWindow.getLabelIndex();
 			this.getProblem().x[i]=problemInstance.getFeatureVector();
 
+			if (ModelInfo.saveModelInputFile)
+				problemInstance.saveProblemInstance(
+						this.getModelInfo().getModelInputFileWriter(),
+						nextWindow.getLabelIndex());
+
 			nextWindow.clean();
+
 
 			// Print how many problems are created so far
 			if ((problemCnt % mod) == 0) {
@@ -307,6 +313,28 @@ public class TrainerInMem {
 		System.out.println("Window lenght: " + this.getProblem().x[0].length);
 		this.getProblem().n = OffSets.windowVectorSize;
 
+	}
+
+	/**
+	 * The wrapper to liblinear trainer.
+	 * @throws IOException
+	 */
+	private void runLiblinearTrainer() throws IOException {
+		long time1;
+		long time2;
+		Linear.disableDebugOutput();
+		time1 = System.currentTimeMillis();
+		System.out.println("problem.n: " + this.getProblem().n);
+		System.out.println("Do training:");
+		Model model = Linear.train(this.getProblem(), this.getParameter());
+		time2 = System.currentTimeMillis();
+		System.out.println("System time (msec): " + (time2-time1));
+
+		System.out.println("Save  model file: " + modelInfo.getModelFile());
+		time1 = System.currentTimeMillis();
+		model.save(new File(modelInfo.getModelFile()));
+		time2 = System.currentTimeMillis();
+		System.out.println("System time (msec): " + (time2-time1));		
 	}
 
 	/**
@@ -347,14 +375,31 @@ public class TrainerInMem {
 		System.out.println("System time (msec): " + (time2-time1));	
 
 		System.out.println("Average window vector lenght: " + ProblemInstance.cumLength/Window.windowCnt);
-		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
+		System.out.println("Approx. GB needed: " + 
+				((ProblemInstance.cumLength/Window.windowCnt)*
+						Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 
-		time1 = System.currentTimeMillis();
-		this.runLiblinearTrainer();
-		time2 = System.currentTimeMillis();
-		System.out.println("Complete time for training and writing model (msec): " + (time2-time1));	
+		/*
+		 * If ModelInfo.saveModelInputFile=true, then close model input file stream 
+		 * but do not do training
+		 */
+		//TODO this is the only place, where I make use of the model input file
+		if (ModelInfo.saveModelInputFile){
+			time1 = System.currentTimeMillis();
+			// Close the model input file writer buffer
+			this.getModelInfo().getModelInputFileWriter().close();
+			time2 = System.currentTimeMillis();
+			System.out.println("Complete time for creating  and writing model input file (msec): " + (time2-time1));
+		} else {
+			// ELSE DO training with java libary
+			time1 = System.currentTimeMillis();
+			this.runLiblinearTrainer();
+			time2 = System.currentTimeMillis();
+			System.out.println("Complete time for training and writing model (msec): " + (time2-time1));
+		}
 	}
 
+	// Printing helpers
 	public String taggedSentenceToString(){
 		String output ="";
 		int mod = 10;
@@ -367,23 +412,5 @@ public class TrainerInMem {
 		}
 		return output;
 
-	}
-
-	private void runLiblinearTrainer() throws IOException {
-		long time1;
-		long time2;
-		Linear.disableDebugOutput();
-		time1 = System.currentTimeMillis();
-		System.out.println("problem.n: " + this.getProblem().n);
-		System.out.println("Do training:");
-		Model model = Linear.train(this.getProblem(), this.getParameter());
-		time2 = System.currentTimeMillis();
-		System.out.println("System time (msec): " + (time2-time1));
-
-		System.out.println("Save  model file: " + modelInfo.getModelFile());
-		time1 = System.currentTimeMillis();
-		model.save(new File(modelInfo.getModelFile()));
-		time2 = System.currentTimeMillis();
-		System.out.println("System time (msec): " + (time2-time1));		
 	}
 }

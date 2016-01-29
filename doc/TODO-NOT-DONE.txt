@@ -1,7 +1,5 @@
 HIERIX: January 2016
 
-- Create LibLinear Input file, so that C version can be called
-
 - Try out POS+MORPH for other languages
 
 - Use BIOES schema

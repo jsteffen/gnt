@@ -80,3 +80,5 @@ January, 2016:
 
 - POS+Morph tagging -> DONE
 	- /GNT/doc/experimentsPOS+MORPH.txt
+- Create LibLinear Input file, so that C version can be called
+

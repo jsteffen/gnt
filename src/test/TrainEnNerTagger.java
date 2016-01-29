@@ -13,6 +13,8 @@ public class TrainEnNerTagger {
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("NER");
+		
+		ModelInfo.saveModelInputFile = false;
 
 		int windowSize = 2;
 		int numberOfSentences = -1;
