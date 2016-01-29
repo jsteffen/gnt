@@ -48,9 +48,7 @@ GNT-to-liblinearC:
 	- have to make sure that POS tag from given devel/test file is used even in case of prediction
 		so that liblinearC prediction can do accuracy computation
 
-NEXT:
-- add flag to main GNT.java caller
+- add flag to main GNT.java caller -> DONE
 
+NEXT
 - define a version that creates all files from training, devel, and test directly
-
-- perform many experiments with liblinearC version

@@ -46,11 +46,14 @@ public class GNT {
 				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T"
 				+ "-f <training file name in conll format>"
 				+ "-c <clusterID file name>"
+				+ "-mif F|T"
 				+ "\nor ...");
 		System.err.println("-mode test -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> "
 				+ "-m <model info type> "
 				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T"
-				+ "-f <test file name in conll format> -e <merged output file for evaluation>");
+				+ "-f <test file name in conll format> "
+				+ "-e <merged output file for evaluation>"
+				+ "-mif F|T");
 		System.err.println("Or use defaults by just calling -mode train|test ; Default values are:");
 		System.err.println(this.toString());
 		// Exit with error !
@@ -71,6 +74,7 @@ public class GNT {
 		Alphabet.withShapeFeats = true;
 		Alphabet.withSuffixFeats = true;
 		Alphabet.withClusterFeats = true;
+		ModelInfo.saveModelInputFile = false;
 	}
 
 	private void initGNTArguments(String[] args){
@@ -86,6 +90,12 @@ public class GNT {
 			case "-f" 		: this.inFile= args[i+1]; break;
 			case "-c" 		: this.clusterIDfile= args[i+1]; break;
 			case "-e" 		: this.outFile = args[i+1]; break;
+			case "-mif"		: 
+				if (args[i+1].equalsIgnoreCase("F"))
+					ModelInfo.saveModelInputFile=false;
+				else
+					ModelInfo.saveModelInputFile=true;
+				; break;
 			case "-wordFeats" : 
 				if (args[i+1].equalsIgnoreCase("F"))
 					Alphabet.withWordFeats=false;
@@ -141,11 +151,12 @@ public class GNT {
 		output += " -suffixFeats "+ ((Alphabet.withSuffixFeats)?"T":"F");
 		output += " -clusterFeats "+ ((Alphabet.withClusterFeats)?"T":"F");
 		output += " -f "+ this.inFile ;
+		output += " -mif "+ ((ModelInfo.saveModelInputFile)?"T":"F");
 		if (this.mode.equalsIgnoreCase("train"))
 			output += " -c "+ this.clusterIDfile;
 		if (this.mode.equalsIgnoreCase("test"))
 			output += " -e "+ this.outFile ;
-
+		
 		return output;
 
 	}
