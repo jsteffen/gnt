@@ -116,3 +116,10 @@ Test with modelInfo="FLORS" and 1000 clusters, no word embedding
 Training: 576466 msec = 9,7 minutes
 
 -> accuracy:  96.04%; precision:  68.65%; recall:  66.18%; FB1:  67.39
+
+*****
+
+BILOU schema:
+
+Test phase:
+accuracy:  96.18%; precision:  70.74%; recall:  67.28%; FB1:  68.96

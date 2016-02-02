@@ -28,10 +28,12 @@ Test on EN conll2003:
 	suffix features:	-2,7	
 	shape features:		-2,47
 
--> 	when running modelInfo "MDO" I am loosing 1%F1, 
+-> 	when running modelInfo "MDP" I am loosing 1%F1, 
 	but training much faster and model files are much smaller!
-	
+
 (Basically about -10% F1 for DE and EN)
+
+-> with MDP and BILOU: 84.41% acc on test (using FLORS, 83,80%)
 	
 Test on DE Konvens2014 - only outer NE span classes:
 -> best results: 69,89% F1
@@ -75,9 +77,6 @@ Testing:
 -> check again paper from Tkachenko & Simanovsky
 
 
-
-HIERIX:
-
 extend training with testa and check how good results are on testb
 -> indicates whether extending training would be helpful:
 
@@ -97,9 +96,15 @@ Shape features
 	-> DONE: brings a bit for POS and NER, so I deactivate that part of the features
 	-> cf. features.WordShapeFeature.createShapeVectorFromWord(String, int)
 	
-HIERIX: still I am missing about 8%F1 for CONLL
+still I am missing about 8%F1 for CONLL
 
 Evaluation with Konvens 2014 DE NER data: DONE
+
+BILOU schema:
+- brings for EN about 1% F1, but for German it hurts
+
+
+HIERIX:
 
 add prefixes as features
 

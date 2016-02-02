@@ -154,3 +154,22 @@ Test with modelInfo="FLORS" and 500 clusters, no word embedding
 lt-pool-229:resources gune00$ ./conlleval < eval/eng-testb.txt 
 processed 46666 tokens with 5648 phrases; found: 5910 phrases; correct: 4763.
 accuracy:  97.11%; precision:  80.59%; recall:  84.33%; FB1:  82.42
+
+
+Testing BILOU tagging scheme:
+*****************************
+./conlleval < eval/eng-testa-bilou.txt 
+processed 51578 tokens with 5913 phrases; found: 5986 phrases; correct: 5321.
+accuracy:  98.08%; precision:  88.89%; recall:  89.99%; FB1:  89.44
+              LOC: precision:  92.59%; recall:  92.90%; FB1:  92.74
+             MISC: precision:  85.73%; recall:  85.82%; FB1:  85.78
+              ORG: precision:  81.54%; recall:  83.67%; FB1:  82.59
+              PER: precision:  92.22%; recall:  93.78%; FB1:  92.99
+
+              ./conlleval < eval/eng-testb-bilou.txt 
+processed 46666 tokens with 5602 phrases; found: 5793 phrases; correct: 4809.
+accuracy:  96.99%; precision:  83.01%; recall:  85.84%; FB1:  84.41
+              LOC: precision:  88.42%; recall:  89.16%; FB1:  88.79
+             MISC: precision:  73.56%; recall:  77.60%; FB1:  75.53
+              ORG: precision:  76.84%; recall:  80.39%; FB1:  78.58
+              PER: precision:  88.11%; recall:  91.57%; FB1:  89.81

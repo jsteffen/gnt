@@ -7,11 +7,11 @@ import data.Alphabet;
 import data.ModelInfo;
 import features.WordSuffixFeatureFactory;
 
-public class TrainDePosMorphTagger {
+public class TrainDeMorphTagger {
 
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("MDP");
-		modelInfo.setTaggerName("DEMORPH");
+		modelInfo.setTaggerName("DEPOSMORPH");
 		
 		int windowSize = 2;
 		int numberOfSentences = -1;
@@ -29,7 +29,7 @@ public class TrainDePosMorphTagger {
 		System.out.println(modelInfo.toString());
 		
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
-		String trainingFileName = "resources/data/german/tiger2_morph_train";
+		String trainingFileName = "resources/data/german/tiger2_posmorph_train";
 		String clusterIdSourceFileName = "/Users/gune00/data/Marmot/Word/de_marlin_cluster_1000";
 
 		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);

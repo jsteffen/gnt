@@ -1,6 +1,5 @@
 HIERIX: January 2016
 
-- test liblinearC 
 
 - check to normalize/scale each component vector
 	to unit length (compute length of vector, and then divide each component)
@@ -13,9 +12,6 @@ HIERIX: January 2016
 
 - Try out POS+MORPH for other languages
 
-- Use BIOES schema
-	- see code in /nereid/src/main/java/de/dfki/lt/nereid/nep/BIO2BILOUtransformer.java
-	- should be useful for NER
 
 - Cluster from Jon Dehardy - clusterCat
 	- run on source text on clusterCat and Marlin
@@ -34,8 +30,6 @@ HIERIX: January 2016
 - Other corpora for DE-POS and DE-NER
 	- Unlabeled Mannheim, google books, ...
 
-
-	
 - other shape features
 	- cf. doc/LiblinearNER.txt
 	- I think that this could be a source for improvement, and hence, do some research here
@@ -74,8 +68,6 @@ HIERIX: January 2016
 	- or use as separate feature
 	
 - set un-frequent features to 0 -> cf. comments in MDP/doc/GN-TODO.txt
-
-
 
 ***
 Feature learning:

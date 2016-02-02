@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 
@@ -237,36 +240,24 @@ public class CorpusProcessor {
 
 	// A simple main caller 
 	public void processConllFiles() throws IOException{
-		if (taggerName.equals("POS"))
+		Set<String> taggerSet = new HashSet<String>(
+				Arrays.asList("POS", "DEPOS", "DEPOSMORPH", "DEMORPH", "DENERKONV", "NERBILOU", "DENERBILOU", "DENERKONVBILOU"));
+		if (taggerSet.contains(taggerName))
 			this.transcodeConllToSentenceFiles();
 		else
 			if (taggerName.equals("NER")){
 				this.transcodeSourceFileToProperConllFormatFiles();
-
 				this.transcodeConllToSentenceFiles();
 			}
 			else
 				if (taggerName.equals("DENER")){
 					this.transcodeSourceFileToProperConllFormatFiles();
-
 					this.transcodeConllToSentenceFiles();
 				}
-				else
-					if (taggerName.equals("DENERKONV")){
-						this.transcodeConllToSentenceFiles();
-					}
-					else
-						if (taggerName.equals("DEPOS")){
-							this.transcodeConllToSentenceFiles();
-						}
-						else
-							if (taggerName.equals("DEPOSMORPH")){
-								this.transcodeConllToSentenceFiles();
-							}
 	}
 
 	public static void main(String[] args) throws IOException {
-		CorpusProcessor mapper = new CorpusProcessor("DEPOS");
+		CorpusProcessor mapper = new CorpusProcessor("DENERKONVBILOU");
 		mapper.processConllFiles();
 	}
 }	

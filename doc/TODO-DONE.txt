@@ -78,7 +78,21 @@ November, 2015:
 	
 January, 2016:
 
+-	Integration of new tagger name:
+	- Corpus()
+	- CorpusProcessor()
+
 - POS+Morph tagging -> DONE
 	- /GNT/doc/experimentsPOS+MORPH.txt
+	
+- Morph tagging -> DONE	
+	
 - Create LibLinear Input file, so that C version can be called
+
+2. February:
+
+- Use BIOES schema -> DONE
+	- see code in /nereid/src/main/java/de/dfki/lt/nereid/nep/BIO2BILOUtransformer.java
+	- should be useful for NER
+
 

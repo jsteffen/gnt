@@ -49,3 +49,31 @@ Marlin: 89,18% (-2,24 behind them)
 
 My current result lies between PCRF1 und PCRF2 of MarMot 
 (devel-best: 90,60%; test-best: 88,58%; -1,64% behind them)
+
+German Morph tagging with tiger
+*******************************
+
+++++
+Do testing from file: resources/data/german/tiger2_morph_devel.conll
+System time (msec): 2046
+Sentences: 5000
+Testing instances: 76704
+Sentences/sec: 2443
+Words/sec: 37489
+Create eval file: resources/eval/tiger2_morph_devel.txt
+All pos: 76704 Correct: 68522 Accuracy: 89,33%
+All OOV pos: 5863 Correct: 4224 Accuracy: 72,05%
+All InV pos: 70841 Correct: 64298 Accuracy: 90,76%
+
+++++
+Do testing from file: resources/data/german/tiger2_morph_test.conll
+System time (msec): 1973
+Sentences: 5000
+Testing instances: 92004
+Sentences/sec: 2534
+Words/sec: 46631
+Create eval file: resources/eval/tiger2_morph_test.txt
+All pos: 92004 Correct: 80457 Accuracy: 87,45%
+All OOV pos: 9168 Correct: 6318 Accuracy: 68,91%
+All InV pos: 82836 Correct: 74139 Accuracy: 89,50%
+

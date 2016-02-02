@@ -31,3 +31,15 @@ For GERMAN:
 How to make it running on my MacBookPro ?
 
 DO tests on other languages ?
+	- uniform languages
+
+
+Current experiments with MORPH
+
+For German: taggerName = MORPH
+
+#Labels = 256
+
+Training time: 116533 msec = 2 minutes; file saving ~4 minutes
+
+Current results: devel=89,33%, test=87,45%
