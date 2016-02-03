@@ -1,5 +1,7 @@
 HIERIX: January 2016
 
+- check tokenisation of clusters and the way I do it
+
 
 - check to normalize/scale each component vector
 	to unit length (compute length of vector, and then divide each component)

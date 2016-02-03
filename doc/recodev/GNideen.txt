@@ -34,9 +34,12 @@ baseline1 training:
 baseline2:
 - create count feature vector
 
-ETC.
+STATUS:
+- created label set
+- created word set
+- create liblinear input file
 
-what if I run files with GNT and create conll files; preprocessed
+HIERIX
+- test with liblinearC
 
-then, I could run for training:
-- for each class directory, collect all documents and run GNT
+	

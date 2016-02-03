@@ -37,5 +37,5 @@ Current results:
 	devel=89,33%, test=87,45%
 
 - current SOTA for morph in Müller&Schütze, ACL, 2015: 
-	devel data: 90,78% (MarLin)
-	test data: 	89,18% (MarLin) and 89,32% (FST-based MA from Charles University, Hajic) 
+	devel data: 90,78% (MarLin, +1,45)
+	test data: 	89,18% (MarLin, +1,73) and 89,32% (FST-based MA from Charles University, Hajic) 
