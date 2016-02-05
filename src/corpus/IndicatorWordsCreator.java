@@ -200,8 +200,7 @@ public class IndicatorWordsCreator {
 		}
 	}
 
-	public void createIndicatorTaggerNameWordsFromCorpus(String taggerName){
-		Corpus newCorpus = new Corpus(taggerName);
-		this.readUnlabeledDataFromCorpus(newCorpus);
+	public void createIndicatorTaggerNameWordsFromCorpus(Corpus corpus){
+		this.readUnlabeledDataFromCorpus(corpus);
 	}
 }

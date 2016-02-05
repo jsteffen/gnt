@@ -240,20 +240,17 @@ public class CorpusProcessor {
 
 	// A simple main caller 
 	public void processConllFiles() throws IOException{
-		Set<String> taggerSet = new HashSet<String>(
+		Set<String> posTaggerSet = new HashSet<String>(
 				Arrays.asList("POS", "DEPOS", "DEPOSMORPH", "DEMORPH", "DENERKONV", "NERBILOU", "DENERBILOU", "DENERKONVBILOU"));
-		if (taggerSet.contains(taggerName))
+		Set<String> nerTaggerSet = new HashSet<String>(
+				Arrays.asList("NER", "DENER" ));
+		if (posTaggerSet.contains(taggerName))
 			this.transcodeConllToSentenceFiles();
 		else
-			if (taggerName.equals("NER")){
+			if (nerTaggerSet.contains(taggerName)){
 				this.transcodeSourceFileToProperConllFormatFiles();
 				this.transcodeConllToSentenceFiles();
 			}
-			else
-				if (taggerName.equals("DENER")){
-					this.transcodeSourceFileToProperConllFormatFiles();
-					this.transcodeConllToSentenceFiles();
-				}
 	}
 
 	public static void main(String[] args) throws IOException {

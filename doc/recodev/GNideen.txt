@@ -41,5 +41,11 @@ STATUS:
 
 HIERIX
 - test with liblinearC
+	MDP:
+	~/dfki/src/liblinear-2.1/train -v 10 -s 4 -c 0.1 -e 0.3 liblinearInputFile.txt 
+	Cross Validation Accuracy = 66.9875%
+	FLORS:
+	~/dfki/src/liblinear-2.1/train -v 10 -s 1 -q liblinearInputFile.txt 
+	Cross Validation Accuracy = 66.6795%
 
 	

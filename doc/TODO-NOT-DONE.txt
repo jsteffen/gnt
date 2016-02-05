@@ -1,7 +1,9 @@
 HIERIX: January 2016
 
+- Test with uniform tag set
+	- reuse java code in cf. /MDP/src/de/dfki/lt/nep/ConllNERmapper.java
+	
 - check tokenisation of clusters and the way I do it
-
 
 - check to normalize/scale each component vector
 	to unit length (compute length of vector, and then divide each component)
@@ -13,7 +15,6 @@ HIERIX: January 2016
 - Interface to TORCH should be quite easy now
 
 - Try out POS+MORPH for other languages
-
 
 - Cluster from Jon Dehardy - clusterCat
 	- run on source text on clusterCat and Marlin
@@ -59,8 +60,7 @@ HIERIX: January 2016
 		NE classes, e.g., cluserID 417 seems to cover first names
 		define them as additional dictionaries and insert them when reading in clusterIds
 		
-- Test with uniform tag set
-	- reuse java code in cf. /MDP/src/de/dfki/lt/nep/ConllNERmapper.java
+
 
 - run GNT with suffix AND ngram by concatenating both into one file
 	- DONE -> errors when concatenation -> I forgot to sort again after adding indices in 

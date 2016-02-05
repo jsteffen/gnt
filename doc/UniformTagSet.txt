@@ -1,0 +1,15 @@
+FEB, 2016:
+
+- Test with uniform tag set
+	- /Users/gune00/data/MLDP/universal_treebanks_v2.0/std
+	
+- Idea - one model for many langugaes
+	- merge all languages into one training file, and learn one model
+	- test with single languages
+	- compare with single language model
+	
+	- CAN I DO THE SAME FOR MDParser ?
+
+- I Would need multi-language clustering and shape feature
+	
+- What about morphology

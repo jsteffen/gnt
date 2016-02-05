@@ -497,8 +497,7 @@ public class WordDistributedFeatureFactory {
 		System.out.println("Done!");
 	}
 
-	public void createAndWriteDistributedWordFeaturesSparse(String taggerName, int maxIndicatorWords) throws IOException {
-		Corpus corpus = new Corpus(taggerName);
+	public void createAndWriteDistributedWordFeaturesSparse(String taggerName, int maxIndicatorWords, Corpus corpus) throws IOException {
 		String iwFilename = "resources/features/iw_all"+taggerName+".txt";
 		System.out.println("Read  " + maxIndicatorWords + " indicator words from " + iwFilename + " for tagger " + taggerName + "!");
 		this.initIndicatorMap(iwFilename, maxIndicatorWords);
@@ -526,7 +525,7 @@ public class WordDistributedFeatureFactory {
 	public static void main(String[] args) throws IOException {
 		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
 
-		dwvFactory.createAndWriteDistributedWordFeaturesSparse("POS", 250);
+		dwvFactory.createAndWriteDistributedWordFeaturesSparse("POS", 250, new Corpus("POS"));
 
 		dwvFactory.readDistributedWordFeaturesSparse("POS", 250);
 	}

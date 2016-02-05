@@ -2,9 +2,9 @@ package trainer;
 
 import java.io.IOException;
 
+import corpus.Corpus;
 import corpus.IndicatorWordsCreator;
 import data.ModelInfo;
-import data.OffSets;
 import data.Window;
 import features.WordClusterFeatureFactory;
 import features.WordDistributedFeatureFactory;
@@ -17,8 +17,11 @@ public class GNTrainer {
 	private TrainerInMem trainer;
 	private long time1 ;
 	private long time2;
+	
+	private Corpus corpus = new Corpus();
 
 	//
+	
 	public TrainerInMem getTrainer() {
 		return trainer;
 	}
@@ -31,14 +34,23 @@ public class GNTrainer {
 	public void setThreshold(double threshold) {
 		this.threshold = threshold;
 	}
+	public Corpus getCorpus() {
+		return corpus;
+	}
+	public void setCorpus(Corpus corpus) {
+		this.corpus = corpus;
+	}
+	
 	// initialization
 
 	public GNTrainer(ModelInfo modelInfo, int dim) {
 		this.trainer = new TrainerInMem(modelInfo, dim);
+		this.corpus = new Corpus(modelInfo.getTaggerName());
 	}
 	public GNTrainer(ModelInfo modelInfo, int dim, double threshold) {
 		this.threshold = threshold;
 		this.trainer = new TrainerInMem(modelInfo, dim);
+		this.corpus = new Corpus(modelInfo.getTaggerName());
 	}
 	
 	// This is a method for on-demand creation of the indicator words
@@ -48,7 +60,7 @@ public class GNTrainer {
 		String iwFilename = "resources/features/iw_all"+taggerName+".txt";
 		System.out.println("Create indictor words and save in file: " + iwFilename);
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
-		iwp.createIndicatorTaggerNameWordsFromCorpus(taggerName);
+		iwp.createIndicatorTaggerNameWordsFromCorpus(this.getCorpus());
 		
 		iwp.postProcessWords(this.getThreshold());
 		iwp.writeSortedIndicatorWords(iwFilename, 10000);
@@ -73,7 +85,7 @@ public class GNTrainer {
 	private void createWordVectors(String taggerName, int dim) throws IOException{
 		if (dim > 0){
 			WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
-			dwvFactory.createAndWriteDistributedWordFeaturesSparse(taggerName, dim);	
+			dwvFactory.createAndWriteDistributedWordFeaturesSparse(taggerName, dim, this.getCorpus());	
 		}
 	}
 

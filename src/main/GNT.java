@@ -204,7 +204,6 @@ public class GNT {
 		evalFile.computeAccuracy(this.outFile, false);
 	}
 
-
 	public static void main(String[] args) throws IOException{
 		GNT newGNT = new GNT();
 		newGNT.setArgValues(args);

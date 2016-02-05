@@ -21,7 +21,7 @@ public class RunDeMorphTagger {
 
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("MDP");
-		modelInfo.setTaggerName("DEPOSMORPH");
+		modelInfo.setTaggerName("DEMORPH");
 		
 		int windowSize = 2;
 		int numberOfSentences = -1;
@@ -45,9 +45,9 @@ public class RunDeMorphTagger {
 		List<Pair<String, String>> fileListDevel = new ArrayList<Pair<String, String>>();
 		List<Pair<String, String>> fileListTest = new ArrayList<Pair<String, String>>();
 
-		fileListDevel.add(new Pair<String, String>("resources/data/german/tiger2_posmorph_devel.conll", "resources/eval/tiger2_posmorph_devel.txt"));
+		fileListDevel.add(new Pair<String, String>("resources/data/german/tiger2_morph_devel.conll", "resources/eval/tiger2_morph_devel.txt"));
 		
-		fileListTest.add(new Pair<String, String>("resources/data/german/tiger2_posmorph_test.conll", "resources/eval/tiger2_posmorph_test.txt"));	
+		fileListTest.add(new Pair<String, String>("resources/data/german/tiger2_morph_test.conll", "resources/eval/tiger2_morph_test.txt"));	
 
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile evalFile = new EvalConllFile();

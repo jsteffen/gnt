@@ -296,6 +296,11 @@ public class Corpus {
 		// Unlabeled data
 		//devUnLabeledData.add("resources/data/german/unlab/de-wikidump-sents500000.txt");		
 	}
+	
+	// Constructor;
+	
+	public Corpus() {
+	}
 
 	public Corpus(String taggerName){
 		switch (taggerName){

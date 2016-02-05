@@ -1,0 +1,34 @@
+Define config file:
+	- specify corpus files:
+		taggerName: string
+		trainingLabeledData = list of fileNames // For all: use file extension !
+		devLabeledData = list of fileNames
+		testLabeledData	= list of fileNames
+		trainingUnLabeledData = list of fileNames
+		devUnLabeledData = list of fileNames
+		tesUntLabeledData	= list of fileNames
+
+-> I think it is better to create these names from devLabeledData & testLabeledData:
+		devEvalFile = single file
+		testEvalFile = single file
+	-> define list which is order consistent to devel/test files
+
+Define taggerName specific config files	
+		
+For GNTrainer:
+- provide property file
+- set corpus as argument and pass further to relevant calls, so that Corpus object is not done by others
+-> DONE
+
+For GNTagger:
+- create eval file names from test/devel file names as part of Corpus.java
+- add Corpus.java then to GNTagger
+
+When done, adapt caller main.GNT
+
+STATUS:
+- defined props file for EN POS -> taggerName ENPOS
+- define class propertiesHandler
+- adapt Corpus file:
+	- create eval files based on available labeled devel and test files
+

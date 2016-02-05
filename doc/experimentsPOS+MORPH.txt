@@ -29,7 +29,7 @@ Current experiments with MORPH
 
 For German: taggerName = MORPH
 
-#Labels = 256
+#Labels = 255
 
 Training time: 116533 msec = 2 minutes; file saving ~4 minutes
 
