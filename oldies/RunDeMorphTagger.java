@@ -23,9 +23,10 @@ public class RunDeMorphTagger {
 		ModelInfo modelInfo = new ModelInfo("MDP");
 		modelInfo.setTaggerName("DEMORPH");
 		
-		int windowSize = 2;
-		int numberOfSentences = -1;
-		int dim = 0;
+		ModelInfo.windowSize = 2;
+		ModelInfo.numberOfSentences = -1;
+		ModelInfo.dim = 0;
+		
 		Alphabet.withWordFeats=false;
 		Alphabet.withShapeFeats=true;
 		Alphabet.withSuffixFeats=true;
@@ -34,14 +35,12 @@ public class RunDeMorphTagger {
 		
 		WordSuffixFeatureFactory.ngram = false;
 
-		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
+		modelInfo.createModelFileName(ModelInfo.windowSize, ModelInfo.dim, ModelInfo.numberOfSentences);
 		System.out.println(modelInfo.toString());
 		
 		GNTagger posTagger = new GNTagger(modelInfo);	
-		posTagger.initGNTagger(windowSize, dim);
+		posTagger.initGNTagger(ModelInfo.windowSize, ModelInfo.dim);
 
-		// TODO: define new data structure so that official results can be used to compute comparisons
-		// Or fill a excel file directly
 		List<Pair<String, String>> fileListDevel = new ArrayList<Pair<String, String>>();
 		List<Pair<String, String>> fileListTest = new ArrayList<Pair<String, String>>();
 

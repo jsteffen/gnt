@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import corpus.Corpus;
+import corpus.Corpus1;
 import data.Alphabet;
 import data.Data;
 import data.ModelInfo;

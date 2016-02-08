@@ -508,26 +508,4 @@ public class WordDistributedFeatureFactory {
 
 		this.writeFlorsCondensed(taggerName, maxIndicatorWords);
 	}
-
-	//***
-
-
-	// Eventually
-	/* Define also word2vec and glove based output:
-	 * word2vec:
-	 * 	first line: number of words, dimension
-	 * 	other lines: word + vector
-	 * Glove:
-	 * 	all lines: word + vector
-	 */
-
-	// Test main method
-	public static void main(String[] args) throws IOException {
-		WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
-
-		dwvFactory.createAndWriteDistributedWordFeaturesSparse("POS", 250, new Corpus("POS"));
-
-		dwvFactory.readDistributedWordFeaturesSparse("POS", 250);
-	}
-
 }

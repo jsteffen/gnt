@@ -36,12 +36,12 @@ import java.nio.file.Files;
  * - read 
  */
 public class CorpusNormalizer {
-	private Corpus corpus = null;
+	private Corpus1 corpus = null;
 
-	public Corpus getCorpus() {
+	public Corpus1 getCorpus() {
 		return corpus;
 	}
-	public void setCorpus(Corpus corpus) {
+	public void setCorpus(Corpus1 corpus) {
 		this.corpus = corpus;
 	}
 	
@@ -194,8 +194,8 @@ public class CorpusNormalizer {
 	}
 
 	public void normalizeAlltaggerNameCorpora() throws IOException{
-		for (String taggerName : Corpus.knownTaggerNames){
-			this.setCorpus(new Corpus(taggerName));
+		for (String taggerName : Corpus1.knownTaggerNames){
+			this.setCorpus(new Corpus1(taggerName));
 			this.normalizeCorpus();
 		}
 	}

@@ -13,12 +13,12 @@ import java.nio.file.StandardCopyOption;
  *
  */
 public class CorpusRecoverer {
-	private Corpus corpus = null;
+	private Corpus1 corpus = null;
 
-	public Corpus getCorpus() {
+	public Corpus1 getCorpus() {
 		return corpus;
 	}
-	public void setCorpus(Corpus corpus) {
+	public void setCorpus(Corpus1 corpus) {
 		this.corpus = corpus;
 	}
 
@@ -78,8 +78,8 @@ public class CorpusRecoverer {
 	}
 
 	public void recoverAlltaggerNameCorpora() throws IOException{
-		for (String taggerName : Corpus.knownTaggerNames){
-			this.setCorpus(new Corpus(taggerName));
+		for (String taggerName : Corpus1.knownTaggerNames){
+			this.setCorpus(new Corpus1(taggerName));
 			this.recoverCopiedFilesFromCorpus();
 		}
 	}

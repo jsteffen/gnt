@@ -3,7 +3,10 @@ package trainer;
 import java.io.IOException;
 
 import corpus.Corpus;
+import corpus.CorpusProcessor;
 import corpus.IndicatorWordsCreator;
+import data.Alphabet;
+import data.GNTProperties;
 import data.ModelInfo;
 import data.Window;
 import features.WordClusterFeatureFactory;
@@ -17,11 +20,11 @@ public class GNTrainer {
 	private TrainerInMem trainer;
 	private long time1 ;
 	private long time2;
-	
+
 	private Corpus corpus = new Corpus();
 
 	//
-	
+
 	public TrainerInMem getTrainer() {
 		return trainer;
 	}
@@ -40,31 +43,50 @@ public class GNTrainer {
 	public void setCorpus(Corpus corpus) {
 		this.corpus = corpus;
 	}
-	
+
 	// initialization
 
-	public GNTrainer(ModelInfo modelInfo, int dim) {
-		this.trainer = new TrainerInMem(modelInfo, dim);
-		this.corpus = new Corpus(modelInfo.getTaggerName());
+	public GNTrainer(ModelInfo modelInfo, GNTProperties props){
+
+		System.out.println(Alphabet.toActiveFeatureString());
+
+		modelInfo.createModelFileName(ModelInfo.windowSize, ModelInfo.dim, ModelInfo.numberOfSentences);
+		System.out.println(modelInfo.toString());
+
+		this.corpus = new Corpus(props);
+
+		CorpusProcessor mapper = new CorpusProcessor(this.corpus);
+
+		try {
+			mapper.processConllFiles();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		this.trainer = new TrainerInMem(modelInfo, ModelInfo.windowSize);
+		this.threshold = ModelInfo.subSamplingThreshold;
 	}
-	public GNTrainer(ModelInfo modelInfo, int dim, double threshold) {
+
+	public GNTrainer(ModelInfo modelInfo, int windowSize) {
+		this.trainer = new TrainerInMem(modelInfo, windowSize);
+	}
+	public GNTrainer(ModelInfo modelInfo, int windowSize, double threshold) {
 		this.threshold = threshold;
-		this.trainer = new TrainerInMem(modelInfo, dim);
-		this.corpus = new Corpus(modelInfo.getTaggerName());
+		this.trainer = new TrainerInMem(modelInfo, windowSize);
 	}
-	
+
 	// This is a method for on-demand creation of the indicator words
-	
+
 	private void createIndicatorWords(){
 		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
 		String iwFilename = "resources/features/iw_all"+taggerName+".txt";
 		System.out.println("Create indictor words and save in file: " + iwFilename);
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
 		iwp.createIndicatorTaggerNameWordsFromCorpus(this.getCorpus());
-		
+
 		iwp.postProcessWords(this.getThreshold());
 		iwp.writeSortedIndicatorWords(iwFilename, 10000);
-		
+
 	}
 
 	// This is a method for on-demand creation of the feature files
@@ -79,7 +101,7 @@ public class GNTrainer {
 		this.createShapeFeatures(taggerName, trainingFileName);
 		this.createSuffixFeatures(taggerName, trainingFileName);
 		this.createClusterFeatures(taggerName, clusterIdSourceFileName);
-		
+
 	}
 
 	private void createWordVectors(String taggerName, int dim) throws IOException{
@@ -93,12 +115,12 @@ public class GNTrainer {
 		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
 		wordShapeFactory.createAndSaveShapeFeature(taggerName, trainingFileName);
 	}
-	
+
 	private void createSuffixFeatures(String taggerName, String trainingFileName){
 		WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
 		wordSuffixFactory.createAndSaveSuffixFeature(taggerName, trainingFileName);	
 	}
-	
+
 	private void createClusterFeatures(String taggerName, String clusterIdSourceFileName){
 		WordClusterFeatureFactory wordClusterFactory = new WordClusterFeatureFactory();
 		wordClusterFactory.createAndSaveClusterIdFeature(taggerName, clusterIdSourceFileName);	
@@ -108,7 +130,7 @@ public class GNTrainer {
 
 	private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
 		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
-		
+
 		System.out.println("Load feature files for tagger " + taggerName + ":");
 		time1 = System.currentTimeMillis();
 
@@ -129,8 +151,8 @@ public class GNTrainer {
 		time2 = System.currentTimeMillis();
 		System.out.println("Total training time: " + (time2-time1));
 
-//		this.getTrainer().getProblem().n = OffSets.windowVectorSize;
-//		this.getTrainer().getProblem().l=Window.windowCnt;
+		//		this.getTrainer().getProblem().n = OffSets.windowVectorSize;
+		//		this.getTrainer().getProblem().l=Window.windowCnt;
 
 		System.out.println("Offsets: " + this.getTrainer().getOffSets().toString());
 		System.out.println("Sentences: " + this.getTrainer().getData().getSentenceCnt());

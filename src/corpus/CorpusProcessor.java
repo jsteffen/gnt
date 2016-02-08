@@ -8,17 +8,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import data.ModelInfo;
 
 
 
 public class CorpusProcessor {
 
 	private Corpus corpus = null;
-	private String taggerName = "";
 
 	public Corpus getCorpus() {
 		return corpus;
@@ -27,9 +25,8 @@ public class CorpusProcessor {
 		this.corpus = corpus;
 	}
 
-	public CorpusProcessor(String taggerName) {
-		this.taggerName = taggerName;
-		this.setCorpus(new Corpus(taggerName));
+	public CorpusProcessor(Corpus corpus) {
+		this.setCorpus(corpus);
 	}
 
 	/*
@@ -53,6 +50,7 @@ public class CorpusProcessor {
 					throws IOException {
 
 		// init reader for CONLL style file
+		
 		BufferedReader reader = new BufferedReader(
 				new InputStreamReader(
 						new FileInputStream(sourceFileName),
@@ -167,11 +165,12 @@ public class CorpusProcessor {
 
 	private String nerTokenToString(String[] tokenizedLine, int index) {
 		String output = "";
-		if (this.taggerName.equals("NER"))
+		if (ModelInfo.taggerName.equals("NER"))
 			output = enNerTokenToString(tokenizedLine,index);
 		else
-			if (this.taggerName.equals("DENER"))
+			if (ModelInfo.taggerName.equals("DENER"))
 				output = deNerTokenToString(tokenizedLine,index);
+		
 		return output;
 
 	}
@@ -182,6 +181,7 @@ public class CorpusProcessor {
 	 * This is a wrapper to process a set of NER files. Currently, assuming conll 2003 format
 	 */
 	private void transcodeSourceFileToProperConllFormatFiles(){
+		
 		for (String fileName : this.getCorpus().getTrainingLabeledSourceFiles()){
 			try {
 				System.out.println(fileName+".src");
@@ -190,7 +190,7 @@ public class CorpusProcessor {
 				e.printStackTrace();
 			}
 		}
-		for (String fileName : this.getCorpus().getDevLabeledData()){
+		for (String fileName : this.getCorpus().getDevLabeledSourceFiles()){
 			try {
 				System.out.println(fileName+".src");
 				transcodeNERfile(fileName+".src", "ISO-8859-1", fileName+".conll", "utf-8");
@@ -198,7 +198,7 @@ public class CorpusProcessor {
 				e.printStackTrace();
 			}
 		}
-		for (String fileName : this.getCorpus().getTestLabeledData()){
+		for (String fileName : this.getCorpus().getTestLabeledSourceFiles()){
 			try {
 				System.out.println(fileName+".src");
 				transcodeNERfile(fileName+".src", "ISO-8859-1", fileName+".conll", "utf-8");
@@ -239,22 +239,22 @@ public class CorpusProcessor {
 	}
 
 	// A simple main caller 
-	public void processConllFiles() throws IOException{
-		Set<String> posTaggerSet = new HashSet<String>(
-				Arrays.asList("POS", "DEPOS", "DEPOSMORPH", "DEMORPH", "DENERKONV", "NERBILOU", "DENERBILOU", "DENERKONVBILOU"));
-		Set<String> nerTaggerSet = new HashSet<String>(
-				Arrays.asList("NER", "DENER" ));
-		if (posTaggerSet.contains(taggerName))
-			this.transcodeConllToSentenceFiles();
-		else
-			if (nerTaggerSet.contains(taggerName)){
-				this.transcodeSourceFileToProperConllFormatFiles();
-				this.transcodeConllToSentenceFiles();
-			}
-	}
+	//	public void processConllFiles() throws IOException{
+	//		Set<String> posTaggerSet = new HashSet<String>(
+	//				Arrays.asList("POS", "DEPOS", "DEPOSMORPH", "DEMORPH", "DENERKONV", "NERBILOU", "DENERBILOU", "DENERKONVBILOU"));
+	//		Set<String> nerTaggerSet = new HashSet<String>(
+	//				Arrays.asList("NER", "DENER" ));
+	//		if (posTaggerSet.contains(taggerName))
+	//			this.transcodeConllToSentenceFiles();
+	//		else
+	//			if (nerTaggerSet.contains(taggerName)){
+	//				this.transcodeSourceFileToProperConllFormatFiles();
+	//				this.transcodeConllToSentenceFiles();
+	//			}
+	//	}
 
-	public static void main(String[] args) throws IOException {
-		CorpusProcessor mapper = new CorpusProcessor("DENERKONVBILOU");
-		mapper.processConllFiles();
+	public void processConllFiles() throws IOException{
+		this.transcodeSourceFileToProperConllFormatFiles();
+		this.transcodeConllToSentenceFiles();
 	}
 }	

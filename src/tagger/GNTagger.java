@@ -11,10 +11,11 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import corpus.EvalConllFile;
+import corpus.Corpus;
 import trainer.ProblemInstance;
 import data.Alphabet;
 import data.Data;
+import data.GNTProperties;
 import data.ModelInfo;
 import data.OffSets;
 import data.Sentence;
@@ -26,6 +27,7 @@ public class GNTagger {
 	private Data data = new Data();
 	private Alphabet alphabet = new Alphabet();
 	private ModelInfo modelInfo = new ModelInfo();
+	private Corpus corpus = new Corpus();
 	private OffSets offSets = new OffSets();
 	private int windowSize = 2;
 	private Model model ;
@@ -71,14 +73,31 @@ public class GNTagger {
 	public void setModel(Model model) {
 		this.model = model;
 	}
+	public Corpus getCorpus() {
+		return corpus;
+	}
+	public void setCorpus(Corpus corpus) {
+		this.corpus = corpus;
+	}
 
 	// Init
 	public GNTagger(){
 	}
-
+	
 	public GNTagger(ModelInfo modelInfo) {
 		this.setModelInfo(modelInfo);
 		this.setData(new Data(modelInfo.getTaggerName()));
+	}
+
+	public GNTagger(ModelInfo modelInfo, GNTProperties props) {
+		this.setModelInfo(modelInfo);
+		this.setData(new Data(modelInfo.getTaggerName()));
+		System.out.println(Alphabet.toActiveFeatureString());
+
+		modelInfo.createModelFileName(ModelInfo.windowSize, ModelInfo.dim, ModelInfo.numberOfSentences);
+		System.out.println(modelInfo.toString());
+
+		this.corpus = new Corpus(props);
 	}
 
 	// Methods

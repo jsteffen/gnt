@@ -7,7 +7,7 @@ import data.Alphabet;
 import data.ModelInfo;
 import features.WordSuffixFeatureFactory;
 
-public class TrainEnPosTagger {
+public class TrainEnPosTagger2 {
 
 	public static void main(String[] args) throws IOException{
 		ModelInfo modelInfo = new ModelInfo("MDP");
@@ -15,10 +15,11 @@ public class TrainEnPosTagger {
 		
 		ModelInfo.saveModelInputFile = false;
 		
-		int windowSize = 2;
-		int numberOfSentences = -1;
-		int dim = 0;
-		double subSamplingThreshold = 0.000000001;
+		ModelInfo.windowSize = 2;
+		ModelInfo.numberOfSentences = -1;
+		ModelInfo.dim = 0;
+		ModelInfo.subSamplingThreshold = 0.000000001;
+		
 		Alphabet.withWordFeats=false;
 		Alphabet.withShapeFeats=true;
 		Alphabet.withSuffixFeats=true;
@@ -27,14 +28,15 @@ public class TrainEnPosTagger {
 		
 		WordSuffixFeatureFactory.ngram = false;
 		
-		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
+		modelInfo.createModelFileName(ModelInfo.windowSize, ModelInfo.dim, ModelInfo.numberOfSentences);
 		System.out.println(modelInfo.toString());
 		
-		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize, subSamplingThreshold);
+		GNTrainer gnTrainer = new GNTrainer(modelInfo, ModelInfo.windowSize, ModelInfo.subSamplingThreshold);
 		String trainingFileName = "resources/data/sancl-2012/sancl.labeled/ontonotes-wsj-train";
 		String clusterIdSourceFileName = "/Users/gune00/data/Marmot/Word/en_marlin_cluster_1000";
 
-		gnTrainer.gntTrainingWithDimensionFromConllFile(trainingFileName, clusterIdSourceFileName, dim, numberOfSentences);
+		gnTrainer.gntTrainingWithDimensionFromConllFile(
+				trainingFileName, clusterIdSourceFileName, ModelInfo.dim, ModelInfo.numberOfSentences);
 
 	}
 

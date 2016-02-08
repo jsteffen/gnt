@@ -10,48 +10,50 @@ import de.bwaldvogel.liblinear.SolverType;
 
 public class ModelInfo {
 
-	private SolverType solver = SolverType.L2R_LR; // -s 0
-	private double C = 1.0;    // cost of constraints violation
-	private double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
-
-	private String taggerName = "";
+	public static SolverType solver = SolverType.L2R_LR; // -s 0
+	public static double C = 1.0;    // cost of constraints violation
+	public static double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
 
 	private String modelFilePrefix = "resources/models/model_";
 	private String modelFile = "";
 
-	/**
-	 * This is a global flag to trigger saving of model input file;
-	 */
-	public static boolean saveModelInputFile = false;
 	private String modelInputFilePrefix = "resources/modelInputFiles/modelInputFile_";
 	private String modelInputFile = "";
 	private BufferedWriter modelInputFileWriter = null;
 
+	/**
+	 * Globals flags for defining window site, number of sentences, vector dimension and
+	 * subsampling range.
+	 */
+	public static String taggerName = "";
+	
+	public static int windowSize = 2;
+	public static int numberOfSentences = -1;
+	public static int dim = 0;
+	public static double subSamplingThreshold = 0.000000001;
+	/**
+	 * This is a global flag to trigger saving of model input file;
+	 */
+	public static boolean saveModelInputFile = false;
+	
 
 	public SolverType getSolver() {
 		return solver;
 	}
-	public void setSolver(SolverType solver) {
-		this.solver = solver;
-	}
+	
 	public double getC() {
 		return C;
 	}
-	public void setC(double c) {
-		C = c;
-	}
+	
 	public double getEps() {
 		return eps;
 	}
-	public void setEps(double eps) {
-		this.eps = eps;
-	}
-
+	
 	public String getTaggerName() {
 		return taggerName;
 	}
 	public void setTaggerName(String taggerName) {
-		this.taggerName = taggerName.toUpperCase();
+		ModelInfo.taggerName = taggerName.toUpperCase();
 	}
 
 	public String getModelFilePrefix() {
@@ -105,23 +107,23 @@ public class ModelInfo {
 
 	public void initFlorsInfo(){
 		// L2-regularized L2-loss support vector classification (primal)
-		this.setSolver(SolverType.L2R_L2LOSS_SVC);
-		this.setC(1.0);
-		this.setEps(0.01);
+		ModelInfo.solver = SolverType.L2R_L2LOSS_SVC;
+		ModelInfo.C = 1.0;
+		ModelInfo.eps = 0.01;
 	}
 
 	public void initMDPInfo(){
 		// multi-class SVM by Crammer and Singer
-		this.setSolver(SolverType.MCSVM_CS);
-		this.setC(0.1);
-		this.setEps(0.3);
+		ModelInfo.solver = SolverType.MCSVM_CS;
+		ModelInfo.C = 0.1;
+		ModelInfo.eps = 0.3;
 	}
 
 	public void initGNTInfo(){
 		// L2-regularized logistic regression (primal)
-		this.setSolver(SolverType.L2R_LR);
-		this.setC(1.0);
-		this.setEps(0.01);
+		ModelInfo.solver = SolverType.L2R_LR;
+		ModelInfo.C = 1.0;
+		ModelInfo.eps = 0.01;
 	}
 
 	public String toString(){

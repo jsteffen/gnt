@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import corpus.Corpus;
+import corpus.Corpus1;
 
 /**
  * Goal is to compute all lower-case suffixes from a training set of words.

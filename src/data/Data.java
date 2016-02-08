@@ -10,7 +10,7 @@ public class Data {
 	private Sentence sentence = new Sentence();
 	private int sentenceCnt = 0;
 	private List<Window> instances = new ArrayList<Window>();
-	private String taggerName = "POS";
+	private String taggerName = "NEPOS";
 	private String labelMapFileName = "resources/features/labelSet.txt";
 	private String wordMapFileName = "resources/features/wordSet.txt";
 	
