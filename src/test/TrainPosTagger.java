@@ -18,7 +18,7 @@ public class TrainPosTagger {
 	}
 
 	public static void main(String[] args) throws IOException{
-		TrainPosTagger.trainer("resources/props/DeUniPosTagger.xml");
+		TrainPosTagger.trainer("resources/props/DeNerKonvTagger.xml");
 	}
 
 }

@@ -2,6 +2,7 @@ package features;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class WordClusterFeatureFactory {
 		System.out.println("Create cluster ID list from: " + clusterIDfileName);
 		this.createWord2ClusterIdMapFromFile(clusterIDfileName, -1);
 
-		String fileName = "resources/features/clusterId"+"_"+taggerName+".txt";
+		String fileName = "resources/features/"+taggerName+"/clusterId.txt";
 		System.out.println("Writing cluster ID list to: " + fileName);
 		this.writeClusterIdFeatureFile(fileName);
 
@@ -153,9 +154,11 @@ public class WordClusterFeatureFactory {
 	}
 
 	public void writeClusterIdFeatureFile(String targetFileName){
+		File file = new File(targetFileName);
+		file.getParentFile().mkdirs();
 		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
 			for(String word: this.getWord2index().keySet()){
 				writer.write(word+"\t"+this.getWord2index().get(word)+"\n");
 			}
@@ -185,33 +188,9 @@ public class WordClusterFeatureFactory {
 	}
 
 	public void readClusterIdList(String taggerName){
-		String fileName = "resources/features/clusterId"+"_"+taggerName+".txt";
+		String fileName = "resources/features/"+taggerName+"/clusterId.txt";
 		System.out.println("Reading cluster ID list from: " + fileName);
 		this.readClusterIdFeatureFile(fileName);
 		System.out.println("... done");
-	}
-
-	public void readClusterIdList(){
-		String fileName = "resources/features/clusterId"+"_"+".txt";
-		System.out.println("Reading cluster ID list from: " + fileName);
-		this.readClusterIdFeatureFile(fileName);
-		System.out.println("... done");
-	}
-
-
-	public static void main(String[] args){
-		WordClusterFeatureFactory wordClusterIdFactory = new WordClusterFeatureFactory();
-		wordClusterIdFactory.createWord2ClusterIdMapFromFile("/Users/gune00/data/Marmot/Word/en_marlin_cluster_1000", -1);
-
-
-		System.out.println("Writing clusterId list to: " + "resources/features/clusterId.txt");
-		wordClusterIdFactory.writeClusterIdFeatureFile("resources/features/clusterId.txt");
-		System.out.println(wordClusterIdFactory.clusterIdcnt);
-		System.out.println("... done");
-		System.out.println("Read cluster Id list from: " + "resources/features/clusterId.txt");
-		wordClusterIdFactory.readClusterIdFeatureFile("resources/features/clusterId.txt");
-		System.out.println("... done");
-		String word = "The";
-		;		System.out.println(word + " : " + wordClusterIdFactory.getClusterIdFeature(word));
 	}
 }

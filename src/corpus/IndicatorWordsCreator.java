@@ -2,6 +2,7 @@ package corpus;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -166,9 +167,11 @@ public class IndicatorWordsCreator {
 	}
 
 	public void writeSortedIndicatorWords(String targetFileName, int cnt){
+		File file = new File(targetFileName);
+		file.getParentFile().mkdirs();
 		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
 			this.writeSortedMap(cnt, writer);
 
 			writer.close();

@@ -79,8 +79,8 @@ public class Data {
 
 	public Data(String taggerName) {
 		this.setTaggerName(taggerName);
-		labelMapFileName = "resources/features/labelSet"+taggerName+".txt";
-		wordMapFileName = "resources/features/wordSet"+taggerName+".txt";
+		labelMapFileName = "resources/features/"+taggerName+"/labelSet.txt";
+		wordMapFileName = "resources/features/"+taggerName+"/wordSet.txt";
 	}
 	// Methods
 
@@ -185,7 +185,7 @@ public class Data {
 	}
 	
 	public void readWordSet(String taggerName){
-		this.getWordSet().readSetIndexMap("resources/features/wordSet"+taggerName+".txt");	
+		this.getWordSet().readSetIndexMap("resources/features/"+taggerName+"/wordSet.txt");	
 	}
 
 	public String toString(){

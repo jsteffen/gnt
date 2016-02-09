@@ -2,6 +2,7 @@ package features;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -266,19 +267,19 @@ public class WordSuffixFeatureFactory {
 
 		System.out.println("#word: " + this.getWordCnt()+" #suffixes: " + this.getSuffixCnt());
 
-		String suffixFileName = "resources/features/suffixList"+"_"+taggerName+".txt";
+		String suffixFileName = "resources/features/"+taggerName+"/suffixList.txt";
 		System.out.println("Writing suffix list to: " + suffixFileName);
 		this.writeSuffixFile(suffixFileName);
 		System.out.println("... done");
 	}
 
 
-	private void createSuffixListFromFile(String fileName, int max){
+	private void createSuffixListFromFile(String file, int max){
 		BufferedReader reader;
 		int lineCnt = 0;
 		int mod = 10000;
 		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
 
 			// Each line consists of a sequence of words
 			String line;
@@ -302,9 +303,12 @@ public class WordSuffixFeatureFactory {
 	// after the above has been done, write out vocabulary into files:
 	// Firstly, sort num2word according to natural order, and write value of entry key.
 	private void writeSuffixFile(String targetFileName){
+		File file = new File(targetFileName);
+		file.getParentFile().mkdirs();
+		
 		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
 			for(int key: num2suffix.keySet()){
 				writer.write(num2suffix.get(key)+"\n");
 			}
@@ -335,30 +339,9 @@ public class WordSuffixFeatureFactory {
 	}
 	
 	public void readSuffixList(String taggerName){
-		String suffixFileName = "resources/features/suffixList"+"_"+taggerName+".txt";
+		String suffixFileName = "resources/features/"+taggerName+"/suffixList.txt";
 		System.out.println("Reading suffix list from: " + suffixFileName);
 		this.readSuffixFile(suffixFileName);
 		System.out.println("... done");
-	}
-
-	//** tests methods
-	public void testWriteSuffixList(){
-
-		createSuffixListFromFile("resources/data/english/ptb3-training-sents.txt", -1);
-		// createSuffixListFromFile("resources/data/ner/eng-train-sents.txt", -1);
-		//createSuffixListFromFile("resources/data/english/english-train-sents.txt", -1);
-
-		System.out.println("#word: " + this.wordCnt + 
-				" #suffixes: " + this.suffixCnt);
-		System.out.println("Writing suffix list to: " + "resources/features/suffixList.txt");
-		this.writeSuffixFile("resources/features/suffixList.txt");
-		System.out.println("... done");
-	}
-
-	
-
-	public static void main(String[] args){
-		WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
-		wordSuffixFactory.testWriteSuffixList();
 	}
 }

@@ -99,5 +99,6 @@ January, 2016:
 - Property files
 
 - Test with uniform tag set
-	
+
+- collect all tagger specific feature files under directory named by taggerName	
 

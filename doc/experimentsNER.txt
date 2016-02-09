@@ -103,16 +103,12 @@ Evaluation with Konvens 2014 DE NER data: DONE
 BILOU schema:
 - brings for EN about 1% F1, but for German it hurts
 
+I have additional NE-conll data
 
 HIERIX:
 
 add prefixes as features
 
-Alternative indicator words:
-- What if I select indicator words those that occur in training data
-	- select the context words from annotated strings 
-	and choose the highest ranked words found in all indicator words
-	
 NER lexicons:
 	- although I have word clusters, it might be too small
 	- so very large NE lists could make sense

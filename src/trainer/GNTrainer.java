@@ -79,7 +79,7 @@ public class GNTrainer {
 
 	private void createIndicatorWords(){
 		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
-		String iwFilename = "resources/features/iw_all"+taggerName+".txt";
+		String iwFilename = "resources/features/"+taggerName+"/iw_all.txt";
 		System.out.println("Create indictor words and save in file: " + iwFilename);
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
 		iwp.createIndicatorTaggerNameWordsFromCorpus(this.getCorpus());

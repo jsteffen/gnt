@@ -41,7 +41,7 @@ public class RunPosTagger {
 
 	public static void main(String[] args) throws IOException{
 		
-		RunPosTagger.runner("resources/props/DeUniPosTagger.xml");
+		RunPosTagger.runner("resources/props/DeNerKonvTagger.xml");
 		
 	}
 }

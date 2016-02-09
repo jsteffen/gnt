@@ -2,6 +2,7 @@ package data;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,9 +52,11 @@ public class SetIndexMap {
 	}
 
 	public void writeSetIndexMap(String targetFileName){
+		File file = new File(targetFileName);
+		file.getParentFile().mkdirs();
 		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName),"UTF-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
 			for(int key: this.getNum2label().keySet()){
 				writer.write(this.getNum2label().get(key)+"\n");
 			}

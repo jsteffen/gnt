@@ -1,5 +1,7 @@
 HIERIX: January 2016
 
+- store model file also under taggerName feature dir
+
 - check tokenisation of clusters for Marlion ! and the way I do it
 	- eventually tokenize again
 

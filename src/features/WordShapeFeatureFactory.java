@@ -2,6 +2,7 @@ package features;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -86,19 +87,21 @@ public class WordShapeFeatureFactory {
 		System.out.println("Create shape list from: " + trainingFileName);
 		this.createShapeVectorsFromFile(trainingFileName, -1);
 
-		String shapeFileName = "resources/features/shapeList"+"_"+taggerName+".txt";
+		String shapeFileName = "resources/features/"+taggerName+"/shapeList.txt";
 		System.out.println("Writing shape list to: " + shapeFileName);
 		this.writeShapeFeatureFile(shapeFileName);
 
 		System.out.println("... done");
 	}
 
-	private void createShapeVectorsFromFile(String fileName, int max){
+	private void createShapeVectorsFromFile(String targetFileName, int max){
+		File file = new File(targetFileName);
+		file.getParentFile().mkdirs();
 		BufferedReader reader;
 		int lineCnt = 0;
 		int mod = 10000;
 		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
 
 			// Each line consists of a sequence of words
 			String line;
@@ -211,20 +214,9 @@ public class WordShapeFeatureFactory {
 	}
 
 	public void readShapeList(String taggerName){
-		String shapeFileName = "resources/features/shapeList"+"_"+taggerName+".txt";
+		String shapeFileName = "resources/features/"+taggerName+"/shapeList.txt";
 		System.out.println("Reading shape list from: " + shapeFileName);
 		this.readShapeFeatureFile(shapeFileName);
 		System.out.println("... done");
 	}
-
-	public static void main(String[] args){
-		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
-		wordShapeFactory.createShapeVectorsFromFile("resources/data/english/ptb3-training-sents.txt", -1);
-		//wordShapeFactory.createShapeVectorsFromFile("resources/data/ner/eng-train-sents.txt", -1);
-
-		System.out.println("Writing shape list to: " + "resources/features/shapeList.txt");
-		wordShapeFactory.writeShapeFeatureFile("resources/features/shapeList.txt");
-		System.out.println("... done");
-	}
-
 }

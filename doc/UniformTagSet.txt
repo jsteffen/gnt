@@ -10,19 +10,21 @@ FEB, 2016:
 
 - I Would need multi-language clustering and shape feature
 	
-- What about morphology?
-	- Can I uniform it as well ?
+- What about morphology? - Can I uniform it as well ?
 	
-- Test with uniform tag set: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std
-
 - Define a single config file, that would run all languages using parameter, e.g.,
-	"en/en-" 
-	and setting for clusters
-	
-For other results, cf. http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf
+	"en/en-" and setting for clusters
 
-Describe a script so that all languages can be processed!
-Organize cluster files.
+- What to do with spelling ? is it affective?
+	
+- Describe a script so that all languages can be processed!
+- Organize cluster files.
+
+Initial tests
+**************
+
+Test with uniform tag set: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std
+For other results, cf. http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf
 
 Accessing coarse-grain UPOS - conll pos=3 !
 
