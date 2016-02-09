@@ -1,9 +1,7 @@
 FEB, 2016:
 
-- Test with uniform tag set
-	- /Users/gune00/data/MLDP/universal_treebanks_v2.0/std
-	
-- Idea - one model for many langugaes
+
+- Idea - one model for many languages
 	- merge all languages into one training file, and learn one model
 	- test with single languages
 	- compare with single language model
@@ -12,4 +10,93 @@ FEB, 2016:
 
 - I Would need multi-language clustering and shape feature
 	
-- What about morphology
+- What about morphology?
+	- Can I uniform it as well ?
+	
+- Test with uniform tag set: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std
+
+- Define a single config file, that would run all languages using parameter, e.g.,
+	"en/en-" 
+	and setting for clusters
+	
+For other results, cf. http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf
+
+Describe a script so that all languages can be processed!
+Organize cluster files.
+
+Accessing coarse-grain UPOS - conll pos=3 !
+
+DE:  - strange, should be higher ? Tokenization problems ?
+++++
+Do testing from file: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std/de/de-universal-dev.conll
+System time (msec): 345
+Sentences: 800
+Testing instances: 12215
+Sentences/sec: 2318
+Words/sec: 35405
+Create eval file: resources/eval/de-universal-dev.txt
+All pos: 12215 Correct: 11590 Accuracy: 94,88%
+All OOV pos: 1292 Correct: 1188 Accuracy: 91,95%
+All InV pos: 10923 Correct: 10402 Accuracy: 95,23%
+
+++++
+Do testing from file: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std/de/de-universal-test.conll
+System time (msec): 315
+Sentences: 1000
+Testing instances: 16339
+Sentences/sec: 3174
+Words/sec: 51869
+Create eval file: resources/eval/de-universal-test.txt
+All pos: 16339 Correct: 15513 Accuracy: 94,94%
+All OOV pos: 1962 Correct: 1838 Accuracy: 93,68%
+All InV pos: 14377 Correct: 13675 Accuracy: 95,12%
+	
+FR: competitive with Lrec Paper; no clustering
+++++
+Do testing from file: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std/fr/fr-universal-dev.conll
+System time (msec): 612
+Sentences: 1611
+Testing instances: 38328
+Sentences/sec: 2632
+Words/sec: 62627
+Create eval file: resources/eval/fr-universal-dev.txt
+All pos: 38328 Correct: 36983 Accuracy: 96,49%
+All OOV pos: 2827 Correct: 2525 Accuracy: 89,32%
+All InV pos: 35501 Correct: 34458 Accuracy: 97,06%
+
+++++
+Do testing from file: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std/fr/fr-universal-test.conll
+System time (msec): 101
+Sentences: 300
+Testing instances: 6950
+Sentences/sec: 2970
+Words/sec: 68811
+Create eval file: resources/eval/fr-universal-test.txt
+All pos: 6950 Correct: 6607 Accuracy: 95,06%
+All OOV pos: 398 Correct: 344 Accuracy: 86,43%
+All InV pos: 6552 Correct: 6263 Accuracy: 95,59%
+
+EN: - better than in LREC-paper
+++++
+Do testing from file: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-dev.conll
+System time (msec): 860
+Sentences: 1700
+Testing instances: 40117
+Sentences/sec: 1976
+Words/sec: 46647
+Create eval file: resources/eval/en-universal-dev.txt
+All pos: 40117 Correct: 39189 Accuracy: 97,69%
+All OOV pos: 1106 Correct: 1028 Accuracy: 92,95%
+All InV pos: 39011 Correct: 38161 Accuracy: 97,82%
+
+++++
+Do testing from file: /Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-test.conll
+System time (msec): 543
+Sentences: 2416
+Testing instances: 56684
+Sentences/sec: 4449
+Words/sec: 104390
+Create eval file: resources/eval/en-universal-test.txt
+All pos: 56684 Correct: 55469 Accuracy: 97,86%
+All OOV pos: 1393 Correct: 1261 Accuracy: 90,52%
+All InV pos: 55291 Correct: 54208 Accuracy: 98,04%

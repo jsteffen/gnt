@@ -1,9 +1,7 @@
 HIERIX: January 2016
 
-- Test with uniform tag set
-	- reuse java code in cf. /MDP/src/de/dfki/lt/nep/ConllNERmapper.java
-	
-- check tokenisation of clusters and the way I do it
+- check tokenisation of clusters for Marlion ! and the way I do it
+	- eventually tokenize again
 
 - check to normalize/scale each component vector
 	to unit length (compute length of vector, and then divide each component)
@@ -11,6 +9,7 @@ HIERIX: January 2016
 	-> I am doing it now on complete feature vector in 
 		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
 	-> try it on relevant component feature!
+-> UNDERSTAND, why not necessary !
 
 - Interface to TORCH should be quite easy now
 
@@ -97,10 +96,8 @@ Additional applications:
 	
 ***
 For software package:
-- Do splitting
-
-- create property file
-- save and move it to model file folder
+- create property file -> DONE
+- save and move it to model file folder -> DONE
 - add FLORS accuracy to evaluation script
 - create input file for TORCH
 - generated compressed folder of all data that is necessary for tagging
@@ -109,7 +106,8 @@ For software package:
 
 - define logger
 - define parallel processing
-
+- do splitting according to
+	
 
 	
 

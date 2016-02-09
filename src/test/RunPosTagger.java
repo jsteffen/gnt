@@ -29,7 +29,7 @@ public class RunPosTagger {
 			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
 			posTagger.tagAndWriteFromConllDevelFile(fileName+".conll", evalFileName, -1);
 			System.out.println("Create eval file: " + posTagger.getCorpus().makeEvalFileName(fileName));
-			evalFile.computeAccuracy(evalFileName, false);
+			evalFile.computeAccuracy(evalFileName, true);
 		}
 		for (String fileName : posTagger.getCorpus().getTestLabeledData()){
 			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
@@ -41,7 +41,7 @@ public class RunPosTagger {
 
 	public static void main(String[] args) throws IOException{
 		
-		RunPosTagger.runner("resources/props/DeNerKonvTagger.xml");
+		RunPosTagger.runner("resources/props/DeUniPosTagger.xml");
 		
 	}
 }

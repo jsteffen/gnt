@@ -3,7 +3,7 @@ For GNTrainer:
 - set corpus as argument and pass further to relevant calls, so that Corpus object is not done by others
 -> DONE
 
-When done, adapt caller main.GNT
+When done, adapt caller main.GNT -> DONE
 
 Strip off .conll file extension from labeled files
 Strip off .src from source files
@@ -28,4 +28,4 @@ DENER: 		ok
 DEMORPH:	ok
 ENNER:		ok - using BILOU
 DENERKONV:	ok
-DEPOSMORPH:
+DEPOSMORPH:	ok
