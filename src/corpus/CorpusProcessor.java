@@ -12,8 +12,6 @@ import java.util.List;
 
 import data.ModelInfo;
 
-
-
 public class CorpusProcessor {
 
 	private Corpus corpus = null;
@@ -165,7 +163,8 @@ public class CorpusProcessor {
 
 	private String nerTokenToString(String[] tokenizedLine, int index) {
 		String output = "";
-		if (ModelInfo.taggerName.equals("NER"))
+		if (ModelInfo.taggerName.equals("NER")||
+				ModelInfo.taggerName.equals("ENNER"))
 			output = enNerTokenToString(tokenizedLine,index);
 		else
 			if (ModelInfo.taggerName.equals("DENER"))
@@ -237,21 +236,6 @@ public class CorpusProcessor {
 			}
 		}	
 	}
-
-	// A simple main caller 
-	//	public void processConllFiles() throws IOException{
-	//		Set<String> posTaggerSet = new HashSet<String>(
-	//				Arrays.asList("POS", "DEPOS", "DEPOSMORPH", "DEMORPH", "DENERKONV", "NERBILOU", "DENERBILOU", "DENERKONVBILOU"));
-	//		Set<String> nerTaggerSet = new HashSet<String>(
-	//				Arrays.asList("NER", "DENER" ));
-	//		if (posTaggerSet.contains(taggerName))
-	//			this.transcodeConllToSentenceFiles();
-	//		else
-	//			if (nerTaggerSet.contains(taggerName)){
-	//				this.transcodeSourceFileToProperConllFormatFiles();
-	//				this.transcodeConllToSentenceFiles();
-	//			}
-	//	}
 
 	public void processConllFiles() throws IOException{
 		this.transcodeSourceFileToProperConllFormatFiles();

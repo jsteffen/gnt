@@ -14,7 +14,7 @@ to create unlabeled data from labeled data
 -> trainer.GNTrainer.GNTrainer(ModelInfo, GNTProperties)
 -> DONE
 
-hard-wirded tagger names in corpus.CorpusProcessor.nerTokenToString(String[], int)
+hard-wired tagger names in corpus.CorpusProcessor.nerTokenToString(String[], int)
 
 Call of trainer and tagger only depends now on config file
 -> make simpler call, e.g., only define config files, and then call them
@@ -26,7 +26,6 @@ ENPOS: 		ok
 DEPOS: 		ok
 DENER: 		ok
 DEMORPH:	ok
-ENNER:
+ENNER:		ok - using BILOU
+DENERKONV:	ok
 DEPOSMORPH:
-DENERKONV:
-ENNERBILOU:

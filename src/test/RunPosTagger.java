@@ -14,10 +14,7 @@ import data.ModelInfo;
  *
  */
 public class RunPosTagger {
-
-	public static void main(String[] args) throws IOException{
-		String configFileName = "resources/props/DeMorphTagger.xml";
-		
+	public static void runner(String configFileName) throws IOException{
 		ModelInfo modelInfo = new ModelInfo();
 		GNTProperties props = new GNTProperties(configFileName);
 		GNTagger posTagger = new GNTagger(modelInfo, props);
@@ -40,5 +37,11 @@ public class RunPosTagger {
 			System.out.println("Create eval file: " + posTagger.getCorpus().makeEvalFileName(fileName));
 			evalFile.computeAccuracy(evalFileName, false);
 		}
+	}
+
+	public static void main(String[] args) throws IOException{
+		
+		RunPosTagger.runner("resources/props/DeNerKonvTagger.xml");
+		
 	}
 }

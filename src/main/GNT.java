@@ -4,10 +4,11 @@ import java.io.IOException;
 
 import corpus.EvalConllFile;
 import tagger.GNTagger;
+import test.RunPosTagger;
+import test.TrainPosTagger;
 import trainer.GNTrainer;
 import data.Alphabet;
 import data.ModelInfo;
-import features.WordFeatures;
 
 /**
  * The main calls for training and tagging and testing with GNTagger
@@ -20,13 +21,15 @@ import features.WordFeatures;
 /*
  * arguments:
  * 
+ * -mode train|test -config <configFile>|
  * -mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> 
- * \ -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T -f <filename> -c <fileName>
+ * \ -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T -f <filename> -c <fileName>|
  * -mode test -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> 
  * \ -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -f <filename test> -e <evalFileName>
  */
 public class GNT {
 	private String mode = "train";
+	private String config = "";
 	private String taggerName = "POS";
 	private String windowSize = "2";
 	private String dimension = "50";
@@ -41,6 +44,8 @@ public class GNT {
 	}
 
 	private void errorMessageAndExit(){
+		System.err.println("-mode train|test -config <configFile.xml>"
+				+ "\nor ...");
 		System.err.println("-mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> "
 				+ "-m <model info type> "
 				+ "-wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T"
@@ -82,6 +87,7 @@ public class GNT {
 		for (int i=0; i < args.length;i++){
 			switch (args[i]){
 			case "-mode" 	: this.mode = args[i+1]; break;
+			case "-config"	: this.mode = args[i+1]; break;
 			case "-tagger" 	: this.taggerName = args[i+1]; break;
 			case "-w" 		: this.windowSize= args[i+1]; break;
 			case "-d" 		: this.dimension= args[i+1]; break;
@@ -141,29 +147,32 @@ public class GNT {
 		String output = "";
 
 		output += " -mode "+ this.mode ;
-		output += " -tagger "+ this.taggerName;
-		output += " -w "+ this.windowSize ;
-		output += " -d "+ this.dimension ;
-		output += " -s "+ this.sentences ;
-		output += " -m "+ this.modelInfoType ;
-		output += " -wordFeats "+ ((Alphabet.withWordFeats)?"T":"F");
-		output += " -shapeFeats "+ ((Alphabet.withShapeFeats)?"T":"F");
-		output += " -suffixFeats "+ ((Alphabet.withSuffixFeats)?"T":"F");
-		output += " -clusterFeats "+ ((Alphabet.withClusterFeats)?"T":"F");
-		output += " -f "+ this.inFile ;
-		output += " -mif "+ ((ModelInfo.saveModelInputFile)?"T":"F");
-		if (this.mode.equalsIgnoreCase("train"))
-			output += " -c "+ this.clusterIDfile;
-		if (this.mode.equalsIgnoreCase("test"))
-			output += " -e "+ this.outFile ;
-		
+		if (!this.config.isEmpty()){
+			output += " -config "+ this.config ;
+		}
+		else
+		{
+			output += " -tagger "+ this.taggerName;
+			output += " -w "+ this.windowSize ;
+			output += " -d "+ this.dimension ;
+			output += " -s "+ this.sentences ;
+			output += " -m "+ this.modelInfoType ;
+			output += " -wordFeats "+ ((Alphabet.withWordFeats)?"T":"F");
+			output += " -shapeFeats "+ ((Alphabet.withShapeFeats)?"T":"F");
+			output += " -suffixFeats "+ ((Alphabet.withSuffixFeats)?"T":"F");
+			output += " -clusterFeats "+ ((Alphabet.withClusterFeats)?"T":"F");
+			output += " -f "+ this.inFile ;
+			output += " -mif "+ ((ModelInfo.saveModelInputFile)?"T":"F");
+			if (this.mode.equalsIgnoreCase("train"))
+				output += " -c "+ this.clusterIDfile;
+			if (this.mode.equalsIgnoreCase("test"))
+				output += " -e "+ this.outFile ;
+		}
+
 		return output;
 
 	}
-	private void runGNTrainer(String[] args) throws IOException {
-		System.out.println("Run GNTrainer: ");
-		System.out.println(this.toString());
-
+	private void runGNTrainerInner(String[] args) throws IOException	{
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
 		modelInfo.setTaggerName(taggerName);
 
@@ -179,10 +188,7 @@ public class GNT {
 
 	}
 
-	private void runGNTagger(String[] args) throws IOException {
-		System.out.println("Run GNTagger: ");
-		System.out.println(this.toString());
-
+	private void runGNTaggerInner(String[] args) throws IOException	{
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
 		modelInfo.setTaggerName(taggerName);
 
@@ -202,6 +208,25 @@ public class GNT {
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile, -1);
 		System.out.println("Create eval file: " + this.outFile);
 		evalFile.computeAccuracy(this.outFile, false);
+	}
+
+	private void runGNTrainer(String[] args) throws IOException {
+		System.out.println("Run GNTrainer: ");
+		System.out.println(this.toString());
+		if (!this.config.isEmpty())
+			TrainPosTagger.trainer(this.config);
+		else
+			this.runGNTrainerInner(args);
+	}
+
+	private void runGNTagger(String[] args) throws IOException {
+		System.out.println("Run GNTagger: ");
+		System.out.println(this.toString());
+	
+		if (!this.config.isEmpty())
+			RunPosTagger.runner(this.config);
+		else
+			this.runGNTaggerInner(args);
 	}
 
 	public static void main(String[] args) throws IOException{

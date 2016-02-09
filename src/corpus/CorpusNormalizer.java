@@ -36,12 +36,12 @@ import java.nio.file.Files;
  * - read 
  */
 public class CorpusNormalizer {
-	private Corpus1 corpus = null;
+	private Corpus corpus = null;
 
-	public Corpus1 getCorpus() {
+	public Corpus getCorpus() {
 		return corpus;
 	}
-	public void setCorpus(Corpus1 corpus) {
+	public void setCorpus(Corpus corpus) {
 		this.corpus = corpus;
 	}
 	
