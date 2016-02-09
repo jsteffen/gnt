@@ -10,6 +10,7 @@ public class TrainPosTagger {
 
 	public static void trainer(String configFileName) throws IOException{
 		ModelInfo modelInfo = new ModelInfo();
+
 		GNTProperties props = new GNTProperties(configFileName);
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, props);
 		gnTrainer.gntTrainingWithDimensionFromConllFile(
@@ -17,7 +18,7 @@ public class TrainPosTagger {
 	}
 
 	public static void main(String[] args) throws IOException{
-		TrainPosTagger.trainer("resources/props/DePosMorphTagger.xml");
+		TrainPosTagger.trainer("resources/props/EnPosTagger.xml");
 	}
 
 }

@@ -193,16 +193,16 @@ public class CorpusNormalizer {
 		this.normalizeUnLabeledFilesFromCorpus();		
 	}
 
-	public void normalizeAlltaggerNameCorpora() throws IOException{
-		for (String taggerName : Corpus1.knownTaggerNames){
-			this.setCorpus(new Corpus1(taggerName));
-			this.normalizeCorpus();
-		}
-	}
-
-	public static void main(String[] args) throws IOException {
-		CorpusNormalizer normalizer = new CorpusNormalizer();
-		normalizer.normalizeAlltaggerNameCorpora();
-
-	}
+//	public void normalizeAlltaggerNameCorpora() throws IOException{
+//		for (String taggerName : Corpus1.knownTaggerNames){
+//			this.setCorpus(new Corpus1(taggerName));
+//			this.normalizeCorpus();
+//		}
+//	}
+//
+//	public static void main(String[] args) throws IOException {
+//		CorpusNormalizer normalizer = new CorpusNormalizer();
+//		normalizer.normalizeAlltaggerNameCorpora();
+//
+//	}
 }

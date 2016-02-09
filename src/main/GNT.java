@@ -30,11 +30,11 @@ import data.ModelInfo;
 public class GNT {
 	private String mode = "train";
 	private String config = "";
-	private String taggerName = "POS";
+	private String taggerName = "ENPOS";
 	private String windowSize = "2";
-	private String dimension = "50";
+	private String dimension = "0";
 	private String sentences = "-1";
-	private String modelInfoType = "GNT";
+	private String modelInfoType = "MDP";
 	private String inFile = "";
 	private String clusterIDfile = "";
 	private String outFile = "";
@@ -67,15 +67,15 @@ public class GNT {
 
 	private void setDefaultValues(){
 		mode = "train";
-		taggerName = "POS";
+		taggerName = "ENPOS";
 		windowSize = "2";
-		dimension = "500";
+		dimension = "0";
 		sentences = "-1";
-		modelInfoType = "FLORS";
+		modelInfoType = "MDP";
 		inFile = "";
 		clusterIDfile = "/Users/gune00/data/Marmot/Word/en_marlin_cluster_1000";
 		outFile = "";
-		Alphabet.withWordFeats = true;
+		Alphabet.withWordFeats = false;
 		Alphabet.withShapeFeats = true;
 		Alphabet.withSuffixFeats = true;
 		Alphabet.withClusterFeats = true;
@@ -87,7 +87,7 @@ public class GNT {
 		for (int i=0; i < args.length;i++){
 			switch (args[i]){
 			case "-mode" 	: this.mode = args[i+1]; break;
-			case "-config"	: this.mode = args[i+1]; break;
+			case "-config"	: this.config = args[i+1]; break;
 			case "-tagger" 	: this.taggerName = args[i+1]; break;
 			case "-w" 		: this.windowSize= args[i+1]; break;
 			case "-d" 		: this.dimension= args[i+1]; break;

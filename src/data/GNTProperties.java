@@ -58,7 +58,8 @@ public class GNTProperties extends Properties {
 		Alphabet.withClusterFeats = Boolean.parseBoolean(this.getProperty("withClusterFeats"));
 
 		WordSuffixFeatureFactory.ngram = Boolean.parseBoolean(this.getProperty("WordSuffixFeatureFactory.ngram"));
-		WordSuffixFeatureFactory.ngramSize = Integer.parseInt(this.getProperty("WordSuffixFeatureFactory.ngramSize"));
+		if (this.getProperty("WordSuffixFeatureFactory.ngramSize") != null)
+			WordSuffixFeatureFactory.ngramSize = Integer.parseInt(this.getProperty("WordSuffixFeatureFactory.ngramSize"));
 	}
 
 	private void setDataAccessors(){
@@ -82,11 +83,11 @@ public class GNTProperties extends Properties {
 	public boolean getDebugProperty(){
 		return Boolean.parseBoolean(this.getProperty("debug"));
 	}
-	
+
 	public String getTrainingFile(){
 		return this.getProperty("trainingFile").split(".conll")[0].replaceAll("[\n\r\t]", "");
 	}
-	
+
 	public String getClusterIdNameFile(){
 		return this.getProperty("clusterIdSourceFileName".replaceAll("[\n\r\t]", ""));
 	}
