@@ -97,10 +97,10 @@ public class GNTrainer {
 
 		System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + taggerName);
 
-		this.createWordVectors(taggerName, dim);
-		this.createShapeFeatures(taggerName, trainingFileName);
-		this.createSuffixFeatures(taggerName, trainingFileName);
-		this.createClusterFeatures(taggerName, clusterIdSourceFileName);
+		if (Alphabet.withWordFeats) this.createWordVectors(taggerName, dim);
+		if (Alphabet.withShapeFeats) this.createShapeFeatures(taggerName, trainingFileName);
+		if (Alphabet.withShapeFeats)this.createSuffixFeatures(taggerName, trainingFileName);
+		if (Alphabet.withClusterFeats) this.createClusterFeatures(taggerName, clusterIdSourceFileName);
 
 	}
 

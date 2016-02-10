@@ -62,7 +62,7 @@
 	</entry>
 
 	<!-- Cluster file -->
-	<entry key="clusterIdSourceFileName">/Users/gune00/data/Marmot/Word/de_marlin_cluster_1000</entry>
+	<entry key="clusterIdSourceFileName">resources/cluster/marmot/de_marlin_cluster_1000</entry>
 
 	<!-- Training file -->
 	<!-- it is redundant, because also set in trainingLabeledData; however, 
