@@ -10,7 +10,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -29,7 +28,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>main.GNT</mainClass>
+							<mainClass>caller.GNT</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

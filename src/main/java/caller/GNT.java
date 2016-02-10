@@ -1,11 +1,9 @@
-package main;
+package caller;
 
 import java.io.IOException;
 
 import corpus.EvalConllFile;
 import tagger.GNTagger;
-import test.RunPosTagger;
-import test.TrainPosTagger;
 import trainer.GNTrainer;
 import data.Alphabet;
 import data.ModelInfo;

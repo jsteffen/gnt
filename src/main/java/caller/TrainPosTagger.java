@@ -1,4 +1,4 @@
-package test;
+package caller;
 
 import java.io.IOException;
 
@@ -16,9 +16,4 @@ public class TrainPosTagger {
 		gnTrainer.gntTrainingWithDimensionFromConllFile(
 				props.getTrainingFile(), props.getClusterIdNameFile(), ModelInfo.dim, ModelInfo.numberOfSentences);
 	}
-
-	public static void main(String[] args) throws IOException{
-		TrainPosTagger.trainer("resources/props/DeNerKonvTagger.xml");
-	}
-
 }

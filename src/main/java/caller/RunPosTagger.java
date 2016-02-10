@@ -1,4 +1,4 @@
-package test;
+package caller;
 
 import java.io.IOException;
 
@@ -37,11 +37,5 @@ public class RunPosTagger {
 			System.out.println("Create eval file: " + posTagger.getCorpus().makeEvalFileName(fileName));
 			evalFile.computeAccuracy(evalFileName, false);
 		}
-	}
-
-	public static void main(String[] args) throws IOException{
-		
-		RunPosTagger.runner("resources/props/DeNerKonvTagger.xml");
-		
 	}
 }

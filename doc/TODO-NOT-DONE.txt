@@ -1,8 +1,7 @@
 HIERIX: January 2016
 
-- store model file also under taggerName feature dir
 
-- check tokenisation of clusters for Marlion ! and the way I do it
+- check tokenisation of clusters for Marlin ! and the way I do it
 	- eventually tokenize again
 
 - check to normalize/scale each component vector
@@ -12,10 +11,6 @@ HIERIX: January 2016
 		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
 	-> try it on relevant component feature!
 -> UNDERSTAND, why not necessary !
-
-- Interface to TORCH should be quite easy now
-
-- Try out POS+MORPH for other languages
 
 - Cluster from Jon Dehardy - clusterCat
 	- run on source text on clusterCat and Marlin
@@ -103,6 +98,9 @@ For software package:
 - add FLORS accuracy to evaluation script
 - create input file for TORCH
 - generated compressed folder of all data that is necessary for tagging
+	- store model file also under taggerName feature dir
+	- then compress model file and feature files -> very useful !
+	
 - define feature instances ala ClearNLP via XML
 -> how to integrate feature extraction approach dynamically ?
 
