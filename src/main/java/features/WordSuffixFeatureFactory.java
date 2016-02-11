@@ -164,7 +164,6 @@ public class WordSuffixFeatureFactory {
 				updateSuffixTable(suffix, i);
 		}
 	}
-	
 
 	// ************************** Inserting or Updating extracted suffix/ngram **************************
 	
@@ -205,10 +204,10 @@ public class WordSuffixFeatureFactory {
 	private boolean isNonWord(String token){
 		return (
 				false
-				//(token.length() > 3)
-				// hasLastNonLetter(token)
-				//				|| hasOnlyNonLetters(token) 
-				//				|| isNumber(token)
+//				(token.length() < 3) ||
+//				 hasLastNonLetter(token)
+//								|| hasOnlyNonLetters(token) 
+//								|| isNumber(token)
 				);
 	}
 
@@ -234,7 +233,6 @@ public class WordSuffixFeatureFactory {
 				computeNgramsAndStore(word);
 			else{
 				computeSuffixesAndStore(word);
-				//computeNgramsAndStore(word);
 			}
 			}
 	}
@@ -343,5 +341,23 @@ public class WordSuffixFeatureFactory {
 		System.out.println("Reading suffix list from: " + suffixFileName);
 		this.readSuffixFile(suffixFileName);
 		System.out.println("... done");
+	}
+	
+	
+	private void computeSuffixesTest(String word) {
+		System.out.println("Word: " + word);
+		// Smallest suffix is just last character of a word
+		for (int i = 0; i < word.length(); i++){
+			String suffix = word.substring(i);
+			System.out.println("Suff: " + suffix);
+			String prefix = word.substring(0,i+1);
+			System.out.println("Pref : " + prefix);
+		}
+	}
+	public static void main(String[] args) throws IOException{
+		WordSuffixFeatureFactory wsf = new WordSuffixFeatureFactory();
+		
+		wsf.computeSuffixesTest("Hausmann");
+		
 	}
 }

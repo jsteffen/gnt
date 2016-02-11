@@ -1,0 +1,106 @@
+Application on Twitter data for German:
+
+FEB, 2016
+
+training with twitter corpus:
+_____________________________
+++++
+Do testing from file: resources/data/twitter/twitter.gold.dev.conll
+System time (msec): 287
+Sentences: 500
+Testing instances: 7218
+Sentences/sec: 1742
+Words/sec: 25149
+Create eval file: resources/eval/twitter.gold.dev.txt
+All pos: 7218 Correct: 5898 Accuracy: 81,71%
+All OOV pos: 2951 Correct: 2003 Accuracy: 67,88%
+All InV pos: 4267 Correct: 3895 Accuracy: 91,28%
+
+++++
+Do testing from file: resources/data/twitter/twitter.gold.test.conll
+Unknown signature: 0101000000000000
+Word: Feuerwehrmann/-frau at loc: 0: unknown signature!
+Unknown signature: 0101000000000000
+Word: Feuerwehrmann/-frau at loc: 0: unknown signature!
+Unknown signature: 0101000000000000
+Word: Feuerwehrmann/-frau at loc: 0: unknown signature!
+System time (msec): 144
+Sentences: 506
+Testing instances: 7404
+Sentences/sec: 3513
+Words/sec: 51416
+Create eval file: resources/eval/twitter.gold.test.txt
+All pos: 7404 Correct: 6009 Accuracy: 81,16%
+All OOV pos: 2998 Correct: 2009 Accuracy: 67,01%
+All InV pos: 4406 Correct: 4000 Accuracy: 90,79%
+	
+training with tigger-2 corpus:
+_____________________________
+
+Adding twitter dev and test to DePos ! Does not effect DePos tagging result !
+
+++++
+Do testing from file: resources/data/twitter/twitter.gold.dev.conll
+System time (msec): 136
+Sentences: 500
+Testing instances: 7218
+Sentences/sec: 3676
+Words/sec: 53073
+Create eval file: resources/eval/twitter.gold.dev.txt
+All pos: 7218 Correct: 5573 Accuracy: 77,21%
+All OOV pos: 2126 Correct: 914 Accuracy: 42,99%
+All InV pos: 5092 Correct: 4659 Accuracy: 91,50%
+
+++++
+Do testing from file: resources/data/twitter/twitter.gold.test.conll
+System time (msec): 117
+Sentences: 506
+Testing instances: 7404
+Sentences/sec: 4324
+Words/sec: 63282
+Create eval file: resources/eval/twitter.gold.test.txt
+All pos: 7404 Correct: 5809 Accuracy: 78,46%
+All OOV pos: 2068 Correct: 869 Accuracy: 42,02%
+All InV pos: 5336 Correct: 4940 Accuracy: 92,58%
+
+with post processing
+********************
+
+++++
+Do testing from file: resources/data/twitter/twitter.gold.dev.conll
+System time (msec): 131
+Sentences: 500
+Testing instances: 7218
+Sentences/sec: 3816
+Words/sec: 55099
+Create eval file: resources/eval/twitter.gold.dev.txt
+All pos: 7218 Correct: 6133 Accuracy: 84,97%
+All OOV pos: 2126 Correct: 1474 Accuracy: 69,33%
+All InV pos: 5092 Correct: 4659 Accuracy: 91,50%
+
+++++
+Do testing from file: resources/data/twitter/twitter.gold.test.conll
+System time (msec): 126
+Sentences: 506
+Testing instances: 7404
+Sentences/sec: 4015
+Words/sec: 58761
+Create eval file: resources/eval/twitter.gold.test.txt
+All pos: 7404 Correct: 6399 Accuracy: 86,43%
+All OOV pos: 2068 Correct: 1459 Accuracy: 70,55%
+All InV pos: 5336 Correct: 4940 Accuracy: 92,58%
+
+Post processing approach:
+************************
+
+- 	change predicted label to one of the twitter specific labels by 
+	post processing the word and its specific shape
+
+- Improve:
+	- define better regular expressions
+	- problematic case is HASH, because often HASH-tags are tagged as NN/NE
+	
+- tokenization - how ?
+- NER
+	
+	

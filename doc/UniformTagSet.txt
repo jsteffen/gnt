@@ -20,6 +20,8 @@ FEB, 2016:
 - Describe a script so that all languages can be processed!
 - Organize cluster files.
 
+- when running on unix: copy treebank files
+
 Initial tests
 **************
 

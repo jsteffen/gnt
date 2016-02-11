@@ -102,3 +102,12 @@ January, 2016:
 
 - collect all tagger specific feature files under directory named by taggerName	
 
+11. FEB, 2016
+
+- labeled: I have the twitter data from Ines Rehbein
+	- XML format stehen in data/twitter_gold
+-> mapped to CONLL
+
+-> defined property file; 
+-> defined PosProcessor ala Zesch et al
+	not yet complete

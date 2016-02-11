@@ -212,7 +212,7 @@ public class GNT {
 		System.out.println("Run GNTrainer: ");
 		System.out.println(this.toString());
 		if (!this.config.isEmpty())
-			TrainPosTagger.trainer(this.config);
+			TrainTagger.trainer(this.config);
 		else
 			this.runGNTrainerInner(args);
 	}
@@ -222,7 +222,7 @@ public class GNT {
 		System.out.println(this.toString());
 	
 		if (!this.config.isEmpty())
-			RunPosTagger.runner(this.config);
+			RunTagger.runner(this.config);
 		else
 			this.runGNTaggerInner(args);
 	}

@@ -83,7 +83,7 @@ public class GNTagger {
 	// Init
 	public GNTagger(){
 	}
-	
+
 	public GNTagger(ModelInfo modelInfo) {
 		this.setModelInfo(modelInfo);
 		this.setData(new Data(modelInfo.getTaggerName()));
@@ -135,6 +135,8 @@ public class GNTagger {
 		System.out.println("System time (msec): " + (time2-time1));
 		System.out.println(this.getModel().toString()+"\n");
 	}
+
+	
 
 	/**
 	 * The same as trainer.TrainerInMem.createWindowFramesFromSentence()!
@@ -250,46 +252,7 @@ public class GNTagger {
 		return output;
 
 	}
-
-	/**
-	 * For each internalized conll sentence:
-	 * - compute window frames
-	 * - fill windows using train=false mode
-	 * - construct problem and call predictor
-	 * - reset instance variable of data object, because predictor is called directly on windows of sentences
-	 * @param conllReader
-	 * @param max
-	 * @throws IOException
-	 */
-	private void tagSentencesFromConllReader(BufferedReader conllReader, int max) throws IOException{
-		String line = "";
-		List<String[]> tokens = new ArrayList<String[]>();
-
-		while ((line = conllReader.readLine()) != null) {
-			if (line.isEmpty()) {
-				// Stop if max sentences have been processed
-				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
-
-				// create internal sentence object and label maps
-				// I use this here although labels will be later overwritten 
-				// - but can use it in eval modus as well
-				data.generateSentenceObjectFromConllLabeledSentence(tokens);
-
-				// tag sentence object
-				this.tagSentenceObject();
-
-				// reset tokens
-				tokens = new ArrayList<String[]>();
-			}
-			else {
-				String[] tokenizedLine = line.split("\t");
-				tokens.add(tokenizedLine);
-			}
-		}
-		conllReader.close();
-	}
-
-
+	
 	private void tagAndWriteSentencesFromConllReader(BufferedReader conllReader, BufferedWriter conllWriter, int max) throws IOException{
 		String line = "";
 		List<String[]> tokens = new ArrayList<String[]>();
@@ -330,8 +293,14 @@ public class GNTagger {
 		for (int i=0; i < tokens.size(); i++){
 			String[] token = tokens.get(i);
 			String label = this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
+
+			String word = token[Data.wordFormIndex];
+
+			label = PostProcessor.determineTwitterLabel(word, label);
+
+
 			String newConllToken=token[0]+" "
-					+token[Data.wordFormIndex]+" "
+					+word+" "
 					+token[Data.posTagIndex]+" "
 					+label
 					+"\n";
@@ -339,31 +308,6 @@ public class GNTagger {
 			conllWriter.write(newConllToken);
 		}
 		conllWriter.write("\n");
-	}
-
-	// TODO NOT USED
-	private void tagFromConllDevelFile(String sourceFileName, int max)
-			throws IOException {
-		long time1;
-		long time2;
-
-		BufferedReader conllReader = new BufferedReader(
-				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
-		boolean train = false;
-		boolean adjust = true;
-
-		System.out.println("Do testing from file: " + sourceFileName);
-		System.out.println("Train?: " + train + " Adjust?: " + adjust + "\n");
-		System.out.println("Offsets: " + this.getOffSets().toString());
-		System.out.println(this.getModel().toString());
-
-		time1 = System.currentTimeMillis();
-		this.tagSentencesFromConllReader(conllReader, max);
-		time2 = System.currentTimeMillis();
-		System.out.println("System time (msec): " + (time2-time1));
-
-		System.out.println("Sentences: " + this.getData().getSentenceCnt());
-		System.out.println("Testing instances: " + Window.windowCnt);
 	}
 
 	// This is the current main caller for the GNTagger

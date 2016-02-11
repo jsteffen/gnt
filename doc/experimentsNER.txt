@@ -104,6 +104,7 @@ BILOU schema:
 - brings for EN about 1% F1, but for German it hurts
 
 I have additional NE-conll data
+	- improve training so that it can work with many files
 
 HIERIX:
 
@@ -113,6 +114,10 @@ NER lexicons:
 	- although I have word clusters, it might be too small
 	- so very large NE lists could make sense
 	- or retraining of Marmot cluster using own NER relevant data files
+
+HOW to add gazeetteers to GNT 
+	- as post processor
+	- e.g., correcting assign labels as in with twitter tags?
 
 
 

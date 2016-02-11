@@ -31,4 +31,14 @@ Normalization:
 	- creates sentence files from conll files and also creates proper conll files if necessary
 
 Both can be combined
+
+HIERIX, Feb, 2016:
+
+Twitter data:
+
+sources are: /Users/gune00/data/twitter_gold
+
+Mapper to Conll format: /GNT/src/main/java/corpus/TweetToConllMapper.java
+
+DONE
 	

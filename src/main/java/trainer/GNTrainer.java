@@ -91,19 +91,6 @@ public class GNTrainer {
 
 	// This is a method for on-demand creation of the feature files
 
-	private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim)
-			throws IOException{
-		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
-
-		System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + taggerName);
-
-		if (Alphabet.withWordFeats) this.createWordVectors(taggerName, dim);
-		if (Alphabet.withShapeFeats) this.createShapeFeatures(taggerName, trainingFileName);
-		if (Alphabet.withShapeFeats)this.createSuffixFeatures(taggerName, trainingFileName);
-		if (Alphabet.withClusterFeats) this.createClusterFeatures(taggerName, clusterIdSourceFileName);
-
-	}
-
 	private void createWordVectors(String taggerName, int dim) throws IOException{
 		if (dim > 0){
 			WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
@@ -125,9 +112,21 @@ public class GNTrainer {
 		WordClusterFeatureFactory wordClusterFactory = new WordClusterFeatureFactory();
 		wordClusterFactory.createAndSaveClusterIdFeature(taggerName, clusterIdSourceFileName);	
 	}
-
-
-
+	
+	// This is a method for on-demand creation of the feature files
+	
+	private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim)
+			throws IOException{
+		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
+	
+		System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + taggerName);
+	
+		if (Alphabet.withWordFeats) this.createWordVectors(taggerName, dim);
+		if (Alphabet.withShapeFeats) this.createShapeFeatures(taggerName, trainingFileName);
+		if (Alphabet.withShapeFeats)this.createSuffixFeatures(taggerName, trainingFileName);
+		if (Alphabet.withClusterFeats) this.createClusterFeatures(taggerName, clusterIdSourceFileName);
+	
+	}
 	private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
 		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
 

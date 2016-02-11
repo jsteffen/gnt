@@ -3,7 +3,7 @@
 <properties version="1.0">
 
 	<!-- Tagger name -->
-	<entry key="taggerName">DEPOS</entry>
+	<entry key="taggerName">DETWEETPOS</entry>
 
 	<!-- Saves the vector features of the training instances into a input file 
 		for liblinear C implementation; if set to true, then no training will be 
@@ -40,28 +40,24 @@
 
 	<!-- CORPUS parameters - labeled data -->
 	<entry key="trainingLabeledData">
-		resources/data/german/tiger2_train.conll
+		resources/data/twitter/twitter.gold.train.conll
 	</entry>
 	<entry key="devLabeledData">
-		resources/data/german/tiger2_devel.conll,
 		resources/data/twitter/twitter.gold.dev.conll
 	</entry>
 	<entry key="testLabeledData">
-		resources/data/german/tiger2_test.conll,
 		resources/data/twitter/twitter.gold.test.conll
 	</entry>
 
 	<!-- CORPUS parameters - unlabeled data -->
 	<entry key="trainingUnLabeledData">
-		resources/data/german/tiger2_train-sents.txt
+		resources/data/twitter/twitter.gold.train-sents.txt
 	</entry>
 	<entry key="devUnLabeledData">
-		resources/data/german/tiger2_devel-sents.txt,
 		resources/data/twitter/twitter.gold.dev-sents.txt,
 		resources/data/german/unlab/de-wikidump-sents500000.txt
 	</entry>
 	<entry key="testUnLabeledData">
-		resources/data/german/tiger2_test-sents.txt,
 		resources/data/twitter/twitter.gold.test-sents.txt
 	</entry>
 
@@ -72,7 +68,7 @@
 	<!-- it is redundant, because also set in trainingLabeledData; however, 
 		there as a list of training files, which is actually currently not supported 
 		when calling the GNTrainer and GNTtagger -->
-	<entry key="trainingFile">resources/data/german/tiger2_train.conll
+	<entry key="trainingFile">resources/data/twitter/twitter.gold.train.conll
 	</entry>
 
 </properties>

@@ -267,8 +267,8 @@ public class WordFeatures {
 		else
 		{
 			// we have an unknown word with no cluster Id,
-			// which basically means that shape-size() will remain 0
-			// It should not happen ! 
+			// This should not happen, because unknown words are matched to <RARE> dummy word, if
+			// not found
 			System.err.println("Word: " + word + ": unknown clusterID!");
 		}
 		// should be always 1

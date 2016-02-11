@@ -13,7 +13,7 @@ import data.ModelInfo;
  * @author gune00
  *
  */
-public class RunPosTagger {
+public class RunTagger {
 	public static void runner(String configFileName) throws IOException{
 		ModelInfo modelInfo = new ModelInfo();
 		GNTProperties props = new GNTProperties(configFileName);

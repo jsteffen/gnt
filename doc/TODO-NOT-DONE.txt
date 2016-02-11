@@ -1,9 +1,5 @@
 HIERIX: January 2016
 
-
-- check tokenisation of clusters for Marlin ! and the way I do it
-	- eventually tokenize again
-
 - check to normalize/scale each component vector
 	to unit length (compute length of vector, and then divide each component)
 	I think I forgot it 
@@ -12,19 +8,12 @@ HIERIX: January 2016
 	-> try it on relevant component feature!
 -> UNDERSTAND, why not necessary !
 
+- define standalone taggers
+	- take care of tokenization
+
 - Cluster from Jon Dehardy - clusterCat
-	- run on source text on clusterCat and Marlin
-	- use same parameters
-		- number of cluster, frequency threshold, iterations
-	- difference between clusterCat and Marlin:
-		clusterCat uses "leftWord word rightWord bigrams" (similar to word clusters in GNT)
-		Marlin uses "leftWord leftWord word" trigrams
-	- Jon proposed to use clusters and cluster size as additional feature
-
-
-- labeled: I have the twitter data from Ines Rehbein
-	- XML format stehen in data/twitter_gold
-	-> müssen noch nach CONLL transformiert werden
+	
+- approximate matching for unknown words when looking up cluster map
 
 - Other corpora for DE-POS and DE-NER
 	- Unlabeled Mannheim, google books, ...
@@ -43,11 +32,8 @@ HIERIX: January 2016
 
 - Use previous predicted tag as feature for POS/NER
 
-- Generalisation:
-	- filter out low frequencies of terms/suffixes
-	
 - Use of gazetteers:
-	- instead of using it as feature, use it as pre/postfilter
+	- instead of using it as feature, use it as postfilter as part of tagger.PostProcessor.java
 	- use nemexa for exact match
 	- learn to obtain optimal threshold for nemexf via regression analysis on training analysis
 	- get NEs also from Wikidata
@@ -56,8 +42,6 @@ HIERIX: January 2016
 		NE classes, e.g., cluserID 417 seems to cover first names
 		define them as additional dictionaries and insert them when reading in clusterIds
 		
-
-
 - run GNT with suffix AND ngram by concatenating both into one file
 	- DONE -> errors when concatenation -> I forgot to sort again after adding indices in 
 		features.WordSuffixFeatureFactory.getAllKnownSubstringsForWord(String)

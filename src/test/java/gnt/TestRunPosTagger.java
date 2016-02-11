@@ -2,12 +2,12 @@ package gnt;
 
 import java.io.IOException;
 
-import caller.RunPosTagger;
+import caller.RunTagger;
 
 public class TestRunPosTagger {
 
 	public static void main(String[] args) throws IOException{
 		
-		RunPosTagger.runner("src/main/resources/props/FrUniPosTagger.xml");		
+		RunTagger.runner("src/main/resources/props/DePosTagger.xml");		
 	}
 }

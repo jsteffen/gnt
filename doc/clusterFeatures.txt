@@ -46,3 +46,27 @@ This set of classes seems to be all that have to be changed/adapted when a new f
 -> First tests: worked! and shows improvement for NER of about 4,8% F1
 
 Try them with POS tagger as well -> OK, brings improvements
+
+*************
+Feb, 2016:
+
+About unknown words:
+
+- All words not member of the clusterId-Map are mapped to dummy word <RARE>.
+- Words in the clusterId-Map are NOT lower-cased; only normalization is done by mapping digits to 0
+- Currently, no tokenization is performed, because implicitly used via the labeled treebanks
+- If I have free text, then tokenization must be done with tokenizer that is also used for creating word clusters
+- OR tokenization-inconsistent words will be treated as <RARE>
+- SPELLING variation also can not be handled, because we perform exact match with clusterId-Map
+
+
+HIERIX:
+
+- Cluster from Jon Dehardy - clusterCat
+	- run on source text on clusterCat and Marlin
+	- use same parameters
+		- number of cluster, frequency threshold, iterations
+	- difference between clusterCat and Marlin:
+		clusterCat uses "leftWord word rightWord bigrams" (similar to word clusters in GNT)
+		Marlin uses "leftWord leftWord word" trigrams
+	- Jon proposed to use clusters and cluster size as additional feature

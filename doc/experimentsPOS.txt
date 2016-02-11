@@ -13,7 +13,6 @@ Current results:
 - DE - error rate: 2,70 % DE test; best reported: 2,56% (97,44%) or 2,27% (97,73%)
 	Acc=97,30%, OOV=91,76%
 	Training = 97952 msec (1,67 minutes)
-	
 
 Possible parameters for experiments:
 
@@ -67,7 +66,5 @@ normalization
 	- open/closed tag classes
 	- Schnabel&Schütze 2013: future work to find domain-specific computation of word-length threshold
 		(what is a domain specific good "long word")
-		
-- Mit Philip: twitter corpus fuer deutsch
 
-- Apply on uniform tagset 
+

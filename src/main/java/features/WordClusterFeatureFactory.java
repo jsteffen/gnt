@@ -28,20 +28,12 @@ import java.util.Map;
  */
 public class WordClusterFeatureFactory {
 	// store mapping of clusterID to liblinear indexing
-//	private Map<String, Integer> clusterId2num = new HashMap<String, Integer>();
+	//	private Map<String, Integer> clusterId2num = new HashMap<String, Integer>();
 	// Store resulting word2liblinear index map
 	// store words to clusterId mapping as provided by Marmot tool!
 	private Map<String,Integer> word2index = new HashMap<String,Integer>();
 	private int clusterIdcnt = 0;
 
-	// Getters and setters
-
-//	public Map<String, Integer> getClusterId2num() {
-//		return clusterId2num;
-//	}
-//	public void setClusterId2num(Map<String, Integer> clusterId2num) {
-//		this.clusterId2num = clusterId2num;
-//	}
 	public Map<String, Integer> getWord2index() {
 		return word2index;
 	}
@@ -67,7 +59,7 @@ public class WordClusterFeatureFactory {
 
 	/**
 	 * For CASE-SENSITIVE word, look it up in word2liblinear index;
-	 * If it exists, return index else return index of unknown word <RARE>|<Rare>
+	 * If it exists, return index else return index of unknown word <RARE>|<Rare>|<STOP>
 	 * @param word
 	 * @return
 	 */
@@ -75,17 +67,24 @@ public class WordClusterFeatureFactory {
 		String normalizedDigitString = word.replaceAll("\\d", "0");
 		if (this.getWord2index().containsKey(normalizedDigitString))
 			return this.getWord2index().get(normalizedDigitString);
-		else
+		else {
+			//System.out.println("Unknown cluster word: " + normalizedDigitString);
+			//
+			// Map unknown words to dummy word <RARE>
 			if (this.getWord2index().containsKey("<RARE>"))
 				return this.getWord2index().get("<RARE>");
 			else
 				if (this.getWord2index().containsKey("<Rare>"))
 					return this.getWord2index().get("<Rare>");
 				else
-				{
-					System.err.println("Word does not match with word2liblinear index: " + word);
-					return -1;
-				}
+					if (this.getWord2index().containsKey("<STOP>"))
+						return this.getWord2index().get("<STOP>");
+					else
+					{
+						System.err.println("Word does not match with word2liblinear index: " + word);
+						return -1;
+					}
+		}
 	}
 
 	public void createAndSaveClusterIdFeature(String taggerName, String clusterIDfileName){
@@ -106,19 +105,16 @@ public class WordClusterFeatureFactory {
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
 
-			// Each line consists of a sequence of words
+			// Each line consists of "word\tclusterId"
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if  ((max > 0) && (lineCnt >= max)) break;
 				lineCnt++;
-				// split off words -> it will be lower-cased as part of the process that computes the signatures
 				String[] entry = line.split("\t");
-				// then compute suffixes
 				computeWord2ClusterIdFromWords(entry[0], entry[1]);
 				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
 			}
 			reader.close();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
@@ -129,16 +125,6 @@ public class WordClusterFeatureFactory {
 		addNewWord2liblinearId(word, liblinearIndex);
 	}
 
-//	private Integer getLiblinearIndexOld(String clusterId) {
-//		if (!this.getClusterId2num().containsKey(clusterId)){
-//			clusterIdcnt++;
-//			getClusterId2num().put(clusterId, clusterIdcnt);
-//			return clusterIdcnt;
-//		}
-//		else
-//			return getClusterId2num().get(clusterId);
-//	}
-	
 	// This is to make sure that clusterId start from 1, because in Marlin they start from 0
 	// so they have to be adjusted
 	private Integer getLiblinearIndex(String clusterId) {
@@ -150,7 +136,7 @@ public class WordClusterFeatureFactory {
 			getWord2index().put(word, liblinearIndex);
 		}
 		else
-			System.err.println("Word " + word + " already in seen!");
+			System.err.println("Word " + word + " already seen!");
 	}
 
 	public void writeClusterIdFeatureFile(String targetFileName){
@@ -163,7 +149,6 @@ public class WordClusterFeatureFactory {
 				writer.write(word+"\t"+this.getWord2index().get(word)+"\n");
 			}
 			writer.close();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -181,7 +166,6 @@ public class WordClusterFeatureFactory {
 				this.getWord2index().put(entry[0], liblinearClusterId);
 			}
 			reader.close();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
