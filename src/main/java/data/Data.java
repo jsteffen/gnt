@@ -117,7 +117,7 @@ public class Data {
 	}
 	
 	/**
-	 * tokens are a list of words in form of strings.
+	 * tokens are a list of words in form of conll strings.
 	 * - the words are unlabeled
 	 * - No lower case here of word
 	 * - Using a dummy POS "UNK" encoded as -1
@@ -150,7 +150,8 @@ public class Data {
 			// NOTE: No lower case here of word
 			// Using a dummy POS -1
 			sentence.addNextToken(i,
-					updateWordMap(tokens[Data.wordFormIndex]), -1);
+					updateWordMap(tokens[i]), 
+					-1);
 		}
 		this.setSentence(sentence);
 		this.sentenceCnt++;

@@ -17,8 +17,6 @@ public class RunTaggerStandalone {
 
 		posTagger.tagUnlabeledTokens(tokens);
 		
-		// errors - returns only
-		// bin/VAFIN bin/VAFIN bin/VAFIN bin/VAFIN 
 		String taggedString = posTagger.taggedSentenceToString();
 		
 		System.out.println(taggedString);

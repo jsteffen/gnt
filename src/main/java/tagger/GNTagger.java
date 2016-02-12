@@ -212,7 +212,7 @@ public class GNTagger {
 
 		// create feature vector instance for each window frame and tag
 		this.constructProblemAndTag(false, true);
-
+		
 		// reset instances - need to do this here, because learner is called directly on windows
 		this.getData().cleanInstances();
 	}
@@ -227,10 +227,10 @@ public class GNTagger {
 
 		// create internal sentence object
 		this.getData().generateSentenceObjectFromUnlabeledTokens(tokens);
-
+		
 		// tag sentence object
 		this.tagSentenceObject();
-
+		
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1)+"\n");
 	}
@@ -243,9 +243,14 @@ public class GNTagger {
 		String output ="";
 		int mod = 10;
 		int cnt = 0;
-		for (int i=0; i < this.getData().getSentence().getWordArray().length;i++){
-			output += this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i])+"/"+
-					this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i])+" ";
+		Sentence sentence = this.getData().getSentence();
+		for (int i=0; i < sentence.getWordArray().length;i++){
+			String word = this.getData().getWordSet().getNum2label().get(sentence.getWordArray()[i]);
+			String label = this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
+			
+			label = PostProcessor.determineTwitterLabel(word, label);
+			
+			output += word+"/"+label+" ";
 			cnt++;
 			if ((cnt % mod)==0) output+="\n";
 		}

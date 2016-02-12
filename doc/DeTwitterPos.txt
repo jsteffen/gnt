@@ -68,27 +68,28 @@ with post processing
 
 ++++
 Do testing from file: resources/data/twitter/twitter.gold.dev.conll
-System time (msec): 131
+System time (msec): 147
 Sentences: 500
 Testing instances: 7218
-Sentences/sec: 3816
-Words/sec: 55099
+Sentences/sec: 3401
+Words/sec: 49102
 Create eval file: resources/eval/twitter.gold.dev.txt
-All pos: 7218 Correct: 6133 Accuracy: 84,97%
-All OOV pos: 2126 Correct: 1474 Accuracy: 69,33%
-All InV pos: 5092 Correct: 4659 Accuracy: 91,50%
+All pos: 7218 Correct: 6179 Accuracy: 85,61%
+All OOV pos: 2126 Correct: 1517 Accuracy: 71,35%
+All InV pos: 5092 Correct: 4662 Accuracy: 91,56%
 
 ++++
 Do testing from file: resources/data/twitter/twitter.gold.test.conll
-System time (msec): 126
+System time (msec): 147
 Sentences: 506
 Testing instances: 7404
-Sentences/sec: 4015
-Words/sec: 58761
+Sentences/sec: 3442
+Words/sec: 50367
 Create eval file: resources/eval/twitter.gold.test.txt
-All pos: 7404 Correct: 6399 Accuracy: 86,43%
-All OOV pos: 2068 Correct: 1459 Accuracy: 70,55%
-All InV pos: 5336 Correct: 4940 Accuracy: 92,58%
+All pos: 7404 Correct: 6400 Accuracy: 86,44%
+All OOV pos: 2068 Correct: 1457 Accuracy: 70,45%
+All InV pos: 5336 Correct: 4943 Accuracy: 92,63%
+
 
 Post processing approach:
 ************************

@@ -8,8 +8,8 @@ HIERIX: January 2016
 	-> try it on relevant component feature!
 -> UNDERSTAND, why not necessary !
 
-- define standalone taggers
-	- take care of tokenization
+- define standalone taggers -> DONE
+	- take care of tokenization - currently just space
 
 - Cluster from Jon Dehardy - clusterCat
 	

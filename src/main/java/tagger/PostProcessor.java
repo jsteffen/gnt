@@ -1,44 +1,48 @@
 package tagger;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class PostProcessor {
-	
+
+	private static Set<String> emoticon = 
+			new HashSet<String>(
+					Arrays.asList(":)",";)","^^",":D",";)",";-)",":)","♥","^^",";-)","^^","*-*",":D",
+							":P","^^","<3",":((",";-)",":-)",";)","*-*",":-)",":)",":-P",":(",":-)",":D",
+							"-.-","^^",":-)",":D",":-P",";)",";-)",":D","O.o",":D",";)","o.O",";)",":D",
+							"xD","\\o/",":'o","<3",";)","XD",":-)",":-*",":D","♥",":D",";))))",">__<",";-)",
+							":-)",":-)))",":D","<3","^^",":D",";-)",";)","xD",":)",";)",":'(",":(",":€",":D",
+							".__.",":-)",":P",":D",":P",":D","<3",":)","^^","D:","xD",":-/",";-)",":D",":(",">",
+							":D","<3",";-)",";)","*_*",":)",":-)","^^",":o)",":D","<3","=>",":)",":P",":/",
+							":P","-.-",":D",":/","<3",":)","♥",":)",";)",";-)",":)",":(",":D",";)",";oD",":)",
+							":-))",":-)",";)",":-(",":)",";-)",";)",":/",":O",";)",":)))","o_O","-_-",
+							":(",":D",";)","oO",":(","-.-",";)",":D",";-)","<3",">:D",":D"
+							));
+	private static Set<String> pause = 
+			new HashSet<String>(
+					Arrays.asList("..", "...", "....",".....","........","..........."
+							));
+
 	public static String determineTwitterLabel(String word, String label){
 		// missing PAUSE and COMMENTS
-		if (word.startsWith("@")) 
+		if (word.charAt(0)=='@')
 			return "ADDRESS";
 		else
-			if (word.startsWith("http://")) 
-				return "URL";
+			if (word.charAt(0)=='#')
+				// very ambiguous
+				return "HASH";
 			else
-				if (word.startsWith("#")) 
-					// very ambiguous
-					return "HASH";
+				if (word.startsWith("http://")) 
+					return "URL";
 				else
-					if (word.startsWith(":)") ||
-							word.startsWith("._.") ||
-							word.startsWith(";)") ||
-							word.startsWith("\\o/") ||
-							word.startsWith("😁😁") ||
-							word.startsWith(":/") ||
-							word.startsWith("xD") ||
-							word.startsWith("^^") ||
-							word.startsWith(":')") ||
-							word.startsWith("&lt;3") ||
-							word.startsWith(":3") ||
-							word.startsWith("*Q*") ||
-							word.startsWith("(-;") ||
-							word.startsWith(":o)") ||
-							word.startsWith("v.v") ||
-							word.startsWith("(:") ||
-							word.startsWith(";D") ||
-							word.startsWith("😂") ||
-							word.startsWith("oO") ||
-							word.startsWith("D:") ||
-							word.startsWith(":D")
-							) 
+					if (emoticon.contains(word)) 
 						return "EMO";
 					else
-						return label;
+						if (pause.contains(word)) 
+							return "PAUSE";
+						else
+							return label;
 
 	}
 
