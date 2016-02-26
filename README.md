@@ -1,4 +1,7 @@
 # gnt
+
+Developed by Günter Neumann, http://www.dfki.de/~neumann/, Feb. 2016
+
 GNT - A GeNeralized Tagger for POS, NER and Morphology tagging
 
 Uses a semi-supervised approach by using a supervised training set in form of CONLL tables, 
