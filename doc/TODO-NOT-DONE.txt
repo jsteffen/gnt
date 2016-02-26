@@ -84,6 +84,7 @@ For software package:
 - generated compressed folder of all data that is necessary for tagging
 	- store model file also under taggerName feature dir
 	- then compress model file and feature files -> very useful !
+	- see also corpus.WikiPediaConllReader.getBufferedReaderForCompressedFile(String)
 	
 - define feature instances ala ClearNLP via XML
 -> how to integrate feature extraction approach dynamically ?

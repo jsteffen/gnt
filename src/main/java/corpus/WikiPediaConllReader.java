@@ -69,7 +69,7 @@ OBACHT: NUmbers are in generalized form, e.g., 1989,99 -> 0000,00
 
 STATUS:
 
-Currently (Novmeber, 2015) I am just extracting maxSent sentences.
+Currently (November, 2015) I am just extracting maxSent sentences.
 All sentences for de-wikidump:
 35943938 610430095 3922225565 de-wikidump-sentsAll.txt
 
@@ -124,6 +124,8 @@ public class WikiPediaConllReader {
 
 		String line = "";
 		int sentCnt = 0;
+		int lineCnt = 0;
+		int mod = 1000000;
 		List<String> tokens = new ArrayList<String>();
 		while ((line = reader.readLine()) != null) {
 			if (line.isEmpty()) {
@@ -136,6 +138,8 @@ public class WikiPediaConllReader {
 				// Stop if maxSent has been processed
 				// if maxSent is < 0 this means: read until end of file.
 				if  ((maxSent > 0) && (sentCnt >= maxSent)) break;
+				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
+				lineCnt++;
 			}
 			else
 			{
@@ -162,8 +166,8 @@ public class WikiPediaConllReader {
 		
 		mapper.transcodeConllToSentenceFile(
 				"/Users/gune00/data/Marmot/en.wikidump.bz2", "dummy", 
-				"/Users/gune00/data/Marmot/en-wikidump-sentsAll.txt", "utf-8", 
-				-1);
+				"/Users/gune00/data/Marmot/en-wikidump-sents5millions.txt", "utf-8", 
+				5000000);
 		
 	}
 }
