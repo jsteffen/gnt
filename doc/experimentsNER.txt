@@ -118,6 +118,14 @@ NER lexicons:
 HOW to add gazeetteers to GNT 
 	- as post processor
 	- e.g., correcting assign labels as in with twitter tags?
+	
+If I want to stick only on supervised data and unsupervised data (clusters, embeddings)
+and want to avoid feature engineering, what can I do?
+- extract sort of character distribution from labeled data to use as shape features
+- used previous tagging decisions to model some sort of grammar
+	-> both is considered important also in NN-based NER, cf. /Users/gune00/dfki/DeepLearning/NER/NAACL-2016.pdf
+	-> BUT, how can this be done as part of liblinear?
+	-> can I use a kind of second layer liblinear approach?
 
 
 

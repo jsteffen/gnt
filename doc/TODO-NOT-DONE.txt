@@ -6,12 +6,12 @@ HIERIX: January 2016
 	-> I am doing it now on complete feature vector in 
 		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
 	-> try it on relevant component feature!
--> UNDERSTAND, why not necessary !
+-> LEARN TO UNDERSTAND, why not necessary !
 
-- define standalone taggers -> DONE
-	- take care of tokenization - currently just space
+- *** take care of tokenization - currently just space
 
 - Cluster from Jon Dehardy - clusterCat
+- retrain clusters
 	
 - approximate matching for unknown words when looking up cluster map
 
@@ -22,6 +22,10 @@ HIERIX: January 2016
 	- cf. doc/LiblinearNER.txt
 	- I think that this could be a source for improvement, and hence, do some research here
 
+- *** Use previous predicted tag as feature for POS/NER
+
+- *** Extract character distribution from labeled data
+
 - use other word embedding -> word2vec -> 
 	but actually only used in NER -> so check, whether really usable
 	maybe better clustering or other co-occurrence  models (WebQA?)
@@ -30,7 +34,6 @@ HIERIX: January 2016
 - POS tags as feature for NER
 	- how can I define a kind of pipeline model for GNT ?
 
-- Use previous predicted tag as feature for POS/NER
 
 - Use of gazetteers:
 	- instead of using it as feature, use it as postfilter as part of tagger.PostProcessor.java

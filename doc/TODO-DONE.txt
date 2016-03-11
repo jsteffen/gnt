@@ -111,3 +111,5 @@ January, 2016:
 -> defined property file; 
 -> defined PosProcessor ala Zesch et al
 	not yet complete
+	
+- define standalone taggers -> DONE
