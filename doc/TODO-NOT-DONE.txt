@@ -11,7 +11,7 @@ HIERIX: January 2016
 - *** take care of tokenization - currently just space
 
 - Cluster from Jon Dehardy - clusterCat
-- retrain clusters
+- re-train clusters
 	
 - approximate matching for unknown words when looking up cluster map
 
@@ -23,6 +23,8 @@ HIERIX: January 2016
 	- I think that this could be a source for improvement, and hence, do some research here
 
 - *** Use previous predicted tag as feature for POS/NER
+	- cascaded LIBLINEAR ? sense-fully ?
+	- how can I define a kind of pipeline model for GNT ?
 
 - *** Extract character distribution from labeled data
 
@@ -30,10 +32,6 @@ HIERIX: January 2016
 	but actually only used in NER -> so check, whether really usable
 	maybe better clustering or other co-occurrence  models (WebQA?)
 	- character and other embeddings
-
-- POS tags as feature for NER
-	- how can I define a kind of pipeline model for GNT ?
-
 
 - Use of gazetteers:
 	- instead of using it as feature, use it as postfilter as part of tagger.PostProcessor.java
@@ -81,13 +79,21 @@ Additional applications:
 ***
 For software package:
 - create property file -> DONE
+
 - save and move it to model file folder -> DONE
+
 - add FLORS accuracy to evaluation script
+
 - create input file for TORCH
+
 - generated compressed folder of all data that is necessary for tagging
 	- store model file also under taggerName feature dir
 	- then compress model file and feature files -> very useful !
 	- see also corpus.WikiPediaConllReader.getBufferedReaderForCompressedFile(String)
+
+- integrate learned models into jar-FILE -> usefull for using GNT with FLINK
+	- create runtime-specific jar file with all dependencies and resources to run a tagger
+	- create MODEL-specific jar files -> in order to restrict size of jar
 	
 - define feature instances ala ClearNLP via XML
 -> how to integrate feature extraction approach dynamically ?
