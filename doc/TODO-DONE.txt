@@ -109,7 +109,7 @@ January, 2016:
 -> mapped to CONLL
 
 -> defined property file; 
--> defined PosProcessor ala Zesch et al
+-> defined PostProcessor ala Zesch et al
 	not yet complete
 	
 - define standalone taggers -> DONE

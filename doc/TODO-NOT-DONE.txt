@@ -26,6 +26,11 @@ HIERIX: January 2016
 	- cascaded LIBLINEAR ? sense-fully ?
 	- how can I define a kind of pipeline model for GNT ?
 
+- *** DO separate POS-tagging and MORPH tagging
+	- learn different models
+	- use in combined mod
+-> also means: cascaded liblinear
+
 - *** Extract character distribution from labeled data
 
 - use other word embedding -> word2vec -> 
@@ -34,12 +39,12 @@ HIERIX: January 2016
 	- character and other embeddings
 
 - Use of gazetteers:
-	- instead of using it as feature, use it as postfilter as part of tagger.PostProcessor.java
+	- instead of using it as feature, use it as post-filter as part of tagger.PostProcessor.java
 	- use nemexa for exact match
 	- learn to obtain optimal threshold for nemexf via regression analysis on training analysis
 	- get NEs also from Wikidata
 	
-	- add to clusters entries which belong to 
+	- add to cluster entries which belong to 
 		NE classes, e.g., cluserID 417 seems to cover first names
 		define them as additional dictionaries and insert them when reading in clusterIds
 		
@@ -65,6 +70,9 @@ Feature learning:
 ***
 Additional applications:
 
+- GNT: do multilingual tagging based on uniform tag set
+	-> doc/UniformTagSet.txt
+
 - GNT for lemmatization
 	
 - GNT also for chunking
@@ -86,7 +94,7 @@ For software package:
 
 - create input file for TORCH
 
-- generated compressed folder of all data that is necessary for tagging
+- generate compressed folder of all data that is necessary for tagging
 	- store model file also under taggerName feature dir
 	- then compress model file and feature files -> very useful !
 	- see also corpus.WikiPediaConllReader.getBufferedReaderForCompressedFile(String)
@@ -100,7 +108,7 @@ For software package:
 
 - define logger
 - define parallel processing
-- do splitting according to
+- do splitting according
 	
 
 	
