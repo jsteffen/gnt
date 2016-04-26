@@ -21,22 +21,6 @@ public class ModelInfo {
 	private String modelInputFile = "";
 	private BufferedWriter modelInputFileWriter = null;
 
-	/**
-	 * Globals flags for defining window site, number of sentences, vector dimension and
-	 * subsampling range.
-	 */
-	public static String taggerName = "";
-	
-	public static int windowSize = 2;
-	public static int numberOfSentences = -1;
-	public static int dim = 0;
-	public static double subSamplingThreshold = 0.000000001;
-	/**
-	 * This is a global flag to trigger saving of model input file;
-	 */
-	public static boolean saveModelInputFile = false;
-	
-
 	public SolverType getSolver() {
 		return solver;
 	}
@@ -47,13 +31,6 @@ public class ModelInfo {
 	
 	public double getEps() {
 		return eps;
-	}
-	
-	public String getTaggerName() {
-		return taggerName;
-	}
-	public void setTaggerName(String taggerName) {
-		ModelInfo.taggerName = taggerName.toUpperCase();
 	}
 
 	public String getModelFilePrefix() {
@@ -138,7 +115,7 @@ public class ModelInfo {
 	}
 
 	/**
-	 * A mode file name is build from
+	 * A model file name is build from
 	 * <p>modelFilePrefix + taggerName + windowSize + dimension + number of training sentences + wordFeat-flag + shapeFeat-flag + suffixFeat-flag
 	 * @param windowSize + ".txt"
 	 * @param dim
@@ -151,13 +128,13 @@ public class ModelInfo {
 		String clusterFeatString = (Alphabet.withClusterFeats)?"T":"F";
 		if (wordFeatString.equals("F")) dim=0;
 
-		String fileSuffix = this.getTaggerName()+"_"+windowSize+"_"+dim+"iw"+numberOfSentences+"sent_"+
+		String fileSuffix = GlobalParams.taggerName+"_"+windowSize+"_"+dim+"iw"+numberOfSentences+"sent_"+
 				wordFeatString+shapeFeatString+suffixFeatString+clusterFeatString+"_"+
 				this.getSolver()+".txt";
 		
 		this.modelFile = this.modelFilePrefix + fileSuffix;
 		
-		if (ModelInfo.saveModelInputFile){
+		if (GlobalParams.saveModelInputFile){
 			//Only if ModelInfo.saveModelInputFile=true then save the modelInputFile
 			this.modelInputFile = this.modelInputFilePrefix + fileSuffix;
 			// And create and open the writerBuffer

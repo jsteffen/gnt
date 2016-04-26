@@ -6,6 +6,7 @@ import corpus.EvalConllFile;
 import tagger.GNTagger;
 import trainer.GNTrainer;
 import data.Alphabet;
+import data.GlobalParams;
 import data.ModelInfo;
 
 /**
@@ -77,7 +78,7 @@ public class GNT {
 		Alphabet.withShapeFeats = true;
 		Alphabet.withSuffixFeats = true;
 		Alphabet.withClusterFeats = true;
-		ModelInfo.saveModelInputFile = false;
+		GlobalParams.saveModelInputFile = false;
 	}
 
 	private void initGNTArguments(String[] args){
@@ -96,9 +97,9 @@ public class GNT {
 			case "-e" 		: this.outFile = args[i+1]; break;
 			case "-mif"		: 
 				if (args[i+1].equalsIgnoreCase("F"))
-					ModelInfo.saveModelInputFile=false;
+					GlobalParams.saveModelInputFile=false;
 				else
-					ModelInfo.saveModelInputFile=true;
+					GlobalParams.saveModelInputFile=true;
 				; break;
 			case "-wordFeats" : 
 				if (args[i+1].equalsIgnoreCase("F"))
@@ -160,7 +161,7 @@ public class GNT {
 			output += " -suffixFeats "+ ((Alphabet.withSuffixFeats)?"T":"F");
 			output += " -clusterFeats "+ ((Alphabet.withClusterFeats)?"T":"F");
 			output += " -f "+ this.inFile ;
-			output += " -mif "+ ((ModelInfo.saveModelInputFile)?"T":"F");
+			output += " -mif "+ ((GlobalParams.saveModelInputFile)?"T":"F");
 			if (this.mode.equalsIgnoreCase("train"))
 				output += " -c "+ this.clusterIDfile;
 			if (this.mode.equalsIgnoreCase("test"))
@@ -172,7 +173,6 @@ public class GNT {
 	}
 	private void runGNTrainerInner(String[] args) throws IOException	{
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
-		modelInfo.setTaggerName(taggerName);
 
 		int windowSize = Integer.valueOf(this.windowSize);
 		int dim = Integer.valueOf(this.dimension);
@@ -188,7 +188,6 @@ public class GNT {
 
 	private void runGNTaggerInner(String[] args) throws IOException	{
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
-		modelInfo.setTaggerName(taggerName);
 
 		int windowSize = Integer.valueOf(this.windowSize);
 		int dim = Integer.valueOf(this.dimension);
@@ -201,7 +200,7 @@ public class GNT {
 		posTagger.initGNTagger(windowSize, dim);
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile evalFile = new EvalConllFile();
-		evalFile.getData().readWordSet(modelInfo.getTaggerName());
+		evalFile.getData().readWordSet(GlobalParams.taggerName);
 		System.out.println(evalFile.getData().toString());
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile, -1);
 		System.out.println("Create eval file: " + this.outFile);

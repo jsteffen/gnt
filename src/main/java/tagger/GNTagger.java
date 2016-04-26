@@ -16,6 +16,7 @@ import trainer.ProblemInstance;
 import data.Alphabet;
 import data.Data;
 import data.GNTProperties;
+import data.GlobalParams;
 import data.ModelInfo;
 import data.OffSets;
 import data.Sentence;
@@ -86,15 +87,15 @@ public class GNTagger {
 
 	public GNTagger(ModelInfo modelInfo) {
 		this.setModelInfo(modelInfo);
-		this.setData(new Data(modelInfo.getTaggerName()));
+		this.setData(new Data());
 	}
 
 	public GNTagger(ModelInfo modelInfo, GNTProperties props) {
 		this.setModelInfo(modelInfo);
-		this.setData(new Data(modelInfo.getTaggerName()));
+		this.setData(new Data());
 		System.out.println(Alphabet.toActiveFeatureString());
 
-		modelInfo.createModelFileName(ModelInfo.windowSize, ModelInfo.dim, ModelInfo.numberOfSentences);
+		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		System.out.println(modelInfo.toString());
 
 		this.corpus = new Corpus(props);
@@ -109,7 +110,7 @@ public class GNTagger {
 		this.setWindowSize(windowSize);
 
 		System.out.println("Load feature files with dim: " + dim);
-		this.getAlphabet().loadFeaturesFromFiles(this.getModelInfo().getTaggerName(), dim);
+		this.getAlphabet().loadFeaturesFromFiles(GlobalParams.taggerName, dim);
 
 		System.out.println("Load label set:");
 		this.getData().readLabelSet();
@@ -186,7 +187,7 @@ public class GNTagger {
 			ProblemInstance problemInstance = new ProblemInstance();
 			problemInstance.createProblemInstanceFromWindow(nextWindow);
 
-			if (ModelInfo.saveModelInputFile){
+			if (GlobalParams.saveModelInputFile){
 				problemInstance.saveProblemInstance(
 						this.getModelInfo().getModelInputFileWriter(),
 						nextWindow.getLabelIndex());
@@ -329,7 +330,7 @@ public class GNTagger {
 		/*
 		 * Set the writer buffer for the model input file based on the given sourceFileName
 		 */
-		if (ModelInfo.saveModelInputFile){
+		if (GlobalParams.saveModelInputFile){
 			String fileName = new File(sourceFileName).getName();
 			this.getModelInfo().setModelInputFileWriter(
 					new BufferedWriter(
@@ -343,11 +344,11 @@ public class GNTagger {
 		Window.windowCnt=0;
 
 		time1 = System.currentTimeMillis();
-		// -1 means: all sentences from file are processed
+		
 		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, sentenceCnt);
 		// close the buffers
 		conllReader.close(); conllWriter.close();
-		if (ModelInfo.saveModelInputFile)
+		if (GlobalParams.saveModelInputFile)
 			this.getModelInfo().getModelInputFileWriter().close();
 
 		time2 = System.currentTimeMillis();

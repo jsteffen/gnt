@@ -10,7 +10,6 @@ public class Data {
 	private Sentence sentence = new Sentence();
 	private int sentenceCnt = 0;
 	private List<Window> instances = new ArrayList<Window>();
-	private String taggerName = "NEPOS";
 	private String labelMapFileName = "resources/features/labelSet.txt";
 	private String wordMapFileName = "resources/features/wordSet.txt";
 	
@@ -67,21 +66,13 @@ public class Data {
 	public void setWordMapFileName(String wordMapFileName) {
 		this.wordMapFileName = wordMapFileName;
 	}
-	public String getTaggerName() {
-		return taggerName;
-	}
-	public void setTaggerName(String taggerName) {
-		this.taggerName = taggerName;
-	}
+	
 	// Instances
 	public Data() {
+		labelMapFileName = "resources/features/"+GlobalParams.taggerName+"/labelSet.txt";
+		wordMapFileName = "resources/features/"+GlobalParams.taggerName+"/wordSet.txt";
 	}
-
-	public Data(String taggerName) {
-		this.setTaggerName(taggerName);
-		labelMapFileName = "resources/features/"+taggerName+"/labelSet.txt";
-		wordMapFileName = "resources/features/"+taggerName+"/wordSet.txt";
-	}
+	
 	// Methods
 
 	

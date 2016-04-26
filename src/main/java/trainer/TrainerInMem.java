@@ -10,6 +10,7 @@ import java.util.List;
 
 import data.Alphabet;
 import data.Data;
+import data.GlobalParams;
 import data.ModelInfo;
 import data.OffSets;
 import data.Window;
@@ -137,7 +138,7 @@ public class TrainerInMem {
 	public TrainerInMem (ModelInfo modelInfo, int windowSize){
 		this.setWindowSize(windowSize);
 		this.setModelInfo(modelInfo);
-		this.setData(new Data(modelInfo.getTaggerName()));
+		this.setData(new Data());
 
 		this.setParameter(new Parameter(
 				modelInfo.getSolver(),
@@ -288,7 +289,7 @@ public class TrainerInMem {
 			this.getProblem().y[i]=nextWindow.getLabelIndex();
 			this.getProblem().x[i]=problemInstance.getFeatureVector();
 
-			if (ModelInfo.saveModelInputFile)
+			if (GlobalParams.saveModelInputFile)
 				problemInstance.saveProblemInstance(
 						this.getModelInfo().getModelInputFileWriter(),
 						nextWindow.getLabelIndex());
@@ -352,7 +353,9 @@ public class TrainerInMem {
 		System.out.println("Train?: " + train + " Adjust?: " + adjust);
 		System.out.println(this.getModelInfo().toString());
 
+		// Read training data
 		time1 = System.currentTimeMillis();
+		System.out.println("Create conll training instances ...");
 		this.createTrainingInstancesFromConllReader(conllReader, max);
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
@@ -362,6 +365,7 @@ public class TrainerInMem {
 		System.out.println("Feature instances size: " + OffSets.windowVectorSize);
 		System.out.println("Training instances: " + Window.windowCnt);
 
+		// Construct training problem
 		System.out.println("Construct problem:");
 		time1 = System.currentTimeMillis();
 		this.constructProblem(train, adjust);
@@ -373,24 +377,27 @@ public class TrainerInMem {
 				((ProblemInstance.cumLength/Window.windowCnt)*
 						Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 
+		// Do learning
 		/*
 		 * If ModelInfo.saveModelInputFile=true, then close model input file stream 
 		 * but do not do training
 		 */
-		//TODO this is the only place, where I make use of the model input file
-		if (ModelInfo.saveModelInputFile){
+		// NOTE this is the only place, where I make use of the model input file
+		if (GlobalParams.saveModelInputFile){
 			time1 = System.currentTimeMillis();
 			// Close the model input file writer buffer
 			this.getModelInfo().getModelInputFileWriter().close();
 			time2 = System.currentTimeMillis();
 			System.out.println("Complete time for creating  and writing model input file (msec): " + (time2-time1));
 		} else {
-			// ELSE DO training with java libary
+			// ELSE DO training with java library
 			time1 = System.currentTimeMillis();
 			this.runLiblinearTrainer();
 			time2 = System.currentTimeMillis();
 			System.out.println("Complete time for training and writing model (msec): " + (time2-time1));
 		}
+		// TODO Here: pack archive
+		
 	}
 
 	// Printing helpers

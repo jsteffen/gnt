@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.GlobalParams;
 import data.ModelInfo;
 
 public class CorpusProcessor {
@@ -163,11 +164,11 @@ public class CorpusProcessor {
 
 	private String nerTokenToString(String[] tokenizedLine, int index) {
 		String output = "";
-		if (ModelInfo.taggerName.equals("NER")||
-				ModelInfo.taggerName.equals("ENNER"))
+		if (GlobalParams.taggerName.equals("NER")||
+				GlobalParams.taggerName.equals("ENNER"))
 			output = enNerTokenToString(tokenizedLine,index);
 		else
-			if (ModelInfo.taggerName.equals("DENER"))
+			if (GlobalParams.taggerName.equals("DENER"))
 				output = deNerTokenToString(tokenizedLine,index);
 		
 		return output;

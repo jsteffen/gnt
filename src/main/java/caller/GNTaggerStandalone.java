@@ -2,6 +2,7 @@ package caller;
 
 import java.io.IOException;
 import data.GNTProperties;
+import data.GlobalParams;
 import data.ModelInfo;
 import tagger.GNTagger;
 
@@ -14,7 +15,7 @@ public class GNTaggerStandalone {
 		modelInfo = new ModelInfo();
 		props = new GNTProperties(configFileName);
 		posTagger = new GNTagger(modelInfo, props);
-		posTagger.initGNTagger(ModelInfo.windowSize, ModelInfo.dim);
+		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 	}
 
 	public void tagItRunner(String inputString) throws IOException{

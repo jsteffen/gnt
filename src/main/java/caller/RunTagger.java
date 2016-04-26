@@ -5,6 +5,7 @@ import java.io.IOException;
 import tagger.GNTagger;
 import corpus.EvalConllFile;
 import data.GNTProperties;
+import data.GlobalParams;
 import data.ModelInfo;
 
 /**
@@ -18,11 +19,11 @@ public class RunTagger {
 		ModelInfo modelInfo = new ModelInfo();
 		GNTProperties props = new GNTProperties(configFileName);
 		GNTagger posTagger = new GNTagger(modelInfo, props);
-		posTagger.initGNTagger(ModelInfo.windowSize, ModelInfo.dim);
+		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 
 		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile evalFile = new EvalConllFile();
-		evalFile.getData().readWordSet(modelInfo.getTaggerName());
+		evalFile.getData().readWordSet(GlobalParams.taggerName);
 		System.out.println(evalFile.getData().toString());
 
 		for (String fileName : posTagger.getCorpus().getDevLabeledData()){

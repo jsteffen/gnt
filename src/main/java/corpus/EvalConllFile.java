@@ -11,6 +11,8 @@ import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 
 import data.Data;
+import data.GlobalParams;
+import data.ModelInfo;
 
 public class EvalConllFile {
 	private Data data = new Data();
@@ -46,10 +48,6 @@ public class EvalConllFile {
 	}
 	
 	public EvalConllFile(){	
-	}
-	
-	public EvalConllFile(String taggerName){
-		this.setData(new Data(taggerName));	
 	}
 
 
@@ -116,7 +114,8 @@ public class EvalConllFile {
 	public static void main(String[] args) throws IOException{
 		// This is for testing
 		// This reads saved vocabulary from training corpus
-		EvalConllFile evalFile = new EvalConllFile("DEPOSMORPH");
+		GlobalParams.taggerName = "DEPOSMORPH";
+		EvalConllFile evalFile = new EvalConllFile();
 		evalFile.data.readWordSet();
 
 		evalFile.computeAccuracy("resources/eval/tiger2_posmorph_devel.txt", true);

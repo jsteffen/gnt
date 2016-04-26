@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import trainer.GNTrainer;
 import data.GNTProperties;
+import data.GlobalParams;
 import data.ModelInfo;
 
 public class TrainTagger {
@@ -14,6 +15,6 @@ public class TrainTagger {
 		GNTProperties props = new GNTProperties(configFileName);
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, props);
 		gnTrainer.gntTrainingWithDimensionFromConllFile(
-				props.getTrainingFile(), props.getClusterIdNameFile(), ModelInfo.dim, ModelInfo.numberOfSentences);
+				props.getTrainingFile(), props.getClusterIdNameFile(), GlobalParams.dim, GlobalParams.numberOfSentences);
 	}
 }

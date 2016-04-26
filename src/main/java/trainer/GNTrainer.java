@@ -7,6 +7,7 @@ import corpus.CorpusProcessor;
 import corpus.IndicatorWordsCreator;
 import data.Alphabet;
 import data.GNTProperties;
+import data.GlobalParams;
 import data.ModelInfo;
 import data.Window;
 import features.WordClusterFeatureFactory;
@@ -50,7 +51,7 @@ public class GNTrainer {
 
 		System.out.println(Alphabet.toActiveFeatureString());
 
-		modelInfo.createModelFileName(ModelInfo.windowSize, ModelInfo.dim, ModelInfo.numberOfSentences);
+		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		System.out.println(modelInfo.toString());
 
 		this.corpus = new Corpus(props);
@@ -63,8 +64,8 @@ public class GNTrainer {
 			e.printStackTrace();
 		}
 
-		this.trainer = new TrainerInMem(modelInfo, ModelInfo.windowSize);
-		this.threshold = ModelInfo.subSamplingThreshold;
+		this.trainer = new TrainerInMem(modelInfo, GlobalParams.windowSize);
+		this.threshold = GlobalParams.subSamplingThreshold;
 	}
 
 	public GNTrainer(ModelInfo modelInfo, int windowSize) {
@@ -78,7 +79,7 @@ public class GNTrainer {
 	// This is a method for on-demand creation of the indicator words
 
 	private void createIndicatorWords(){
-		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
+		String taggerName = GlobalParams.taggerName;
 		String iwFilename = "resources/features/"+taggerName+"/iw_all.txt";
 		System.out.println("Create indictor words and save in file: " + iwFilename);
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
@@ -117,7 +118,7 @@ public class GNTrainer {
 	
 	private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim)
 			throws IOException{
-		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
+		String taggerName = GlobalParams.taggerName;
 	
 		System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + taggerName);
 	
@@ -128,7 +129,7 @@ public class GNTrainer {
 	
 	}
 	private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
-		String taggerName = this.getTrainer().getModelInfo().getTaggerName();
+		String taggerName = GlobalParams.taggerName;
 
 		System.out.println("Load feature files for tagger " + taggerName + ":");
 		time1 = System.currentTimeMillis();

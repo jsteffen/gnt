@@ -37,18 +37,18 @@ public class GNTProperties extends Properties {
 	}
 
 	private void setModelInfoParametersFromProperties(){
-		ModelInfo.taggerName = this.getProperty("taggerName").toUpperCase();
+		GlobalParams.taggerName = this.getProperty("taggerName").toUpperCase();
 
-		ModelInfo.saveModelInputFile = Boolean.parseBoolean(this.getProperty("saveModelInputFile"));
+		GlobalParams.saveModelInputFile = Boolean.parseBoolean(this.getProperty("saveModelInputFile"));
 
 		ModelInfo.solver = this.parseSolverType(this.getProperty("solverType"));
 		ModelInfo.C = Double.parseDouble(this.getProperty("c"));
 		ModelInfo.eps = Double.parseDouble(this.getProperty("eps"));
 
-		ModelInfo.windowSize = Integer.parseInt(this.getProperty("windowSize"));
-		ModelInfo.numberOfSentences = Integer.parseInt(this.getProperty("numberOfSentences"));
-		ModelInfo.dim = Integer.parseInt(this.getProperty("dim"));
-		ModelInfo.subSamplingThreshold = Double.parseDouble(this.getProperty("subSamplingThreshold"));
+		GlobalParams.windowSize = Integer.parseInt(this.getProperty("windowSize"));
+		GlobalParams.numberOfSentences = Integer.parseInt(this.getProperty("numberOfSentences"));
+		GlobalParams.dim = Integer.parseInt(this.getProperty("dim"));
+		GlobalParams.subSamplingThreshold = Double.parseDouble(this.getProperty("subSamplingThreshold"));
 	}
 
 	private void setActivatedFeatureExtractors(){
