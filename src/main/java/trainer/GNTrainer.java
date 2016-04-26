@@ -24,12 +24,12 @@ public class GNTrainer {
 	private long time2;
 
 	private Corpus corpus = new Corpus();
-	
+
 	private Archivator archivator;
 
 	//
 
-	
+
 	public Archivator getArchivator() {
 		return archivator;
 	}
@@ -56,13 +56,12 @@ public class GNTrainer {
 	}
 
 	// initialization
-	
+
 	public GNTrainer(ModelInfo modelInfo, GNTProperties props){
 
 		System.out.println(Alphabet.toActiveFeatureString());
-		
-		//TODO hierix
-		this.setArchivator(new Archivator(GlobalParams.taggerName));
+
+
 
 		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		System.out.println(modelInfo.toString());
@@ -77,6 +76,8 @@ public class GNTrainer {
 			e.printStackTrace();
 		}
 
+		//TODO hierix
+		this.setArchivator(new Archivator(modelInfo.getModelFile()));
 		this.trainer = new TrainerInMem(modelInfo, GlobalParams.windowSize);
 		this.threshold = GlobalParams.subSamplingThreshold;
 	}
@@ -84,7 +85,7 @@ public class GNTrainer {
 	public GNTrainer(ModelInfo modelInfo, int windowSize) {
 		this.trainer = new TrainerInMem(modelInfo, windowSize);
 	}
-	
+
 	// This is a method for on-demand creation of the indicator words
 
 	private void createIndicatorWords(){
@@ -122,21 +123,21 @@ public class GNTrainer {
 		WordClusterFeatureFactory wordClusterFactory = new WordClusterFeatureFactory();
 		wordClusterFactory.createAndSaveClusterIdFeature(taggerName, clusterIdSourceFileName);	
 	}
-	
+
 	// This is a method for on-demand creation of the feature files
-	
+
 	private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim)
 			throws IOException{
-		
+
 		System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + GlobalParams.taggerName);
-	
+
 		if (Alphabet.withWordFeats) this.createWordVectors(GlobalParams.taggerName, dim);
 		if (Alphabet.withShapeFeats) this.createShapeFeatures(GlobalParams.taggerName, trainingFileName);
 		if (Alphabet.withShapeFeats)this.createSuffixFeatures(GlobalParams.taggerName, trainingFileName);
 		if (Alphabet.withClusterFeats) this.createClusterFeatures(GlobalParams.taggerName, clusterIdSourceFileName);
-	
+
 	}
-	
+
 	private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
 		String taggerName = GlobalParams.taggerName;
 
