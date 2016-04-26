@@ -118,6 +118,6 @@ public class EvalConllFile {
 		EvalConllFile evalFile = new EvalConllFile();
 		evalFile.data.readWordSet();
 
-		evalFile.computeAccuracy("resources/eval/tiger2_posmorph_devel.txt", true);
+		evalFile.computeAccuracy(GlobalParams.evalFilePathname+"/tiger2_posmorph_devel.txt", true);
 	}
 }

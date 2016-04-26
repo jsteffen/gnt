@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import data.GNTProperties;
+import data.GlobalParams;
 
 // The class that holds all corpus files for training, testing etc.
 public class Corpus {
@@ -140,7 +141,7 @@ public class Corpus {
 	}
 	
 	public String makeEvalFileName(String labeledFile){
-		return "resources/eval/"+ new File(labeledFile).getName()+".txt";
+		return GlobalParams.evalFilePathname+ new File(labeledFile).getName()+".txt";
 		
 	}
 

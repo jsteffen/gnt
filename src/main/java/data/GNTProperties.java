@@ -36,19 +36,19 @@ public class GNTProperties extends Properties {
 		return solverType;
 	}
 
-	private void setModelInfoParametersFromProperties(){
+	private void setGlobalParamsFromProperties(){
 		GlobalParams.taggerName = this.getProperty("taggerName").toUpperCase();
-
 		GlobalParams.saveModelInputFile = Boolean.parseBoolean(this.getProperty("saveModelInputFile"));
-
-		ModelInfo.solver = this.parseSolverType(this.getProperty("solverType"));
-		ModelInfo.C = Double.parseDouble(this.getProperty("c"));
-		ModelInfo.eps = Double.parseDouble(this.getProperty("eps"));
-
 		GlobalParams.windowSize = Integer.parseInt(this.getProperty("windowSize"));
 		GlobalParams.numberOfSentences = Integer.parseInt(this.getProperty("numberOfSentences"));
 		GlobalParams.dim = Integer.parseInt(this.getProperty("dim"));
-		GlobalParams.subSamplingThreshold = Double.parseDouble(this.getProperty("subSamplingThreshold"));
+		GlobalParams.subSamplingThreshold = Double.parseDouble(this.getProperty("subSamplingThreshold"));		
+	}
+	
+	private void setModelInfoParametersFromProperties(){
+		ModelInfo.solver = this.parseSolverType(this.getProperty("solverType"));
+		ModelInfo.C = Double.parseDouble(this.getProperty("c"));
+		ModelInfo.eps = Double.parseDouble(this.getProperty("eps"));
 	}
 
 	private void setActivatedFeatureExtractors(){
@@ -71,6 +71,7 @@ public class GNTProperties extends Properties {
 	public GNTProperties(String propsFileName){
 		try {
 			this.setGntProps(propsFileName);
+			this.setGlobalParamsFromProperties();
 			this.setModelInfoParametersFromProperties();
 			this.setActivatedFeatureExtractors();
 			this.setDataAccessors();

@@ -10,8 +10,8 @@ public class Data {
 	private Sentence sentence = new Sentence();
 	private int sentenceCnt = 0;
 	private List<Window> instances = new ArrayList<Window>();
-	private String labelMapFileName = "resources/features/labelSet.txt";
-	private String wordMapFileName = "resources/features/wordSet.txt";
+	private String labelMapFileName = null;
+	private String wordMapFileName = null;
 	
 	// counted from 0, 2nd column in conll in case of POS, else 0 for NER
 	/**
@@ -69,8 +69,8 @@ public class Data {
 	
 	// Instances
 	public Data() {
-		labelMapFileName = "resources/features/"+GlobalParams.taggerName+"/labelSet.txt";
-		wordMapFileName = "resources/features/"+GlobalParams.taggerName+"/wordSet.txt";
+		labelMapFileName = GlobalParams.featureFilePathname+GlobalParams.taggerName+"/labelSet.txt";
+		wordMapFileName = GlobalParams.featureFilePathname+GlobalParams.taggerName+"/wordSet.txt";
 	}
 	
 	// Methods
@@ -174,10 +174,6 @@ public class Data {
 
 	public void readWordSet(){
 		this.getWordSet().readSetIndexMap(this.getWordMapFileName());	
-	}
-	
-	public void readWordSet(String taggerName){
-		this.getWordSet().readSetIndexMap("resources/features/"+taggerName+"/wordSet.txt");	
 	}
 
 	public String toString(){

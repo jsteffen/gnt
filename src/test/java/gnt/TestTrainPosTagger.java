@@ -7,6 +7,6 @@ import caller.TrainTagger;
 public class TestTrainPosTagger {
 
 	public static void main(String[] args) throws IOException{
-		TrainTagger.trainer("src/main/resources/props/DeTweetPosTagger.xml");
+		TrainTagger.trainer("src/main/resources/props/EnPosTagger.xml");
 	}
 }

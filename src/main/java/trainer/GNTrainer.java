@@ -2,6 +2,7 @@ package trainer;
 
 import java.io.IOException;
 
+import archive.Archivator;
 import corpus.Corpus;
 import corpus.CorpusProcessor;
 import corpus.IndicatorWordsCreator;
@@ -23,9 +24,18 @@ public class GNTrainer {
 	private long time2;
 
 	private Corpus corpus = new Corpus();
+	
+	private Archivator archivator;
 
 	//
 
+	
+	public Archivator getArchivator() {
+		return archivator;
+	}
+	public void setArchivator(Archivator archivator) {
+		this.archivator = archivator;
+	}
 	public TrainerInMem getTrainer() {
 		return trainer;
 	}
@@ -46,10 +56,13 @@ public class GNTrainer {
 	}
 
 	// initialization
-
+	
 	public GNTrainer(ModelInfo modelInfo, GNTProperties props){
 
 		System.out.println(Alphabet.toActiveFeatureString());
+		
+		//TODO hierix
+		this.setArchivator(new Archivator(GlobalParams.taggerName));
 
 		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		System.out.println(modelInfo.toString());
@@ -71,16 +84,12 @@ public class GNTrainer {
 	public GNTrainer(ModelInfo modelInfo, int windowSize) {
 		this.trainer = new TrainerInMem(modelInfo, windowSize);
 	}
-	public GNTrainer(ModelInfo modelInfo, int windowSize, double threshold) {
-		this.threshold = threshold;
-		this.trainer = new TrainerInMem(modelInfo, windowSize);
-	}
-
+	
 	// This is a method for on-demand creation of the indicator words
 
 	private void createIndicatorWords(){
 		String taggerName = GlobalParams.taggerName;
-		String iwFilename = "resources/features/"+taggerName+"/iw_all.txt";
+		String iwFilename = GlobalParams.featureFilePathname+taggerName+"/iw_all.txt";
 		System.out.println("Create indictor words and save in file: " + iwFilename);
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
 		iwp.createIndicatorTaggerNameWordsFromCorpus(this.getCorpus());
@@ -118,16 +127,16 @@ public class GNTrainer {
 	
 	private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim)
 			throws IOException{
-		String taggerName = GlobalParams.taggerName;
+		
+		System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + GlobalParams.taggerName);
 	
-		System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + taggerName);
-	
-		if (Alphabet.withWordFeats) this.createWordVectors(taggerName, dim);
-		if (Alphabet.withShapeFeats) this.createShapeFeatures(taggerName, trainingFileName);
-		if (Alphabet.withShapeFeats)this.createSuffixFeatures(taggerName, trainingFileName);
-		if (Alphabet.withClusterFeats) this.createClusterFeatures(taggerName, clusterIdSourceFileName);
+		if (Alphabet.withWordFeats) this.createWordVectors(GlobalParams.taggerName, dim);
+		if (Alphabet.withShapeFeats) this.createShapeFeatures(GlobalParams.taggerName, trainingFileName);
+		if (Alphabet.withShapeFeats)this.createSuffixFeatures(GlobalParams.taggerName, trainingFileName);
+		if (Alphabet.withClusterFeats) this.createClusterFeatures(GlobalParams.taggerName, clusterIdSourceFileName);
 	
 	}
+	
 	private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
 		String taggerName = GlobalParams.taggerName;
 

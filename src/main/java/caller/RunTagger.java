@@ -21,21 +21,23 @@ public class RunTagger {
 		GNTagger posTagger = new GNTagger(modelInfo, props);
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 
-		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
 		EvalConllFile evalFile = new EvalConllFile();
-		evalFile.getData().readWordSet(GlobalParams.taggerName);
+		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: " 
+		+ evalFile.getData().getWordMapFileName());
+		
+		evalFile.getData().readWordSet();
 		System.out.println(evalFile.getData().toString());
 
 		for (String fileName : posTagger.getCorpus().getDevLabeledData()){
 			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
 			posTagger.tagAndWriteFromConllDevelFile(fileName+".conll", evalFileName, -1);
-			System.out.println("Create eval file: " + posTagger.getCorpus().makeEvalFileName(fileName));
+			System.out.println("Create eval file: " + evalFileName);
 			evalFile.computeAccuracy(evalFileName, true);
 		}
 		for (String fileName : posTagger.getCorpus().getTestLabeledData()){
 			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
 			posTagger.tagAndWriteFromConllDevelFile(fileName+".conll", evalFileName, -1);
-			System.out.println("Create eval file: " + posTagger.getCorpus().makeEvalFileName(fileName));
+			System.out.println("Create eval file: " + evalFileName);
 			evalFile.computeAccuracy(evalFileName, false);
 		}
 	}

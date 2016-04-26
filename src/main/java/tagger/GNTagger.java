@@ -112,7 +112,7 @@ public class GNTagger {
 		System.out.println("Load feature files with dim: " + dim);
 		this.getAlphabet().loadFeaturesFromFiles(GlobalParams.taggerName, dim);
 
-		System.out.println("Load label set:");
+		System.out.println("Load label set: " + this.getData().getLabelMapFileName());
 		this.getData().readLabelSet();
 
 		System.out.println("Cleaning non-used variables in Alphabet and in Data:");

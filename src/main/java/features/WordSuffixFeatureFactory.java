@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import data.GlobalParams;
+
 /**
  * Goal is to compute all lower-case suffixes from a training set of words.
  * For suffix s, we set the dimension corresponding to s in f_suffix(w) to 1 if lowercased w ends in s 
@@ -265,7 +267,7 @@ public class WordSuffixFeatureFactory {
 
 		System.out.println("#word: " + this.getWordCnt()+" #suffixes: " + this.getSuffixCnt());
 
-		String suffixFileName = "resources/features/"+taggerName+"/suffixList.txt";
+		String suffixFileName = GlobalParams.featureFilePathname+taggerName+"/suffixList.txt";
 		System.out.println("Writing suffix list to: " + suffixFileName);
 		this.writeSuffixFile(suffixFileName);
 		System.out.println("... done");
@@ -337,7 +339,7 @@ public class WordSuffixFeatureFactory {
 	}
 	
 	public void readSuffixList(String taggerName){
-		String suffixFileName = "resources/features/"+taggerName+"/suffixList.txt";
+		String suffixFileName = GlobalParams.featureFilePathname+taggerName+"/suffixList.txt";
 		System.out.println("Reading suffix list from: " + suffixFileName);
 		this.readSuffixFile(suffixFileName);
 		System.out.println("... done");

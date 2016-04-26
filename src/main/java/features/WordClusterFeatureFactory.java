@@ -11,6 +11,8 @@ import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import data.GlobalParams;
+
 /**
  * Given a word2clusterId file from /Users/gune00/data/Marmot/Word
  * where each line is of form:
@@ -91,7 +93,7 @@ public class WordClusterFeatureFactory {
 		System.out.println("Create cluster ID list from: " + clusterIDfileName);
 		this.createWord2ClusterIdMapFromFile(clusterIDfileName, -1);
 
-		String fileName = "resources/features/"+taggerName+"/clusterId.txt";
+		String fileName = GlobalParams.featureFilePathname+taggerName+"/clusterId.txt";
 		System.out.println("Writing cluster ID list to: " + fileName);
 		this.writeClusterIdFeatureFile(fileName);
 
@@ -172,7 +174,7 @@ public class WordClusterFeatureFactory {
 	}
 
 	public void readClusterIdList(String taggerName){
-		String fileName = "resources/features/"+taggerName+"/clusterId.txt";
+		String fileName = GlobalParams.featureFilePathname+taggerName+"/clusterId.txt";
 		System.out.println("Reading cluster ID list from: " + fileName);
 		this.readClusterIdFeatureFile(fileName);
 		System.out.println("... done");

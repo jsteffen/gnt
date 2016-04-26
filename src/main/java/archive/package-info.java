@@ -72,10 +72,6 @@ So, in any case, I can define and call a method unpack
 	Archivator.pack() 
 		as last statement in trainer.TrainerInMem.trainFromConllTrainingFileInMemory
 		
-NOTE:
- if this works I would not need the resources/features/ any more
- so could delete them
- but then, why not directly create the archive when creating the alphabet/data files ?
 */
 
 /**
@@ -88,10 +84,36 @@ How to unpack an archive ?
 		similar for data()
 		and modelfile
 
-In order to make it more systematic:
+ */
 
-- add feature dir to modelInfo
-- make sure data is using taggerName from modelInfo
+/*
+ * How to do it?
+ * 
+ - Provide archive file to trainer and tagger
+ 	- select archive name based on modelfile/taggername
+ 	- use model file name path as target dir
+ 	- store also dim within archive -> used for distributed word features
+ 
+ 
+-  	When a feature file is created I could store its full pathname(?) name in a list of a archive object carried by the trainer
+- 	then add feature file name to archive
+-	same for model file; and labelSet and wordSet
+-	finally create archive and close archive
+
+
+Problem:
+I would need to know which reading function to call for which filename
 	
+Approach for unpacking:
+-	data.Alphabet.loadFeaturesFromArchive()
+-	it calls all feature reading methods with archive as argument
+-	the methods itself check inside whether archive contains its file name (only the file name) and if so
+	retrieves the input stream and reads the file
+	-	thus the archive-filename interface is within the feature class
+	-	and should also work for new feature files
+	-	note: I need unique file names which I currently have
+	
+- same for data() labelSet and wordSet
+
  */
 

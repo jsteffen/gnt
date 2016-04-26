@@ -8,6 +8,6 @@ public class TestRunPosTagger {
 
 	public static void main(String[] args) throws IOException{
 		
-		RunTagger.runner("src/main/resources/props/DeTweetPosTagger.xml");		
+		RunTagger.runner("src/main/resources/props/EnPosTagger.xml");		
 	}
 }

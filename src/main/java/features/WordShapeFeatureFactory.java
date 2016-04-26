@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import data.GlobalParams;
+
 /** 
  * For each word given, check all shape features and set bit vector map accordingly.
  * Maintain a map of word - bit vector, so that a output file for the training set can be created - really needed ?
@@ -87,7 +89,7 @@ public class WordShapeFeatureFactory {
 		System.out.println("Create shape list from: " + trainingFileName);
 		this.createShapeVectorsFromFile(trainingFileName, -1);
 
-		String shapeFileName = "resources/features/"+taggerName+"/shapeList.txt";
+		String shapeFileName = GlobalParams.featureFilePathname+taggerName+"/shapeList.txt";
 		System.out.println("Writing shape list to: " + shapeFileName);
 		this.writeShapeFeatureFile(shapeFileName);
 
@@ -214,7 +216,7 @@ public class WordShapeFeatureFactory {
 	}
 
 	public void readShapeList(String taggerName){
-		String shapeFileName = "resources/features/"+taggerName+"/shapeList.txt";
+		String shapeFileName = GlobalParams.featureFilePathname+taggerName+"/shapeList.txt";
 		System.out.println("Reading shape list from: " + shapeFileName);
 		this.readShapeFeatureFile(shapeFileName);
 		System.out.println("... done");

@@ -29,7 +29,6 @@ import data.ModelInfo;
 public class GNT {
 	private String mode = "train";
 	private String config = "";
-	private String taggerName = "ENPOS";
 	private String windowSize = "2";
 	private String dimension = "0";
 	private String sentences = "-1";
@@ -66,7 +65,6 @@ public class GNT {
 
 	private void setDefaultValues(){
 		mode = "train";
-		taggerName = "ENPOS";
 		windowSize = "2";
 		dimension = "0";
 		sentences = "-1";
@@ -74,6 +72,7 @@ public class GNT {
 		inFile = "";
 		clusterIDfile = "/Users/gune00/data/Marmot/Word/en_marlin_cluster_1000";
 		outFile = "";
+		GlobalParams.taggerName = "ENPOS";
 		Alphabet.withWordFeats = false;
 		Alphabet.withShapeFeats = true;
 		Alphabet.withSuffixFeats = true;
@@ -87,7 +86,7 @@ public class GNT {
 			switch (args[i]){
 			case "-mode" 	: this.mode = args[i+1]; break;
 			case "-config"	: this.config = args[i+1]; break;
-			case "-tagger" 	: this.taggerName = args[i+1]; break;
+			case "-tagger" 	: GlobalParams.taggerName = args[i+1]; break;
 			case "-w" 		: this.windowSize= args[i+1]; break;
 			case "-d" 		: this.dimension= args[i+1]; break;
 			case "-s" 		: this.sentences= args[i+1]; break;
@@ -151,7 +150,7 @@ public class GNT {
 		}
 		else
 		{
-			output += " -tagger "+ this.taggerName;
+			output += " -tagger "+ GlobalParams.taggerName;
 			output += " -w "+ this.windowSize ;
 			output += " -d "+ this.dimension ;
 			output += " -s "+ this.sentences ;
@@ -174,34 +173,35 @@ public class GNT {
 	private void runGNTrainerInner(String[] args) throws IOException	{
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
 
-		int windowSize = Integer.valueOf(this.windowSize);
-		int dim = Integer.valueOf(this.dimension);
-		int numberOfSentences = Integer.valueOf(this.sentences);
+		GlobalParams.windowSize = Integer.valueOf(this.windowSize);
+		GlobalParams.dim = Integer.valueOf(this.dimension);
+		GlobalParams.numberOfSentences = Integer.valueOf(this.sentences);
 
-		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
+		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 
-		GNTrainer gnTrainer = new GNTrainer(modelInfo, windowSize);
+		GNTrainer gnTrainer = new GNTrainer(modelInfo, GlobalParams.windowSize);
 
-		gnTrainer.gntTrainingWithDimensionFromConllFile(this.inFile, this.clusterIDfile, dim, numberOfSentences);
+		gnTrainer.gntTrainingWithDimensionFromConllFile(this.inFile, this.clusterIDfile, GlobalParams.dim, GlobalParams.numberOfSentences);
 
 	}
 
 	private void runGNTaggerInner(String[] args) throws IOException	{
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
 
-		int windowSize = Integer.valueOf(this.windowSize);
-		int dim = Integer.valueOf(this.dimension);
-		int numberOfSentences = Integer.valueOf(this.sentences);
+		GlobalParams.windowSize = Integer.valueOf(this.windowSize);
+		GlobalParams.dim = Integer.valueOf(this.dimension);
+		GlobalParams.numberOfSentences = Integer.valueOf(this.sentences);
 
-		modelInfo.createModelFileName(windowSize, dim, numberOfSentences);
+		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 
 		GNTagger posTagger = new GNTagger(modelInfo);
 
-		posTagger.initGNTagger(windowSize, dim);
-		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: ");
+		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 		EvalConllFile evalFile = new EvalConllFile();
-		evalFile.getData().readWordSet(GlobalParams.taggerName);
+		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: " + evalFile.getData().getWordMapFileName());
+		evalFile.getData().readWordSet();
 		System.out.println(evalFile.getData().toString());
+		
 		posTagger.tagAndWriteFromConllDevelFile(this.inFile, this.outFile, -1);
 		System.out.println("Create eval file: " + this.outFile);
 		evalFile.computeAccuracy(this.outFile, false);
