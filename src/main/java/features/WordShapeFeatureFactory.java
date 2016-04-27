@@ -6,12 +6,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import archive.Archivator;
 import data.GlobalParams;
 
 /** 
@@ -84,16 +86,18 @@ public class WordShapeFeatureFactory {
 		word2signature = new HashMap<String,WordShapeFeature>();
 		index2signature = new TreeMap<Integer,String>();
 	}
-
-	public void createAndSaveShapeFeature(String taggerName, String trainingFileName){
+	
+	public void createAndSaveShapeFeature(Archivator archivator, String taggerName, String trainingFileName){
 		System.out.println("Create shape list from: " + trainingFileName);
 		this.createShapeVectorsFromFile(trainingFileName, -1);
 
 		String shapeFileName = GlobalParams.featureFilePathname+taggerName+"/shapeList.txt";
 		System.out.println("Writing shape list to: " + shapeFileName);
 		this.writeShapeFeatureFile(shapeFileName);
-
 		System.out.println("... done");
+		// Add file to archivator
+		archivator.getFilesToPack().add(shapeFileName);
+		
 	}
 
 	private void createShapeVectorsFromFile(String targetFileName, int max){
@@ -214,11 +218,37 @@ public class WordShapeFeatureFactory {
 			e.printStackTrace();
 		}
 	}
+	
+	private void readShapeFeatureFile(Archivator archivator, String string) {
+		BufferedReader reader;
+		int cnt = 1;
+		try {
+			InputStream inputStream = archivator.getArchiveMap().get(string);
+			reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				signature2index.put(line, cnt);
+				index2signature.put(cnt,line);
+				cnt++;
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void readShapeList(String taggerName){
 		String shapeFileName = GlobalParams.featureFilePathname+taggerName+"/shapeList.txt";
 		System.out.println("Reading shape list from: " + shapeFileName);
 		this.readShapeFeatureFile(shapeFileName);
+		System.out.println("... done");
+	}
+	
+	public void readShapeList(Archivator archivator, String taggerName){
+		String shapeFileName = GlobalParams.featureFilePathname+taggerName+"/shapeList.txt";
+		System.out.println("Reading shape list from archive: " + shapeFileName);
+		this.readShapeFeatureFile(archivator, shapeFileName);
 		System.out.println("... done");
 	}
 }

@@ -99,6 +99,8 @@ How to unpack an archive ?
 - 	then add feature file name to archive
 -	same for model file; and labelSet and wordSet
 -	finally create archive and close archive
+-> DONE! and works
+-> DONE! delete files
 
 
 Problem:
@@ -112,8 +114,15 @@ Approach for unpacking:
 	-	thus the archive-filename interface is within the feature class
 	-	and should also work for new feature files
 	-	note: I need unique file names which I currently have
+-> DONE, but had to duplicate reading methods
 	
 - same for data() labelSet and wordSet
+-> DONE, but had to duplicate reading methods
+
+-> OK, works for EnPos, EnNer, DeTweet
+-> check with standalone tagger and GNT.java
+-> and then with distributed word features
+-> then CLEAN CODE
 
  */
 

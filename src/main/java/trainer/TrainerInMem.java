@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import archive.Archivator;
 import data.Alphabet;
 import data.Data;
 import data.GlobalParams;
@@ -60,6 +61,7 @@ import de.bwaldvogel.liblinear.SolverType;
 public class TrainerInMem {
 	private Data data = new Data();
 	private Alphabet alphabet = new Alphabet();
+	private Archivator archivator ;
 	private OffSets offSets = new OffSets();
 	private int windowSize = 2;
 	private ModelInfo modelInfo = new ModelInfo();
@@ -95,6 +97,12 @@ public class TrainerInMem {
 	}
 	public void setAlphabet(Alphabet alphabet) {
 		this.alphabet = alphabet;
+	}
+	public Archivator getArchivator() {
+		return archivator;
+	}
+	public void setArchivator(Archivator archivator) {
+		this.archivator = archivator;
 	}
 	public OffSets getOffSets() {
 		return offSets;
@@ -139,6 +147,18 @@ public class TrainerInMem {
 		this.setWindowSize(windowSize);
 		this.setModelInfo(modelInfo);
 		this.setData(new Data());
+
+		this.setParameter(new Parameter(
+				modelInfo.getSolver(),
+				modelInfo.getC(),
+				modelInfo.getEps()));
+	}
+	
+	public TrainerInMem (Archivator archivator, ModelInfo modelInfo, int windowSize){
+		this.setWindowSize(windowSize);
+		this.setModelInfo(modelInfo);
+		this.setData(new Data());
+		this.setArchivator(archivator);
 
 		this.setParameter(new Parameter(
 				modelInfo.getSolver(),
@@ -396,8 +416,15 @@ public class TrainerInMem {
 			time2 = System.currentTimeMillis();
 			System.out.println("Complete time for training and writing model (msec): " + (time2-time1));
 		}
-		// TODO Here: pack archive
-		
+		// Add labelSet and wordSet from Data()
+		this.getArchivator().getFilesToPack().add(this.getData().getLabelMapFileName());
+		this.getArchivator().getFilesToPack().add(this.getData().getWordMapFileName());
+		// Add model file
+		this.getArchivator().getFilesToPack().add(this.getModelInfo().getModelFile());
+		// Finally pack archive
+		this.getArchivator().pack();
+		System.out.println("Pack archive: " + this.getArchivator().getArchiveName());
+		System.out.println("... Done!");
 	}
 
 	// Printing helpers

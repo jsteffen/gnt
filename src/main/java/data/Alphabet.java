@@ -1,5 +1,6 @@
 package data;
 
+import archive.Archivator;
 import features.WordClusterFeatureFactory;
 import features.WordDistributedFeatureFactory;
 import features.WordShapeFeatureFactory;
@@ -56,6 +57,13 @@ public class Alphabet {
 		if (Alphabet.withSuffixFeats) this.wordSuffixFactory.readSuffixList(taggerName);
 		if (Alphabet.withShapeFeats) this.wordShapeFactory.readShapeList(taggerName);
 		if (Alphabet.withClusterFeats) this.wordClusterFactory.readClusterIdList(taggerName);
+	}
+	
+	public void loadFeaturesFromFiles(Archivator archivator, String taggerName, int dim){
+		if (Alphabet.withWordFeats) this.wordVectorFactory.readDistributedWordFeaturesSparse(archivator, taggerName, dim);
+		if (Alphabet.withSuffixFeats) this.wordSuffixFactory.readSuffixList(archivator, taggerName);
+		if (Alphabet.withShapeFeats) this.wordShapeFactory.readShapeList(archivator, taggerName);
+		if (Alphabet.withClusterFeats) this.wordClusterFactory.readClusterIdList(archivator, taggerName);
 	}
 
 	public void clean(){

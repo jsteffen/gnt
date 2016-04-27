@@ -6,11 +6,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import archive.Archivator;
 
 public class SetIndexMap {
 	private Map<String, Integer> label2num = new HashMap<String, Integer>();
@@ -71,6 +74,26 @@ public class SetIndexMap {
 		int cnt = 0;
 		try {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(string),"UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				cnt++;
+				this.getLabel2num().put(line, cnt);
+				this.getNum2label().put(cnt,line);
+			}
+			labelCnt = cnt++;
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void readSetIndexMap(Archivator archivator, String string) {
+		BufferedReader reader;
+		int cnt = 0;
+		try {
+			InputStream inputStream = archivator.getArchiveMap().get(string);
+			reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				cnt++;

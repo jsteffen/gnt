@@ -5,7 +5,14 @@ HIERIX: January 2016
 	I think I forgot it 
 	-> I am doing it now on complete feature vector in 
 		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
+		
 	-> try it on relevant component feature!
+	-> according to LibLinear paper, normalized each instance vector which has non-zero values
+		by value/sqrt(length of instance vector)
+	-> NOTE: I should do it on relative feature vectors!
+	
+	
+	
 -> LEARN TO UNDERSTAND, why not necessary !
 
 - *** take care of tokenization - currently just space

@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import archive.Archivator;
 import corpus.Corpus;
 import trainer.ProblemInstance;
 import data.Alphabet;
@@ -32,12 +33,19 @@ public class GNTagger {
 	private OffSets offSets = new OffSets();
 	private int windowSize = 2;
 	private Model model ;
+	private Archivator archivator;
 
 	private long time1 ;
 	private long time2;
 
 	// Setters and getters
 
+	public Archivator getArchivator() {
+		return archivator;
+	}
+	public void setArchivator(Archivator archivator) {
+		this.archivator = archivator;
+	}
 	public Data getData() {
 		return data;
 	}
@@ -88,6 +96,7 @@ public class GNTagger {
 	public GNTagger(ModelInfo modelInfo) {
 		this.setModelInfo(modelInfo);
 		this.setData(new Data());
+		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
 	}
 
 	public GNTagger(ModelInfo modelInfo, GNTProperties props) {
@@ -99,21 +108,25 @@ public class GNTagger {
 		System.out.println(modelInfo.toString());
 
 		this.corpus = new Corpus(props);
+		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
 	}
 
 	// Methods
 
 	public void initGNTagger(int windowSize, int dim) throws IOException{
 		time1 = System.currentTimeMillis();
+		
+		System.out.println("Extract archive:");
+		this.getArchivator().extract();
 
 		System.out.println("Set window size: " + windowSize);
 		this.setWindowSize(windowSize);
 
 		System.out.println("Load feature files with dim: " + dim);
-		this.getAlphabet().loadFeaturesFromFiles(GlobalParams.taggerName, dim);
+		this.getAlphabet().loadFeaturesFromFiles(this.getArchivator(), GlobalParams.taggerName, dim);
 
-		System.out.println("Load label set: " + this.getData().getLabelMapFileName());
-		this.getData().readLabelSet();
+		System.out.println("Load label set from archive: " + this.getData().getLabelMapFileName());
+		this.getData().readLabelSet(this.getArchivator());
 
 		System.out.println("Cleaning non-used variables in Alphabet and in Data:");
 		this.getAlphabet().clean();
@@ -128,8 +141,13 @@ public class GNTagger {
 
 		time1 = System.currentTimeMillis();
 
-		System.out.println("Load model file: " + this.getModelInfo().getModelFile());
-		this.setModel(Model.load(new File(this.getModelInfo().getModelFile())));
+		System.out.println("Load model file from archive: " + this.getModelInfo().getModelFile());
+		
+		//this.setModel(Model.load(new File(this.getModelInfo().getModelFile())));
+		this.setModel(Linear.loadModel(
+				new InputStreamReader(
+						this.getArchivator().getArchiveMap().get(this.getModelInfo().getModelFile()),
+						"UTF-8")));
 		System.out.println(".... DONE!");
 
 		time2 = System.currentTimeMillis();

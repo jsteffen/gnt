@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import archive.Archivator;
 import data.GlobalParams;
 
 /**
@@ -78,15 +80,15 @@ public class WordSuffixFeatureFactory {
 	public void clean(){
 		num2suffix = new TreeMap<Integer, String>();
 	}
-	
+
 	// A simple flag for switching between suffix and ngram computation
 	public static boolean ngram = false;
 	public static int ngramSize = 3;
-	
+
 	/*
 	 * Methods
 	 */
-	
+
 	//*********************** Computation of ngrams *********************** 
 	/**
 	 * Compute ngrams from given word
@@ -104,7 +106,7 @@ public class WordSuffixFeatureFactory {
 		}
 		return ngrams;
 	}
-	
+
 	public List<Integer> getAllKnownNgramsForWord(String word){
 		List<Integer> indices = new ArrayList<Integer>();
 		Set<String> ngrams = this.generateNgrams(word, WordSuffixFeatureFactory.ngramSize);
@@ -118,7 +120,7 @@ public class WordSuffixFeatureFactory {
 		indices.sort(null);
 		return indices;
 	}
-	
+
 	private void computeNgramsAndStore(String word) {
 		int i = 0;
 		Set<String> ngrams = this.generateNgrams(word, WordSuffixFeatureFactory.ngramSize);
@@ -138,7 +140,7 @@ public class WordSuffixFeatureFactory {
 	 * @param word
 	 * @return
 	 */
-	
+
 	private List<Integer> getAllKnownSuffixForWordIntern(String word){
 		List<Integer> indices = new ArrayList<Integer>();
 		for (int i = 0; i < word.length(); i++){
@@ -152,7 +154,7 @@ public class WordSuffixFeatureFactory {
 		indices.sort(null);
 		return indices;
 	}
-	
+
 	/** 
 	 * compute all suffixes of a word starting from 0, which means the word is a suffix of itself.
 	 * If suffix is not a word, then do not store it.
@@ -168,7 +170,7 @@ public class WordSuffixFeatureFactory {
 	}
 
 	// ************************** Inserting or Updating extracted suffix/ngram **************************
-	
+
 	/** A number is a string which starts and ends with a digit.
 	 * This is used to filter out strings for which we do not want to compute suffixes, e.g., numbers
 	 * 
@@ -206,10 +208,10 @@ public class WordSuffixFeatureFactory {
 	private boolean isNonWord(String token){
 		return (
 				false
-//				(token.length() < 3) ||
-//				 hasLastNonLetter(token)
-//								|| hasOnlyNonLetters(token) 
-//								|| isNumber(token)
+				//				(token.length() < 3) ||
+				//				 hasLastNonLetter(token)
+				//								|| hasOnlyNonLetters(token) 
+				//								|| isNumber(token)
 				);
 	}
 
@@ -222,9 +224,9 @@ public class WordSuffixFeatureFactory {
 			num2suffix.put(suffixCnt, suffix);
 		}
 	}
-	
+
 	//*********************** generic caller *********************** 
-	
+
 	/**
 	 * Receives a list of token, and computes suffixes for each token.
 	 * @param words
@@ -236,15 +238,15 @@ public class WordSuffixFeatureFactory {
 			else{
 				computeSuffixesAndStore(word);
 			}
-			}
+		}
 	}
-	
+
 	/**
 	 * Main caller that switches between suffix computation and ngram computation
 	 * @param word
 	 * @return
 	 */
-	
+
 	//TODO
 	// after adding also ngrams, indices must be sorted again!!
 	public List<Integer> getAllKnownSubstringsForWord(String word){
@@ -260,8 +262,8 @@ public class WordSuffixFeatureFactory {
 	}
 
 	//*********************** creating and storing *********************** 
-	
-	public void createAndSaveSuffixFeature(String taggerName, String trainingFileName){
+
+	public void createAndSaveSuffixFeature(Archivator archivator, String taggerName, String trainingFileName){
 		System.out.println("Create suffix list from: " + trainingFileName);
 		this.createSuffixListFromFile(trainingFileName, -1);
 
@@ -271,6 +273,8 @@ public class WordSuffixFeatureFactory {
 		System.out.println("Writing suffix list to: " + suffixFileName);
 		this.writeSuffixFile(suffixFileName);
 		System.out.println("... done");
+		// Add file to archivator
+		archivator.getFilesToPack().add(suffixFileName);
 	}
 
 
@@ -305,7 +309,7 @@ public class WordSuffixFeatureFactory {
 	private void writeSuffixFile(String targetFileName){
 		File file = new File(targetFileName);
 		file.getParentFile().mkdirs();
-		
+
 		BufferedWriter writer;
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
@@ -338,6 +342,25 @@ public class WordSuffixFeatureFactory {
 		}
 	}
 	
+	private void readSuffixFile(Archivator archivator, String string) {
+		BufferedReader reader;
+		int cnt = 1;
+		try {
+			InputStream inputStream = archivator.getArchiveMap().get(string);
+			reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				this.getSuffix2num().put(line, cnt);
+				this.getNum2suffix().put(cnt,line);
+				cnt++;
+			}
+			reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void readSuffixList(String taggerName){
 		String suffixFileName = GlobalParams.featureFilePathname+taggerName+"/suffixList.txt";
 		System.out.println("Reading suffix list from: " + suffixFileName);
@@ -345,7 +368,14 @@ public class WordSuffixFeatureFactory {
 		System.out.println("... done");
 	}
 	
-	
+	public void readSuffixList(Archivator archivator, String taggerName){
+		String suffixFileName = GlobalParams.featureFilePathname+taggerName+"/suffixList.txt";
+		System.out.println("Reading suffix list from archive: " + suffixFileName);
+		this.readSuffixFile(archivator, suffixFileName);
+		System.out.println("... done");
+	}
+
+
 	private void computeSuffixesTest(String word) {
 		System.out.println("Word: " + word);
 		// Smallest suffix is just last character of a word
@@ -358,8 +388,8 @@ public class WordSuffixFeatureFactory {
 	}
 	public static void main(String[] args) throws IOException{
 		WordSuffixFeatureFactory wsf = new WordSuffixFeatureFactory();
-		
+
 		wsf.computeSuffixesTest("Hausmann");
-		
+
 	}
 }

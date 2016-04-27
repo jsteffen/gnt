@@ -58,7 +58,7 @@ public class WordVectorSimilarity {
 	// Test main method
 	public static void main(String[] args) throws IOException {
 		int dim = 100;
-		WordVectorSimilarity.dwvFactory.readDistributedWordFeaturesSparse("POS", 100);
+		//WordVectorSimilarity.dwvFactory.readDistributedWordFeaturesSparse("POS", 100);
 		WordVectorSimilarity.testSimilarity("an", "an");
 		WordVectorSimilarity.testSimilarity("house", "house");
 		WordVectorSimilarity.testSimilarity("house", "houses");

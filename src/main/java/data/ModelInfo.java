@@ -16,6 +16,7 @@ public class ModelInfo {
 
 	private String modelFilePrefix = "resources/models/model_";
 	private String modelFile = "";
+	private String modelFileArchive = "";
 
 	private String modelInputFilePrefix = "resources/modelInputFiles/modelInputFile_";
 	private String modelInputFile = "";
@@ -45,7 +46,7 @@ public class ModelInfo {
 	public void setModelFile(String modelFile) {
 		this.modelFile = modelFile;
 	}
-
+	
 	public String getModelInputFilePrefix() {
 		return modelInputFilePrefix;
 	}
@@ -64,6 +65,14 @@ public class ModelInfo {
 	public void setModelInputFileWriter(BufferedWriter modelInputFileWriter) {
 		this.modelInputFileWriter = modelInputFileWriter;
 	}
+	public String getModelFileArchive() {
+		return modelFileArchive;
+	}
+
+	public void setModelFileArchive(String modelFileArchive) {
+		this.modelFileArchive = modelFileArchive;
+	}
+
 	//
 	public ModelInfo(){
 	}
@@ -128,15 +137,16 @@ public class ModelInfo {
 		String clusterFeatString = (Alphabet.withClusterFeats)?"T":"F";
 		if (wordFeatString.equals("F")) dim=0;
 
-		String fileSuffix = GlobalParams.taggerName+"_"+windowSize+"_"+dim+"iw"+numberOfSentences+"sent_"+
+		String fileNameDetails = GlobalParams.taggerName+"_"+windowSize+"_"+dim+"iw"+numberOfSentences+"sent_"+
 				wordFeatString+shapeFeatString+suffixFeatString+clusterFeatString+"_"+
-				this.getSolver()+".txt";
+				this.getSolver();
 		
-		this.modelFile = this.modelFilePrefix + fileSuffix;
+		this.modelFile = this.modelFilePrefix + fileNameDetails + ".txt";
+		this.modelFileArchive = this.modelFilePrefix + fileNameDetails + ".zip";
 		
 		if (GlobalParams.saveModelInputFile){
 			//Only if ModelInfo.saveModelInputFile=true then save the modelInputFile
-			this.modelInputFile = this.modelInputFilePrefix + fileSuffix;
+			this.modelInputFile = this.modelInputFilePrefix + fileNameDetails + ".txt";
 			// And create and open the writerBuffer
 			try {
 				this.setModelInputFileWriter(new BufferedWriter(

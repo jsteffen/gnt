@@ -3,6 +3,8 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import archive.Archivator;
+
 public class Data {
 
 	private SetIndexMap wordSet = new SetIndexMap();
@@ -168,12 +170,20 @@ public class Data {
 		this.getLabelSet().readSetIndexMap(this.getLabelMapFileName());	
 	}
 	
+	public void readLabelSet(Archivator archivator){
+		this.getLabelSet().readSetIndexMap(archivator, this.getLabelMapFileName());	
+	}
+	
 	public void saveWordSet(){
 		this.getWordSet().writeSetIndexMap(this.getWordMapFileName());	
 	}
 
 	public void readWordSet(){
 		this.getWordSet().readSetIndexMap(this.getWordMapFileName());	
+	}
+	
+	public void readWordSet(Archivator archivator){
+		this.getWordSet().readSetIndexMap(archivator, this.getWordMapFileName());	
 	}
 
 	public String toString(){

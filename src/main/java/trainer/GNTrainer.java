@@ -18,17 +18,13 @@ import features.WordSuffixFeatureFactory;
 
 public class GNTrainer {
 
-	private double threshold = 0.000000001;
 	private TrainerInMem trainer;
 	private long time1 ;
 	private long time2;
-
 	private Corpus corpus = new Corpus();
-
 	private Archivator archivator;
 
-	//
-
+	// Setters and getters
 
 	public Archivator getArchivator() {
 		return archivator;
@@ -42,12 +38,6 @@ public class GNTrainer {
 	public void setTrainer(TrainerInMem trainer) {
 		this.trainer = trainer;
 	}
-	public double getThreshold() {
-		return threshold;
-	}
-	public void setThreshold(double threshold) {
-		this.threshold = threshold;
-	}
 	public Corpus getCorpus() {
 		return corpus;
 	}
@@ -55,14 +45,12 @@ public class GNTrainer {
 		this.corpus = corpus;
 	}
 
-	// initialization
+	// Creators
 
 	public GNTrainer(ModelInfo modelInfo, GNTProperties props){
 
 		System.out.println(Alphabet.toActiveFeatureString());
-
-
-
+		
 		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		System.out.println(modelInfo.toString());
 
@@ -76,28 +64,23 @@ public class GNTrainer {
 			e.printStackTrace();
 		}
 
-		//TODO hierix
-		this.setArchivator(new Archivator(modelInfo.getModelFile()));
-		this.trainer = new TrainerInMem(modelInfo, GlobalParams.windowSize);
-		this.threshold = GlobalParams.subSamplingThreshold;
+		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+		this.trainer = new TrainerInMem(this.getArchivator(), modelInfo, GlobalParams.windowSize);
 	}
 
 	public GNTrainer(ModelInfo modelInfo, int windowSize) {
-		this.trainer = new TrainerInMem(modelInfo, windowSize);
+		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+		this.trainer = new TrainerInMem(this.getArchivator(), modelInfo, windowSize);
 	}
 
+	// Methods
+	
 	// This is a method for on-demand creation of the indicator words
 
-	private void createIndicatorWords(){
-		String taggerName = GlobalParams.taggerName;
-		String iwFilename = GlobalParams.featureFilePathname+taggerName+"/iw_all.txt";
-		System.out.println("Create indictor words and save in file: " + iwFilename);
+	private void createIndicatorWords(String taggerName, double subSamplingThreshold){
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
-		iwp.createIndicatorTaggerNameWordsFromCorpus(this.getCorpus());
-
-		iwp.postProcessWords(this.getThreshold());
-		iwp.writeSortedIndicatorWords(iwFilename, 10000);
-
+		iwp.createAndWriteIndicatorTaggerNameWordsFromCorpus(
+				this.getArchivator(), taggerName, this.getCorpus(), subSamplingThreshold);
 	}
 
 	// This is a method for on-demand creation of the feature files
@@ -105,23 +88,23 @@ public class GNTrainer {
 	private void createWordVectors(String taggerName, int dim) throws IOException{
 		if (dim > 0){
 			WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
-			dwvFactory.createAndWriteDistributedWordFeaturesSparse(taggerName, dim, this.getCorpus());	
+			dwvFactory.createAndWriteDistributedWordFeaturesSparse(this.getArchivator(), taggerName, dim, this.getCorpus());	
 		}
 	}
 
 	private void createShapeFeatures(String taggerName, String trainingFileName){
 		WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
-		wordShapeFactory.createAndSaveShapeFeature(taggerName, trainingFileName);
+		wordShapeFactory.createAndSaveShapeFeature(this.getArchivator(), taggerName, trainingFileName);
 	}
 
 	private void createSuffixFeatures(String taggerName, String trainingFileName){
 		WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
-		wordSuffixFactory.createAndSaveSuffixFeature(taggerName, trainingFileName);	
+		wordSuffixFactory.createAndSaveSuffixFeature(this.getArchivator(), taggerName, trainingFileName);	
 	}
 
 	private void createClusterFeatures(String taggerName, String clusterIdSourceFileName){
 		WordClusterFeatureFactory wordClusterFactory = new WordClusterFeatureFactory();
-		wordClusterFactory.createAndSaveClusterIdFeature(taggerName, clusterIdSourceFileName);	
+		wordClusterFactory.createAndSaveClusterIdFeature(this.getArchivator(), taggerName, clusterIdSourceFileName);	
 	}
 
 	// This is a method for on-demand creation of the feature files
@@ -176,7 +159,7 @@ public class GNTrainer {
 			throws IOException{
 		time1 = System.currentTimeMillis();
 
-		this.createIndicatorWords();
+		this.createIndicatorWords(GlobalParams.taggerName, GlobalParams.subSamplingThreshold);
 		this.createTrainingFeatureFiles(trainingFileName+"-sents.txt", clusterIdSourceFileName, dim);
 
 		time2 = System.currentTimeMillis();

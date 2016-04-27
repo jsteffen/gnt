@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import archive.Archivator;
+import data.GlobalParams;
+
 /**
  * A indicator word is used to define a dimension of distributed word vectors
  * a indicator word is selected on basis its rank.
@@ -205,5 +208,17 @@ public class IndicatorWordsCreator {
 
 	public void createIndicatorTaggerNameWordsFromCorpus(Corpus corpus){
 		this.readUnlabeledDataFromCorpus(corpus);
+	}
+	
+	public void createAndWriteIndicatorTaggerNameWordsFromCorpus(Archivator archivator, String taggerName, Corpus corpus, double subSamplingThreshold){
+		String iwFilename = GlobalParams.featureFilePathname+taggerName+"/iw_all.txt";
+		System.out.println("Create indictor words and save in file: " + iwFilename);
+		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
+		iwp.createIndicatorTaggerNameWordsFromCorpus(corpus);
+
+		iwp.postProcessWords(subSamplingThreshold);
+		iwp.writeSortedIndicatorWords(iwFilename, 10000);
+		// Add file to archivator
+		archivator.getFilesToPack().add(iwFilename);
 	}
 }

@@ -22,10 +22,10 @@ public class RunTagger {
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 
 		EvalConllFile evalFile = new EvalConllFile();
-		System.out.println("\n++++\nLoad known vocabulary from training for evaluating OOV: " 
+		System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: " 
 		+ evalFile.getData().getWordMapFileName());
 		
-		evalFile.getData().readWordSet();
+		evalFile.getData().readWordSet(posTagger.getArchivator());
 		System.out.println(evalFile.getData().toString());
 
 		for (String fileName : posTagger.getCorpus().getDevLabeledData()){

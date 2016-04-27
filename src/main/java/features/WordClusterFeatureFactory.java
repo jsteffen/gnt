@@ -6,11 +6,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import archive.Archivator;
 import data.GlobalParams;
 
 /**
@@ -89,7 +91,7 @@ public class WordClusterFeatureFactory {
 		}
 	}
 
-	public void createAndSaveClusterIdFeature(String taggerName, String clusterIDfileName){
+	public void createAndSaveClusterIdFeature(Archivator archivator, String taggerName, String clusterIDfileName){
 		System.out.println("Create cluster ID list from: " + clusterIDfileName);
 		this.createWord2ClusterIdMapFromFile(clusterIDfileName, -1);
 
@@ -98,6 +100,8 @@ public class WordClusterFeatureFactory {
 		this.writeClusterIdFeatureFile(fileName);
 
 		System.out.println("... done");
+		// Add file to archivator
+		archivator.getFilesToPack().add(fileName);
 	}
 
 	private void createWord2ClusterIdMapFromFile(String fileName, int max){
@@ -172,11 +176,36 @@ public class WordClusterFeatureFactory {
 			e.printStackTrace();
 		}
 	}
+	
+	private void readClusterIdFeatureFile(Archivator archivator, String string) {
+		BufferedReader reader;
+		try {
+			InputStream inputStream = archivator.getArchiveMap().get(string);
+			reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				String[] entry = line.split("\t");
+				int liblinearClusterId = Integer.parseInt(entry[1]);
+				clusterIdcnt = Math.max(liblinearClusterId, clusterIdcnt);
+				this.getWord2index().put(entry[0], liblinearClusterId);
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void readClusterIdList(String taggerName){
 		String fileName = GlobalParams.featureFilePathname+taggerName+"/clusterId.txt";
 		System.out.println("Reading cluster ID list from: " + fileName);
 		this.readClusterIdFeatureFile(fileName);
+		System.out.println("... done");
+	}
+	
+	public void readClusterIdList(Archivator archivator, String taggerName){
+		String fileName = GlobalParams.featureFilePathname+taggerName+"/clusterId.txt";
+		System.out.println("Reading cluster ID list from archive: " + fileName);
+		this.readClusterIdFeatureFile(archivator, fileName);
 		System.out.println("... done");
 	}
 }
