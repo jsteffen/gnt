@@ -29,14 +29,17 @@ HIERIX: January 2016
 	- cf. doc/LiblinearNER.txt
 	- I think that this could be a source for improvement, and hence, do some research here
 
+- *** Multilingual and uniform tag set
+
 - *** Use previous predicted tag as feature for POS/NER
 	- cascaded LIBLINEAR ? sense-fully ?
 	- how can I define a kind of pipeline model for GNT ?
+	- via search-based structured prediction
 
 - *** DO separate POS-tagging and MORPH tagging
 	- learn different models
 	- use in combined mod
--> also means: cascaded liblinear
+	-> also means: cascaded liblinear
 
 - *** Extract character distribution from labeled data
 
@@ -93,18 +96,10 @@ Additional applications:
 	
 ***
 For software package:
-- create property file -> DONE
-
-- save and move it to model file folder -> DONE
 
 - add FLORS accuracy to evaluation script
 
 - create input file for TORCH
-
-- generate compressed folder of all data that is necessary for tagging
-	- store model file also under taggerName feature dir
-	- then compress model file and feature files -> very useful !
-	- see also corpus.WikiPediaConllReader.getBufferedReaderForCompressedFile(String)
 
 - integrate learned models into jar-FILE -> usefull for using GNT with FLINK
 	- create runtime-specific jar file with all dependencies and resources to run a tagger

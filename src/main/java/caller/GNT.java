@@ -42,7 +42,7 @@ public class GNT {
 	}
 
 	private void errorMessageAndExit(){
-		System.err.println("-mode train|test -config <configFile.xml>"
+		System.err.println("-mode train|test -config src/main/resources/props/<configFile.xml>"
 				+ "\nor ...");
 		System.err.println("-mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> "
 				+ "-m <model info type> "
@@ -70,7 +70,7 @@ public class GNT {
 		sentences = "-1";
 		modelInfoType = "MDP";
 		inFile = "";
-		clusterIDfile = "/Users/gune00/data/Marmot/Word/en_marlin_cluster_1000";
+		clusterIDfile = "resources/cluster/marmot/en_marlin_cluster_1000";
 		outFile = "";
 		GlobalParams.taggerName = "ENPOS";
 		Alphabet.withWordFeats = false;

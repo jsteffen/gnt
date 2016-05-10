@@ -52,6 +52,11 @@ public class Alphabet {
 	
 	// Methods
 	
+	/**
+	 * Load the precomputed features from file during training phase.
+	 * @param taggerName
+	 * @param dim
+	 */
 	public void loadFeaturesFromFiles(String taggerName, int dim){
 		if (Alphabet.withWordFeats) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim);
 		if (Alphabet.withSuffixFeats) this.wordSuffixFactory.readSuffixList(taggerName);
@@ -59,6 +64,12 @@ public class Alphabet {
 		if (Alphabet.withClusterFeats) this.wordClusterFactory.readClusterIdList(taggerName);
 	}
 	
+	/**
+	 * Load the compressed features files from archive during tagging phase
+	 * @param archivator
+	 * @param taggerName
+	 * @param dim
+	 */
 	public void loadFeaturesFromFiles(Archivator archivator, String taggerName, int dim){
 		if (Alphabet.withWordFeats) this.wordVectorFactory.readDistributedWordFeaturesSparse(archivator, taggerName, dim);
 		if (Alphabet.withSuffixFeats) this.wordSuffixFactory.readSuffixList(archivator, taggerName);

@@ -1,6 +1,11 @@
 FEB, 2016:
 
+- Check whether retraining of Marmot clusters is necessary
+	- how to get them for other language 
+	- bascially I have them via Wikipedia and my wdtk_examples project
 
+
+Multilinguality:
 - Idea - one model for many languages
 	- merge all languages into one training file, and learn one model
 	- test with single languages

@@ -115,14 +115,35 @@ Approach for unpacking:
 	-	and should also work for new feature files
 	-	note: I need unique file names which I currently have
 -> DONE, but had to duplicate reading methods
+	- because, in training phase I first compute the features files before training is started and then add their
+	  compressed version to the archive.
+	- in principle can be avoided if archive is used in trainer.GNTrainer.createTrainingFeatureFiles(String, String, int)
+-> after archive is created delete the non-compressed features files
 	
 - same for data() labelSet and wordSet
--> DONE, but had to duplicate reading methods
+-> DONE, also using duplicate reading methods
 
--> OK, works for EnPos, EnNer, DeTweet
--> check with standalone tagger and GNT.java
--> and then with distributed word features
--> then CLEAN CODE
+-> OK, works for EnPos, EnNer, DeTweet, DeMorph
+	-> check with standalone tagger
+		- OK
+	-> GNT.java
+		- OK using config file as parameter
+		- e.g., -mode test -config src/main/resources/props/EnNerTagger.xml
+	-> and then with distributed word features
+		- OK
+		
+HIERIX		
+-> integrate used config file into archive
+	- use src/main/resources/props as dummy config files that can be used to define own config files
+	- then save config file in archive using config.xml as name
+	- then adapt tagging so to be initialized with archive first
+	- actually I only need that part of config file that is necessary to recover the global params not the corpus files
+-> so some more changes are necessary to separate parameter setting and corpus files
+	- only the liblinear and control parameters
+	- how to do it ?
+	
+
+-> CLEAN CODE
 
  */
 

@@ -44,6 +44,7 @@ THINK:
 - But then: how to get the relations ? 
 - Maybe as a post processor that computes all possible candidate relations and selects  the highest scored ones?
 - Maybe I need ako CRF approach to get simple clique structure or other graph based algorithms or a linear structured-prediction learners
+- Yes, what I need is to integrate the local decisions into a search-based structured prediction algorithm, where MDP is one form
 
 NOTE:
 This could also work for semantic role labeling

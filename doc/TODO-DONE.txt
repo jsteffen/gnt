@@ -108,8 +108,14 @@ January, 2016:
 	- XML format stehen in data/twitter_gold
 -> mapped to CONLL
 
--> defined property file; 
+-> defined property file
+
 -> defined PostProcessor ala Zesch et al
 	not yet complete
 	
 - define standalone taggers -> DONE
+
+MAY, 2016
+- generated compressed folder of all data that is necessary for tagging
+	- /GNT/src/main/java/archive/package-info.java
+	
