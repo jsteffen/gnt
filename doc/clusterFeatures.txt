@@ -2,13 +2,13 @@ October, 2015:
 
 - integration of clusters from /Users/gune00/data/Marmot/Word
 
-- use preprocessed cluster first:
+	- use preprocessed cluster first:
 
-- use cluster name as feature
+	- use cluster name as feature
 
-- create word2clusterID  map
+	- create word2clusterID  map
 
-- unknown words are mapped to clusterID of word <RARE>|<Rare>
+	- unknown words are mapped to clusterID of word <RARE>|<Rare>
 
 -> DONE
 
@@ -30,10 +30,14 @@ About unknown words:
 
 - All words not member of the clusterId-Map are mapped to dummy word <RARE>.
 - Words in the clusterId-Map are NOT lower-cased; only normalization is done by mapping digits to 0
+
 - Currently, no tokenization is performed, because implicitly used via the labeled treebanks
+
 - If I have free text, then tokenization must be done with tokenizer that is also used for creating word clusters
 - OR tokenization-inconsistent words will be treated as <RARE>
+
 - SPELLING variation also can not be handled, because we perform exact match with clusterId-Map
+	- could be realized by NemexA but then what are useful sim-fct and sim-threshold?
 
 
 HIERIX:

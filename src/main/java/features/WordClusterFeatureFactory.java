@@ -32,7 +32,7 @@ import data.GlobalParams;
  */
 public class WordClusterFeatureFactory {
 	// store mapping of clusterID to liblinear indexing
-	//	private Map<String, Integer> clusterId2num = new HashMap<String, Integer>();
+	// private Map<String, Integer> clusterId2num = new HashMap<String, Integer>();
 	// Store resulting word2liblinear index map
 	// store words to clusterId mapping as provided by Marmot tool!
 	private Map<String,Integer> word2index = new HashMap<String,Integer>();
@@ -63,10 +63,13 @@ public class WordClusterFeatureFactory {
 
 	/**
 	 * For CASE-SENSITIVE word, look it up in word2liblinear index;
-	 * If it exists, return index else return index of unknown word <RARE>|<Rare>|<STOP>
+	 * If it exists, return index else return index of unknown word <RARE>|<Rare>|<STOP>.
+	 * During training phase, all words from training files are used and cluster id is used.
+	 * During testing, for each word in cluster-dictionary, its cluster id is used
 	 * @param word
 	 * @return
 	 */
+	// Used to fill cluster feature vector in training and tagging
 	public int getClusterIdFeature(String word){
 		String normalizedDigitString = word.replaceAll("\\d", "0");
 		if (this.getWord2index().containsKey(normalizedDigitString))
@@ -91,6 +94,7 @@ public class WordClusterFeatureFactory {
 		}
 	}
 
+	// Used to internalize word2cluster id by ajusting cluster id by +1
 	public void createAndSaveClusterIdFeature(Archivator archivator, String taggerName, String clusterIDfileName){
 		System.out.println("Create cluster ID list from: " + clusterIDfileName);
 		this.createWord2ClusterIdMapFromFile(clusterIDfileName, -1);
@@ -131,7 +135,7 @@ public class WordClusterFeatureFactory {
 		addNewWord2liblinearId(word, liblinearIndex);
 	}
 
-	// This is to make sure that clusterId start from 1, because in Marlin they start from 0
+	// This is to make sure that clusterId starts from 1, because in Marlin they start from 0
 	// so they have to be adjusted
 	private Integer getLiblinearIndex(String clusterId) {
 		return Integer.valueOf(clusterId)+1;

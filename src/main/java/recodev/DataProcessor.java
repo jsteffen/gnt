@@ -153,7 +153,7 @@ public class DataProcessor {
 		while ((line = reader.readLine()) != null) {
 			this.updateDictionaryFromString(line);
 			lineCnt++;
-			//if ((lineCnt % mod) == 0) System.out.println(lineCnt);
+			if ((lineCnt % mod) == 0) System.out.println(lineCnt);
 		}
 
 		reader.close();
@@ -169,7 +169,7 @@ public class DataProcessor {
 		int docId = 0;
 		if (documentFilesOfLabel != null)
 			for(File doc: documentFilesOfLabel){
-				//System.out.println("\t" + docId + ": " + doc.getName());
+				System.out.println("\t" + docId + ": " + doc.getName());
 				try {
 					this.updateDictionaryFromFile(doc);
 				} catch (IOException e) {
@@ -231,7 +231,7 @@ public class DataProcessor {
 		while ((line = reader.readLine()) != null) {
 			this.updateFeatureMapFromString(line, featureMap);
 			lineCnt++;
-			//if ((lineCnt % mod) == 0) System.out.println(lineCnt);
+			if ((lineCnt % mod) == 0) System.out.println(lineCnt);
 		}
 
 		reader.close();

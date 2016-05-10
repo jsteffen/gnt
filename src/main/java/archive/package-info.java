@@ -123,7 +123,7 @@ Approach for unpacking:
 - same for data() labelSet and wordSet
 -> DONE, also using duplicate reading methods
 
--> OK, works for EnPos, EnNer, DeTweet, DeMorph
+-> OK
 	-> check with standalone tagger
 		- OK
 	-> GNT.java

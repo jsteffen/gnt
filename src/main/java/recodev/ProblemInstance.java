@@ -58,11 +58,7 @@ public class ProblemInstance {
 			 offSet++;
 			 
 		}
-
-
 	}
-
-
 
 	/**
 	 * This is a method that checks whether a feature vector is well-formed
@@ -86,7 +82,7 @@ public class ProblemInstance {
 	}
 
 	/**
-	 * This method save the feature vector of the current window plus its given label directly
+	 * This method saves the feature vector of the current window plus its given label directly
 	 * as liblinear vector
 	 * @param instanceWriter
 	 * @param labelIndex

@@ -7,11 +7,9 @@ HIERIX: January 2016
 		trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
 		
 	-> try it on relevant component feature!
-	-> according to LibLinear paper, normalized each instance vector which has non-zero values
+	-> according to LibLinear paper, normalize each instance vector which has non-zero values
 		by value/sqrt(length of instance vector)
 	-> NOTE: I should do it on relative feature vectors!
-	
-	
 	
 -> LEARN TO UNDERSTAND, why not necessary !
 
@@ -28,8 +26,6 @@ HIERIX: January 2016
 - other shape features
 	- cf. doc/LiblinearNER.txt
 	- I think that this could be a source for improvement, and hence, do some research here
-
-- *** Multilingual and uniform tag set
 
 - *** Use previous predicted tag as feature for POS/NER
 	- cascaded LIBLINEAR ? sense-fully ?
