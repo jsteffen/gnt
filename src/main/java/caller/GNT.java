@@ -173,6 +173,7 @@ public class GNT {
 		return output;
 
 	}
+	
 	private void runGNTrainerInner(String[] args) throws IOException	{
 		ModelInfo modelInfo = new ModelInfo(this.modelInfoType);
 
@@ -214,7 +215,7 @@ public class GNT {
 		if (!this.dataConfig.isEmpty())
 			TrainTagger.trainer(this.dataConfig, this.corpusConfig);
 		else
-			this.runGNTrainerInner(args);
+			System.err.println("Only training GNT with config files is supported!");
 	}
 
 	private void runGNTagger(String[] args) throws IOException {
@@ -224,7 +225,7 @@ public class GNT {
 		if (!this.dataConfig.isEmpty())
 			RunTagger.runner(this.dataConfig, this.corpusConfig);
 		else
-			this.runGNTaggerInner(args);
+			System.err.println("Only running GNT with config files is supported!");
 	}
 
 	public static void main(String[] args) throws IOException{

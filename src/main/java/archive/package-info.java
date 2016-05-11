@@ -134,10 +134,6 @@ Approach for unpacking:
 		
 HIERIX		
 -> integrate used config file into archive
-	- only needed for tagging phase
-	- use src/main/resources/dataProps as dummy config files that can be used to define own config files
-	- then save config file in archive using config.xml as name
-	- then adapt tagging so to be called with model file only
 	
 -> so some more changes are necessary to separate parameter setting and corpus files
 	- only the liblinear and control parameters
