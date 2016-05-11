@@ -13,10 +13,10 @@ import java.util.List;
 
 import archive.Archivator;
 import corpus.Corpus;
+import corpus.GNTcorpusProperties;
 import trainer.ProblemInstance;
 import data.Alphabet;
 import data.Data;
-import data.GNTProperties;
 import data.GlobalParams;
 import data.ModelInfo;
 import data.OffSets;
@@ -35,7 +35,7 @@ public class GNTagger {
 	private Model model ;
 	private Archivator archivator;
 
-	private long time1 ;
+	private long time1;
 	private long time2;
 
 	// Setters and getters
@@ -96,10 +96,11 @@ public class GNTagger {
 	public GNTagger(ModelInfo modelInfo) {
 		this.setModelInfo(modelInfo);
 		this.setData(new Data());
+		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
 	}
 
-	public GNTagger(ModelInfo modelInfo, GNTProperties props) {
+	public GNTagger(ModelInfo modelInfo, GNTcorpusProperties props) {
 		this.setModelInfo(modelInfo);
 		this.setData(new Data());
 		System.out.println(Alphabet.toActiveFeatureString());

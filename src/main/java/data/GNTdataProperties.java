@@ -11,7 +11,7 @@ import javax.xml.stream.XMLStreamException;
 import de.bwaldvogel.liblinear.SolverType;
 import features.WordSuffixFeatureFactory;
 
-public class GNTProperties extends Properties {
+public class GNTdataProperties extends Properties {
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class GNTProperties extends Properties {
 		GlobalParams.dim = Integer.parseInt(this.getProperty("dim"));
 		GlobalParams.subSamplingThreshold = Double.parseDouble(this.getProperty("subSamplingThreshold"));		
 	}
-	
+
 	private void setModelInfoParametersFromProperties(){
 		ModelInfo.solver = this.parseSolverType(this.getProperty("solverType"));
 		ModelInfo.C = Double.parseDouble(this.getProperty("c"));
@@ -62,19 +62,14 @@ public class GNTProperties extends Properties {
 			WordSuffixFeatureFactory.ngramSize = Integer.parseInt(this.getProperty("WordSuffixFeatureFactory.ngramSize"));
 	}
 
-	private void setDataAccessors(){
-		Data.wordFormIndex = Integer.parseInt(this.getProperty("wordFormIndex"));
-		Data.posTagIndex = Integer.parseInt(this.getProperty("posTagIndex"));
-	}
 
 	// call setters via class instantiation
-	public GNTProperties(String propsFileName){
+	public GNTdataProperties(String propsFileName){
 		try {
 			this.setGntProps(propsFileName);
 			this.setGlobalParamsFromProperties();
 			this.setModelInfoParametersFromProperties();
 			this.setActivatedFeatureExtractors();
-			this.setDataAccessors();
 		} catch (IOException | XMLStreamException e) {
 			e.printStackTrace();
 		}

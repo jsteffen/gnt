@@ -4,7 +4,8 @@ import java.io.IOException;
 
 import tagger.GNTagger;
 import corpus.EvalConllFile;
-import data.GNTProperties;
+import corpus.GNTcorpusProperties;
+import data.GNTdataProperties;
 import data.GlobalParams;
 import data.ModelInfo;
 
@@ -15,10 +16,11 @@ import data.ModelInfo;
  *
  */
 public class RunTagger {
-	public static void runner(String configFileName) throws IOException{
+	public static void runner(String dataConfigFileName, String corpusConfigFileName) throws IOException{
 		ModelInfo modelInfo = new ModelInfo();
-		GNTProperties props = new GNTProperties(configFileName);
-		GNTagger posTagger = new GNTagger(modelInfo, props);
+		GNTdataProperties dataProps = new GNTdataProperties(dataConfigFileName);
+		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
+		GNTagger posTagger = new GNTagger(modelInfo, corpusProps);
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 
 		EvalConllFile evalFile = new EvalConllFile();
@@ -27,7 +29,7 @@ public class RunTagger {
 		
 		evalFile.getData().readWordSet(posTagger.getArchivator());
 		System.out.println(evalFile.getData().toString());
-
+		
 		for (String fileName : posTagger.getCorpus().getDevLabeledData()){
 			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
 			posTagger.tagAndWriteFromConllDevelFile(fileName+".conll", evalFileName, -1);

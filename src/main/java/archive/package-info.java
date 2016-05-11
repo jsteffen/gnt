@@ -134,13 +134,23 @@ Approach for unpacking:
 		
 HIERIX		
 -> integrate used config file into archive
-	- use src/main/resources/props as dummy config files that can be used to define own config files
+	- only needed for tagging phase
+	- use src/main/resources/dataProps as dummy config files that can be used to define own config files
 	- then save config file in archive using config.xml as name
-	- then adapt tagging so to be initialized with archive first
-	- actually I only need that part of config file that is necessary to recover the global params not the corpus files
+	- then adapt tagging so to be called with model file only
+	
 -> so some more changes are necessary to separate parameter setting and corpus files
 	- only the liblinear and control parameters
-	- how to do it ?
+	- I tested it adapted tagger to run without corpus files
+	- need to separate config and corpus properties
+	-> DONE
+	
+-> simple version first:
+	- copy and add config file with name config.xml to archive during training
+		- then config.xml can be safely deleted
+	- in tagging mode:
+		- specify archive
+		- and adapt tagger so to extract and load config.xml file from archive
 	
 
 -> CLEAN CODE

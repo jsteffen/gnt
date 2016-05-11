@@ -8,6 +8,8 @@ public class TestRunPosTagger {
 
 	public static void main(String[] args) throws IOException{
 		
-		RunTagger.runner("src/main/resources/props/EnNerTagger.xml");		
+		RunTagger.runner(
+				"src/main/resources/dataProps/EnNerTagger.xml", 
+				"src/main/resources/corpusProps/EnNerTagger.xml");		
 	}
 }

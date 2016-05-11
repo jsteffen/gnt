@@ -20,7 +20,7 @@ import data.ModelInfo;
 /*
  * arguments:
  * 
- * -mode train|test -config <configFile>|
+ * -mode train|test -dataConfig <configFile> -corpusConfig <configFile> |
  * -mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> 
  * \ -wordFeats F|T -shapeFeats F|T -suffixFeats F|T -clusterFeats F|T -f <filename> -c <fileName>|
  * -mode test -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> -m <model info type> 
@@ -28,7 +28,8 @@ import data.ModelInfo;
  */
 public class GNT {
 	private String mode = "train";
-	private String config = "";
+	private String dataConfig = "";
+	private String corpusConfig = "";
 	private String windowSize = "2";
 	private String dimension = "0";
 	private String sentences = "-1";
@@ -42,7 +43,7 @@ public class GNT {
 	}
 
 	private void errorMessageAndExit(){
-		System.err.println("-mode train|test -config src/main/resources/props/<configFile.xml>"
+		System.err.println("-mode train|test -dataConfig src/main/resources/dataProps/<configFile.xml> -corpusConfig src/main/resources/corpusProps/<configFile.xml>"
 				+ "\nor ...");
 		System.err.println("-mode train -tagger taggerName -w <window size> -d <dimension> -s <number of sentences> "
 				+ "-m <model info type> "
@@ -85,7 +86,8 @@ public class GNT {
 		for (int i=0; i < args.length;i++){
 			switch (args[i]){
 			case "-mode" 	: this.mode = args[i+1]; break;
-			case "-config"	: this.config = args[i+1]; break;
+			case "-dataConfig"	: this.dataConfig = args[i+1]; break;
+			case "-corpusConfig"	: this.corpusConfig = args[i+1]; break;
 			case "-tagger" 	: GlobalParams.taggerName = args[i+1]; break;
 			case "-w" 		: this.windowSize= args[i+1]; break;
 			case "-d" 		: this.dimension= args[i+1]; break;
@@ -145,8 +147,9 @@ public class GNT {
 		String output = "";
 
 		output += " -mode "+ this.mode ;
-		if (!this.config.isEmpty()){
-			output += " -config "+ this.config ;
+		if (!this.dataConfig.isEmpty()){
+			output += " -dataConfig "+ this.dataConfig ;
+			output += " -corpusConfig "+ this.corpusConfig ;
 		}
 		else
 		{
@@ -192,8 +195,6 @@ public class GNT {
 		GlobalParams.dim = Integer.valueOf(this.dimension);
 		GlobalParams.numberOfSentences = Integer.valueOf(this.sentences);
 
-		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
-
 		GNTagger posTagger = new GNTagger(modelInfo);
 
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
@@ -210,8 +211,8 @@ public class GNT {
 	private void runGNTrainer(String[] args) throws IOException {
 		System.out.println("Run GNTrainer: ");
 		System.out.println(this.toString());
-		if (!this.config.isEmpty())
-			TrainTagger.trainer(this.config);
+		if (!this.dataConfig.isEmpty())
+			TrainTagger.trainer(this.dataConfig, this.corpusConfig);
 		else
 			this.runGNTrainerInner(args);
 	}
@@ -220,8 +221,8 @@ public class GNT {
 		System.out.println("Run GNTagger: ");
 		System.out.println(this.toString());
 	
-		if (!this.config.isEmpty())
-			RunTagger.runner(this.config);
+		if (!this.dataConfig.isEmpty())
+			RunTagger.runner(this.dataConfig, this.corpusConfig);
 		else
 			this.runGNTaggerInner(args);
 	}

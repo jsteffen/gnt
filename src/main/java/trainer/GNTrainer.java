@@ -5,9 +5,10 @@ import java.io.IOException;
 import archive.Archivator;
 import corpus.Corpus;
 import corpus.CorpusProcessor;
+import corpus.GNTcorpusProperties;
 import corpus.IndicatorWordsCreator;
 import data.Alphabet;
-import data.GNTProperties;
+import data.GNTdataProperties;
 import data.GlobalParams;
 import data.ModelInfo;
 import data.Window;
@@ -47,14 +48,14 @@ public class GNTrainer {
 
 	// Creators
 
-	public GNTrainer(ModelInfo modelInfo, GNTProperties props){
+	public GNTrainer(ModelInfo modelInfo, GNTdataProperties dataProps, GNTcorpusProperties corpusProps){
 
 		System.out.println(Alphabet.toActiveFeatureString());
 		
 		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		System.out.println(modelInfo.toString());
 
-		this.corpus = new Corpus(props);
+		this.corpus = new Corpus(corpusProps);
 
 		CorpusProcessor mapper = new CorpusProcessor(this.corpus);
 

@@ -119,3 +119,6 @@ MAY, 2016
 - generated compressed folder of all data that is necessary for tagging
 	- /GNT/src/main/java/archive/package-info.java
 	
+- defined separate property classes for data and corpus setting and adapted trainer and tagger
+  as well as src/main/resources/...
+	

@@ -4,12 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import data.GNTProperties;
 import data.GlobalParams;
 
 // The class that holds all corpus files for training, testing etc.
 public class Corpus {
-	private GNTProperties gntProps = null;
+	private GNTcorpusProperties gntProps = null;
 
 	private  List<String> trainingLabeledSourceFiles = new ArrayList<String>();
 	private  List<String> devLabeledSourceFiles = new ArrayList<String>();
@@ -22,6 +21,7 @@ public class Corpus {
 	private  List<String> trainingUnLabeledData = new ArrayList<String>();
 	private  List<String> devUnLabeledData = new ArrayList<String>();
 	private  List<String> testUnLabeledData = new ArrayList<String>();
+
 
 	public List<String> getTrainingLabeledData() {
 		return trainingLabeledData;
@@ -121,12 +121,7 @@ public class Corpus {
 		}		
 	}
 
-	public Corpus(){
-
-	}
-	public Corpus(GNTProperties properties) {
-		this.gntProps = properties;
-		
+	private void setCorpusFiles(){
 		this.setTrainingLabeledSourceFilesFromProps(this.gntProps.getProperty("trainingLabeledSourceFiles"));
 		this.setDevLabeledSourceFilesFromProps(this.gntProps.getProperty("devLabeledSourceFiles"));
 		this.setTestLabeledSourceFilesFromProps(this.gntProps.getProperty("testLabeledSourceFiles"));
@@ -139,10 +134,19 @@ public class Corpus {
 		this.setDevUnLabeledDataFromProps(this.gntProps.getProperty("devUnLabeledData"));
 		this.setTestUnLabeledDataFromProps(this.gntProps.getProperty("testUnLabeledData"));
 	}
-	
+
+	public Corpus(){
+
+	}
+	public Corpus(GNTcorpusProperties properties) {
+		this.gntProps = properties;
+
+		this.setCorpusFiles();
+	}
+
 	public String makeEvalFileName(String labeledFile){
 		return GlobalParams.evalFilePathname+ new File(labeledFile).getName()+".txt";
-		
+
 	}
 
 }

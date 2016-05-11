@@ -7,6 +7,8 @@ import caller.TrainTagger;
 public class TestTrainPosTagger {
 
 	public static void main(String[] args) throws IOException{
-		TrainTagger.trainer("src/main/resources/props/DePosTagger.xml");
+		TrainTagger.trainer(
+				"src/main/resources/dataProps/EnNerTagger.xml", 
+				"src/main/resources/corpusProps/EnNerTagger.xml");
 	}
 }

@@ -8,7 +8,7 @@ public class TestRunTaggerStandalone {
 	
 public static void main(String[] args) throws IOException{
 	GNTaggerStandalone runner = new GNTaggerStandalone();
-	runner.initRunner("src/main/resources/props/DeMorphTagger.xml");
+	runner.initRunner("src/main/resources/dataProps/DePosTagger.xml");
 		
 	System.out.println("Tag text: ");
 	runner.tagItRunner(

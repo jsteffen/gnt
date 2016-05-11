@@ -2,19 +2,21 @@ package caller;
 
 import java.io.IOException;
 
+import corpus.GNTcorpusProperties;
 import trainer.GNTrainer;
-import data.GNTProperties;
+import data.GNTdataProperties;
 import data.GlobalParams;
 import data.ModelInfo;
 
 public class TrainTagger {
 
-	public static void trainer(String configFileName) throws IOException{
+	public static void trainer(String dataConfigFileName, String corpusConfigFileName) throws IOException{
 		ModelInfo modelInfo = new ModelInfo();
 
-		GNTProperties props = new GNTProperties(configFileName);
-		GNTrainer gnTrainer = new GNTrainer(modelInfo, props);
+		GNTdataProperties dataProps = new GNTdataProperties(dataConfigFileName);
+		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
+		GNTrainer gnTrainer = new GNTrainer(modelInfo, dataProps, corpusProps);
 		gnTrainer.gntTrainingWithDimensionFromConllFile(
-				props.getTrainingFile(), props.getClusterIdNameFile(), GlobalParams.dim, GlobalParams.numberOfSentences);
+				corpusProps.getTrainingFile(), corpusProps.getClusterIdNameFile(), GlobalParams.dim, GlobalParams.numberOfSentences);
 	}
 }
