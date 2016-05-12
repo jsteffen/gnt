@@ -14,6 +14,7 @@ public class TrainTagger {
 		ModelInfo modelInfo = new ModelInfo();
 
 		GNTdataProperties dataProps = new GNTdataProperties(dataConfigFileName);
+		dataProps.copyConfigFile(dataConfigFileName);
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
 		GNTrainer gnTrainer = new GNTrainer(modelInfo, dataProps, corpusProps);
 		gnTrainer.gntTrainingWithDimensionFromConllFile(

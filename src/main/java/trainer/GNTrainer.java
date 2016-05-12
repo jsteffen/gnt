@@ -51,7 +51,7 @@ public class GNTrainer {
 	public GNTrainer(ModelInfo modelInfo, GNTdataProperties dataProps, GNTcorpusProperties corpusProps){
 
 		System.out.println(Alphabet.toActiveFeatureString());
-		
+
 		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		System.out.println(modelInfo.toString());
 
@@ -75,7 +75,7 @@ public class GNTrainer {
 	}
 
 	// Methods
-	
+
 	// This is a method for on-demand creation of the indicator words
 
 	private void createIndicatorWords(String taggerName, double subSamplingThreshold){
@@ -160,12 +160,17 @@ public class GNTrainer {
 			throws IOException{
 		time1 = System.currentTimeMillis();
 
+		// add copied dataProps file to archive
+		this.getArchivator().getFilesToPack().add(GNTdataProperties.configTmpFileName);
+
+		// Create feature files
 		this.createIndicatorWords(GlobalParams.taggerName, GlobalParams.subSamplingThreshold);
 		this.createTrainingFeatureFiles(trainingFileName+"-sents.txt", clusterIdSourceFileName, dim);
 
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 
+		// Do training
 		this.gntTrainingFromConllFile(trainingFileName+".conll", dim, maxExamples);
 	}
 }

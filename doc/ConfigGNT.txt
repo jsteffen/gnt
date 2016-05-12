@@ -29,3 +29,13 @@ DEMORPH:	ok
 ENNER:		ok - using BILOU
 DENERKONV:	ok
 DEPOSMORPH:	ok
+
+May, 2016:
+
+I separate data props and corpus props in specific src/main/resources/ folders:
+
+- dataProps: those parameters which set the system control and the machine learner
+- corpusProps: for setting training, devel and test sources
+
+dataProps is always needed, also when running the tagger standalone, and should be part of the archive
+corpusPropos only, during training and testing or when files should be used...

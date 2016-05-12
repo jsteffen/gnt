@@ -132,23 +132,19 @@ Approach for unpacking:
 	-> and then with distributed word features
 		- OK
 		
-HIERIX		
 -> integrate used config file into archive
-	
--> so some more changes are necessary to separate parameter setting and corpus files
-	- only the liblinear and control parameters
-	- I tested it adapted tagger to run without corpus files
-	- need to separate config and corpus properties
-	-> DONE
 	
 -> simple version first:
 	- copy and add config file with name config.xml to archive during training
 		- then config.xml can be safely deleted
+	-> DONE
 	- in tagging mode:
 		- specify archive
 		- and adapt tagger so to extract and load config.xml file from archive
+	- use config file as first file, so that it can be used initially
+	-> DONE
 	
-
+HIERIX
 -> CLEAN CODE
 
  */

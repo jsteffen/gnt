@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import corpus.GNTcorpusProperties;
 import trainer.ProblemInstance;
 import data.Alphabet;
 import data.Data;
+import data.GNTdataProperties;
 import data.GlobalParams;
 import data.ModelInfo;
 import data.OffSets;
@@ -93,32 +95,68 @@ public class GNTagger {
 	public GNTagger(){
 	}
 
-	public GNTagger(ModelInfo modelInfo) {
+	public GNTagger(ModelInfo modelInfo) throws IOException {
 		this.setModelInfo(modelInfo);
 		this.setData(new Data());
 		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+
+		System.out.println("Extract archive ...");
+		this.getArchivator().extract();
 	}
 
-	public GNTagger(ModelInfo modelInfo, GNTcorpusProperties props) {
+	public GNTagger(ModelInfo modelInfo, GNTcorpusProperties props) throws IOException {
 		this.setModelInfo(modelInfo);
 		this.setData(new Data());
+		this.corpus = new Corpus(props);
 		System.out.println(Alphabet.toActiveFeatureString());
 
 		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
 		System.out.println(modelInfo.toString());
 
-		this.corpus = new Corpus(props);
+
 		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+		System.out.println("Extract archive ...");
+		this.getArchivator().extract();
+	}
+
+	public GNTagger(String archiveName, ModelInfo modelInfo) throws IOException {
+
+		this.setArchivator(new Archivator(archiveName));
+		System.out.println("Extract archive ...");
+		this.getArchivator().extract();
+		System.out.println("Set dataProps ...");
+		GNTdataProperties dataProps = 
+				new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName));
+
+		this.setModelInfo(modelInfo);
+		this.setData(new Data());
+
+		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
+
+	}
+
+	public GNTagger(String archiveName, GNTcorpusProperties props, ModelInfo modelInfo) throws IOException {
+
+		this.setArchivator(new Archivator(archiveName));
+		System.out.println("Extract archive ...");
+		this.getArchivator().extract();
+		System.out.println("Set dataProps ...");
+		GNTdataProperties dataProps = 
+				new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName));
+
+		this.setModelInfo(modelInfo);
+		this.setData(new Data());
+		this.corpus = new Corpus(props);
+
+		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
+
 	}
 
 	// Methods
 
-	public void initGNTagger(int windowSize, int dim) throws IOException{
+	public void initGNTagger(int windowSize, int dim) throws UnsupportedEncodingException, IOException { 
 		time1 = System.currentTimeMillis();
-		
-		System.out.println("Extract archive:");
-		this.getArchivator().extract();
 
 		System.out.println("Set window size: " + windowSize);
 		this.setWindowSize(windowSize);
@@ -143,7 +181,7 @@ public class GNTagger {
 		time1 = System.currentTimeMillis();
 
 		System.out.println("Load model file from archive: " + this.getModelInfo().getModelFile());
-		
+
 		//this.setModel(Model.load(new File(this.getModelInfo().getModelFile())));
 		this.setModel(Linear.loadModel(
 				new InputStreamReader(
@@ -156,7 +194,7 @@ public class GNTagger {
 		System.out.println(this.getModel().toString()+"\n");
 	}
 
-	
+
 
 	/**
 	 * The same as trainer.TrainerInMem.createWindowFramesFromSentence()!
@@ -232,7 +270,7 @@ public class GNTagger {
 
 		// create feature vector instance for each window frame and tag
 		this.constructProblemAndTag(false, true);
-		
+
 		// reset instances - need to do this here, because learner is called directly on windows
 		this.getData().cleanInstances();
 	}
@@ -247,10 +285,10 @@ public class GNTagger {
 
 		// create internal sentence object
 		this.getData().generateSentenceObjectFromUnlabeledTokens(tokens);
-		
+
 		// tag sentence object
 		this.tagSentenceObject();
-		
+
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1)+"\n");
 	}
@@ -267,9 +305,9 @@ public class GNTagger {
 		for (int i=0; i < sentence.getWordArray().length;i++){
 			String word = this.getData().getWordSet().getNum2label().get(sentence.getWordArray()[i]);
 			String label = this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
-			
+
 			label = PostProcessor.determineTwitterLabel(word, label);
-			
+
 			output += word+"/"+label+" ";
 			cnt++;
 			if ((cnt % mod)==0) output+="\n";
@@ -277,7 +315,7 @@ public class GNTagger {
 		return output;
 
 	}
-	
+
 	private void tagAndWriteSentencesFromConllReader(BufferedReader conllReader, BufferedWriter conllWriter, int max) throws IOException{
 		String line = "";
 		List<String[]> tokens = new ArrayList<String[]>();
@@ -363,7 +401,7 @@ public class GNTagger {
 		Window.windowCnt=0;
 
 		time1 = System.currentTimeMillis();
-		
+
 		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, sentenceCnt);
 		// close the buffers
 		conllReader.close(); conllWriter.close();

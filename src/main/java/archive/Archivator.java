@@ -22,7 +22,7 @@ public class Archivator {
 	private HashMap<String,InputStream> archiveMap;
 	private List<String> filesToPack = new ArrayList<String>();
 
-	//Setters amd getters
+	//Setters and getters
 	public List<String> getFilesToPack() {
 		return filesToPack;
 	}

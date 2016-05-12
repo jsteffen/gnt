@@ -5,7 +5,6 @@ import java.io.IOException;
 import tagger.GNTagger;
 import corpus.EvalConllFile;
 import corpus.GNTcorpusProperties;
-import data.GNTdataProperties;
 import data.GlobalParams;
 import data.ModelInfo;
 
@@ -16,11 +15,10 @@ import data.ModelInfo;
  *
  */
 public class RunTagger {
-	public static void runner(String dataConfigFileName, String corpusConfigFileName) throws IOException{
+	public static void runner(String archiveName, String corpusConfigFileName) throws IOException{
 		ModelInfo modelInfo = new ModelInfo();
-		GNTdataProperties dataProps = new GNTdataProperties(dataConfigFileName);
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
-		GNTagger posTagger = new GNTagger(modelInfo, corpusProps);
+		GNTagger posTagger = new GNTagger(archiveName, corpusProps, modelInfo);
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 
 		EvalConllFile evalFile = new EvalConllFile();

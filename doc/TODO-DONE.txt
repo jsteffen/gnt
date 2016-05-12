@@ -121,4 +121,7 @@ MAY, 2016
 	
 - defined separate property classes for data and corpus setting and adapted trainer and tagger
   as well as src/main/resources/...
+ 
+- create models as archive which stores all necessary information for running a tagger
+	- feature files, label/word files, dataConfig.xml and model file
 	

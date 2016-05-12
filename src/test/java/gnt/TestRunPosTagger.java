@@ -9,7 +9,7 @@ public class TestRunPosTagger {
 	public static void main(String[] args) throws IOException{
 		
 		RunTagger.runner(
-				"src/main/resources/dataProps/EnNerTagger.xml", 
-				"src/main/resources/corpusProps/EnNerTagger.xml");		
+				"resources/models/model_DETWEETPOS_2_0iw-1sent_FTTT_MCSVM_CS.zip", 
+				"src/main/resources/corpusProps/DeTweetPosTagger.xml");		
 	}
 }

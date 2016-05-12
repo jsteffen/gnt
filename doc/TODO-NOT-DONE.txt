@@ -93,6 +93,8 @@ Additional applications:
 ***
 For software package:
 
+- make it thread save
+
 - add FLORS accuracy to evaluation script
 
 - create input file for TORCH

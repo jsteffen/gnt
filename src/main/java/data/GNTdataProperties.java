@@ -3,6 +3,9 @@ package data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
@@ -17,6 +20,8 @@ public class GNTdataProperties extends Properties {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public static String configTmpFileName = "src/main/resources/dataConfig.xml";
 
 	public void setGntProps (String propsFileName)
 			throws InvalidPropertiesFormatException, IOException, XMLStreamException {
@@ -62,6 +67,16 @@ public class GNTdataProperties extends Properties {
 			WordSuffixFeatureFactory.ngramSize = Integer.parseInt(this.getProperty("WordSuffixFeatureFactory.ngramSize"));
 	}
 
+	public void copyConfigFile(String propsFileName){
+		Path sourceFile = new File(propsFileName).toPath();
+		Path targetFile = new File(GNTdataProperties.configTmpFileName).toPath();
+		try {
+			Files.copy(sourceFile, targetFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
 
 	// call setters via class instantiation
 	public GNTdataProperties(String propsFileName){
@@ -76,16 +91,16 @@ public class GNTdataProperties extends Properties {
 
 	}
 
-	public boolean getDebugProperty(){
-		return Boolean.parseBoolean(this.getProperty("debug"));
-	}
-
-	public String getTrainingFile(){
-		return this.getProperty("trainingFile").split(".conll")[0].replaceAll("[\n\r\t]", "");
-	}
-
-	public String getClusterIdNameFile(){
-		return this.getProperty("clusterIdSourceFileName".replaceAll("[\n\r\t]", ""));
+	public GNTdataProperties(InputStream fileIn){
+		try {
+			this.loadFromXML(fileIn);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.setGlobalParamsFromProperties();
+		this.setModelInfoParametersFromProperties();
+		this.setActivatedFeatureExtractors();
 	}
 
 }

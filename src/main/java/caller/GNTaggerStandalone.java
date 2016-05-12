@@ -1,20 +1,17 @@
 package caller;
 
 import java.io.IOException;
-import data.GNTdataProperties;
 import data.GlobalParams;
 import data.ModelInfo;
 import tagger.GNTagger;
 
 public class GNTaggerStandalone {
 	private ModelInfo modelInfo = null;
-	private GNTdataProperties props = null;
 	private GNTagger posTagger = null;
 
-	public void initRunner(String configFileName) throws IOException{
+	public void initRunner(String archiveName) throws IOException{
 		modelInfo = new ModelInfo();
-		props = new GNTdataProperties(configFileName);
-		posTagger = new GNTagger(modelInfo);
+		posTagger = new GNTagger(archiveName, modelInfo);
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 	}
 
@@ -26,7 +23,6 @@ public class GNTaggerStandalone {
 		String taggedString = posTagger.taggedSentenceToString();
 
 		for (String token : taggedString.split(" ")){
-
 			System.out.println(token);
 		}
 	}
