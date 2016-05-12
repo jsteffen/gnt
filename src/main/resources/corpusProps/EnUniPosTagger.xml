@@ -27,8 +27,7 @@
 		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train-sents.txt
 	</entry>
 	<entry key="devUnLabeledData">
-		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train-sents.txt,
-		resources/data/german/unlab/de-wikidump-sents500000.txt
+		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train-sents.txt
 	</entry>
 	<entry key="testUnLabeledData">
 		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train-sents.txt
