@@ -264,7 +264,7 @@ public class GNTagger {
 		}	
 	}
 
-	private void tagSentenceObject() throws IOException{
+	public void tagSentenceObject() throws IOException{
 		// create window frames from sentence and store in list
 		this.createWindowFramesFromSentence();
 

@@ -98,9 +98,12 @@ public class GNT {
 		System.out.println(this.toString());
 
 		if (!this.dataConfig.isEmpty())
-			RunTagger.runner(this.archiveName, this.corpusConfig);
+			RunTagger.runner(this.dataConfig, this.corpusConfig);
 		else
-			System.err.println("Only running GNT with config files is supported!");
+			if (!this.archiveName.isEmpty())
+				RunTagger.runner(this.archiveName, this.corpusConfig);
+			else
+				System.err.println("Only running GNT with archive name and config files is supported!");
 	}
 
 	public static void main(String[] args) throws IOException{
