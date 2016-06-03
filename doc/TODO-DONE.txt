@@ -115,6 +115,12 @@ January, 2016:
 	
 - define standalone taggers -> DONE
 
+MARCH, 2016
+- GNT: do multilingual tagging based on uniform tag set
+	-> doc/UniformTagSet.txt
+
+
+
 MAY, 2016
 - generated compressed folder of all data that is necessary for tagging
 	- /GNT/src/main/java/archive/package-info.java
@@ -122,6 +128,6 @@ MAY, 2016
 - defined separate property classes for data and corpus setting and adapted trainer and tagger
   as well as src/main/resources/...
  
-- create models as archive which stores all necessary information for running a tagger
+- created models as archive which stores all necessary information for running a tagger
 	- feature files, label/word files, dataConfig.xml and model file
 	

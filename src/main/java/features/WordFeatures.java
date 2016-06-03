@@ -13,6 +13,7 @@ import data.Pair;
  * - right distributed word features 
  * - shape features
  * - suffix features
+ * - cluster features
  * 
  * they are represented by a list of pairs using relative index and value.
  * Where value can be double or boolean

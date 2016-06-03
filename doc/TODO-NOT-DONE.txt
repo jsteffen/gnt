@@ -76,9 +76,6 @@ Feature learning:
 ***
 Additional applications:
 
-- GNT: do multilingual tagging based on uniform tag set
-	-> doc/UniformTagSet.txt
-
 - GNT for lemmatization
 	
 - GNT also for chunking

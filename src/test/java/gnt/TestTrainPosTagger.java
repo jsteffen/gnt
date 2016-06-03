@@ -12,14 +12,14 @@ public class TestTrainPosTagger {
 //		TrainTagger.trainer(
 //				"src/main/resources/dataProps/EnNerTagger.xml", 
 //				"src/main/resources/corpusProps/EnNerTagger.xml");
-//		TrainTagger.trainer(
-//				"src/main/resources/dataProps/EnPosTagger.xml", 
-//				"src/main/resources/corpusProps/EnPosTagger.xml");
+		TrainTagger.trainer(
+				"src/main/resources/dataProps/EnPosTagger.xml", 
+				"src/main/resources/corpusProps/EnPosTagger.xml");
 //		TrainTagger.trainer(
 //				"src/main/resources/dataProps/EnUniPosTagger.xml", 
 //				"src/main/resources/corpusProps/EnUniPosTagger.xml");
-		TrainTagger.trainer(
-				"src/main/resources/dataProps/FrUniPosTagger.xml", 
-				"src/main/resources/corpusProps/FrUniPosTagger.xml");
+//		TrainTagger.trainer(
+//				"src/main/resources/dataProps/FrUniPosTagger.xml", 
+//				"src/main/resources/corpusProps/FrUniPosTagger.xml");
 	}
 }

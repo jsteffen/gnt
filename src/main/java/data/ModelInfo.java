@@ -102,7 +102,7 @@ public class ModelInfo {
 		// multi-class SVM by Crammer and Singer
 		ModelInfo.solver = SolverType.MCSVM_CS;
 		ModelInfo.C = 0.1;
-		ModelInfo.eps = 0.3;
+		ModelInfo.eps = 0.1;
 	}
 
 	public void initGNTInfo(){
