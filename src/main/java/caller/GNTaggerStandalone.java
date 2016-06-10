@@ -48,8 +48,7 @@ public class GNTaggerStandalone {
 				String taggedString = posTagger.taggedSentenceToString();
 				for (String token : taggedString.split(" ")){
 					fileWriter.write(token+"\n");
-				}
-				fileWriter.newLine();			
+				}			
 			}
 		}
 		fileReader.close();

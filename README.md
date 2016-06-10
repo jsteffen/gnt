@@ -27,3 +27,6 @@ Current tasks:
 - NER with tests on EN and DE
 - Morphology with tests on DE
 - Twitter-based POS tagging for DE
+
+I defined a simple GntTokenier class to process text files.
+Need to be improved soon.
