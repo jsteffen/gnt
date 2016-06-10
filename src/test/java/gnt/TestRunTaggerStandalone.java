@@ -11,7 +11,7 @@ public static void main(String[] args) throws IOException{
 	runner.initRunner("resources/models/model_ENPOS_2_0iw-1sent_FTTT_MCSVM_CS.zip");
 		
 	System.out.println("Tag text: ");
-	runner.tagItRunner(
+	runner.tagStringRunner(
 			"Direction Blinking Left: When moving the pitman arm in position turn left " 
 			+ "the vehicle flashes all left direction indicators (front left, exterior mirror left, rear left) "
 			+ "synchronically with pulse ratio bright to dark 1:1."

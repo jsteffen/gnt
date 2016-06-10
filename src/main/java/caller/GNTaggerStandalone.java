@@ -23,7 +23,7 @@ public class GNTaggerStandalone {
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 	}
 
-	public void tagItRunner(String inputString) throws IOException{
+	public void tagStringRunner(String inputString) throws IOException{
 		String[] tokens = GntTokenizer.splitTokenizer(inputString);
 
 		this.posTagger.tagUnlabeledTokens(tokens);
