@@ -2,12 +2,7 @@ package caller;
 
 import java.io.IOException;
 
-import corpus.EvalConllFile;
-import tagger.GNTagger;
-import trainer.GNTrainer;
-import data.Alphabet;
 import data.GlobalParams;
-import data.ModelInfo;
 
 /**
  * The main calls for training and tagging and testing with GNTagger
@@ -24,10 +19,14 @@ import data.ModelInfo;
  * -mode test -archiveName resources/models/<archive.zip> -corpusConfig src/main/resources/corpusProps/<configFile.xml>
  */
 public class GNT {
-	private String mode = "train";
+	private String mode = "train"; // or "test"
 	private String dataConfig = "";
 	private String archiveName = "";
 	private String corpusConfig = "";
+	private String corpusDir = "";
+	private String inEncode = "ISO-8859-1";
+	private String outEncode = "UTF-8";
+
 
 	public GNT(){
 	}
@@ -36,6 +35,8 @@ public class GNT {
 		System.err.println("-mode train -dataConfig src/main/resources/dataProps/<configFile.xml> -corpusConfig src/main/resources/corpusProps/<configFile.xml>"
 				+ "\nor ...");
 		System.err.println("-mode test -archiveName resources/models/<archive.zip> -corpusConfig src/main/resources/corpusProps/<configFile.xml>"
+				+ "\nor ...");
+		System.err.println("-mode test -archiveName resources/models/<archive.zip> -corpusDir <folder-with-text-files> -inEncode <encoding> -outEncode <encoding>"
 				+ "\nor ...");
 		System.err.println(this.toString());
 		// Exit with error !
@@ -46,11 +47,14 @@ public class GNT {
 
 		for (int i=0; i < args.length;i++){
 			switch (args[i]){
-			case "-mode" 	: this.mode = args[i+1]; break;
-			case "-dataConfig"	: this.dataConfig = args[i+1]; break;
-			case "-archiveName"	: this.archiveName = args[i+1]; break;
+			case "-mode" 			: this.mode = args[i+1]; break;
+			case "-dataConfig"		: this.dataConfig = args[i+1]; break;
+			case "-archiveName"		: this.archiveName = args[i+1]; break;
 			case "-corpusConfig"	: this.corpusConfig = args[i+1]; break;
-			case "-tagger" 	: GlobalParams.taggerName = args[i+1]; break;
+			case "-corpusDir"		: this.corpusDir = args[i+1]; break;
+			case "-tagger" 			: GlobalParams.taggerName = args[i+1]; break;
+			case "-inEncode" 		: this.inEncode = args[i+1]; break;
+			case "-outEncode" 		: this.outEncode = args[i+1]; break;
 			}
 		}
 	}
@@ -79,7 +83,13 @@ public class GNT {
 		else
 			if (!this.archiveName.isEmpty()){
 				output += " -archiveName "+ this.archiveName ;
-				output += " -corpusConfig "+ this.corpusConfig ;
+				if (!this.corpusConfig.isEmpty())
+					output += " -corpusConfig "+ this.corpusConfig ;
+				else{
+					output += " -corpusDir "+ this.corpusDir ;
+					output += " -inEncode "+ this.inEncode ;
+					output += " -outEncode "+ this.outEncode ;
+				}
 			}
 		return output;
 	}
@@ -97,11 +107,17 @@ public class GNT {
 		System.out.println("Run GNTagger: ");
 		System.out.println(this.toString());
 
-		if (!this.dataConfig.isEmpty())
-			RunTagger.runner(this.dataConfig, this.corpusConfig);
+		if (!this.archiveName.isEmpty() &&
+				!this.corpusConfig.isEmpty() &&
+				this.corpusDir.isEmpty()){
+			RunTagger.runner(this.archiveName, this.corpusConfig);
+		}
 		else
-			if (!this.archiveName.isEmpty())
-				RunTagger.runner(this.archiveName, this.corpusConfig);
+			if (!this.archiveName.isEmpty() &&
+					!this.corpusDir.isEmpty() &&
+					this.corpusConfig.isEmpty()){
+				RunTagger.folderRunner(this.archiveName, this.corpusDir, this.inEncode, this.outEncode);
+			}
 			else
 				System.err.println("Only running GNT with archive name and config files is supported!");
 	}

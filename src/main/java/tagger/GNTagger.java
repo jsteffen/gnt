@@ -281,16 +281,11 @@ public class GNTagger {
 	 * @throws IOException
 	 */
 	public void tagUnlabeledTokens(String[] tokens) throws IOException{
-		this.time1 = System.currentTimeMillis();
-
 		// create internal sentence object
 		this.getData().generateSentenceObjectFromUnlabeledTokens(tokens);
 
 		// tag sentence object
 		this.tagSentenceObject();
-
-		time2 = System.currentTimeMillis();
-		System.out.println("System time (msec): " + (time2-time1)+"\n");
 	}
 
 	/**
