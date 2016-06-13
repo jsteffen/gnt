@@ -12,10 +12,9 @@ public class GntTokenizer {
 		String delims = "[ |\\,|\\:|\\.|\\\"|\\(|\\)|\\!|\\?]+";
 		delims = "[\\W]+";
 
-		//TODO: may have empty tokens
-
 		String[] tokens = string.split(delims);
 
+		// GN: This is a cheap trick to remove empty strings
 		final List<String> list =  new ArrayList<String>();
 		Collections.addAll(list, tokens); 
 		list.remove("");

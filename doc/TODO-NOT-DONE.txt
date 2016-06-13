@@ -1,4 +1,7 @@
-HIERIX: January 2016
+HIERIX: June 2016
+
+- create zipped file by calling C++ tagger version 
+-> needed for perocessing PosMorph-files
 
 - check to normalize/scale each component vector
 	to unit length (compute length of vector, and then divide each component)

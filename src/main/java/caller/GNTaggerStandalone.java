@@ -23,6 +23,11 @@ public class GNTaggerStandalone {
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
 	}
 
+	/**
+	 * Receives a string and calls GNT tagger. Then splits resulting tagged strings into a line-oriented format
+	 * @param inputString
+	 * @throws IOException
+	 */
 	public void tagStringRunner(String inputString) throws IOException{
 		String[] tokens = GntTokenizer.splitTokenizer(inputString);
 
@@ -35,6 +40,15 @@ public class GNTaggerStandalone {
 		}
 	}
 
+	/**
+	 * Receives the name of a file, reads it line-wise, calls GNT tagger on each line, and
+	 * saves resulting tagged string in output file. Output file is build from sourceFilename by 
+	 * adding suffix .GNT
+	 * @param sourceFileName
+	 * @param inEncode
+	 * @param outEncode
+	 * @throws IOException
+	 */
 	public void tagFileRunner(String sourceFileName, String inEncode, String outEncode) throws IOException {
 		BufferedReader fileReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(sourceFileName), inEncode));
