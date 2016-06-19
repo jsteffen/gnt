@@ -9,12 +9,12 @@ public class TestTrainPosTagger {
 	// TODO it is NOT thread save
 
 	public static void main(String[] args) throws IOException{
-//		TrainTagger.trainer(
-//				"src/main/resources/dataProps/EnNerTagger.xml", 
-//				"src/main/resources/corpusProps/EnNerTagger.xml");
 		TrainTagger.trainer(
-				"src/main/resources/dataProps/EnPosTagger.xml", 
-				"src/main/resources/corpusProps/EnPosTagger.xml");
+				"src/main/resources/dataProps/EnNerTagger.xml", 
+				"src/main/resources/corpusProps/EnNerTagger.xml");
+//		TrainTagger.trainer(
+//				"src/main/resources/dataProps/EnPosTagger.xml", 
+//				"src/main/resources/corpusProps/EnPosTagger.xml");
 //		TrainTagger.trainer(
 //				"src/main/resources/dataProps/EnUniPosTagger.xml", 
 //				"src/main/resources/corpusProps/EnUniPosTagger.xml");

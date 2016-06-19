@@ -1,5 +1,8 @@
 HIERIX: June 2016
 
+count and sort extracted names with: 
+grep -i "\\-PER" test/aquaint-xie-plain.txt.GNT | sort | uniq -c | sort -bnr > pers.txt
+
 - create zipped file by calling C++ tagger version 
 -> needed for perocessing PosMorph-files
 
