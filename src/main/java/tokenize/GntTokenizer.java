@@ -10,7 +10,7 @@ public class GntTokenizer {
 		//System.out.println(">>>"+string+"<<<");
 
 		String delims = "[ |\\,|\\:|\\.|\\\"|\\(|\\)|\\!|\\?]+";
-		delims = "[\\W]+";
+		//delims = "[\\W]+";
 
 		String[] tokens = string.split(delims);
 
