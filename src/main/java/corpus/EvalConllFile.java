@@ -16,9 +16,9 @@ import data.ModelInfo;
 
 public class EvalConllFile {
 	private Data data = new Data();
-	private double acc;
-	private double accOOV;
-	private double accInV;
+	public static double acc;
+	public static double accOOV;
+	public static double accInV;
 
 	public Data getData() {
 		return data;
