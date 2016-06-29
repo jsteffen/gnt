@@ -23,7 +23,7 @@ public class GNTcorpusProperties extends Properties {
 	}
 
 	public String getTrainingFile(){
-		return this.getProperty("trainingFile").split(".conll")[0].replaceAll("[\n\r\t]", "");
+		return this.getProperty("trainingFile").split("\\.conll")[0].replaceAll("[\n\r\t]", "");
 	}
 
 	public String getClusterIdNameFile(){

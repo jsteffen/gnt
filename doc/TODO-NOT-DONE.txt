@@ -1,7 +1,20 @@
 HIERIX: June 2016
 
-count and sort extracted names with: 
-grep -i "\\-PER" test/aquaint-xie-plain.txt.GNT | sort | uniq -c | sort -bnr > pers.txt
+-	count and sort extracted names with: 
+	grep -i "\\-PER" test/aquaint-xie-plain.txt.GNT | sort | uniq -c | sort -bnr > pers.txt
+	-> also Wikipedia
+
+-	exploit dynamic context window -> weight distance
+
+-	clusters for other languages
+	- Cluster from Jon Dehardy - clusterCat
+	- re-train clusters
+	- *** take care of tokenization - currently just space
+
+- other shape features
+	- cf. doc/LiblinearNER.txt
+	- I think that this could be a source for improvement, and hence, do some research here
+	- byte-based word representation and dynamic learning of shape features
 
 - create zipped file by calling C++ tagger version 
 -> needed for perocessing PosMorph-files
@@ -19,11 +32,7 @@ grep -i "\\-PER" test/aquaint-xie-plain.txt.GNT | sort | uniq -c | sort -bnr > p
 	
 -> LEARN TO UNDERSTAND, why not necessary !
 
-- *** take care of tokenization - currently just space
 
-- Cluster from Jon Dehardy - clusterCat
-- re-train clusters
-	
 - approximate matching for unknown words when looking up cluster map
 
 - Other corpora for DE-POS and DE-NER
@@ -95,10 +104,6 @@ Additional applications:
 	
 ***
 For software package:
-
-- make it thread save
-
-- add FLORS accuracy to evaluation script
 
 - create input file for TORCH
 

@@ -17,7 +17,7 @@ import data.GlobalParams;
 
 /**
  * A indicator word is used to define a dimension of distributed word vectors
- * a indicator word is selected on basis its rank.
+ * a indicator word is selected on basis of its rank.
  *<p><p> 
  * A class for creating the indicator words for a given text corpus
  * - each line of a text file corresponds to a sentence of lower-cased words

@@ -160,6 +160,8 @@ public class GNTagger {
 
 		System.out.println("Set window size: " + windowSize);
 		this.setWindowSize(windowSize);
+		System.out.println("Set window count: ");
+		Window.windowCnt = 0;
 
 		System.out.println("Load feature files with dim: " + dim);
 		this.getAlphabet().loadFeaturesFromFiles(this.getArchivator(), GlobalParams.taggerName, dim);

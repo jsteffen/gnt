@@ -19,11 +19,46 @@ import data.ModelInfo;
  *
  */
 public class RunTagger {
+	
 	public static void runner(String archiveName, String corpusConfigFileName) throws IOException{
 		ModelInfo modelInfo = new ModelInfo();
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
 		GNTagger posTagger = new GNTagger(archiveName, corpusProps, modelInfo);
 		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
+
+		EvalConllFile evalFile = new EvalConllFile();
+		System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: " 
+		+ evalFile.getData().getWordMapFileName());
+		
+		evalFile.getData().readWordSet(posTagger.getArchivator());
+		System.out.println(evalFile.getData().toString());
+		
+		for (String fileName : posTagger.getCorpus().getDevLabeledData()){
+			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
+			posTagger.tagAndWriteFromConllDevelFile(fileName+".conll", evalFileName, -1);
+			System.out.println("Create eval file: " + evalFileName);
+			evalFile.computeAccuracy(evalFileName, true);
+		}
+		for (String fileName : posTagger.getCorpus().getTestLabeledData()){
+			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
+			posTagger.tagAndWriteFromConllDevelFile(fileName+".conll", evalFileName, -1);
+			System.out.println("Create eval file: " + evalFileName);
+			evalFile.computeAccuracy(evalFileName, false);
+		}
+	}
+	
+	// Used for running universal dependency treebanks as defined in project UniversalDepedencyBuilder
+	public static void runner(String archiveZipName, String corpusConfigFileName, String archiveTxtName) throws IOException{
+		ModelInfo modelInfo = new ModelInfo();
+		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
+		GNTagger posTagger = new GNTagger(archiveZipName, corpusProps, modelInfo);
+		//GN: Major difference with above.
+		posTagger.getModelInfo().setModelFile(archiveTxtName);
+		System.out.println("ModelFile: " + posTagger.getModelInfo().getModelFile());
+		
+		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
+
+		
 
 		EvalConllFile evalFile = new EvalConllFile();
 		System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: " 

@@ -139,6 +139,8 @@ public class GNTrainer {
 
 		System.out.println("Create windows with size: " + this.getTrainer().getWindowSize());
 		time1 = System.currentTimeMillis();
+		System.out.println("Set window count: ");
+		Window.windowCnt = 0;
 
 		this.getTrainer().trainFromConllTrainingFileInMemory(trainingFileName, maxExamples);
 

@@ -15,6 +15,7 @@ import data.GlobalParams;
 import data.ModelInfo;
 import data.OffSets;
 import data.Window;
+import de.bwaldvogel.liblinear.Feature;
 import de.bwaldvogel.liblinear.FeatureNode;
 import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
@@ -334,12 +335,28 @@ public class TrainerInMem {
 	 * The wrapper to liblinear trainer.
 	 * @throws IOException
 	 */
+	
+	private void checkProblem(){
+		for (Feature[] nodes : this.getProblem().x) {
+
+            if (nodes == null) System.out.println("shit!!");
+            int indexBefore = 0;
+            for (Feature n : nodes) {
+                if (n.getIndex() <= indexBefore) {
+                    throw new IllegalArgumentException("feature nodes must be sorted by index in ascending order");
+                }
+            }
+        }
+	}
+	
 	private void runLiblinearTrainer() throws IOException {
 		long time1;
 		long time2;
 		Linear.disableDebugOutput();
 		time1 = System.currentTimeMillis();
 		System.out.println("problem.n: " + this.getProblem().n);
+		System.out.println("Test problem ");
+		this.checkProblem();
 		System.out.println("Do training:");
 		Model model = Linear.train(this.getProblem(), this.getParameter());
 		time2 = System.currentTimeMillis();

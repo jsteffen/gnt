@@ -21,7 +21,7 @@ import data.GlobalParams;
  * 
  * Goal is to create a file that represents distributed word vectors for a given set of words.
  * The words are from a given corpus.
- * This are processed line wise, where each line corresponds to a tokenized lower-cased sentence.
+ * These are processed line wise, where each line corresponds to a tokenized lower-cased sentence.
  * The indicator words iw are used to define the dimension of left and right distributed vectors.
  * The index i corresponds to the rank iw_i+1, i.e., 0 == iw_1 ... n == iw_m.
  * The context vectors are extended by a n+1 element for counting omitted context (avoids zero vectors)
@@ -39,7 +39,7 @@ import data.GlobalParams;
  * - when eof is reached, compute weight for non-zero frequencies of each word vector context element
  * - then create vocabulary file vocFilename.txt using num2word and vocVector.txt file that keeps the left and right vector
  * - this way we obtain a static knowledge base of distributed vectors for a set of words
- * - finally, provide methods that enables reading and loading embedded word vectors from files directly.
+ * - finally, provide methods that enable reading and loading embedded word vectors from files directly.
  * @author gune00
  *
  */

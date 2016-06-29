@@ -131,3 +131,6 @@ MAY, 2016
 - created models as archive which stores all necessary information for running a tagger
 	- feature files, label/word files, dataConfig.xml and model file
 	
+JUNE, 2016:
+- now runs several languages -> initialized Window.windowCnt !
+	

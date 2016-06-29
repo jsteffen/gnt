@@ -97,8 +97,10 @@ public class GNT {
 	private void runGNTrainer(String[] args) throws IOException {
 		System.out.println("Run GNTrainer: ");
 		System.out.println(this.toString());
-		if (!this.dataConfig.isEmpty())
-			TrainTagger.trainer(this.dataConfig, this.corpusConfig);
+		if (!this.dataConfig.isEmpty()){
+			TrainTagger gntTrainer = new TrainTagger();
+			gntTrainer.trainer(this.dataConfig, this.corpusConfig);
+		}
 		else
 			System.err.println("Only training GNT with config files is supported!");
 	}

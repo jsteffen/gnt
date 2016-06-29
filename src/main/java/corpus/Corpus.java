@@ -57,7 +57,7 @@ public class Corpus {
 		if (property != null){
 			String[] fileList = property.split(",");
 			for (String fileName : fileList){
-				String fileNameWithoutExtension = fileName.split(".src")[0].replaceAll("[\n\r\t]", "");	
+				String fileNameWithoutExtension = fileName.split("\\.src")[0].replaceAll("[\n\r\t]", "");	
 				this.trainingLabeledSourceFiles.add(fileNameWithoutExtension);
 			}
 		}
@@ -66,7 +66,7 @@ public class Corpus {
 		if (property != null){
 			String[] fileList = property.split(",");
 			for (String fileName : fileList){
-				String fileNameWithoutExtension = fileName.split(".src")[0].replaceAll("[\n\r\t]", "");
+				String fileNameWithoutExtension = fileName.split("\\.src")[0].replaceAll("[\n\r\t]", "");
 				this.devLabeledSourceFiles.add(fileNameWithoutExtension);
 			}		
 		}
@@ -75,7 +75,7 @@ public class Corpus {
 		if (property != null){
 			String[] fileList = property.split(",");
 			for (String fileName : fileList){
-				String fileNameWithoutExtension = fileName.split(".src")[0].replaceAll("[\n\r\t]", "");
+				String fileNameWithoutExtension = fileName.split("\\.src")[0].replaceAll("[\n\r\t]", "");
 				this.testLabeledSourceFiles.add(fileNameWithoutExtension);
 			}	
 		}
@@ -84,21 +84,21 @@ public class Corpus {
 	private void setTrainingLabeledDataFromProps(String property) {
 		String[] fileList = property.split(",");
 		for (String fileName : fileList){
-			String fileNameWithoutExtension = fileName.split(".conll")[0].replaceAll("[\n\r\t]", "");
+			String fileNameWithoutExtension = fileName.split("\\.conll")[0].replaceAll("[\n\r\t]", "");
 			trainingLabeledData.add(fileNameWithoutExtension);
 		}		
 	}
 	private void setDevLabeledDataFromProps(String property) {
 		String[] fileList = property.split(",");
 		for (String fileName : fileList){
-			String fileNameWithoutExtension = fileName.split(".conll")[0].replaceAll("[\n\r\t]", "");
+			String fileNameWithoutExtension = fileName.split("\\.conll")[0].replaceAll("[\n\r\t]", "");
 			devLabeledData.add(fileNameWithoutExtension);
 		}		
 	}
 	private void setTestLabeledDataFromProps(String property) {
 		String[] fileList = property.split(",");
 		for (String fileName : fileList){
-			String fileNameWithoutExtension = fileName.split(".conll")[0].replaceAll("[\n\r\t]", "");
+			String fileNameWithoutExtension = fileName.split("\\.conll")[0].replaceAll("[\n\r\t]", "");
 			testLabeledData.add(fileNameWithoutExtension);
 		}		
 	}

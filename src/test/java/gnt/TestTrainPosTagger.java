@@ -6,9 +6,8 @@ import caller.TrainTagger;
 
 public class TestTrainPosTagger {
 
-	// TODO it is NOT thread save
-
 	public static void main(String[] args) throws IOException{
+		TrainTagger gntTrainer = new TrainTagger();
 		//		TrainTagger.trainer(
 		//				"src/main/resources/dataProps/EnNerTagger.xml", 
 		//				"src/main/resources/corpusProps/EnNerTagger.xml");
@@ -18,11 +17,11 @@ public class TestTrainPosTagger {
 		//		TrainTagger.trainer(
 		//				"src/main/resources/dataProps/EnUniPosTagger.xml", 
 		//				"src/main/resources/corpusProps/EnUniPosTagger.xml");
-				TrainTagger.trainer(
-						"src/main/resources/dataProps/FrUniPosTagger.xml", 
-						"src/main/resources/corpusProps/FrUniPosTagger.xml");
-//		TrainTagger.trainer(
-//				"src/main/resources/dataProps/EnWsjPosTagger.xml", 
-//				"src/main/resources/corpusProps/EnWsjPosTagger.xml");
+		gntTrainer.trainer(
+				"src/main/resources/dataProps/FrUniPosTagger.xml", 
+				"src/main/resources/corpusProps/FrUniPosTagger.xml");
+		gntTrainer.trainer(
+				"src/main/resources/dataProps/EnWsjPosTagger.xml", 
+				"src/main/resources/corpusProps/EnWsjPosTagger.xml");
 	}
 }
