@@ -39,6 +39,8 @@ public class GNTagger {
 
 	private long time1;
 	private long time2;
+	
+	public static long tokenPersec = 0;
 
 	// Setters and getters
 
@@ -162,6 +164,7 @@ public class GNTagger {
 		this.setWindowSize(windowSize);
 		System.out.println("Set window count: ");
 		Window.windowCnt = 0;
+		GNTagger.tokenPersec = 0;
 
 		System.out.println("Load feature files with dim: " + dim);
 		this.getAlphabet().loadFeaturesFromFiles(this.getArchivator(), GlobalParams.taggerName, dim);
@@ -408,9 +411,10 @@ public class GNTagger {
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 
+		GNTagger.tokenPersec = (Window.windowCnt*1000)/(time2-time1);
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
 		System.out.println("Testing instances: " + Window.windowCnt);
 		System.out.println("Sentences/sec: " + (this.getData().getSentenceCnt()*1000)/(time2-time1));
-		System.out.println("Words/sec: " + (Window.windowCnt*1000)/(time2-time1));
+		System.out.println("Words/sec: " + GNTagger.tokenPersec);
 	}
 }
