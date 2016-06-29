@@ -21,7 +21,7 @@ public class GNTdataProperties extends Properties {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static String configTmpFileName = "resources/dataConfig.xml";
+	public static String configTmpFileName = "src/main/resources/dataConfig.xml";
 
 	public void setGntProps (String propsFileName)
 			throws InvalidPropertiesFormatException, IOException, XMLStreamException {
