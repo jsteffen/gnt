@@ -95,7 +95,6 @@ public class GNTdataProperties extends Properties {
 		try {
 			this.loadFromXML(fileIn);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.setGlobalParamsFromProperties();
