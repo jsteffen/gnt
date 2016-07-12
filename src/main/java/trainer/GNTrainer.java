@@ -117,7 +117,7 @@ public class GNTrainer {
 
 		if (Alphabet.withWordFeats) this.createWordVectors(GlobalParams.taggerName, dim);
 		if (Alphabet.withShapeFeats) this.createShapeFeatures(GlobalParams.taggerName, trainingFileName);
-		if (Alphabet.withShapeFeats)this.createSuffixFeatures(GlobalParams.taggerName, trainingFileName);
+		if (Alphabet.withSuffixFeats)this.createSuffixFeatures(GlobalParams.taggerName, trainingFileName);
 		if (Alphabet.withClusterFeats) this.createClusterFeatures(GlobalParams.taggerName, clusterIdSourceFileName);
 
 	}
