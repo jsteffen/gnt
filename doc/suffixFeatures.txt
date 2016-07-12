@@ -48,6 +48,6 @@ Computation of ngrams instead of suffixes: DONE
 Combine suffix and ngram by concatenating both into same file
 	- 	simple concat does not help because it seems that I can not compute absolute enumeration for 
 		resulting features
-	->	I simply forgot to resort the resulting concatenated lists!
+	->	I simply forgot to re-sort the resulting concatenated lists!
 
 Compute prefixes - might be useful for NER (is used as feature their)

@@ -82,9 +82,9 @@ public class Window {
 	/**
 	 * The general structure of a window is:
 	 * <leftPads, leftContext, Center, rightContext, rightPad>
-	 * where center is a single elements, and the other elements are sequences of elements
-	 * depending on the actually value of this.size; this means that the total number of elements
-	 * is #|leftPads + leftContext| == this.size
+	 * where center is a single element, and the other elements are sequences of elements
+	 * depending on the actually value of this.windowSize; this means that the total number of elements
+	 * is #|leftPads + leftContext| == this.windowSize
 	 * 
 	 * boolean train means: we are in the training mode
 	 * boolean adjust means: add offsets to each index in order to get Liblinear-consitent feature names (numerical indices)
@@ -94,7 +94,7 @@ public class Window {
 	public void fillWindow(boolean train, boolean adjust){
 
 		// compute left/right borders of the size of the window elements, which depends on windowSize
-		int max = this.sentence.getWordArray().length-1;
+		int max = this.sentence.getWordArray().length-1; // Because elements are indexed from 0 upwards
 		int leftPads = (this.center < this.windowSize)?(this.windowSize-this.center):0;
 		int leftContext = (this.windowSize-leftPads);
 		int rightContext = ((max-this.center) < this.windowSize)?(max-this.center):this.windowSize;
@@ -107,7 +107,7 @@ public class Window {
 		// counts the dynamically created window element and use it as index in WordFeatures
 		int elementCnt = 0;
 
-		// printWindowIntervalInfo(max, lp, lc, rc, rp);
+		// printWindowIntervalInfo(max, leftPads, leftContext, rightContext, rightPads);
 
 		// Based on the computed intervals above, this also indicates the number of window elements.
 		// based on value this.size;
@@ -116,12 +116,15 @@ public class Window {
 		// Add left padding elements to sentence (if any); needed later to correctly compute global offSets
 
 		for (int i = 0 ; i < leftPads; i++){
-			wordString = "<BOUNDARY>";
-			// wordLoc does not matter here, because empty WordFeatures class is created
-			WordFeatures wordFeatures = createWordFeatures(sentence, wordString, i, elementCnt, train, adjust);
-			windowLength+= wordFeatures.getLength();
-			elements.add(wordFeatures);
-			elementCnt++;
+			// Make sure that center element does not cross sentence boundary
+			if (i <= sentence.getLabelArray().length) {
+				wordString = "<BOUNDARY>";
+				// wordLoc does not matter here, because empty WordFeatures class is created
+				WordFeatures wordFeatures = createWordFeatures(sentence, wordString, i, elementCnt, train, adjust);
+				windowLength+= wordFeatures.getLength();
+				elements.add(wordFeatures);
+				elementCnt++;
+			}
 		}
 		// Add left context elements
 		for (int i = (this.center-leftContext) ; i < this.center; i++){
@@ -134,10 +137,10 @@ public class Window {
 		// Add token center element
 		{	
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center]);
-		WordFeatures wordFeatures = createWordFeatures(sentence, wordString, this.center, elementCnt, train, adjust);
-		windowLength+= wordFeatures.getLength();
-		elements.add(wordFeatures);
-		elementCnt++;
+			WordFeatures wordFeatures = createWordFeatures(sentence, wordString, this.center, elementCnt, train, adjust);
+			windowLength+= wordFeatures.getLength();
+			elements.add(wordFeatures);
+			elementCnt++;
 		}
 		// right content elements; 
 		// set wordLoc always to 1, because can never be 0
@@ -151,12 +154,15 @@ public class Window {
 		// right sentence pads
 
 		for (int i = (this.center + rightContext) ; i < (this.center + rightContext + rightPads); i++) {
-			wordString = "<BOUNDARY>";
-			// wordLoc does not matter here, because empty WordFeatures class is created
-			WordFeatures wordFeatures = createWordFeatures(sentence, wordString, i, elementCnt, train, adjust);
-			windowLength+= wordFeatures.getLength();
-			elements.add(wordFeatures);
-			elementCnt++;
+			// Make sure that center element does not cross sentence boundary
+			if (i <= sentence.getLabelArray().length) {
+				wordString = "<BOUNDARY>";
+				// wordLoc does not matter here, because empty WordFeatures class is created
+				WordFeatures wordFeatures = createWordFeatures(sentence, wordString, i, elementCnt, train, adjust);
+				windowLength+= wordFeatures.getLength();
+				elements.add(wordFeatures);
+				elementCnt++;
+			}
 		}
 	}
 
@@ -185,13 +191,14 @@ public class Window {
 		wordFeatures.fillWordFeatures(word, wordPosition, alphabet, train);
 		return wordFeatures;
 	}
-	
+
 	private Pair<String, String> getContextWords(Sentence sentence, int wordIndex){
+		//System.out.println("Sentence: " + sentence.getWordArray().length + " Wordindex: " + wordIndex);
 		String leftWord = (wordIndex==0)?"<BOUNDARY>":
 			this.data.getWordSet().num2label.get(this.sentence.getWordArray()[wordIndex-1]);
 		String rightWord = (wordIndex>=sentence.getWordArray().length-1)?"<BOUNDARY>":
 			this.data.getWordSet().num2label.get(this.sentence.getWordArray()[wordIndex+1]);
-		
+
 		return new Pair<String, String>(leftWord,rightWord);
 	}
 
