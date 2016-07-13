@@ -4,18 +4,25 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import data.Data;
 import data.GlobalParams;
-import data.ModelInfo;
 
 public class EvalConllFile {
 	private Data data = new Data();
+	private Map<String, Integer> wrongTagsHash = new HashMap<String, Integer>();
+
+
 	public static double acc;
 	public static double accOOV;
 	public static double accInV;
@@ -23,31 +30,58 @@ public class EvalConllFile {
 	public Data getData() {
 		return data;
 	}
+	public Map<String, Integer> getWrongTagsHash() {
+		return wrongTagsHash;
+	}
+	public void setWrongTagsHash(Map<String, Integer> wrongTagsHash) {
+		this.wrongTagsHash = wrongTagsHash;
+	}
 	public void setData(Data data) {
 		this.data = data;
 	}
 	public double getAcc() {
 		return acc;
-	}
-	public void setAcc(double acc) {
-		this.acc = acc;
-	}
+	}	
 	public double getAccOOV() {
 		return accOOV;
-	}
-	public void setAccOOV(double accOOV) {
-		this.accOOV = accOOV;
-	}
+	}	
 	public double getAccInV() {
 		return accInV;
 	}
 
 
-	public void setAccInV(double accInV) {
-		this.accInV = accInV;
-	}
-	
 	public EvalConllFile(){	
+	}
+
+	// Count frequency of wrong tags in form of "GOLDTAG-PREDICTEDTAG"
+	private void countWrongTag(String wrongTag){
+		if (this.getWrongTagsHash().containsKey(wrongTag)) {
+			this.getWrongTagsHash().put(wrongTag, this.getWrongTagsHash().get(wrongTag)+1);
+		} else {
+			this.getWrongTagsHash().put(wrongTag, 1);
+		}
+	}
+
+	// Sort hash according to value in decreasing order
+	// transform hashmap to treemap by using ValueComparator
+	private static Map<String, Integer> sortByValue(Map<String, Integer> unsortedMap) {
+		Map<String, Integer> sortedMap = new TreeMap<String, Integer>(new ValueComparator(unsortedMap));
+		sortedMap.putAll(unsortedMap);
+		return sortedMap;
+	}
+
+	private void writeWrongTagsHash (String  debugFileName) 
+			throws UnsupportedEncodingException, FileNotFoundException{
+		BufferedWriter writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
+		try {
+			for (Map.Entry<String, Integer> entry : this.getWrongTagsHash().entrySet()) {
+				writer.write(entry.getKey() + "\t"+ entry.getValue() + "\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -70,11 +104,14 @@ public class EvalConllFile {
 
 					String goldPos = tokenizedLine[2];
 					String predPos = tokenizedLine[3];
-					
+
 					goldPosCnt++;
 					if (predPos.equals(goldPos)) correctPosCnt++;
 					else
-						if (debug) debugWriter.write(line+"\n");
+						if (debug) {
+							debugWriter.write(line+"\n");
+							this.countWrongTag(goldPos+":"+predPos);
+						}
 
 					// Counting our of vocabulary words
 					//TODO: note I do not lower case words when counting OOV -> correct? 
@@ -88,7 +125,14 @@ public class EvalConllFile {
 		}
 		conllReader.close();
 		debugWriter.close();
-		if (!debug) debugFileName.delete();
+		if (!debug) 
+			debugFileName.delete();
+		else
+		{
+			this.setWrongTagsHash(sortByValue(this.getWrongTagsHash()));
+			this.writeWrongTagsHash(sourceFileName+".errs");
+
+		}
 
 		// accuracy for all words of test file
 		acc = (double) correctPosCnt / (double) goldPosCnt;

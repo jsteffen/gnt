@@ -98,7 +98,6 @@ public class Window {
 		int leftPads = (this.center < this.windowSize)?(this.windowSize-this.center):0;
 		int leftContext = (this.windowSize-leftPads);
 		int rightContext = ((max-this.center) < this.windowSize)?(max-this.center):this.windowSize;
-		// TODO: means context cannot cross sentence boundary ! -> OK?
 		int rightPads = (this.windowSize-rightContext);
 
 		// the surface word string determined from the training examples
