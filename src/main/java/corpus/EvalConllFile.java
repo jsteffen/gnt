@@ -53,6 +53,10 @@ public class EvalConllFile {
 	public EvalConllFile(){	
 	}
 
+	private void resetWrongTagsHash(){
+		wrongTagsHash = new HashMap<String, Integer>();
+	}
+
 	// Count frequency of wrong tags in form of "GOLDTAG-PREDICTEDTAG"
 	private void countWrongTag(String wrongTag){
 		if (this.getWrongTagsHash().containsKey(wrongTag)) {
@@ -70,15 +74,12 @@ public class EvalConllFile {
 		return sortedMap;
 	}
 
-	private void writeWrongTagsHash (String  debugFileName) 
+	private void writeWrongTagsHash (BufferedWriter errorWriter) 
 			throws UnsupportedEncodingException, FileNotFoundException{
-		BufferedWriter writer = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
 		try {
 			for (Map.Entry<String, Integer> entry : this.getWrongTagsHash().entrySet()) {
-				writer.write(entry.getKey() + "\t"+ entry.getValue() + "\n");
+				errorWriter.write(entry.getKey() + "\t"+ entry.getValue() + "\n");
 			}
-			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -89,13 +90,18 @@ public class EvalConllFile {
 		BufferedReader conllReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
 		File debugFileName = new File(sourceFileName+".debug");
+		File errorFileName = new File(sourceFileName+".errs");
 		BufferedWriter debugWriter = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
+		BufferedWriter errorWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
 		int goldPosCnt = 0;
 		int correctPosCnt = 0;
 		int goldOOVCnt = 0;
 		int correctOOVCnt = 0;
 		String line = "";
+
+		this.resetWrongTagsHash();
 		while ((line = conllReader.readLine()) != null) {
 			if (!line.isEmpty()) {
 				if (!line.equals("-X- -X- -X- -X-")){
@@ -123,15 +129,17 @@ public class EvalConllFile {
 				}
 			}
 		}
+		if (debug) {
+			this.setWrongTagsHash(sortByValue(this.getWrongTagsHash()));
+			this.writeWrongTagsHash(errorWriter);
+		}
 		conllReader.close();
 		debugWriter.close();
+		errorWriter.close();
 		if (!debug) 
-			debugFileName.delete();
-		else
 		{
-			this.setWrongTagsHash(sortByValue(this.getWrongTagsHash()));
-			this.writeWrongTagsHash(sourceFileName+".errs");
-
+			debugFileName.delete();
+			errorFileName.delete();
 		}
 
 		// accuracy for all words of test file

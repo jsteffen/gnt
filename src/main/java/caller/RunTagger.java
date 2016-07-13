@@ -43,7 +43,7 @@ public class RunTagger {
 			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
 			posTagger.tagAndWriteFromConllDevelFile(fileName+".conll", evalFileName, -1);
 			System.out.println("Create eval file: " + evalFileName);
-			evalFile.computeAccuracy(evalFileName, false);
+			evalFile.computeAccuracy(evalFileName, true);
 		}
 	}
 	
