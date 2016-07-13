@@ -48,7 +48,7 @@ public class RunTagger {
 	}
 	
 	// Used for running universal dependency treebanks as defined in project UniversalDepedencyBuilder
-	public static void runner(String archiveZipName, String corpusConfigFileName, String archiveTxtName) throws IOException{
+	public static void runner(String archiveZipName, String corpusConfigFileName, String archiveTxtName, boolean debugTest) throws IOException{
 		ModelInfo modelInfo = new ModelInfo();
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
 		GNTagger posTagger = new GNTagger(archiveZipName, corpusProps, modelInfo);
@@ -77,7 +77,7 @@ public class RunTagger {
 			String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
 			posTagger.tagAndWriteFromConllDevelFile(fileName+".conll", evalFileName, -1);
 			System.out.println("Create eval file: " + evalFileName);
-			evalFile.computeAccuracy(evalFileName, false);
+			evalFile.computeAccuracy(evalFileName, debugTest);
 		}
 	}
 
