@@ -13,24 +13,24 @@
 
 	<!-- CORPUS parameters - labeled data -->
 	<entry key="trainingLabeledData">
-		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train.conll
+		/Users/gune00/data/UniversalDependencies/conll/English/en-ud-train.conll
 	</entry>
 	<entry key="devLabeledData">
-		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-dev.conll
+		/Users/gune00/data/UniversalDependencies/conll/English/en-ud-dev.conll
 	</entry>
 	<entry key="testLabeledData">
-		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-test.conll
+		/Users/gune00/data/UniversalDependencies/conll/English/en-ud-test.conll
 	</entry>
 
 	<!-- CORPUS parameters - unlabeled data -->
 	<entry key="trainingUnLabeledData">
-		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train-sents.txt
+		/Users/gune00/data/UniversalDependencies/conll/English/en-ud-train-sents.txt
 	</entry>
 	<entry key="devUnLabeledData">
-		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train-sents.txt
+		/Users/gune00/data/UniversalDependencies/conll/English/en-ud-dev-sents.txt
 	</entry>
 	<entry key="testUnLabeledData">
-		/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train-sents.txt
+		/Users/gune00/data/UniversalDependencies/conll/English/en-ud-test-sents.txt
 	</entry>
 
 	<!-- Cluster file -->
@@ -40,7 +40,7 @@
 	<!-- it is redundant, because also set in trainingLabeledData; however, 
 		there as a list of training files, which is actually currently not supported 
 		when calling the GNTrainer and GNTtagger -->
-	<entry key="trainingFile">/Users/gune00/data/MLDP/universal_treebanks_v2.0/std/en/en-universal-train.conll
+	<entry key="trainingFile">/Users/gune00/data/UniversalDependencies/conll/English/en-ud-train.conll
 	</entry>
 
 </properties>

@@ -18,10 +18,7 @@ public class TestTrainPosTagger {
 		//				"src/main/resources/dataProps/EnUniPosTagger.xml", 
 		//				"src/main/resources/corpusProps/EnUniPosTagger.xml");
 		gntTrainer.trainer(
-				"src/main/resources/dataProps/FrUniPosTagger.xml", 
-				"src/main/resources/corpusProps/FrUniPosTagger.xml");
-		gntTrainer.trainer(
-				"src/main/resources/dataProps/EnWsjPosTagger.xml", 
-				"src/main/resources/corpusProps/EnWsjPosTagger.xml");
+				"src/main/resources/dataProps/EnUniPosTagger.xml", 
+				"src/main/resources/corpusProps/EnUniPosTagger.xml");
 	}
 }
