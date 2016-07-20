@@ -1,5 +1,31 @@
 GN on 13.12.2013:
 
+Using liblinear for NER:
+***********************
+
+Cf. http://www.cs.bgu.ac.il/~elhadad/nlp09/hw2.html#svm
+
+Lexical features:
+1. The word form (the string as it appears in the sentence)
+2. The POS of the word
+3. ORT - a feature that captures the orthographic (letter) structure of the word. It
+   can have any of the following values: number, contains-digit, contains-hyphen,
+   capitalized, all-capitals, URL, punctuation, regular.
+4. prefix1: first letter of the word
+5. prefix2: first two letters of the word
+6. prefix3: first three letters of the word
+7. suffix1: last letter of the word
+8. suffix2: last two letters of the word
+9. suffix3: last three letters of the word
+
+Lookup features:
+	gazetters
+	similarity
+	simstring
+
+context features: 
+	-2, -1, 0, 1, 2
+
 *******************************************
 Useful NE-specific features for GERMAN used by others:
 
