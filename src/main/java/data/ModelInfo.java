@@ -10,7 +10,7 @@ import de.bwaldvogel.liblinear.SolverType;
 
 public class ModelInfo {
 
-	public static SolverType solver = SolverType.L2R_LR; // -s 0
+	public SolverType solver = SolverType.L2R_LR; // -s 0
 	public static double C = 1.0;    // cost of constraints violation
 	public static double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
 
@@ -22,8 +22,6 @@ public class ModelInfo {
 	private String modelInputFile = "";
 	private BufferedWriter modelInputFileWriter = null;
 	
-	private String foo ="";
-
 	public SolverType getSolver() {
 		return solver;
 	}
