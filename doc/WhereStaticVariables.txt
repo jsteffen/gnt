@@ -1,0 +1,14 @@
+July, 2016:
+
+- when using GNT for POS and GNT in one pipeline, then static variables can be problematic;
+
+tagger.GNTagger.tokenPersec
+	- change it
+	
+data.GlobalParams
+	- change
+
+data.GNTdataProperties.GNTdataProperties(String)
+	- eventually: should keep all parameters which are currently static
+	- GNTrainer should then get this as local variable
+	- GNTTagger as well
