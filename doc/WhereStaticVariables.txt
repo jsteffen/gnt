@@ -12,3 +12,7 @@ data.GNTdataProperties.GNTdataProperties(String)
 	- eventually: should keep all parameters which are currently static
 	- GNTrainer should then get this as local variable
 	- GNTTagger as well
+	
+data.OffSets
+
+
