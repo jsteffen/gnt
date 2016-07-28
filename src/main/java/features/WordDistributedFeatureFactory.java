@@ -601,17 +601,17 @@ public class WordDistributedFeatureFactory {
 		System.out.println("Done!");
 	}
 	
-	public void readDistributedWordFeaturesSparse(Archivator archivator, String taggerName, int maxIndicatorWords){
+	public void readDistributedWordFeaturesSparse(Archivator archivator, String taggerName, int maxIndicatorWords, String featureFilePath){
 		System.out.println("Read GNT condensed from archive ...");
-		String iwFile = this.getFeatureFilePathname()+taggerName+"/iw"+maxIndicatorWords+".txt";
+		String iwFile = featureFilePath+taggerName+"/iw"+maxIndicatorWords+".txt";
 		System.out.println("Read used indicator words file from archive: " + iwFile);
 		this.readIndicatorWordFile(archivator, iwFile);
 
-		String vocFile = this.getFeatureFilePathname()+taggerName+"/vocFile.txt";
+		String vocFile = featureFilePath+taggerName+"/vocFile.txt";
 		System.out.println("Read vocabulary file from archive: " + vocFile);
 		this.readVocabularyFile(archivator, vocFile);
 
-		String dwvFile = this.getFeatureFilePathname()+taggerName+"/vocContext"+maxIndicatorWords+".txt";
+		String dwvFile = featureFilePath+taggerName+"/vocContext"+maxIndicatorWords+".txt";
 		System.out.println("Read left/right context vector from file from archive: " + dwvFile);
 		this.readContextFile(archivator, dwvFile);
 		System.out.println("Done!");

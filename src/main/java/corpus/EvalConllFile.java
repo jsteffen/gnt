@@ -53,6 +53,9 @@ public class EvalConllFile {
 	public EvalConllFile(){	
 	}
 
+	public EvalConllFile(String featureFilePathname, String taggerName) {
+		this.setData(new Data(featureFilePathname, taggerName));
+	}
 	private void resetWrongTagsHash(){
 		wrongTagsHash = new HashMap<String, Integer>();
 	}

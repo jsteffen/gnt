@@ -258,8 +258,8 @@ public class WordShapeFeatureFactory {
 		System.out.println("... done");
 	}
 	
-	public void readShapeList(Archivator archivator, String taggerName){
-		String shapeFileName = this.getFeatureFilePathname()+taggerName+"/shapeList.txt";
+	public void readShapeList(Archivator archivator, String taggerName, String featureFilePath){
+		String shapeFileName = featureFilePath+taggerName+"/shapeList.txt";
 		System.out.println("Reading shape list from archive: " + shapeFileName);
 		this.readShapeFeatureFile(archivator, shapeFileName);
 		System.out.println("... done");

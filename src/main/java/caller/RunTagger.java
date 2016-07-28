@@ -21,14 +21,15 @@ import data.ModelInfo;
 public class RunTagger {
 	
 	public static void runner(String archiveName, String corpusConfigFileName) throws IOException{
-		ModelInfo modelInfo = new ModelInfo();
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
-		GNTagger posTagger = new GNTagger(archiveName, corpusProps, modelInfo);
+		GNTagger posTagger = new GNTagger(archiveName, corpusProps);
 		posTagger.initGNTagger(
 				posTagger.getDataProps().getGlobalParams().getWindowSize(), 
 				posTagger.getDataProps().getGlobalParams().getDim());
 
-		EvalConllFile evalFile = new EvalConllFile();
+		EvalConllFile evalFile = 
+				new EvalConllFile(posTagger.getDataProps().getGlobalParams().getFeatureFilePathname(), 
+						posTagger.getDataProps().getGlobalParams().getTaggerName());
 		System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: " 
 		+ evalFile.getData().getWordMapFileName());
 		
@@ -51,9 +52,8 @@ public class RunTagger {
 	
 	// Used for running universal dependency treebanks as defined in project UniversalDepedencyBuilder
 	public static void runner(String archiveZipName, String corpusConfigFileName, String archiveTxtName, boolean debugTest) throws IOException{
-		ModelInfo modelInfo = new ModelInfo();
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
-		GNTagger posTagger = new GNTagger(archiveZipName, corpusProps, modelInfo);
+		GNTagger posTagger = new GNTagger(archiveZipName, corpusProps);
 		//GN: Major difference with above.
 		posTagger.getModelInfo().setModelFile(archiveTxtName);
 		System.out.println("ModelFile: " + posTagger.getModelInfo().getModelFile());
@@ -62,7 +62,9 @@ public class RunTagger {
 				posTagger.getDataProps().getGlobalParams().getWindowSize(), 
 				posTagger.getDataProps().getGlobalParams().getDim());
 
-		EvalConllFile evalFile = new EvalConllFile();
+		EvalConllFile evalFile = 
+				new EvalConllFile(posTagger.getDataProps().getGlobalParams().getFeatureFilePathname(), 
+						posTagger.getDataProps().getGlobalParams().getTaggerName());
 		System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: " 
 		+ evalFile.getData().getWordMapFileName());
 		

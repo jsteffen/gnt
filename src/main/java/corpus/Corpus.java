@@ -158,7 +158,13 @@ public class Corpus {
 	}
 
 	public Corpus(GNTcorpusProperties corpusProps, GlobalParams globalParams) {
-		// TODO Auto-generated constructor stub
+		this.gntProps = corpusProps;
+
+		this.setCorpusFiles();
+		
+		this.setGlobalParams(globalParams);
+		
+		
 	}
 	public String makeEvalFileName(String labeledFile){
 		return this.getGlobalParams().getEvalFilePathname()+ new File(labeledFile).getName()+".txt";

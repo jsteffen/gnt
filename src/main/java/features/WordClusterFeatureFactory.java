@@ -219,8 +219,8 @@ public class WordClusterFeatureFactory {
 		System.out.println("... done");
 	}
 	
-	public void readClusterIdList(Archivator archivator, String taggerName){
-		String fileName = this.getFeatureFilePathname()+taggerName+"/clusterId.txt";
+	public void readClusterIdList(Archivator archivator, String taggerName, String featureFilePath){
+		String fileName = featureFilePath+taggerName+"/clusterId.txt";
 		System.out.println("Reading cluster ID list from archive: " + fileName);
 		this.readClusterIdFeatureFile(archivator, fileName);
 		System.out.println("... done");

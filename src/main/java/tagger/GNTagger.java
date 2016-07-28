@@ -40,7 +40,7 @@ public class GNTagger {
 
 	private long time1;
 	private long time2;
-	
+
 	public static long tokenPersec = 0;
 
 	// Setters and getters
@@ -54,7 +54,7 @@ public class GNTagger {
 	public Archivator getArchivator() {
 		return archivator;
 	}
-	
+
 	public void setArchivator(Archivator archivator) {
 		this.archivator = archivator;
 	}
@@ -105,30 +105,30 @@ public class GNTagger {
 	public GNTagger(){
 	}
 
-//	public GNTagger(ModelInfo modelInfo) throws IOException {
-//		this.setModelInfo(modelInfo);
-//		this.setData(new Data());
-//		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
-//		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
-//
-//		System.out.println("Extract archive ...");
-//		this.getArchivator().extract();
-//	}
+	//	public GNTagger(ModelInfo modelInfo) throws IOException {
+	//		this.setModelInfo(modelInfo);
+	//		this.setData(new Data());
+	//		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
+	//		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+	//
+	//		System.out.println("Extract archive ...");
+	//		this.getArchivator().extract();
+	//	}
 
-//	public GNTagger(ModelInfo modelInfo, GNTcorpusProperties props) throws IOException {
-//		this.setModelInfo(modelInfo);
-//		this.setData(new Data());
-//		this.corpus = new Corpus(props);
-//		System.out.println(this.getAlphabet().toActiveFeatureString());
-//
-//		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
-//		System.out.println(modelInfo.toString());
-//
-//
-//		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
-//		System.out.println("Extract archive ...");
-//		this.getArchivator().extract();
-//	}
+	//	public GNTagger(ModelInfo modelInfo, GNTcorpusProperties props) throws IOException {
+	//		this.setModelInfo(modelInfo);
+	//		this.setData(new Data());
+	//		this.corpus = new Corpus(props);
+	//		System.out.println(this.getAlphabet().toActiveFeatureString());
+	//
+	//		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
+	//		System.out.println(modelInfo.toString());
+	//
+	//
+	//		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+	//		System.out.println("Extract archive ...");
+	//		this.getArchivator().extract();
+	//	}
 
 	public GNTagger(String archiveName, ModelInfo modelInfo) throws IOException {
 
@@ -137,9 +137,12 @@ public class GNTagger {
 		this.getArchivator().extract();
 		System.out.println("Set dataProps ...");
 		this.setDataProps(new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
+		this.setAlphabet(this.getDataProps().getAlphabet());
 
 		this.setModelInfo(modelInfo);
-		this.setData(new Data());
+		this.setData(
+				new Data(this.getDataProps().getGlobalParams().getFeatureFilePathname(), 
+						this.getDataProps().getGlobalParams().getTaggerName()));
 
 		modelInfo.createModelFileName(dataProps.getGlobalParams().getWindowSize(),
 				dataProps.getGlobalParams().getDim(),
@@ -149,17 +152,20 @@ public class GNTagger {
 
 	}
 
-	public GNTagger(String archiveName, GNTcorpusProperties props, ModelInfo modelInfo) throws IOException {
+	public GNTagger(String archiveName, GNTcorpusProperties props) throws IOException {
 
 		this.setArchivator(new Archivator(archiveName));
 		System.out.println("Extract archive ...");
 		this.getArchivator().extract();
 		System.out.println("Set dataProps ...");
 		this.setDataProps(new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
+		this.setAlphabet(this.getDataProps().getAlphabet());
 
-		this.setModelInfo(modelInfo);
-		this.setData(new Data());
-		this.corpus = new Corpus(props);
+		this.setModelInfo(this.getDataProps().getModelInfo());
+		this.setData(
+				new Data(this.getDataProps().getGlobalParams().getFeatureFilePathname(), 
+						this.getDataProps().getGlobalParams().getTaggerName()));
+		this.corpus = new Corpus(props, this.getDataProps().getGlobalParams());
 
 		modelInfo.createModelFileName(dataProps.getGlobalParams().getWindowSize(),
 				dataProps.getGlobalParams().getDim(),
@@ -181,7 +187,9 @@ public class GNTagger {
 		GNTagger.tokenPersec = 0;
 
 		System.out.println("Load feature files with dim: " + dim);
-		this.getAlphabet().loadFeaturesFromFiles(this.getArchivator(), this.getDataProps().getGlobalParams().getTaggerName(), dim);
+		this.getAlphabet().loadFeaturesFromFiles(
+				this.getArchivator(), this.getDataProps().getGlobalParams().getTaggerName(), dim,
+				this.getDataProps().getGlobalParams().getFeatureFilePathname());
 
 		System.out.println("Load label set from archive: " + this.getData().getLabelMapFileName());
 		this.getData().readLabelSet(this.getArchivator());
