@@ -161,10 +161,11 @@ public class TrainerInMem {
 //				modelInfo.getEps()));
 //	}
 	
-	public TrainerInMem (Archivator archivator, ModelInfo modelInfo, GlobalParams globals, int windowSize){
+	public TrainerInMem (Archivator archivator, ModelInfo modelInfo, Alphabet alphabet, GlobalParams globals, int windowSize){
 		this.setGlobalParams(globals);
 		this.setWindowSize(windowSize);
 		this.setModelInfo(modelInfo);
+		this.setAlphabet(alphabet);
 		this.setData(new Data(globals.getFeatureFilePathname(), globals.getTaggerName()));
 		this.setArchivator(archivator);
 

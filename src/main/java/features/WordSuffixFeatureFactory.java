@@ -380,8 +380,8 @@ public class WordSuffixFeatureFactory {
 		}
 	}
 
-	public void readSuffixList(String taggerName){
-		String suffixFileName = this.getFeatureFilePathname()+taggerName+"/suffixList.txt";
+	public void readSuffixList(String taggerName, String featureFilePath){
+		String suffixFileName = featureFilePath+taggerName+"/suffixList.txt";
 		System.out.println("Reading suffix list from: " + suffixFileName);
 		this.readSuffixFile(suffixFileName);
 		System.out.println("... done");

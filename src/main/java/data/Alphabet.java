@@ -81,11 +81,11 @@ public class Alphabet {
 	 * @param taggerName
 	 * @param dim
 	 */
-	public void loadFeaturesFromFiles(String taggerName, int dim){
-		if (this.isWithWordFeats()) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim);
-		if (this.isWithSuffixFeats()) this.wordSuffixFactory.readSuffixList(taggerName);
-		if (this.isWithShapeFeats()) this.wordShapeFactory.readShapeList(taggerName);
-		if (this.isWithClusterFeats()) this.wordClusterFactory.readClusterIdList(taggerName);
+	public void loadFeaturesFromFiles(String taggerName, int dim, String featureFilePath){
+		if (this.isWithWordFeats()) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim, featureFilePath);
+		if (this.isWithSuffixFeats()) this.wordSuffixFactory.readSuffixList(taggerName, featureFilePath);
+		if (this.isWithShapeFeats()) this.wordShapeFactory.readShapeList(taggerName, featureFilePath);
+		if (this.isWithClusterFeats()) this.wordClusterFactory.readClusterIdList(taggerName, featureFilePath);
 	}
 	
 	/**

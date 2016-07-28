@@ -50,7 +50,7 @@ public class IndicatorWordsCreator {
 	// It is assumed that line is a tokenized sentence
 
 	public IndicatorWordsCreator(String featureFilePathname) {
-		// TODO Auto-generated constructor stub
+		this.setFeatureFilePathname(featureFilePathname);
 	}
 
 	public Map<String, Integer> getWordToNum() {

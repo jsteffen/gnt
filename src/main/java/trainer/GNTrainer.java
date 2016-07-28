@@ -80,6 +80,7 @@ public class GNTrainer {
 				new Archivator(this.getDataProps().getModelInfo().getModelFileArchive()));
 		this.setTrainer(
 				new TrainerInMem(this.getArchivator(), this.getDataProps().getModelInfo(), 
+						this.getDataProps().getAlphabet(),
 						this.getDataProps().getGlobalParams(),
 						this.getDataProps().getGlobalParams().getWindowSize()));
 	}
@@ -146,12 +147,14 @@ public class GNTrainer {
 	}
 
 	private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException{
+		String featureFilePath = this.getDataProps().getGlobalParams().getFeatureFilePathname();
 		String taggerName = this.getDataProps().getGlobalParams().getTaggerName();
 
+		System.out.println("From  " + featureFilePath);
 		System.out.println("Load feature files for tagger " + taggerName + ":");
 		time1 = System.currentTimeMillis();
 
-		this.getTrainer().getAlphabet().loadFeaturesFromFiles(taggerName,dim);
+		this.getTrainer().getAlphabet().loadFeaturesFromFiles(taggerName,dim, featureFilePath);
 
 		System.out.println("Cleaning not used storage:");
 		this.getTrainer().getAlphabet().clean();
