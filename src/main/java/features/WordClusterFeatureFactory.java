@@ -37,7 +37,14 @@ public class WordClusterFeatureFactory {
 	// store words to clusterId mapping as provided by Marmot tool!
 	private Map<String,Integer> word2index = new HashMap<String,Integer>();
 	private int clusterIdcnt = 0;
+	private String featureFilePathname = "";
 
+	public String getFeatureFilePathname() {
+		return featureFilePathname;
+	}
+	public void setFeatureFilePathname(String featureFilePathname) {
+		this.featureFilePathname = featureFilePathname;
+	}
 	public Map<String, Integer> getWord2index() {
 		return word2index;
 	}
@@ -50,9 +57,15 @@ public class WordClusterFeatureFactory {
 	public void setClusterIdcnt(int clusterIdcnt) {
 		this.clusterIdcnt = clusterIdcnt;
 	}
-
+	
+	
 	// Instances
 
+	
+	public WordClusterFeatureFactory(String featureFilePathname){
+		this.setFeatureFilePathname(featureFilePathname);
+	}
+	
 	public WordClusterFeatureFactory(){
 	}
 
@@ -99,7 +112,7 @@ public class WordClusterFeatureFactory {
 		System.out.println("Create cluster ID list from: " + clusterIDfileName);
 		this.createWord2ClusterIdMapFromFile(clusterIDfileName, -1);
 
-		String fileName = GlobalParams.featureFilePathname+taggerName+"/clusterId.txt";
+		String fileName = this.getFeatureFilePathname()+taggerName+"/clusterId.txt";
 		System.out.println("Writing cluster ID list to: " + fileName);
 		this.writeClusterIdFeatureFile(fileName);
 
@@ -200,14 +213,14 @@ public class WordClusterFeatureFactory {
 	}
 
 	public void readClusterIdList(String taggerName){
-		String fileName = GlobalParams.featureFilePathname+taggerName+"/clusterId.txt";
+		String fileName = this.getFeatureFilePathname()+taggerName+"/clusterId.txt";
 		System.out.println("Reading cluster ID list from: " + fileName);
 		this.readClusterIdFeatureFile(fileName);
 		System.out.println("... done");
 	}
 	
 	public void readClusterIdList(Archivator archivator, String taggerName){
-		String fileName = GlobalParams.featureFilePathname+taggerName+"/clusterId.txt";
+		String fileName = this.getFeatureFilePathname()+taggerName+"/clusterId.txt";
 		System.out.println("Reading cluster ID list from archive: " + fileName);
 		this.readClusterIdFeatureFile(archivator, fileName);
 		System.out.println("... done");

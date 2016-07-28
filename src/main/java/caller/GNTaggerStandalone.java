@@ -20,7 +20,9 @@ public class GNTaggerStandalone {
 	public void initRunner(String archiveName) throws IOException{
 		modelInfo = new ModelInfo();
 		posTagger = new GNTagger(archiveName, modelInfo);
-		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
+		posTagger.initGNTagger(
+				posTagger.getDataProps().getGlobalParams().getWindowSize(), 
+				posTagger.getDataProps().getGlobalParams().getDim());
 	}
 
 	/**

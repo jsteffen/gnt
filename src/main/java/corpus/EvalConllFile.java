@@ -166,10 +166,11 @@ public class EvalConllFile {
 	public static void main(String[] args) throws IOException{
 		// This is for testing
 		// This reads saved vocabulary from training corpus
-		GlobalParams.taggerName = "DEPOSMORPH";
+		GlobalParams globals = new GlobalParams();
+		globals.setTaggerName("DEPOSMORPH");
 		EvalConllFile evalFile = new EvalConllFile();
 		evalFile.data.readWordSet();
 
-		evalFile.computeAccuracy(GlobalParams.evalFilePathname+"/tiger2_posmorph_devel.txt", true);
+		evalFile.computeAccuracy(globals.getEvalFilePathname()+"/tiger2_posmorph_devel.txt", true);
 	}
 }

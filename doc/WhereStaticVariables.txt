@@ -12,6 +12,8 @@ data.GNTdataProperties.GNTdataProperties(String)
 	- eventually: should keep all parameters which are currently static
 	- GNTrainer should then get this as local variable
 	- GNTTagger as well
+-> I store Alphabet, GlobalParams and ModelInfo and OffSets in this object
+-> I keep data.GNTdataProperties.configTmpFileName static because this should never changed
 	
 	
 data.OffSets
@@ -20,5 +22,8 @@ data.Alphabet
 
 data.Data.wordFormIndex
 data.Data.posTagIndex
+
+features.WordSuffixFeatureFactory.ngram
+features.WordSuffixFeatureFactory.ngramSize
 
 

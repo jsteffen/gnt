@@ -21,6 +21,7 @@ public class Window {
 	public static int windowCnt = 0;
 	private Data data ;
 	private Alphabet alphabet ;
+	private OffSets offSets;
 	private Sentence sentence;
 	// Index of the window center element
 	private int center;
@@ -33,9 +34,16 @@ public class Window {
 
 	// Setters and getters
 
+	public OffSets getOffSets() {
+		return offSets;
+	}
+	public void setOffSets(OffSets offSets) {
+		this.offSets = offSets;
+	}
 	public List<WordFeatures> getElements() {
 		return elements;
 	}
+	
 	public void setElements(List<WordFeatures> elements) {
 		this.elements = elements;
 	}
@@ -183,7 +191,7 @@ public class Window {
 		wordFeatures.setIndex(elementCnt);
 		// set its offsets using the values from OffSets which are pre-initialised after data has been loaded and before
 		// training starts
-		wordFeatures.setOffSets();
+		wordFeatures.setOffSets(this.alphabet, this.offSets);
 		// indicate whether relative feature names (indices) should be adjusted to global ones according to the rules of Liblinear
 		wordFeatures.setAdjust(adjust);
 		// fill all the window's elements

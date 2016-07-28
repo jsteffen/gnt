@@ -19,10 +19,10 @@ public class Alphabet {
 	private WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
 	private WordClusterFeatureFactory wordClusterFactory = new WordClusterFeatureFactory();
 	
-	public static boolean withWordFeats = true;
-	public static boolean withShapeFeats = true;
-	public static boolean withSuffixFeats = true;
-	public static boolean withClusterFeats = false;
+	private boolean withWordFeats = true;
+	private boolean withShapeFeats = true;
+	private boolean withSuffixFeats = true;
+	private boolean withClusterFeats = false;
 
 	// Setters and getters
 	public WordDistributedFeatureFactory getWordVectorFactory() {
@@ -49,6 +49,30 @@ public class Alphabet {
 	public void setWordClusterFactory(WordClusterFeatureFactory wordClusterFactory) {
 		this.wordClusterFactory = wordClusterFactory;
 	}
+	public boolean isWithWordFeats() {
+		return withWordFeats;
+	}
+	public void setWithWordFeats(boolean withWordFeats) {
+		this.withWordFeats = withWordFeats;
+	}
+	public boolean isWithShapeFeats() {
+		return withShapeFeats;
+	}
+	public void setWithShapeFeats(boolean withShapeFeats) {
+		this.withShapeFeats = withShapeFeats;
+	}
+	public boolean isWithSuffixFeats() {
+		return withSuffixFeats;
+	}
+	public void setWithSuffixFeats(boolean withSuffixFeats) {
+		this.withSuffixFeats = withSuffixFeats;
+	}
+	public boolean isWithClusterFeats() {
+		return withClusterFeats;
+	}
+	public void setWithClusterFeats(boolean withClusterFeats) {
+		this.withClusterFeats = withClusterFeats;
+	}
 	
 	// Methods
 	
@@ -58,10 +82,10 @@ public class Alphabet {
 	 * @param dim
 	 */
 	public void loadFeaturesFromFiles(String taggerName, int dim){
-		if (Alphabet.withWordFeats) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim);
-		if (Alphabet.withSuffixFeats) this.wordSuffixFactory.readSuffixList(taggerName);
-		if (Alphabet.withShapeFeats) this.wordShapeFactory.readShapeList(taggerName);
-		if (Alphabet.withClusterFeats) this.wordClusterFactory.readClusterIdList(taggerName);
+		if (this.isWithWordFeats()) this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim);
+		if (this.isWithSuffixFeats()) this.wordSuffixFactory.readSuffixList(taggerName);
+		if (this.isWithShapeFeats()) this.wordShapeFactory.readShapeList(taggerName);
+		if (this.isWithClusterFeats()) this.wordClusterFactory.readClusterIdList(taggerName);
 	}
 	
 	/**
@@ -71,10 +95,10 @@ public class Alphabet {
 	 * @param dim
 	 */
 	public void loadFeaturesFromFiles(Archivator archivator, String taggerName, int dim){
-		if (Alphabet.withWordFeats) this.wordVectorFactory.readDistributedWordFeaturesSparse(archivator, taggerName, dim);
-		if (Alphabet.withSuffixFeats) this.wordSuffixFactory.readSuffixList(archivator, taggerName);
-		if (Alphabet.withShapeFeats) this.wordShapeFactory.readShapeList(archivator, taggerName);
-		if (Alphabet.withClusterFeats) this.wordClusterFactory.readClusterIdList(archivator, taggerName);
+		if (this.isWithWordFeats()) this.wordVectorFactory.readDistributedWordFeaturesSparse(archivator, taggerName, dim);
+		if (this.isWithSuffixFeats()) this.wordSuffixFactory.readSuffixList(archivator, taggerName);
+		if (this.isWithShapeFeats()) this.wordShapeFactory.readShapeList(archivator, taggerName);
+		if (this.isWithClusterFeats()) this.wordClusterFactory.readClusterIdList(archivator, taggerName);
 	}
 
 	public void clean(){
@@ -91,12 +115,12 @@ public class Alphabet {
 		this.wordClusterFactory.clean();
 	}
 	
-	public static String toActiveFeatureString(){
+	public String toActiveFeatureString(){
 		String output = "\nActive features\n";
-		output += "withWordFeats= 	" + withWordFeats +"\n";
-		output += "withShapeFeats=  " + withShapeFeats +"\n";
-		output += "withSuffixFeats= " + withSuffixFeats +"\n";
-		output += "withClusterFeats= " + withClusterFeats +"\n";
+		output += "withWordFeats= 	" + this.isWithWordFeats() +"\n";
+		output += "withShapeFeats=  " + this.isWithSuffixFeats() +"\n";
+		output += "withSuffixFeats= " + this.isWithShapeFeats() +"\n";
+		output += "withClusterFeats= " + this.isWithClusterFeats() +"\n";
 		return output;	
 	}
 

@@ -36,6 +36,7 @@ public class GNTagger {
 	private int windowSize = 2;
 	private Model model ;
 	private Archivator archivator;
+	private GNTdataProperties dataProps;
 
 	private long time1;
 	private long time2;
@@ -44,9 +45,16 @@ public class GNTagger {
 
 	// Setters and getters
 
+	public GNTdataProperties getDataProps() {
+		return dataProps;
+	}
+	public void setDataProps(GNTdataProperties dataProps) {
+		this.dataProps = dataProps;
+	}
 	public Archivator getArchivator() {
 		return archivator;
 	}
+	
 	public void setArchivator(Archivator archivator) {
 		this.archivator = archivator;
 	}
@@ -97,30 +105,30 @@ public class GNTagger {
 	public GNTagger(){
 	}
 
-	public GNTagger(ModelInfo modelInfo) throws IOException {
-		this.setModelInfo(modelInfo);
-		this.setData(new Data());
-		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
-		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+//	public GNTagger(ModelInfo modelInfo) throws IOException {
+//		this.setModelInfo(modelInfo);
+//		this.setData(new Data());
+//		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
+//		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+//
+//		System.out.println("Extract archive ...");
+//		this.getArchivator().extract();
+//	}
 
-		System.out.println("Extract archive ...");
-		this.getArchivator().extract();
-	}
-
-	public GNTagger(ModelInfo modelInfo, GNTcorpusProperties props) throws IOException {
-		this.setModelInfo(modelInfo);
-		this.setData(new Data());
-		this.corpus = new Corpus(props);
-		System.out.println(Alphabet.toActiveFeatureString());
-
-		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
-		System.out.println(modelInfo.toString());
-
-
-		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
-		System.out.println("Extract archive ...");
-		this.getArchivator().extract();
-	}
+//	public GNTagger(ModelInfo modelInfo, GNTcorpusProperties props) throws IOException {
+//		this.setModelInfo(modelInfo);
+//		this.setData(new Data());
+//		this.corpus = new Corpus(props);
+//		System.out.println(this.getAlphabet().toActiveFeatureString());
+//
+//		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
+//		System.out.println(modelInfo.toString());
+//
+//
+//		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
+//		System.out.println("Extract archive ...");
+//		this.getArchivator().extract();
+//	}
 
 	public GNTagger(String archiveName, ModelInfo modelInfo) throws IOException {
 
@@ -128,13 +136,16 @@ public class GNTagger {
 		System.out.println("Extract archive ...");
 		this.getArchivator().extract();
 		System.out.println("Set dataProps ...");
-		GNTdataProperties dataProps = 
-				new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName));
+		this.setDataProps(new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
 
 		this.setModelInfo(modelInfo);
 		this.setData(new Data());
 
-		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
+		modelInfo.createModelFileName(dataProps.getGlobalParams().getWindowSize(),
+				dataProps.getGlobalParams().getDim(),
+				dataProps.getGlobalParams().getNumberOfSentences(),
+				dataProps.getAlphabet(),
+				dataProps.getGlobalParams());
 
 	}
 
@@ -144,14 +155,17 @@ public class GNTagger {
 		System.out.println("Extract archive ...");
 		this.getArchivator().extract();
 		System.out.println("Set dataProps ...");
-		GNTdataProperties dataProps = 
-				new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName));
+		this.setDataProps(new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
 
 		this.setModelInfo(modelInfo);
 		this.setData(new Data());
 		this.corpus = new Corpus(props);
 
-		modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
+		modelInfo.createModelFileName(dataProps.getGlobalParams().getWindowSize(),
+				dataProps.getGlobalParams().getDim(),
+				dataProps.getGlobalParams().getNumberOfSentences(),
+				dataProps.getAlphabet(),
+				dataProps.getGlobalParams());
 
 	}
 
@@ -167,7 +181,7 @@ public class GNTagger {
 		GNTagger.tokenPersec = 0;
 
 		System.out.println("Load feature files with dim: " + dim);
-		this.getAlphabet().loadFeaturesFromFiles(this.getArchivator(), GlobalParams.taggerName, dim);
+		this.getAlphabet().loadFeaturesFromFiles(this.getArchivator(), this.getDataProps().getGlobalParams().getTaggerName(), dim);
 
 		System.out.println("Load label set from archive: " + this.getData().getLabelMapFileName());
 		this.getData().readLabelSet(this.getArchivator());
@@ -249,7 +263,7 @@ public class GNTagger {
 			ProblemInstance problemInstance = new ProblemInstance();
 			problemInstance.createProblemInstanceFromWindow(nextWindow);
 
-			if (GlobalParams.saveModelInputFile){
+			if (this.getDataProps().getGlobalParams().isSaveModelInputFile()){
 				problemInstance.saveProblemInstance(
 						this.getModelInfo().getModelInputFileWriter(),
 						nextWindow.getLabelIndex());
@@ -387,7 +401,7 @@ public class GNTagger {
 		/*
 		 * Set the writer buffer for the model input file based on the given sourceFileName
 		 */
-		if (GlobalParams.saveModelInputFile){
+		if (this.getDataProps().getGlobalParams().isSaveModelInputFile()){
 			String fileName = new File(sourceFileName).getName();
 			this.getModelInfo().setModelInputFileWriter(
 					new BufferedWriter(
@@ -405,7 +419,7 @@ public class GNTagger {
 		this.tagAndWriteSentencesFromConllReader(conllReader,conllWriter, sentenceCnt);
 		// close the buffers
 		conllReader.close(); conllWriter.close();
-		if (GlobalParams.saveModelInputFile)
+		if (this.getDataProps().getGlobalParams().isSaveModelInputFile())
 			this.getModelInfo().getModelInputFileWriter().close();
 
 		time2 = System.currentTimeMillis();

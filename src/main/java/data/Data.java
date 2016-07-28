@@ -70,9 +70,12 @@ public class Data {
 	}
 	
 	// Instances
-	public Data() {
-		labelMapFileName = GlobalParams.featureFilePathname+GlobalParams.taggerName+"/labelSet.txt";
-		wordMapFileName = GlobalParams.featureFilePathname+GlobalParams.taggerName+"/wordSet.txt";
+	public Data(){
+		
+	}
+	public Data(String featureFilePathname, String taggerName) {
+		labelMapFileName = featureFilePathname+taggerName+"/labelSet.txt";
+		wordMapFileName = featureFilePathname+taggerName+"/wordSet.txt";
 	}
 	
 	// Methods

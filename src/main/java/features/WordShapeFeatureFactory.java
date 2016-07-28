@@ -53,6 +53,15 @@ public class WordShapeFeatureFactory {
 
 	// private int wordCnt = 0;
 	private int signatureCnt = 0;
+	
+	private String featureFilePathname = "";
+
+	public String getFeatureFilePathname() {
+		return featureFilePathname;
+	}
+	public void setFeatureFilePathname(String featureFilePathname) {
+		this.featureFilePathname = featureFilePathname;
+	}
 
 	// Setters and getters
 
@@ -79,6 +88,10 @@ public class WordShapeFeatureFactory {
 	
 	public WordShapeFeatureFactory(){
 	}
+	
+	public WordShapeFeatureFactory(String featureFilePathname){
+		this.setFeatureFilePathname(featureFilePathname);
+	}
 
 	// Methods
 	
@@ -91,7 +104,7 @@ public class WordShapeFeatureFactory {
 		System.out.println("Create shape list from: " + trainingFileName);
 		this.createShapeVectorsFromFile(trainingFileName, -1);
 
-		String shapeFileName = GlobalParams.featureFilePathname+taggerName+"/shapeList.txt";
+		String shapeFileName = this.getFeatureFilePathname()+taggerName+"/shapeList.txt";
 		System.out.println("Writing shape list to: " + shapeFileName);
 		this.writeShapeFeatureFile(shapeFileName);
 		System.out.println("... done");
@@ -239,14 +252,14 @@ public class WordShapeFeatureFactory {
 	}
 
 	public void readShapeList(String taggerName){
-		String shapeFileName = GlobalParams.featureFilePathname+taggerName+"/shapeList.txt";
+		String shapeFileName = this.getFeatureFilePathname()+taggerName+"/shapeList.txt";
 		System.out.println("Reading shape list from: " + shapeFileName);
 		this.readShapeFeatureFile(shapeFileName);
 		System.out.println("... done");
 	}
 	
 	public void readShapeList(Archivator archivator, String taggerName){
-		String shapeFileName = GlobalParams.featureFilePathname+taggerName+"/shapeList.txt";
+		String shapeFileName = this.getFeatureFilePathname()+taggerName+"/shapeList.txt";
 		System.out.println("Reading shape list from archive: " + shapeFileName);
 		this.readShapeFeatureFile(archivator, shapeFileName);
 		System.out.println("... done");

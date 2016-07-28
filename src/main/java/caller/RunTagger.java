@@ -24,7 +24,9 @@ public class RunTagger {
 		ModelInfo modelInfo = new ModelInfo();
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
 		GNTagger posTagger = new GNTagger(archiveName, corpusProps, modelInfo);
-		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
+		posTagger.initGNTagger(
+				posTagger.getDataProps().getGlobalParams().getWindowSize(), 
+				posTagger.getDataProps().getGlobalParams().getDim());
 
 		EvalConllFile evalFile = new EvalConllFile();
 		System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: " 
@@ -56,9 +58,9 @@ public class RunTagger {
 		posTagger.getModelInfo().setModelFile(archiveTxtName);
 		System.out.println("ModelFile: " + posTagger.getModelInfo().getModelFile());
 		
-		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
-
-		
+		posTagger.initGNTagger(
+				posTagger.getDataProps().getGlobalParams().getWindowSize(), 
+				posTagger.getDataProps().getGlobalParams().getDim());
 
 		EvalConllFile evalFile = new EvalConllFile();
 		System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: " 

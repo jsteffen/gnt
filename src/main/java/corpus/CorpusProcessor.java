@@ -10,13 +10,22 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.GNTdataProperties;
 import data.GlobalParams;
 import data.ModelInfo;
 
 public class CorpusProcessor {
 
 	private Corpus corpus = null;
+	private GNTdataProperties dataProps = null;
 
+	
+	public GNTdataProperties getDataProps() {
+		return dataProps;
+	}
+	public void setDataProps(GNTdataProperties dataProps) {
+		this.dataProps = dataProps;
+	}
 	public Corpus getCorpus() {
 		return corpus;
 	}
@@ -28,6 +37,10 @@ public class CorpusProcessor {
 		this.setCorpus(corpus);
 	}
 
+	public CorpusProcessor(Corpus corpus, GNTdataProperties dataProps) {
+		this.setCorpus(corpus);
+		this.setDataProps(dataProps);
+	}
 	/*
 	 * reads in a file of sentences in conll format and reads out each sentence lines-wise in a output file.
 	 * CONLL format:
@@ -164,11 +177,11 @@ public class CorpusProcessor {
 
 	private String nerTokenToString(String[] tokenizedLine, int index) {
 		String output = "";
-		if (GlobalParams.taggerName.equals("NER")||
-				GlobalParams.taggerName.equals("ENNER"))
+		if (this.getDataProps().getGlobalParams().getTaggerName().equals("NER")||
+				this.getDataProps().getGlobalParams().getTaggerName().equals("ENNER"))
 			output = enNerTokenToString(tokenizedLine,index);
 		else
-			if (GlobalParams.taggerName.equals("DENER"))
+			if (this.getDataProps().getGlobalParams().getTaggerName().equals("DENER"))
 				output = deNerTokenToString(tokenizedLine,index);
 		
 		return output;
