@@ -21,6 +21,8 @@ public class ModelInfo {
 	private String modelInputFilePrefix = "resources/modelInputFiles/modelInputFile_";
 	private String modelInputFile = "";
 	private BufferedWriter modelInputFileWriter = null;
+	
+	private String foo ="";
 
 	public SolverType getSolver() {
 		return solver;
