@@ -130,7 +130,7 @@ public class GNTagger {
 	//		this.getArchivator().extract();
 	//	}
 
-	public GNTagger(String archiveName, ModelInfo modelInfo) throws IOException {
+	public GNTagger(String archiveName) throws IOException {
 
 		this.setArchivator(new Archivator(archiveName));
 		System.out.println("Extract archive ...");
@@ -139,7 +139,7 @@ public class GNTagger {
 		this.setDataProps(new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
 		this.setAlphabet(this.getDataProps().getAlphabet());
 
-		this.setModelInfo(modelInfo);
+		this.setModelInfo(this.getDataProps().getModelInfo());
 		this.setData(
 				new Data(this.getDataProps().getGlobalParams().getFeatureFilePathname(), 
 						this.getDataProps().getGlobalParams().getTaggerName()));
@@ -266,6 +266,7 @@ public class GNTagger {
 			Window nextWindow = data.getInstances().get(i);
 			// Fill the frame with all available features. First boolean sets 
 			// training mode to false which means that unknown words are handled.
+			nextWindow.setOffSets(this.getOffSets());
 			nextWindow.fillWindow(train, adjust);
 			// Create the feature vector
 			ProblemInstance problemInstance = new ProblemInstance();

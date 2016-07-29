@@ -9,8 +9,6 @@ import java.nio.file.Paths;
 import tagger.GNTagger;
 import corpus.EvalConllFile;
 import corpus.GNTcorpusProperties;
-import data.GlobalParams;
-import data.ModelInfo;
 
 /**
  * A test method for running GNT on same data set as FLORS and computing accuracies.
