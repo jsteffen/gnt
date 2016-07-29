@@ -9,6 +9,7 @@ import data.GlobalParams;
 // The class that holds all corpus files for training, testing etc.
 public class Corpus {
 	private GNTcorpusProperties gntProps = null;
+	private GlobalParams globalParams = null;
 
 	private  List<String> trainingLabeledSourceFiles = new ArrayList<String>();
 	private  List<String> devLabeledSourceFiles = new ArrayList<String>();
@@ -22,7 +23,19 @@ public class Corpus {
 	private  List<String> devUnLabeledData = new ArrayList<String>();
 	private  List<String> testUnLabeledData = new ArrayList<String>();
 
-
+	
+	public GlobalParams getGlobalParams() {
+		return globalParams;
+	}
+	public void setGlobalParams(GlobalParams globalParams) {
+		this.globalParams = globalParams;
+	}
+	public GNTcorpusProperties getGntProps() {
+		return gntProps;
+	}
+	public void setGntProps(GNTcorpusProperties gntProps) {
+		this.gntProps = gntProps;
+	}
 	public List<String> getTrainingLabeledData() {
 		return trainingLabeledData;
 	}
@@ -144,8 +157,17 @@ public class Corpus {
 		this.setCorpusFiles();
 	}
 
+	public Corpus(GNTcorpusProperties corpusProps, GlobalParams globalParams) {
+		this.gntProps = corpusProps;
+
+		this.setCorpusFiles();
+		
+		this.setGlobalParams(globalParams);
+		
+		
+	}
 	public String makeEvalFileName(String labeledFile){
-		return GlobalParams.evalFilePathname+ new File(labeledFile).getName()+".txt";
+		return this.getGlobalParams().getEvalFilePathname()+ new File(labeledFile).getName()+".txt";
 
 	}
 

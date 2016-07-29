@@ -53,6 +53,7 @@ public class WordSuffixFeatureFactory {
 	private int wordCnt = 0;
 	private int suffixCnt = 0;
 
+	
 	public Map<String, Integer> getSuffix2num() {
 		return suffix2num;
 	}
@@ -84,7 +85,25 @@ public class WordSuffixFeatureFactory {
 	// A simple flag for switching between suffix and ngram computation
 	public static boolean ngram = false;
 	public static int ngramSize = 3;
+	
+	private String featureFilePathname = "";
 
+	public String getFeatureFilePathname() {
+		return featureFilePathname;
+	}
+	public void setFeatureFilePathname(String featureFilePathname) {
+		this.featureFilePathname = featureFilePathname;
+	}
+
+	// Constructor
+	public WordSuffixFeatureFactory() {
+	}
+	
+	public WordSuffixFeatureFactory(String featureFilePathname2) {
+		this.setFeatureFilePathname(featureFilePathname2);
+	}
+	
+	
 	/*
 	 * Methods
 	 */
@@ -269,7 +288,7 @@ public class WordSuffixFeatureFactory {
 
 		System.out.println("#word: " + this.getWordCnt()+" #suffixes: " + this.getSuffixCnt());
 
-		String suffixFileName = GlobalParams.featureFilePathname+taggerName+"/suffixList.txt";
+		String suffixFileName = this.getFeatureFilePathname()+taggerName+"/suffixList.txt";
 		System.out.println("Writing suffix list to: " + suffixFileName);
 		this.writeSuffixFile(suffixFileName);
 		System.out.println("... done");
@@ -361,15 +380,15 @@ public class WordSuffixFeatureFactory {
 		}
 	}
 
-	public void readSuffixList(String taggerName){
-		String suffixFileName = GlobalParams.featureFilePathname+taggerName+"/suffixList.txt";
+	public void readSuffixList(String taggerName, String featureFilePath){
+		String suffixFileName = featureFilePath+taggerName+"/suffixList.txt";
 		System.out.println("Reading suffix list from: " + suffixFileName);
 		this.readSuffixFile(suffixFileName);
 		System.out.println("... done");
 	}
 	
-	public void readSuffixList(Archivator archivator, String taggerName){
-		String suffixFileName = GlobalParams.featureFilePathname+taggerName+"/suffixList.txt";
+	public void readSuffixList(Archivator archivator, String taggerName, String featureFilePath){
+		String suffixFileName = featureFilePath+taggerName+"/suffixList.txt";
 		System.out.println("Reading suffix list from archive: " + suffixFileName);
 		this.readSuffixFile(archivator, suffixFileName);
 		System.out.println("... done");

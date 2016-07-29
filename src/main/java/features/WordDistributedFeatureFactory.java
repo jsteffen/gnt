@@ -66,6 +66,14 @@ public class WordDistributedFeatureFactory {
 	// Once text is processed, table has to be sorted in increasing order
 	private Map<Integer, WordDistributedFeature> distributedWordsTable = new HashMap<Integer, WordDistributedFeature>();
 
+	private String featureFilePathname = "";
+
+	public String getFeatureFilePathname() {
+		return featureFilePathname;
+	}
+	public void setFeatureFilePathname(String featureFilePathname) {
+		this.featureFilePathname = featureFilePathname;
+	}
 	// Setters and getters
 	public Map<String, Integer> getIw2num() {
 		return iw2num;
@@ -112,6 +120,9 @@ public class WordDistributedFeatureFactory {
 
 	// Methods
 
+	public WordDistributedFeatureFactory(String featureFilePathname) {
+		this.setFeatureFilePathname(featureFilePathname);
+	}
 	public void clean(){
 		num2iw = new HashMap<Integer, String>();
 		num2word = new HashMap<Integer, String>();
@@ -431,16 +442,16 @@ public class WordDistributedFeatureFactory {
 	public void writeFlorsCondensed(Archivator archivator, String taggerName, int maxIndicatorWords){
 		System.out.println("Write GNT data condensed ...");
 		System.out.println("Write out used indicator words file.");
-		String wordFile = GlobalParams.featureFilePathname+taggerName+"/iw"+maxIndicatorWords+".txt";
+		String wordFile = this.getFeatureFilePathname()+taggerName+"/iw"+maxIndicatorWords+".txt";
 		this.writeIndicatorWordFile(wordFile);
 
 		System.out.println("Write out vocabulary file.");
-		String vocFile = GlobalParams.featureFilePathname+taggerName+"/vocFile.txt";
+		String vocFile = this.getFeatureFilePathname()+taggerName+"/vocFile.txt";
 		this.writeVocabularyFile(vocFile);
 
 		System.out.println("Write out left/right context vector files.");
-		String vocContextFile = GlobalParams.featureFilePathname+taggerName+"/vocContext"+maxIndicatorWords+".txt";
-		this.writeContextFile(GlobalParams.featureFilePathname+taggerName+"/vocContext"+maxIndicatorWords+".txt");
+		String vocContextFile = this.getFeatureFilePathname()+taggerName+"/vocContext"+maxIndicatorWords+".txt";
+		this.writeContextFile(this.getFeatureFilePathname()+taggerName+"/vocContext"+maxIndicatorWords+".txt");
 		System.out.println("Done!");
 
 		// Add files to archivator
@@ -574,40 +585,40 @@ public class WordDistributedFeatureFactory {
 		}
 	}
 
-	public void readDistributedWordFeaturesSparse(String taggerName, int maxIndicatorWords){
+	public void readDistributedWordFeaturesSparse(String taggerName, int maxIndicatorWords, String featureFilePath){
 		System.out.println("Read GNT condensed ...");
-		String iwFile = GlobalParams.featureFilePathname+taggerName+"/iw"+maxIndicatorWords+".txt";
+		String iwFile = featureFilePath+taggerName+"/iw"+maxIndicatorWords+".txt";
 		System.out.println("Read used indicator words file: " + iwFile);
 		this.readIndicatorWordFile(iwFile);
 
-		String vocFile = GlobalParams.featureFilePathname+taggerName+"/vocFile.txt";
+		String vocFile = featureFilePath+taggerName+"/vocFile.txt";
 		System.out.println("Read vocabulary file: " + vocFile);
 		this.readVocabularyFile(vocFile);
 
-		String dwvFile = GlobalParams.featureFilePathname+taggerName+"/vocContext"+maxIndicatorWords+".txt";
+		String dwvFile = featureFilePath+taggerName+"/vocContext"+maxIndicatorWords+".txt";
 		System.out.println("Read left/right context vector from file: " + dwvFile);
 		this.readContextFile(dwvFile);
 		System.out.println("Done!");
 	}
 	
-	public void readDistributedWordFeaturesSparse(Archivator archivator, String taggerName, int maxIndicatorWords){
+	public void readDistributedWordFeaturesSparse(Archivator archivator, String taggerName, int maxIndicatorWords, String featureFilePath){
 		System.out.println("Read GNT condensed from archive ...");
-		String iwFile = GlobalParams.featureFilePathname+taggerName+"/iw"+maxIndicatorWords+".txt";
+		String iwFile = featureFilePath+taggerName+"/iw"+maxIndicatorWords+".txt";
 		System.out.println("Read used indicator words file from archive: " + iwFile);
 		this.readIndicatorWordFile(archivator, iwFile);
 
-		String vocFile = GlobalParams.featureFilePathname+taggerName+"/vocFile.txt";
+		String vocFile = featureFilePath+taggerName+"/vocFile.txt";
 		System.out.println("Read vocabulary file from archive: " + vocFile);
 		this.readVocabularyFile(archivator, vocFile);
 
-		String dwvFile = GlobalParams.featureFilePathname+taggerName+"/vocContext"+maxIndicatorWords+".txt";
+		String dwvFile = featureFilePath+taggerName+"/vocContext"+maxIndicatorWords+".txt";
 		System.out.println("Read left/right context vector from file from archive: " + dwvFile);
 		this.readContextFile(archivator, dwvFile);
 		System.out.println("Done!");
 	}
 
 	public void createAndWriteDistributedWordFeaturesSparse(Archivator archivator, String taggerName, int maxIndicatorWords, Corpus corpus) throws IOException {
-		String iwFilename = GlobalParams.featureFilePathname+taggerName+"/iw"+"_all"+".txt";
+		String iwFilename = this.getFeatureFilePathname()+taggerName+"/iw"+"_all"+".txt";
 		System.out.println("Read  " + maxIndicatorWords + " indicator words from " + iwFilename + " for tagger " + taggerName + "!");
 		this.initIndicatorMap(iwFilename, maxIndicatorWords);
 

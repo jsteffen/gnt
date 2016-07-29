@@ -124,29 +124,29 @@ public class WordFeatures {
 	// GN on 14.10.2015
 	// I have to shift offset by OffSets.tokenVectorSize + 1, and so later have to remove the +1
 	// NOTE: I need to know which offset I need to substract the final -1
-	public void setOffSets() {
-		elementOffset = (index * OffSets.tokenVectorSize) + 1;
+	public void setOffSets(Alphabet alphabet, OffSets offSets) {
+		elementOffset = (index * offSets.getTokenVectorSize()) + 1;
 		leftOffset = elementOffset;
-		rightOffset = leftOffset + OffSets.wvLeftSize;
-		shapeOffset = rightOffset + OffSets.wvRightSize;
-		suffixOffset = shapeOffset + OffSets.shapeSize;
-		suffixOffset = (Alphabet.withClusterFeats)?suffixOffset:suffixOffset-1;
-		clusterIdOffset = suffixOffset + OffSets.suffixSize -1;
+		rightOffset = leftOffset + offSets.getWvLeftSize();
+		shapeOffset = rightOffset + offSets.getWvRightSize();
+		suffixOffset = shapeOffset + offSets.getShapeSize();
+		suffixOffset = (alphabet.isWithClusterFeats())?suffixOffset:suffixOffset-1;
+		clusterIdOffset = suffixOffset + offSets.getSuffixSize() -1;
 	}
 
 	public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
 		// if word is a sentence padding element, then just return an empty WordFeatures
 		if (word.endsWith("<BOUNDARY>")) return;
 
-		if (Alphabet.withWordFeats) {
+		if (alphabet.isWithWordFeats()) {
 			fillLeftDistributedWordFeatures(word, alphabet, train, true);
 			fillRightDistributedWordFeatures(word, alphabet, train, true);
 		}
-		if (Alphabet.withShapeFeats)
+		if (alphabet.isWithShapeFeats())
 			fillShapeFeatures(word, index, alphabet, true);
-		if (Alphabet.withSuffixFeats)
+		if (alphabet.isWithSuffixFeats())
 			fillSuffixFeatures(word, alphabet, true);
-		if (Alphabet.withClusterFeats)
+		if (alphabet.isWithClusterFeats())
 			fillClusterIdFeatures(word, alphabet, true);
 	}
 

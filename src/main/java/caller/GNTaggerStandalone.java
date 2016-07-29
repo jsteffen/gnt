@@ -8,19 +8,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import data.GlobalParams;
-import data.ModelInfo;
 import tagger.GNTagger;
 import tokenize.GntTokenizer;
 
 public class GNTaggerStandalone {
-	private ModelInfo modelInfo = null;
 	private GNTagger posTagger = null;
 
 	public void initRunner(String archiveName) throws IOException{
-		modelInfo = new ModelInfo();
-		posTagger = new GNTagger(archiveName, modelInfo);
-		posTagger.initGNTagger(GlobalParams.windowSize, GlobalParams.dim);
+		posTagger = new GNTagger(archiveName);
+		posTagger.initGNTagger(
+				posTagger.getDataProps().getGlobalParams().getWindowSize(), 
+				posTagger.getDataProps().getGlobalParams().getDim());
 	}
 
 	/**

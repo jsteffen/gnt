@@ -33,6 +33,14 @@ public class IndicatorWordsCreator {
 	static int lineCnt = 0;
 	static int tokenCnt = 0;
 	private Map<String, Integer> wordToNum = new HashMap<String, Integer>();
+	private String featureFilePathname = "";
+
+	public String getFeatureFilePathname() {
+		return featureFilePathname;
+	}
+	public void setFeatureFilePathname(String featureFilePathname) {
+		this.featureFilePathname = featureFilePathname;
+	}
 
 	public IndicatorWordsCreator(){
 	}
@@ -40,6 +48,10 @@ public class IndicatorWordsCreator {
 	// Clean text line according to given type
 	// AND lower case text
 	// It is assumed that line is a tokenized sentence
+
+	public IndicatorWordsCreator(String featureFilePathname) {
+		this.setFeatureFilePathname(featureFilePathname);
+	}
 
 	public Map<String, Integer> getWordToNum() {
 		return wordToNum;
@@ -211,7 +223,7 @@ public class IndicatorWordsCreator {
 	}
 	
 	public void createAndWriteIndicatorTaggerNameWordsFromCorpus(Archivator archivator, String taggerName, Corpus corpus, double subSamplingThreshold){
-		String iwFilename = GlobalParams.featureFilePathname+taggerName+"/iw_all.txt";
+		String iwFilename = this.getFeatureFilePathname()+taggerName+"/iw_all.txt";
 		System.out.println("Create indictor words and save in file: " + iwFilename);
 		IndicatorWordsCreator iwp = new IndicatorWordsCreator();
 		iwp.createIndicatorTaggerNameWordsFromCorpus(corpus);

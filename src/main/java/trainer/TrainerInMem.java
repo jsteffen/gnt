@@ -64,6 +64,7 @@ public class TrainerInMem {
 	private Alphabet alphabet = new Alphabet();
 	private Archivator archivator ;
 	private OffSets offSets = new OffSets();
+	private GlobalParams globalParams = new GlobalParams();
 	private int windowSize = 2;
 	private ModelInfo modelInfo = new ModelInfo();
 	public static boolean debug = false;
@@ -135,30 +136,37 @@ public class TrainerInMem {
 	public void setProblem(Problem problem) {
 		this.problem = problem;
 	}
-
+	public GlobalParams getGlobalParams() {
+		return globalParams;
+	}
+	public void setGlobalParams(GlobalParams globalParams) {
+		this.globalParams = globalParams;
+	}
 	// Instances
-	public TrainerInMem (){
-	}
-
-	public TrainerInMem (int windowSize){
-		this.setWindowSize(windowSize);
-	}
-
-	public TrainerInMem (ModelInfo modelInfo, int windowSize){
-		this.setWindowSize(windowSize);
-		this.setModelInfo(modelInfo);
-		this.setData(new Data());
-
-		this.setParameter(new Parameter(
-				modelInfo.getSolver(),
-				modelInfo.getC(),
-				modelInfo.getEps()));
-	}
+//	public TrainerInMem (){
+//	}
+//
+//	public TrainerInMem (int windowSize){
+//		this.setWindowSize(windowSize);
+//	}
+//
+//	public TrainerInMem (ModelInfo modelInfo, int windowSize){
+//		this.setWindowSize(windowSize);
+//		this.setModelInfo(modelInfo);
+//		this.setData(new Data());
+//
+//		this.setParameter(new Parameter(
+//				modelInfo.getSolver(),
+//				modelInfo.getC(),
+//				modelInfo.getEps()));
+//	}
 	
-	public TrainerInMem (Archivator archivator, ModelInfo modelInfo, int windowSize){
+	public TrainerInMem (Archivator archivator, ModelInfo modelInfo, Alphabet alphabet, GlobalParams globals, int windowSize){
+		this.setGlobalParams(globals);
 		this.setWindowSize(windowSize);
 		this.setModelInfo(modelInfo);
-		this.setData(new Data());
+		this.setAlphabet(alphabet);
+		this.setData(new Data(globals.getFeatureFilePathname(), globals.getTaggerName()));
 		this.setArchivator(archivator);
 
 		this.setParameter(new Parameter(
@@ -302,6 +310,7 @@ public class TrainerInMem {
 
 		for (int i = 0; i < data.getInstances().size();i++){
 			Window nextWindow = data.getInstances().get(i);
+			nextWindow.setOffSets(this.getOffSets());
 			nextWindow.fillWindow(train, adjust);
 			ProblemInstance problemInstance = new ProblemInstance();
 			problemInstance.createProblemInstanceFromWindow(nextWindow);
@@ -310,7 +319,7 @@ public class TrainerInMem {
 			this.getProblem().y[i]=nextWindow.getLabelIndex();
 			this.getProblem().x[i]=problemInstance.getFeatureVector();
 
-			if (GlobalParams.saveModelInputFile)
+			if (this.getGlobalParams().isSaveModelInputFile())
 				problemInstance.saveProblemInstance(
 						this.getModelInfo().getModelInputFileWriter(),
 						nextWindow.getLabelIndex());
@@ -327,7 +336,7 @@ public class TrainerInMem {
 
 		// Number of feature can be set here, because we know the number of examples now.
 		System.out.println("Window lenght: " + this.getProblem().x[0].length);
-		this.getProblem().n = OffSets.windowVectorSize;
+		this.getProblem().n = this.getOffSets().getWindowVectorSize();
 
 	}
 
@@ -399,7 +408,7 @@ public class TrainerInMem {
 
 		System.out.println("Offsets: " + this.getOffSets().toString());
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
-		System.out.println("Feature instances size: " + OffSets.windowVectorSize);
+		System.out.println("Feature instances size: " + this.getOffSets().getWindowVectorSize());
 		System.out.println("Training instances: " + Window.windowCnt);
 
 		// Construct training problem
@@ -420,7 +429,7 @@ public class TrainerInMem {
 		 * but do not do training
 		 */
 		// NOTE this is the only place, where I make use of the model input file
-		if (GlobalParams.saveModelInputFile){
+		if (this.getGlobalParams().isSaveModelInputFile()){
 			time1 = System.currentTimeMillis();
 			// Close the model input file writer buffer
 			this.getModelInfo().getModelInputFileWriter().close();

@@ -52,7 +52,6 @@ public class GNT {
 			case "-archiveName"		: this.archiveName = args[i+1]; break;
 			case "-corpusConfig"	: this.corpusConfig = args[i+1]; break;
 			case "-corpusDir"		: this.corpusDir = args[i+1]; break;
-			case "-tagger" 			: GlobalParams.taggerName = args[i+1]; break;
 			case "-inEncode" 		: this.inEncode = args[i+1]; break;
 			case "-outEncode" 		: this.outEncode = args[i+1]; break;
 			}
