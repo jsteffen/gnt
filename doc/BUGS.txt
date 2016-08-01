@@ -1,0 +1,4 @@
+August, 2016:
+
+- when zipping config file, then windowSize does not change
+-> solved: do copying after GNTrainer has been created

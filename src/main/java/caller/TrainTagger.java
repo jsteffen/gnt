@@ -10,10 +10,11 @@ public class TrainTagger {
 
 	public void trainer(String dataConfigFileName, String corpusConfigFileName) throws IOException{
 		GNTdataProperties dataProps = new GNTdataProperties(dataConfigFileName);
-		dataProps.copyConfigFile(dataConfigFileName);
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
 		GNTrainer gnTrainer = new GNTrainer(dataProps, corpusProps);
 
+		dataProps.copyConfigFile(dataConfigFileName);
+		
 		gnTrainer.gntTrainingWithDimensionFromConllFile(
 				corpusProps.getTrainingFile(), corpusProps.getClusterIdNameFile(), 
 				dataProps.getGlobalParams().getDim(), 
