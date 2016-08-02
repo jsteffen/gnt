@@ -37,6 +37,3 @@ for German needs token-splitting, e.g.,
 4 Hamiltonoperator B-PERpart O
 
 -> split into Hamilton-operator
-
-My idea of defining a cascade of liblinear learners seems to be 
-what is known as recurrent Machine Learning;
