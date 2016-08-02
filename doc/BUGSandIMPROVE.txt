@@ -1,4 +1,42 @@
 August, 2016:
 
 - when zipping config file, then windowSize does not change
--> solved: do copying after GNTrainer has been created
+-> DONE: do copying after GNTrainer has been created
+
+- when integrating brown clusters -> binary string must be mapped to integer 
+-> within features.WordClusterFeatureFactory.getLiblinearIndex(String)
+
+
+NER:
+prediction of syntactically wrong labels, e.g., 
+
+5 Ago/La I-OTH I-OTH
+6 Fiesta I-OTH I-PER
+
+-> I-PER is NOT possible -> sequential constraints necessary
+-> at least one could do a post-process to correct it automatically
+
+Similar case:
+
+zu O O
+21 Sometime B-OTH O
+22 Ago I-OTH I-OTH
+
+or
+
+Die O O
+2 St B-LOC O
+3 . I-LOC I-LOC
+4 Nikolauskapelle I-LOC I-LOC
+
+-> problem here: how to define start of B-OTH or O
+
+NE-derivations:
+for German needs token-splitting, e.g.,
+
+4 Hamiltonoperator B-PERpart O
+
+-> split into Hamilton-operator
+
+My idea of defining a cascade of liblinear learners seems to be 
+what is known as recurrent Machine Learning;

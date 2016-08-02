@@ -25,9 +25,10 @@ public class TrainTagger {
 			String modelZipFileName, String archiveTxtName) throws IOException{
 		
 		GNTdataProperties dataProps = new GNTdataProperties(dataConfigFileName);
-		dataProps.copyConfigFile(dataConfigFileName);
 		GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
 		GNTrainer gnTrainer = new GNTrainer(dataProps, corpusProps);
+		
+		dataProps.copyConfigFile(dataConfigFileName);
 		
 		//GN: Major difference with above.
 		dataProps.getModelInfo().setModelFile(archiveTxtName);
