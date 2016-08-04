@@ -7,12 +7,6 @@ what is known as recurrent Machine Learning;
 It should be possible to integrate the labels from the window elements (as well as the predicted onces)
 from left to right (only ??)
 
-via 
-tagger.GNTagger.createWindowFramesFromSentence()
-tagger.GNTagger.constructProblemAndTag(boolean, boolean)
-Could be similar to
-features.WordFeatures.fillClusterIdFeatures(String, Alphabet, boolean)
-
 Steps:
 
 Training:
@@ -22,12 +16,14 @@ Training:
 - initialize data.OffSets.initializeOffsets(Alphabet, int)
 - label set should be known anyway so no need to load it during training and tagging
 	- but add as predicate to Alphabet
-	- use |labelSet|+1 or -1 for unknown
+	- unknown labels are bascially ignore and not used for features
 	
 - adapt trainer.TrainerInMem.constructProblem(boolean, boolean)
 	- create predictedLabels feature for left window context in data.Window.fillWindow(boolean, boolean)
-	- data.Window.createWordFeatures(Sentence, String, int, int, boolean, boolean) add boolean parameter recurrent
-		- controls whether predicted labels are used or not (in that case a dummy predicted label is used
+	- data.Window.createWordFeaturesRecurrent(Sentence, String, int, int, boolean, boolean)
+		- if isWithLabelFeats() then add predicted labels
+	-> NOT necessary: just use the current value of the label for word i, 
+		because either it has been assigned a new label or the dummy value
 	- set off sets via features.WordFeatures.setOffSets(Alphabet, OffSets)
 	- add new feature to features.WordFeatures and adapt like clusterId features
 	- adjust feature vector in trainer.ProblemInstance.createProblemInstanceFromWindow(Window)

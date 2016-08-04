@@ -84,6 +84,7 @@ public class GNTdataProperties extends Properties {
 		this.getAlphabet().setWithShapeFeats(Boolean.parseBoolean(this.getProperty("withShapeFeats")));
 		this.getAlphabet().setWithSuffixFeats(Boolean.parseBoolean(this.getProperty("withSuffixFeats")));
 		this.getAlphabet().setWithClusterFeats(Boolean.parseBoolean(this.getProperty("withClusterFeats")));
+		this.getAlphabet().setWithLabelFeats(Boolean.parseBoolean(this.getProperty("withLabelFeats")));
 
 		WordSuffixFeatureFactory.ngram = Boolean.parseBoolean(this.getProperty("WordSuffixFeatureFactory.ngram"));
 		if (this.getProperty("WordSuffixFeatureFactory.ngramSize") != null)

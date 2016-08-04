@@ -31,23 +31,51 @@ public class WordFeatures {
 	private int shapeOffset = 0;
 	private int suffixOffset = 0;
 	private int clusterIdOffset = 0;
+	private int labelOffset = 0;
 	private boolean adjust = false;
 	private int length = 0;
+	
+
+	private int labelIndex = -1;
+	private OffSets offSets;
 
 
 	private List<Pair<Integer,Double>> left = new ArrayList<Pair<Integer,Double>>();
 	private List<Pair<Integer,Double>> right = new ArrayList<Pair<Integer,Double>>();
 	private List<Pair<Integer,Boolean>> suffix = new ArrayList<Pair<Integer,Boolean>>();
-	// I am using here a list although we only have always one shape
+	// I am using here lists although we only have always one element
 	private List<Pair<Integer,Boolean>> shape = new ArrayList<Pair<Integer,Boolean>>();
 	private List<Pair<Integer,Boolean>> cluster = new ArrayList<Pair<Integer,Boolean>>();
+	private List<Pair<Integer,Boolean>> label = new ArrayList<Pair<Integer,Boolean>>();
 
 	//Setters and getters
+	
+	
 	public List<Pair<Integer, Double>> getLeft() {
 		return left;
 	}
 	public void setLeft(List<Pair<Integer, Double>> left) {
 		this.left = left;
+	}
+	
+	public OffSets getOffSets() {
+		return offSets;
+	}
+	public void setOffSets(OffSets offSets) {
+		this.offSets = offSets;
+	}
+	public int getLabelIndex() {
+		return labelIndex;
+	}
+	public void setLabelIndex(int labelIndex) {
+		this.labelIndex = labelIndex;
+	}
+	
+	public List<Pair<Integer, Boolean>> getLabel() {
+		return label;
+	}
+	public void setLabel(List<Pair<Integer, Boolean>> label) {
+		this.label = label;
 	}
 	public List<Pair<Integer, Double>> getRight() {
 		return right;
@@ -124,7 +152,7 @@ public class WordFeatures {
 	// GN on 14.10.2015
 	// I have to shift offset by OffSets.tokenVectorSize + 1, and so later have to remove the +1
 	// NOTE: I need to know which offset I need to substract the final -1
-	public void setOffSets(Alphabet alphabet, OffSets offSets) {
+	public void setOffSetsOld(Alphabet alphabet, OffSets offSets) {
 		elementOffset = (index * offSets.getTokenVectorSize()) + 1;
 		leftOffset = elementOffset;
 		rightOffset = leftOffset + offSets.getWvLeftSize();
@@ -132,6 +160,18 @@ public class WordFeatures {
 		suffixOffset = shapeOffset + offSets.getShapeSize();
 		suffixOffset = (alphabet.isWithClusterFeats())?suffixOffset:suffixOffset-1;
 		clusterIdOffset = suffixOffset + offSets.getSuffixSize() -1;
+	}
+	
+	public void setOffSets(Alphabet alphabet, OffSets offSets) {
+		elementOffset = (index * offSets.getTokenVectorSize()) + 1;
+		leftOffset = elementOffset;
+		rightOffset = leftOffset + offSets.getWvLeftSize();
+		shapeOffset = rightOffset + offSets.getWvRightSize();
+		suffixOffset = shapeOffset + offSets.getShapeSize();
+		suffixOffset = (alphabet.isWithClusterFeats())?suffixOffset:suffixOffset-1;
+		clusterIdOffset = suffixOffset + offSets.getSuffixSize();
+		clusterIdOffset = (alphabet.isWithLabelFeats())?clusterIdOffset:clusterIdOffset-1;
+		labelOffset = clusterIdOffset + offSets.getClusterIdSize() -1;
 	}
 
 	public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
@@ -148,6 +188,8 @@ public class WordFeatures {
 			fillSuffixFeatures(word, alphabet, true);
 		if (alphabet.isWithClusterFeats())
 			fillClusterIdFeatures(word, alphabet, true);
+		if (alphabet.isWithLabelFeats())
+			fillLabelFeatures(word, alphabet, true);
 	}
 
 	// boolean flag offline means: assume that features have been pre-loaded into to memory
@@ -275,6 +317,17 @@ public class WordFeatures {
 		// should be always 1
 		length += cluster.size();
 	}
+	
+	private void fillLabelFeatures(String word, Alphabet alphabet, boolean offline) {
+		int labelIndex = (this.getLabelIndex() > -1)?this.getLabelIndex():this.getOffSets().getLabelVectorSize();
+		int realIndex = (this.isAdjust())?(this.labelOffset+labelIndex):labelIndex;
+		
+		System.out.println("Word: " + word + " LabelId: " + labelIndex + " Realindex: " + realIndex);
+		Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
+		label.add(node);
+		// should be always 1
+		length += label.size();
+	}
 
 	// String representations
 
@@ -288,6 +341,7 @@ public class WordFeatures {
 		output += "Shape: " + this.shapeOffset +"\n";
 		output += "Suffix: " + this.suffixOffset +"\n";
 		output += "ClusterId: " + this.clusterIdOffset +"\n";
+		output += "label: " + this.label +"\n";
 		return output;	
 	}
 
@@ -312,6 +366,11 @@ public class WordFeatures {
 		}
 		output +="\nCluster: ";
 		for (Pair<Integer,Boolean> pair : this.cluster){
+			output+=pair.toString();
+		}
+		
+		output +="\nLabel: ";
+		for (Pair<Integer,Boolean> pair : this.label){
 			output+=pair.toString();
 		}
 		return output;

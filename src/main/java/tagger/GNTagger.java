@@ -199,7 +199,8 @@ public class GNTagger {
 		this.getData().cleanWordSet();
 
 		System.out.println("Initialize offsets:");
-		this.getOffSets().initializeOffsets(this.getAlphabet(), this.getWindowSize());
+		this.getOffSets().initializeOffsets(
+				this.getAlphabet(), this.getData(), this.getWindowSize());
 		System.out.println("\t"+this.getOffSets().toString());
 
 		time2 = System.currentTimeMillis();

@@ -23,3 +23,6 @@ Integration of new feature into system:
 	- DONE
 
 This set of classes seems to be all that have to be changed/adapted when a new feature is to be integrated
+
+Integration of label features:
+	- add predicate withLabelFeats to Alphabet
