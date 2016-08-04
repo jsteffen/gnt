@@ -168,10 +168,9 @@ public class WordFeatures {
 		rightOffset = leftOffset + offSets.getWvLeftSize();
 		shapeOffset = rightOffset + offSets.getWvRightSize();
 		suffixOffset = shapeOffset + offSets.getShapeSize();
-		suffixOffset = (alphabet.isWithClusterFeats())?suffixOffset:suffixOffset-1;
 		clusterIdOffset = suffixOffset + offSets.getSuffixSize();
 		clusterIdOffset = (alphabet.isWithLabelFeats())?clusterIdOffset:clusterIdOffset-1;
-		labelOffset = clusterIdOffset + offSets.getClusterIdSize() -1;
+		labelOffset = clusterIdOffset + offSets.getClusterIdSize() ;
 	}
 
 	public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
@@ -322,7 +321,7 @@ public class WordFeatures {
 		int labelIndex = (this.getLabelIndex() > -1)?this.getLabelIndex():this.getOffSets().getLabelVectorSize();
 		int realIndex = (this.isAdjust())?(this.labelOffset+labelIndex):labelIndex;
 		
-		System.out.println("Word: " + word + " LabelId: " + labelIndex + " Realindex: " + realIndex);
+		//System.out.println("Word: " + word + " LabelId: " + this.getLabelIndex() + " LabelIndex: " + labelIndex + " Realindex: " + realIndex);
 		Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
 		label.add(node);
 		// should be always 1
@@ -341,7 +340,7 @@ public class WordFeatures {
 		output += "Shape: " + this.shapeOffset +"\n";
 		output += "Suffix: " + this.suffixOffset +"\n";
 		output += "ClusterId: " + this.clusterIdOffset +"\n";
-		output += "label: " + this.label +"\n";
+		output += "Label: " + this.labelOffset +"\n";
 		return output;	
 	}
 
@@ -356,14 +355,15 @@ public class WordFeatures {
 		for (Pair<Integer,Double> pair : this.right){
 			output+=pair.toString();
 		}
-		output +="\nShape: ";
-		for (Pair<Integer,Boolean> pair : this.shape){
-			output+=pair.toString();
-		}
 		output +="\nSuffix: ";
 		for (Pair<Integer,Boolean> pair : this.suffix){
 			output+=pair.toString();
 		}
+		output +="\nShape: ";
+		for (Pair<Integer,Boolean> pair : this.shape){
+			output+=pair.toString();
+		}
+		
 		output +="\nCluster: ";
 		for (Pair<Integer,Boolean> pair : this.cluster){
 			output+=pair.toString();

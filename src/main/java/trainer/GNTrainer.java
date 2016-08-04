@@ -159,8 +159,6 @@ public class GNTrainer {
 		System.out.println("Cleaning not used storage:");
 		this.getTrainer().getAlphabet().clean();
 
-		this.getTrainer().getOffSets().initializeOffsets(
-				this.getTrainer().getAlphabet(), this.getTrainer().getData(), this.getTrainer().getWindowSize());
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
 

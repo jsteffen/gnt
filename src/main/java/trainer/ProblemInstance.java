@@ -48,8 +48,8 @@ public class ProblemInstance {
 	 * @param tokenWindow
 	 */
 	public void createProblemInstanceFromWindow(Window tokenWindow) {
-		// This means that the feature vector has size windows length
-		// and windows length is the number of non-zero features with relative feature index and value
+		// This means that the feature vector has size window length
+		// and window length is the number of non-zero features with relative feature index and value
 		this.setFeatureVector(new FeatureNode[tokenWindow.getWindowLength()]);
 		// Add to cumulative length: only needed for computing average length of window
 		ProblemInstance.cumLength+=featureVector.length;

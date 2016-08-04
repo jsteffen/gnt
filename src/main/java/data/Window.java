@@ -194,17 +194,18 @@ public class Window {
 		wordFeatures.setOffSets(this.alphabet, this.offSets);
 		// indicate whether relative feature names (indices) should be adjusted to global ones according to the rules of Liblinear
 		wordFeatures.setAdjust(adjust);
+		
 		// Needed for keeping predicted labels
-		//System.out.println("Word: " + word + "Label index: " + wordPosition);
 		if (word.equals("<BOUNDARY>")) {
-			wordFeatures.setLabelIndex(-1);
+			// Treat as dummy
+			wordFeatures.setLabelIndex(this.offSets.getLabelVectorSize());
 		}
 		else{
 			wordFeatures.setLabelIndex(sentence.getLabelArray()[wordPosition]);
 			
 		}
+		// System.out.println("Word: " + word + ", Label index: " + wordFeatures.getLabelIndex());
 		wordFeatures.setOffSets(offSets);
-
 		// fill all the window's elements
 		wordFeatures.fillWordFeatures(word, wordPosition, alphabet, train);
 		return wordFeatures;

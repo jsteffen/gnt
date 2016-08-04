@@ -106,7 +106,9 @@ public class Data {
 			// and create sentence using word/pos index
 			sentence.addNextToken(i,
 					updateWordMap(tokens.get(i)[Data.wordFormIndex]),
-					updateLabelMap(tokens.get(i)[Data.posTagIndex]));
+					updateLabelMap(tokens.get(i)[Data.posTagIndex])
+					//-1
+					);
 		}
 		this.setSentence(sentence);
 		this.sentenceCnt++;

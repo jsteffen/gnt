@@ -87,7 +87,7 @@ public class OffSets {
 		this.shapeSize = (alphabet.isWithShapeFeats())?alphabet.getWordShapeFactory().getSignature2index().size():0;
 		this.clusterIdSize = (alphabet.isWithClusterFeats())?alphabet.getWordClusterFactory().getClusterIdcnt():0;
 		//TODO: check whether I need an extra 1 for the dummy label
-		this.labelVectorSize = (alphabet.isWithClusterFeats())?data.getLabelSet().getLabel2num().size()+1:0;
+		this.labelVectorSize = (alphabet.isWithLabelFeats())?data.getLabelSet().getLabel2num().size()+1:0;
 		this.tokenVectorSize = ( wvLeftSize + wvRightSize + suffixSize  + shapeSize + clusterIdSize + labelVectorSize);
 		this.windowVectorSize = (tokenVectorSize * (windowSize*2+1)+1);
 	}

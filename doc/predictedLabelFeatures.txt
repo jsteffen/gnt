@@ -33,3 +33,10 @@ Tagging:
 - set up data.OffSets.initializeOffsets(Alphabet, int)
 - I think it should be the same as in training, because labels are predicted left-to-right
 	and overwrite the dummy cat
+	
+Das klappt irgendwie  nicht:
+- setzte ich die predicted labels wirklich richtig ?
+
+Technisch geht es, aber wenn ich dummy labels nehme beim Taggen in data.Data.generateSentenceObjectFromConllLabeledSentence(List<String[]>)
+kommt sehr schlechtes ergebnis raus;
+Das heisst ich muss noch mal genauer den Informationfluss checken

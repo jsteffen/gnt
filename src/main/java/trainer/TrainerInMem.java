@@ -405,6 +405,9 @@ public class TrainerInMem {
 		this.createTrainingInstancesFromConllReader(conllReader, max);
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
+		
+		this.getOffSets().initializeOffsets(
+				this.getAlphabet(), this.getData(), this.getWindowSize());
 
 		System.out.println("Offsets: " + this.getOffSets().toString());
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
