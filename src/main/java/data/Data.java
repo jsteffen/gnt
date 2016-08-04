@@ -107,7 +107,6 @@ public class Data {
 			sentence.addNextToken(i,
 					updateWordMap(tokens.get(i)[Data.wordFormIndex]),
 					updateLabelMap(tokens.get(i)[Data.posTagIndex])
-					//-1
 					);
 		}
 		this.setSentence(sentence);

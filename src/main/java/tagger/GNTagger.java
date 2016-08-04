@@ -351,7 +351,7 @@ public class GNTagger {
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 
 				// create internal sentence object and label maps
-				// Use specified label from conll file for evaluation purposes leter
+				// Use specified label from conll file for evaluation purposes later
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
 				// tag sentence object
