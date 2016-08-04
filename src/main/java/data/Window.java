@@ -18,6 +18,10 @@ import features.WordFeatures;
  *
  */
 public class Window {
+	
+	public static boolean recurrent = false;
+
+
 	public static int windowCnt = 0;
 	private Data data ;
 	private Alphabet alphabet ;
@@ -122,6 +126,7 @@ public class Window {
 
 		// Add left padding elements to sentence (if any); needed later to correctly compute global offSets
 
+		Window.recurrent = true;
 		for (int i = 0 ; i < leftPads; i++){
 			// Make sure that center element does not cross sentence boundary
 			if (i <= sentence.getLabelArray().length) {
@@ -141,6 +146,8 @@ public class Window {
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
+		
+		Window.recurrent = false;
 		// Add token center element
 		{	
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center]);
@@ -195,6 +202,7 @@ public class Window {
 		// indicate whether relative feature names (indices) should be adjusted to global ones according to the rules of Liblinear
 		wordFeatures.setAdjust(adjust);
 		
+		if (Window.recurrent) {
 		// Needed for keeping predicted labels
 		if (word.equals("<BOUNDARY>")) {
 			// Treat as dummy
@@ -204,7 +212,9 @@ public class Window {
 			wordFeatures.setLabelIndex(sentence.getLabelArray()[wordPosition]);
 			
 		}
-		// System.out.println("Word: " + word + ", Label index: " + wordFeatures.getLabelIndex());
+		//System.out.println("Word: " + word + ", Label index: " + wordFeatures.getLabelIndex());
+		
+		}
 		wordFeatures.setOffSets(offSets);
 		// fill all the window's elements
 		wordFeatures.fillWordFeatures(word, wordPosition, alphabet, train);

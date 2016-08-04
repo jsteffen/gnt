@@ -28,6 +28,7 @@ import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
 
 public class GNTagger {
+	
 	private Data data = new Data();
 	private Alphabet alphabet = new Alphabet();
 	private ModelInfo modelInfo = new ModelInfo();
@@ -239,6 +240,7 @@ public class GNTagger {
 
 			// create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
+			// This basically has no effect during tagging
 			tokenWindow.setLabelIndex(labelIndex);
 
 			this.getData().getInstances().add(tokenWindow);
