@@ -69,11 +69,6 @@ HIERIX: August 2016
 	- DONE -> errors when concatenation -> I forgot to sort again after adding indices in 
 		features.WordSuffixFeatureFactory.getAllKnownSubstringsForWord(String)
 		
-- compute all prefixes AND eventually combine with suffixes
-	- or use as separate feature
-	
-- set un-frequent features to 0 -> cf. comments in MDP/doc/GN-TODO.txt
-
 ***
 Feature learning:
 - Idea: extract POS/NER dictionary of tagged tokens or sequences from training file
