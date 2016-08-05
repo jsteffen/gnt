@@ -31,6 +31,8 @@ Die O O
 
 -> problem here: how to define start of B-OTH or O
 
+-> DONE through integration of Labels feature
+
 NE-derivations:
 for German needs token-splitting, e.g.,
 

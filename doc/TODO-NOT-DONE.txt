@@ -1,4 +1,9 @@
-HIERIX: June 2016
+HIERIX: August 2016
+
+- compute all prefixes AND eventually combine with suffixes
+	- or use as separate feature
+	
+- set un-frequent features to 0 -> cf. comments in MDP/doc/GN-TODO.txt
 
 -	count and sort extracted names with: 
 	grep -i "\\-PER" test/aquaint-xie-plain.txt.GNT | sort | uniq -c | sort -bnr > pers.txt
@@ -37,11 +42,6 @@ HIERIX: June 2016
 
 - Other corpora for DE-POS and DE-NER
 	- Unlabeled Mannheim, google books, ...
-
-- other shape features
-	- cf. doc/LiblinearNER.txt
-	- I think that this could be a source for improvement, and hence, do some research here
-
 
 - *** DO separate POS-tagging and MORPH tagging
 	- learn different models
