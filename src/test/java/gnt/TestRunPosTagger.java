@@ -14,9 +14,15 @@ public class TestRunPosTagger {
 //		RunTagger.runner(
 //				"resources/models/model_ENNER_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
 //				"src/main/resources/corpusProps/EnNerTagger.xml");
+//		RunTagger.runner(
+//				"resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
+//				"src/main/resources/corpusProps/DeNerKonvTagger.xml");
+//		RunTagger.runner(
+//				"resources/models/model_DETWEETPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip", 
+//				"src/main/resources/corpusProps/DeTweetPosTagger.xml");
 		RunTagger.runner(
-				"resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
-				"src/main/resources/corpusProps/DeNerKonvTagger.xml");
+				"resources/models/model_DEMORPH_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
+				"src/main/resources/corpusProps/DeMorphTagger.xml");
 //		RunTagger.runner(
 //				"resources/models/model_DENER_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
 //				"src/main/resources/corpusProps/DeNerTagger.xml");
