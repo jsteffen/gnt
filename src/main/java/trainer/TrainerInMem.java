@@ -385,6 +385,7 @@ public class TrainerInMem {
 	 * @param max
 	 * @throws IOException
 	 */
+	//TODO: currently runs only a single training file
 	public void trainFromConllTrainingFileInMemory(String sourceFileName, int max)
 			throws IOException {
 		long time1;
@@ -405,6 +406,9 @@ public class TrainerInMem {
 		this.createTrainingInstancesFromConllReader(conllReader, max);
 		time2 = System.currentTimeMillis();
 		System.out.println("System time (msec): " + (time2-time1));
+		
+		this.getOffSets().initializeOffsets(
+				this.getAlphabet(), this.getData(), this.getWindowSize());
 
 		System.out.println("Offsets: " + this.getOffSets().toString());
 		System.out.println("Sentences: " + this.getData().getSentenceCnt());
@@ -426,7 +430,7 @@ public class TrainerInMem {
 		// Do learning
 		/*
 		 * If ModelInfo.saveModelInputFile=true, then close model input file stream 
-		 * but do not do training
+		 * but do not do training; useful if liblinear should be run directly from shell, e.g., using the C-implementation
 		 */
 		// NOTE this is the only place, where I make use of the model input file
 		if (this.getGlobalParams().isSaveModelInputFile()){
@@ -435,8 +439,9 @@ public class TrainerInMem {
 			this.getModelInfo().getModelInputFileWriter().close();
 			time2 = System.currentTimeMillis();
 			System.out.println("Complete time for creating  and writing model input file (msec): " + (time2-time1));
-		} else {
-			// ELSE DO training with java library
+		} 
+		// ELSE DO training with java library
+		else {
 			time1 = System.currentTimeMillis();
 			this.runLiblinearTrainer();
 			time2 = System.currentTimeMillis();

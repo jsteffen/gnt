@@ -1,0 +1,135 @@
+August, 2016:
+
+
+My idea of defining a cascade of liblinear learners seems to be 
+what is known as recurrent Machine Learning;
+
+It should be possible to integrate the labels from the window elements (as well as the predicted onces)
+from left to right (only ??)
+
+Steps:
+
+Training:
+
+- define a feature for predictedLabels
+	feature vector can be built from known label set
+- initialize data.OffSets.initializeOffsets(Alphabet, int)
+- label set should be known anyway so no need to load it during training and tagging
+	- but add as predicate to Alphabet
+	- unknown labels are bascially ignore and not used for features
+	
+- adapt trainer.TrainerInMem.constructProblem(boolean, boolean)
+	- create predictedLabels feature for left window context in data.Window.fillWindow(boolean, boolean)
+	- data.Window.createWordFeaturesRecurrent(Sentence, String, int, int, boolean, boolean)
+		- if isWithLabelFeats() then add predicted labels
+	-> NOT necessary: just use the current value of the label for word i, 
+		because either it has been assigned a new label or the dummy value
+	- set off sets via features.WordFeatures.setOffSets(Alphabet, OffSets)
+	- add new feature to features.WordFeatures and adapt like clusterId features
+	- adjust feature vector in trainer.ProblemInstance.createProblemInstanceFromWindow(Window)
+
+Tagging:
+- labels are already loaded
+- set up data.OffSets.initializeOffsets(Alphabet, int)
+- I think it should be the same as in training, because labels are predicted left-to-right
+	and overwrite the dummy cat
+	
+Das klappt irgendwie  nicht:
+- setzte ich die predicted labels wirklich richtig ?
+
+Technisch geht es, aber wenn ich dummy labels nehme beim Taggen in data.Data.generateSentenceObjectFromConllLabeledSentence(List<String[]>)
+kommt sehr schlechtes ergebnis raus;
+Das heisst ich muss noch mal genauer den Informationfluss checken.
+
+Actually I am assuming that the labels from devel and test are only used for evaluation;
+But this is not really true because they should be overwritten incrementally from left to right.
+
+Now, I changed it such that I only use predicted labels in strict left-to-right mode.
+The error was that I used basically the GOLD labels which are right to the center word. Now I assume that it 
+actually does what it should do.
+
+
+
+It seems to be more effective for NER then for POS (what I expected)
+
+For En NER:
+
+WITH LABELS:
+
+processed 46666 tokens with 5602 phrases; found: 5540 phrases; correct: 4856.
+accuracy:  97.01%; precision:  87.65%; recall:  86.68%; FB1:  87.17
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  90.31%; recall:  90.37%; FB1:  90.34
+             MISC: precision:  80.92%; recall:  76.59%; FB1:  78.69
+              ORG: precision:  83.28%; recall:  81.97%; FB1:  82.62
+              PER: precision:  92.13%; recall:  92.07%; FB1:  92.10
+              
+WITHOUT LABELS:
+
+./conlleval < eval/eng-testb.txt
+processed 46666 tokens with 5602 phrases; found: 5786 phrases; correct: 4809.
+accuracy:  96.98%; precision:  83.11%; recall:  85.84%; FB1:  84.46
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  87.95%; recall:  89.64%; FB1:  88.79
+             MISC: precision:  75.00%; recall:  76.73%; FB1:  75.86
+              ORG: precision:  76.54%; recall:  80.63%; FB1:  78.53
+              PER: precision:  88.60%; recall:  91.20%; FB1:  89.88
+              
+FOR DE KONVENS:
+
+WITH LABELS:
+
+lt-pool-164:resources gune00$ ./conlleval < eval/deu.konvens.test.txt
+processed 96483 tokens with 6177 phrases; found: 5399 phrases; correct: 4278.
+accuracy:  96.30%; precision:  79.24%; recall:  69.26%; FB1:  73.91
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  83.95%; recall:  78.78%; FB1:  81.28
+         LOCderiv: precision:  83.01%; recall:  84.49%; FB1:  83.75
+          LOCpart: precision:  62.50%; recall:  18.35%; FB1:  28.37
+              ORG: precision:  70.91%; recall:  60.00%; FB1:  65.00
+         ORGderiv: precision: 100.00%; recall:  12.50%; FB1:  22.22
+          ORGpart: precision:  51.69%; recall:  35.47%; FB1:  42.07
+              OTH: precision:  66.81%; recall:  43.90%; FB1:  52.99
+         OTHderiv: precision:  65.38%; recall:  43.59%; FB1:  52.31
+          OTHpart: precision:  42.86%; recall:  14.29%; FB1:  21.43
+              PER: precision:  84.96%; recall:  82.78%; FB1:  83.86
+         PERderiv: precision:  50.00%; recall:   9.09%; FB1:  15.38
+          PERpart: precision:  33.33%; recall:   4.55%; FB1:   8.00
+          
+          
+WITHOUT LABELS:
+
+lt-pool-229:resources gune00$ ./conlleval < eval/deu-konv-test.txt 
+processed 96483 tokens with 6177 phrases; found: 5853 phrases; correct: 4209.
+accuracy:  96.33%; precision:  71.91%; recall:  68.14%; FB1:  69.98
+              LOC: precision:  80.17%; recall:  78.43%; FB1:  79.29
+         LOCderiv: precision:  83.63%; recall:  84.67%; FB1:  84.15
+          LOCpart: precision:  57.58%; recall:  17.43%; FB1:  26.76
+              ORG: precision:  59.33%; recall:  58.35%; FB1:  58.83
+         ORGderiv: precision:  50.00%; recall:  12.50%; FB1:  20.00
+          ORGpart: precision:  50.88%; recall:  33.72%; FB1:  40.56
+              OTH: precision:  48.81%; recall:  41.18%; FB1:  44.67
+         OTHderiv: precision:  67.86%; recall:  48.72%; FB1:  56.72
+          OTHpart: precision:  43.75%; recall:  16.67%; FB1:  24.14
+              PER: precision:  78.57%; recall:  81.26%; FB1:  79.89
+         PERderiv: precision:  33.33%; recall:   9.09%; FB1:  14.29
+          PERpart: precision:  28.57%; recall:   4.55%; FB1:   7.84
+
+DE NER CONLL-2003:
+
+processed 52098 tokens with 3673 phrases; found: 2990 phrases; correct: 2361.
+accuracy:  96.29%; precision:  78.96%; recall:  64.28%; FB1:  70.87
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  77.11%; recall:  71.59%; FB1:  74.25
+             MISC: precision:  65.60%; recall:  48.96%; FB1:  56.07
+              ORG: precision:  74.05%; recall:  55.37%; FB1:  63.36
+              PER: precision:  90.95%; recall:  72.30%; FB1:  80.56
+              
+Compared to:
+
+processed 52098 tokens with 3673 phrases; found: 3040 phrases; correct: 2299.
+accuracy:  96.33%; precision:  75.62%; recall:  62.59%; FB1:  68.49
+              LOC: precision:  75.50%; recall:  69.08%; FB1:  72.15
+             MISC: precision:  65.80%; recall:  45.07%; FB1:  53.50
+              ORG: precision:  62.05%; recall:  50.97%; FB1:  55.97
+              PER: precision:  88.89%; recall:  74.31%; FB1:  80.95         

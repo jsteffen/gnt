@@ -5,7 +5,10 @@ Integration of new feature into system:
 - adapt Alphabet -> DONE
 	- only few changes necessary
 	- add cluster id map and define activation feature
+	data.Alphabet.loadFeaturesFromFiles(String, int, String)
 	- DONE
+- adapt GNTdataProperties:
+	data.GNTdataProperties.setActivatedFeatureExtractors()
 - adapt class Offsets -> DONE
 	- insert cluster id offset slot and add to computation
 - adapt class WordFeatures
@@ -19,7 +22,31 @@ Integration of new feature into system:
 	- DONE
 	
 - adapt GNTrainer
+	trainer.GNTrainer.createTrainingFeatureFiles(String, String, int)
 	- load cluster data
 	- DONE
 
 This set of classes seems to be all that have to be changed/adapted when a new feature is to be integrated
+
+Integration of label features:
+	- add predicate withLabelFeats to Alphabet
+	- no extra feature file loading is necessary because label set is created during training
+		anyway and reused during tagging
+
+I did the following
+- data.Alphabet.isWithLabelFeats(): defined
+- data.Alphabet.setWithLabelFeats(boolean): defined
+- data.OffSets.labelVectorSize: added new slot and set its value in 
+- data.OffSets.initializeOffsets(Alphabet, Data, int)
+	- move call it to trainer.TrainerInMem.trainFromConllTrainingFileInMemory(String, int)
+		since only then label set is known
+- features.WordFeatures.setOffSets(Alphabet, OffSets): use new feature to set offsets
+- data.GNTdataProperties.setActivatedFeatureExtractors(): added new feature "withLabelFeats"
+- data.ModelInfo.createModelFileName(int, int, int, Alphabet, GlobalParams): use value of feature in model-file-name
+- added data.Window.recurrent in order to control using predicted labels in left-to-right manner
+- data.Window.createWordFeatures(Sentence, String, int, int, boolean, boolean): 
+	If Window.recurrent = true, then store label of current token in WordFeatures
+- features.WordFeatures.fillWordFeatures(String, int, Alphabet, boolean):
+	if feature is active, called specific filler features.WordFeatures.fillLabelFeatures(String, Alphabet, boolean)
+	which basically build the feature for the predicted label
+- trainer.ProblemInstance.createProblemInstanceFromWindow(Window): add feature to problem in form needed by liblinear

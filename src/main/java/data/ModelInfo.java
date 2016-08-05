@@ -147,10 +147,11 @@ public class ModelInfo {
 		String shapeFeatString = (alphabet.isWithShapeFeats())?"T":"F";
 		String suffixFeatString = (alphabet.isWithSuffixFeats())?"T":"F";
 		String clusterFeatString = (alphabet.isWithClusterFeats())?"T":"F";
+		String labelFeatString = (alphabet.isWithLabelFeats())?"T":"F";
 		if (wordFeatString.equals("F")) dim=0;
 
 		String fileNameDetails = globalParams.getTaggerName()+"_"+windowSize+"_"+dim+"iw"+numberOfSentences+"sent_"+
-				wordFeatString+shapeFeatString+suffixFeatString+clusterFeatString+"_"+
+				wordFeatString+shapeFeatString+suffixFeatString+clusterFeatString+labelFeatString+"_"+
 				this.getSolver();
 		
 		this.modelFile = this.modelFilePrefix + fileNameDetails + ".txt";

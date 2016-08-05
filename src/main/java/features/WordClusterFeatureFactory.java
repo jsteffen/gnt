@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import archive.Archivator;
-import data.GlobalParams;
 
 /**
  * Given a word2clusterId file from /Users/gune00/data/Marmot/Word
@@ -56,21 +55,18 @@ public class WordClusterFeatureFactory {
 	}
 	public void setClusterIdcnt(int clusterIdcnt) {
 		this.clusterIdcnt = clusterIdcnt;
-	}
-	
+	}	
 	
 	// Instances
 
 	
 	public WordClusterFeatureFactory(String featureFilePathname){
 		this.setFeatureFilePathname(featureFilePathname);
-	}
-	
+	}	
 	public WordClusterFeatureFactory(){
 	}
-
+	
 	// Methods
-
 	public void clean(){
 	}
 

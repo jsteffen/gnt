@@ -29,6 +29,7 @@
 	<entry key="withShapeFeats">true</entry>
 	<entry key="withSuffixFeats">true</entry>
 	<entry key="withClusterFeats">true</entry>
+	<entry key="withLabelFeats">false</entry>
 
 	<entry key="WordSuffixFeatureFactory.ngram">false</entry>
 	<entry key="WordSuffixFeatureFactory.ngramSize">1</entry>

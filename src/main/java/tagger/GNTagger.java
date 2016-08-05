@@ -28,6 +28,7 @@ import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
 
 public class GNTagger {
+	
 	private Data data = new Data();
 	private Alphabet alphabet = new Alphabet();
 	private ModelInfo modelInfo = new ModelInfo();
@@ -199,7 +200,8 @@ public class GNTagger {
 		this.getData().cleanWordSet();
 
 		System.out.println("Initialize offsets:");
-		this.getOffSets().initializeOffsets(this.getAlphabet(), this.getWindowSize());
+		this.getOffSets().initializeOffsets(
+				this.getAlphabet(), this.getData(), this.getWindowSize());
 		System.out.println("\t"+this.getOffSets().toString());
 
 		time2 = System.currentTimeMillis();
@@ -238,6 +240,7 @@ public class GNTagger {
 
 			// create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 			Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
+			// This basically has no effect during tagging
 			tokenWindow.setLabelIndex(labelIndex);
 
 			this.getData().getInstances().add(tokenWindow);
@@ -350,7 +353,7 @@ public class GNTagger {
 				if  ((max > 0) && (data.getSentenceCnt() > max)) break;
 
 				// create internal sentence object and label maps
-				// Use specified label from conll file for evaluation purposes leter
+				// Use specified label from conll file for evaluation purposes later
 				data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
 				// tag sentence object

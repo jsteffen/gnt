@@ -48,14 +48,14 @@ public class ProblemInstance {
 	 * @param tokenWindow
 	 */
 	public void createProblemInstanceFromWindow(Window tokenWindow) {
-		// This means that the feature vector has size windows length
-		// and windows length is the number of non-zero features with relative feature index and value
+		// This means that the feature vector has size window length
+		// and window length is the number of non-zero features with relative feature index and value
 		this.setFeatureVector(new FeatureNode[tokenWindow.getWindowLength()]);
 		// Add to cumulative length: only needed for computing average length of window
 		ProblemInstance.cumLength+=featureVector.length;
 
 		int offSet = 0;
-		
+
 		for (WordFeatures wordFeats : tokenWindow.getElements()){
 			// Add left word embedding length
 			for (int i = 0; i < wordFeats.getLeft().size(); i++){
@@ -86,11 +86,19 @@ public class ProblemInstance {
 				Pair<Integer, Boolean> pair = wordFeats.getCluster().get(i);
 				featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
 			}
+
 			offSet += wordFeats.getCluster().size();
+			// Add label length
+			for (int i = 0; i < wordFeats.getLabel().size(); i++){
+				Pair<Integer, Boolean> pair = wordFeats.getLabel().get(i);
+				featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
+			}
+			
+			offSet += wordFeats.getLabel().size();
 		}
 
 		//this.normalizeFeatureVectorToUnitLenght();
-		
+
 		if (TrainerInMem.debug) this.checkFeatureVector(tokenWindow);
 
 	}
@@ -106,7 +114,7 @@ public class ProblemInstance {
 			node.setValue(node.getValue()/vecLength);
 		}
 	}
-	
+
 	private double computeUnitLength() {
 		double vecLength = 0.0;
 		for (FeatureNode node : this.featureVector){
@@ -114,7 +122,7 @@ public class ProblemInstance {
 		}
 		return Math.sqrt(vecLength);
 	}
-	
+
 	/**
 	 * This is a method that checks whether a feature vector is well-formed
 	 * wrt. to the definition of liblinear which requires that the features in the vector are in natural order.
@@ -135,7 +143,7 @@ public class ProblemInstance {
 			lastValue = x.getIndex();
 		}
 	}
-	
+
 	/**
 	 * This method save the feature vector of the current window plus its given label directly
 	 * as liblinear vector

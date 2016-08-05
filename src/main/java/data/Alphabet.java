@@ -23,6 +23,7 @@ public class Alphabet {
 	private boolean withShapeFeats = true;
 	private boolean withSuffixFeats = true;
 	private boolean withClusterFeats = false;
+	private boolean withLabelFeats = false;
 
 	// Setters and getters
 	public WordDistributedFeatureFactory getWordVectorFactory() {
@@ -73,6 +74,13 @@ public class Alphabet {
 	public void setWithClusterFeats(boolean withClusterFeats) {
 		this.withClusterFeats = withClusterFeats;
 	}
+	public boolean isWithLabelFeats() {
+		return withLabelFeats;
+	}
+	public void setWithLabelFeats(boolean withLabelFeats) {
+		this.withLabelFeats = withLabelFeats;
+	}
+	
 	
 	// Methods
 	
@@ -121,6 +129,7 @@ public class Alphabet {
 		output += "withShapeFeats=  " + this.isWithSuffixFeats() +"\n";
 		output += "withSuffixFeats= " + this.isWithShapeFeats() +"\n";
 		output += "withClusterFeats= " + this.isWithClusterFeats() +"\n";
+		output += "withLabelFeats= " + this.isWithLabelFeats() +"\n";
 		return output;	
 	}
 
