@@ -18,7 +18,8 @@ import features.WordFeatures;
  *
  */
 public class Window {
-	
+
+	// Used to control the use of labels from left context as features in predicting label for current token
 	public static boolean recurrent = false;
 
 
@@ -47,7 +48,7 @@ public class Window {
 	public List<WordFeatures> getElements() {
 		return elements;
 	}
-	
+
 	public void setElements(List<WordFeatures> elements) {
 		this.elements = elements;
 	}
@@ -126,7 +127,6 @@ public class Window {
 
 		// Add left padding elements to sentence (if any); needed later to correctly compute global offSets
 
-		Window.recurrent = true;
 		for (int i = 0 ; i < leftPads; i++){
 			// Make sure that center element does not cross sentence boundary
 			if (i <= sentence.getLabelArray().length) {
@@ -138,6 +138,11 @@ public class Window {
 				elementCnt++;
 			}
 		}
+
+		// Window.recurrent = true means that the labels from the left context will be used 
+
+		Window.recurrent = true;
+
 		// Add left context elements
 		for (int i = (this.center-leftContext) ; i < this.center; i++){
 			wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
@@ -146,7 +151,7 @@ public class Window {
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
-		
+
 		Window.recurrent = false;
 		// Add token center element
 		{	
@@ -156,6 +161,7 @@ public class Window {
 			elements.add(wordFeatures);
 			elementCnt++;
 		}
+
 		// right content elements; 
 		// set wordLoc always to 1, because can never be 0
 		for (int i = this.center+1 ; i < (this.center+1+rightContext); i++){
@@ -201,19 +207,19 @@ public class Window {
 		wordFeatures.setOffSets(this.alphabet, this.offSets);
 		// indicate whether relative feature names (indices) should be adjusted to global ones according to the rules of Liblinear
 		wordFeatures.setAdjust(adjust);
-		
+
 		if (Window.recurrent) {
-		// Needed for keeping predicted labels
-		if (word.equals("<BOUNDARY>")) {
-			// Treat as dummy
-			wordFeatures.setLabelIndex(this.offSets.getLabelVectorSize());
-		}
-		else{
-			wordFeatures.setLabelIndex(sentence.getLabelArray()[wordPosition]);
-			
-		}
-		//System.out.println("Word: " + word + ", Label index: " + wordFeatures.getLabelIndex());
-		
+			// Needed for keeping predicted labels
+			if (word.equals("<BOUNDARY>")) {
+				// Treat as dummy
+				wordFeatures.setLabelIndex(this.offSets.getLabelVectorSize());
+			}
+			else{
+				wordFeatures.setLabelIndex(sentence.getLabelArray()[wordPosition]);
+
+			}
+			//System.out.println("Word: " + word + ", Label index: " + wordFeatures.getLabelIndex());
+
 		}
 		wordFeatures.setOffSets(offSets);
 		// fill all the window's elements

@@ -42,10 +42,6 @@ HIERIX: June 2016
 	- cf. doc/LiblinearNER.txt
 	- I think that this could be a source for improvement, and hence, do some research here
 
-- *** Use previous predicted tag as feature for POS/NER
-	- cascaded LIBLINEAR ? sense-fully ?
-	- how can I define a kind of pipeline model for GNT ?
-	- via search-based structured prediction
 
 - *** DO separate POS-tagging and MORPH tagging
 	- learn different models

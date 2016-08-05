@@ -55,6 +55,7 @@ public class GNTrainer {
 
 	public GNTrainer(GNTdataProperties dataProps, GNTcorpusProperties corpusProps){
 
+		// Get general parameters and create model file name
 		this.setDataProps(dataProps);
 		System.out.println(this.getDataProps().getAlphabet().toActiveFeatureString());
 
@@ -66,18 +67,21 @@ public class GNTrainer {
 				);
 		System.out.println(this.getDataProps().getModelInfo().toString());
 
+		// Set the corpus files for performing training and testing
 		this.corpus = new Corpus(corpusProps, this.getDataProps().getGlobalParams());
-
 		CorpusProcessor mapper = new CorpusProcessor(this.corpus, this.dataProps);
 
 		try {
+			// Make sure that they are all in correct CONLL format
 			mapper.processConllFiles();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		// set the ZIP archivator 
 		this.setArchivator(
 				new Archivator(this.getDataProps().getModelInfo().getModelFileArchive()));
+		// Initialize and set the internal training algorithm
 		this.setTrainer(
 				new TrainerInMem(this.getArchivator(), this.getDataProps().getModelInfo(), 
 						this.getDataProps().getAlphabet(),
@@ -85,11 +89,6 @@ public class GNTrainer {
 						this.getDataProps().getGlobalParams().getWindowSize()));
 	}
 
-
-	//	public GNTrainer(ModelInfo modelInfo, int windowSize) {
-	//		this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
-	//		this.trainer = new TrainerInMem(this.getArchivator(), modelInfo, windowSize);
-	//	}
 
 	// Methods
 
@@ -183,6 +182,7 @@ public class GNTrainer {
 		System.out.println("Approx. GB needed: " + ((ProblemInstance.cumLength/Window.windowCnt)*Window.windowCnt*8+Window.windowCnt)/1000000000.0);
 	}
 
+	// This is the main caller for training
 	public void gntTrainingWithDimensionFromConllFile(String trainingFileName, String clusterIdSourceFileName, int dim, int maxExamples) 
 			throws IOException{
 		time1 = System.currentTimeMillis();

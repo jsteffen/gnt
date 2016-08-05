@@ -114,10 +114,22 @@ accuracy:  96.33%; precision:  71.91%; recall:  68.14%; FB1:  69.98
               PER: precision:  78.57%; recall:  81.26%; FB1:  79.89
          PERderiv: precision:  33.33%; recall:   9.09%; FB1:  14.29
           PERpart: precision:  28.57%; recall:   4.55%; FB1:   7.84
-          
-          
-HIERIX:          
-          
-BUT I need to check carefully and run it also on new text.
 
-Get ride of Window.recurrent static variable.
+DE NER CONLL-2003:
+
+processed 52098 tokens with 3673 phrases; found: 2990 phrases; correct: 2361.
+accuracy:  96.29%; precision:  78.96%; recall:  64.28%; FB1:  70.87
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  77.11%; recall:  71.59%; FB1:  74.25
+             MISC: precision:  65.60%; recall:  48.96%; FB1:  56.07
+              ORG: precision:  74.05%; recall:  55.37%; FB1:  63.36
+              PER: precision:  90.95%; recall:  72.30%; FB1:  80.56
+              
+Compared to:
+
+processed 52098 tokens with 3673 phrases; found: 3040 phrases; correct: 2299.
+accuracy:  96.33%; precision:  75.62%; recall:  62.59%; FB1:  68.49
+              LOC: precision:  75.50%; recall:  69.08%; FB1:  72.15
+             MISC: precision:  65.80%; recall:  45.07%; FB1:  53.50
+              ORG: precision:  62.05%; recall:  50.97%; FB1:  55.97
+              PER: precision:  88.89%; recall:  74.31%; FB1:  80.95         

@@ -21,6 +21,8 @@ public class TrainTagger {
 				dataProps.getGlobalParams().getNumberOfSentences());
 	}
 
+	// This one used for processing the universal dependency treebanks
+	// cf. com.gn.UDlanguageGNTmodelFactory.trainLanguage(String, String)
 	public void trainer(String dataConfigFileName, String corpusConfigFileName, 
 			String modelZipFileName, String archiveTxtName) throws IOException{
 		

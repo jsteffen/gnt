@@ -133,4 +133,7 @@ MAY, 2016
 	
 JUNE, 2016:
 - now runs several languages -> initialized Window.windowCnt !
+
+AUGUST, 2016:
+- add previous (predicted) labels for training and tagging
 	

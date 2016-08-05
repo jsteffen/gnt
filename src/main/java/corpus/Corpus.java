@@ -159,9 +159,7 @@ public class Corpus {
 
 	public Corpus(GNTcorpusProperties corpusProps, GlobalParams globalParams) {
 		this.gntProps = corpusProps;
-
 		this.setCorpusFiles();
-		
 		this.setGlobalParams(globalParams);
 		
 		
