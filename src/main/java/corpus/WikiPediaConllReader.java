@@ -1,6 +1,7 @@
 package corpus;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -9,11 +10,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
 /**
@@ -102,6 +105,14 @@ public class WikiPediaConllReader {
 	    CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis);
 	    BufferedReader br2 = new BufferedReader(new InputStreamReader(input));
 	    return br2;
+	}
+	
+	public static BufferedWriter getBufferedWriterForTextFile(String fileOut) throws FileNotFoundException, CompressorException, UnsupportedEncodingException {
+		FileOutputStream fout = new FileOutputStream(fileOut);
+		BufferedOutputStream bout = new BufferedOutputStream(fout);
+		CompressorOutputStream out = new CompressorStreamFactory().createCompressorOutputStream("bz2", bout);
+		BufferedWriter br2 = new BufferedWriter(new OutputStreamWriter(out, "utf-8"));
+		return br2;
 	}
 	
 	private void transcodeConllToSentenceFile(String sourceFileName, String sourceEncoding,
