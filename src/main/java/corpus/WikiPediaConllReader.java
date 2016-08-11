@@ -110,7 +110,7 @@ public class WikiPediaConllReader {
 	public static BufferedWriter getBufferedWriterForTextFile(String fileOut) throws FileNotFoundException, CompressorException, UnsupportedEncodingException {
 		FileOutputStream fout = new FileOutputStream(fileOut);
 		BufferedOutputStream bout = new BufferedOutputStream(fout);
-		CompressorOutputStream out = new CompressorStreamFactory().createCompressorOutputStream("bz2", bout);
+		CompressorOutputStream out = new CompressorStreamFactory().createCompressorOutputStream("bzip2", bout);
 		BufferedWriter br2 = new BufferedWriter(new OutputStreamWriter(out, "utf-8"));
 		return br2;
 	}
