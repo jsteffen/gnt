@@ -44,10 +44,10 @@ Das heisst ich muss noch mal genauer den Informationfluss checken.
 Actually I am assuming that the labels from devel and test are only used for evaluation;
 But this is not really true because they should be overwritten incrementally from left to right.
 
+WORKS:
 Now, I changed it such that I only use predicted labels in strict left-to-right mode.
 The error was that I used basically the GOLD labels which are right to the center word. Now I assume that it 
 actually does what it should do.
-
 
 
 It seems to be more effective for NER then for POS (what I expected)

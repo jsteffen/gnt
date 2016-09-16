@@ -28,12 +28,12 @@ public class TestTrainPosTagger {
 //				gntTrainer.trainer(
 //						"src/main/resources/dataProps/DeTweetPosTagger.xml", 
 //						"src/main/resources/corpusProps/DeTweetPosTagger.xml");
-				gntTrainer.trainer(
-						"src/main/resources/dataProps/DeMorphTagger.xml", 
-						"src/main/resources/corpusProps/DeMorphTagger.xml");
 //				gntTrainer.trainer(
-//						"src/main/resources/dataProps/EnPosTagger.xml", 
-//						"src/main/resources/corpusProps/EnPosTagger.xml");
+//						"src/main/resources/dataProps/DeMorphTagger.xml", 
+//						"src/main/resources/corpusProps/DeMorphTagger.xml");
+				gntTrainer.trainer(
+						"src/main/resources/dataProps/EnPosTagger.xml", 
+						"src/main/resources/corpusProps/EnPosTagger.xml");
 		//		gntTrainer.trainer(
 		//				"src/main/resources/dataProps/EnUniPosTagger.xml", 
 		//				"src/main/resources/corpusProps/EnUniPosTagger.xml");

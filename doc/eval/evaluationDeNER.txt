@@ -1,22 +1,5 @@
 22.9.2015, GN:
 
-Note tagging with SVM-NER:
-*******************************************************************************
-
-tagging Conll 2003 types according to data define in
-
-/Users/gune00/dfki/TIM-Tools/SvenTagger/NERtests/conll2003
-
-models: trained on eng/deu.train.svm 
-EN2003 -  testb F1=79.90%
-DE2003 -  testb F1=61.37
-
-models: trained on eng/deu.traintesta.svm 
-EN2003 -  testb F1=80.56% (minus 11%)
-DE2003 -  testb F1=66.58  (minus 11%)
-
-Deutsch:
-
 ***** With all sentences from CONLL-based unlabeled data:
 
 lt-pool-223:resources gune00$ ./conlleval < eval/deu-testa.txt 
@@ -175,4 +158,24 @@ accuracy:  95.99%; precision:  73.62%; recall:  62.83%; FB1:  67.80
              MISC: precision:  62.23%; recall:  47.79%; FB1:  54.06
               ORG: precision:  61.43%; recall:  53.17%; FB1:  57.00
               PER: precision:  89.33%; recall:  72.38%; FB1:  79.96
--> HURTS testb              
+-> HURTS testb       
+
+WITH GNT:
+With predicetd labels:
+
+./conlleval < eval/deu-testa.txt
+processed 51645 tokens with 4833 phrases; found: 3834 phrases; correct: 2993.
+accuracy:  95.11%; precision:  78.06%; recall:  61.93%; FB1:  69.07
+              LOC: precision:  75.02%; recall:  73.24%; FB1:  74.12
+             MISC: precision:  68.78%; recall:  50.40%; FB1:  58.17
+              ORG: precision:  76.78%; recall:  54.88%; FB1:  64.00
+              PER: precision:  88.99%; recall:  66.95%; FB1:  76.42
+              
+./conlleval < eval/deu-testb.txt
+processed 52098 tokens with 3673 phrases; found: 2990 phrases; correct: 2361.
+accuracy:  96.29%; precision:  78.96%; recall:  64.28%; FB1:  70.87
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  77.11%; recall:  71.59%; FB1:  74.25
+             MISC: precision:  65.60%; recall:  48.96%; FB1:  56.07
+              ORG: precision:  74.05%; recall:  55.37%; FB1:  63.36
+              PER: precision:  90.95%; recall:  72.30%; FB1:  80.56       

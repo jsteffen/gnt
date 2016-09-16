@@ -7,14 +7,6 @@ tagging Conll 2003 types according to data define in
 
 /Users/gune00/dfki/TIM-Tools/SvenTagger/NERtests/conll2003
 
-models: trained on eng/deu.train.svm 
-EN2003 -  testb F1=79.90%
-DE2003 -  testb F1=61.37
-
-models: trained on eng/deu.traintesta.svm 
-EN2003 -  testb F1=80.56% (minus 11%)
-DE2003 -  testb F1=66.58  (minus 11%)
-
 Testing NER:
 -> had to update corpus data as well!
 
@@ -175,3 +167,25 @@ accuracy:  96.98%; precision:  83.11%; recall:  85.84%; FB1:  84.46
              MISC: precision:  75.00%; recall:  76.73%; FB1:  75.86
               ORG: precision:  76.54%; recall:  80.63%; FB1:  78.53
               PER: precision:  88.60%; recall:  91.20%; FB1:  89.88
+              
+              
+Testing with predicted labels: BEST RESULT
+******************************
+
+./conlleval < eval/eng-testa.txt
+processed 51578 tokens with 5913 phrases; found: 5839 phrases; correct: 5391.
+accuracy:  98.11%; precision:  92.33%; recall:  91.17%; FB1:  91.75
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  94.72%; recall:  94.10%; FB1:  94.41
+             MISC: precision:  91.18%; recall:  85.16%; FB1:  88.07
+              ORG: precision:  88.74%; recall:  86.43%; FB1:  87.57
+              PER: precision:  93.08%; recall:  94.71%; FB1:  93.89
+
+./conlleval < eval/eng-testb.txt
+processed 46666 tokens with 5602 phrases; found: 5540 phrases; correct: 4856.
+accuracy:  97.01%; precision:  87.65%; recall:  86.68%; FB1:  87.17
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  90.31%; recall:  90.37%; FB1:  90.34
+             MISC: precision:  80.92%; recall:  76.59%; FB1:  78.69
+              ORG: precision:  83.28%; recall:  81.97%; FB1:  82.62
+              PER: precision:  92.13%; recall:  92.07%; FB1:  92.10
