@@ -39,9 +39,16 @@ apply GntNER on NL and ES conll data
 data/conll2002
 
 apply on BioInformatic corpus (as done for SVM)
-NLPBA-NER-2004 Alias
+NLPBA-NER-2004
+->
+Need to adapt format to conll format
 
+Check features:
 add prefixes as features
+add POS tags
+add phrase clusters
+add Jon's clusters
+
 
 NER lexicons:
 	- although I have word clusters, it might be too small

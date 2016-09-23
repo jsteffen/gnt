@@ -1,16 +1,3 @@
-18.12.2015:
-
-SVM-based tagger in Nemex:
-APRIL, 2015:
-62,16 % F1
-
-Testing with konvens 2014 data - only outer NE span classes:
-
-Best result at konvens 2014 for outer NE span:
-ExB 80.67 77.55 79.08 acc: 96,91
-UKP 79.90 74.13 76.91 acc: 96,69
-MoSTNER 79.71 67.74 73.24 acc: 96,39
-
 Training von GNT with tagger namer DENERKONV:
 
 86,20316667 minutes
