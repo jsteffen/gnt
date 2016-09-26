@@ -1,0 +1,7 @@
+September, 26th, 2016:
+
+How to recognize date and time expressions, and eventually others?
+
+Use Wikipedia infoboxes and Wikipedia text to create annotated coprora
+
+Kind of distant-supervision approach.
