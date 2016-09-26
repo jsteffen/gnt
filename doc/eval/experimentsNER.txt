@@ -29,6 +29,17 @@ Devel:  F1=??	 	Test: F1=79,08
 
 Missing: ?? 				5,17
 
+
+Genia-Types from NLPBA challenge, 2004
+NLPBA, 2004 data:
+
+Test:		66,96
+			(Words/sec: 74184)
+
+Best 2008: 	77,6
+
+Missing:	10,64%
+
 HIERIX:
 
 I have additional NE-conll data
@@ -37,11 +48,6 @@ I have additional NE-conll data
 
 apply GntNER on NL and ES conll data
 data/conll2002
-
-apply on BioInformatic corpus (as done for SVM)
-NLPBA-NER-2004
-->
-Need to adapt format to conll format
 
 Check features:
 add prefixes as features

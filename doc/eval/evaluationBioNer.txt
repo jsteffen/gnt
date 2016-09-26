@@ -1,0 +1,9 @@
+NLPBA, 2004 data:
+./conlleval < eval/nlpba-test.txt
+processed 101039 tokens with 8662 phrases; found: 9472 phrases; correct: 6071.
+accuracy:  90.94%; precision:  64.09%; recall:  70.09%; FB1:  66.96
+              DNA: precision:  60.32%; recall:  60.89%; FB1:  60.60
+              RNA: precision:  57.94%; recall:  61.86%; FB1:  59.84
+        cell_line: precision:  48.23%; recall:  57.20%; FB1:  52.33
+        cell_type: precision:  75.01%; recall:  65.96%; FB1:  70.19
+          protein: precision:  63.39%; recall:  75.03%; FB1:  68.72
