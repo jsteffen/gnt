@@ -40,8 +40,6 @@ About unknown words:
 	- could be realized by NemexA but then what are useful sim-fct and sim-threshold?
 
 
-HIERIX:
-
 - Cluster from Jon Dehardy - clusterCat
 	- run on source text on clusterCat and Marlin
 	- use same parameters
@@ -50,3 +48,26 @@ HIERIX:
 		clusterCat uses "leftWord word rightWord bigrams" (similar to word clusters in GNT)
 		Marlin uses "leftWord leftWord word" trigrams
 	- Jon proposed to use clusters and cluster size as additional feature
+
+*************
+September, 2016:
+
+Using clusters computed by Marlin:
+
+- /Users/gune00/dfki/POS_MORPH_NER_TAGGING/cistern/cistern-master/marlin
+
+- test and works
+
+- corpus must be preprocessed:
+	- each line a sentence
+	- tokenized
+	- numbers are digitized
+
+- Preprocessing used by Marlin for English:
+	- implementation of PUNKT for sentence recognition
+	- Stanford tokenizer for English
+	
+- I have them preprocessed and tokenized by Morphadorner
+	- unclear how good/bad
+	
+How can I use phrasal clusters?

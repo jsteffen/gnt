@@ -130,6 +130,11 @@ public class WordClusterFeatureFactory {
 				if  ((max > 0) && (lineCnt >= max)) break;
 				lineCnt++;
 				String[] entry = line.split("\t");
+				// to handle case where separator us blank and not tab
+				if (entry.length==1)
+				{
+					entry = line.split(" ");
+				}
 				computeWord2ClusterIdFromWords(entry[0], entry[1]);
 				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
 			}

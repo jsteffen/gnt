@@ -131,14 +131,23 @@ public class NLPBA2ConllMapper {
 		return sentenceString+tokens.get(tokens.size()-1);
 	}
 	
+	private static void normalizeUnlabeledFile4Marlin(String dir, String inFile, String outFile) throws IOException{
+		CorpusNormalizer.normalizeUnLabeledFile(dir+inFile, dir+outFile);
+	}
+	
 	public static void main(String[] args) throws IOException {
-		NLPBA2ConllMapper mapper = new NLPBA2ConllMapper();
+//		NLPBA2ConllMapper mapper = new NLPBA2ConllMapper();
+//		
+//		NLPBA2ConllMapper.transformNLPBAToConllFile(mapper.makeFileName("nlpba-train.txt"), mapper.makeFileName("nlpba-train.conll"));
+//		NLPBA2ConllMapper.transformNLPBAToConllFile(mapper.makeFileName("nlpba-test.txt"), mapper.makeFileName("nlpba-test.conll"));
+//		
+//		NLPBA2ConllMapper.transcodeConllToSentenceFile(mapper.makeFileName("nlpba-train.conll"), mapper.makeFileName("nlpba-train-sents.txt"));
+//		NLPBA2ConllMapper.transcodeConllToSentenceFile(mapper.makeFileName("nlpba-test.conll"), mapper.makeFileName("nlpba-test-sents.txt"));
 		
-		NLPBA2ConllMapper.transformNLPBAToConllFile(mapper.makeFileName("nlpba-train.txt"), mapper.makeFileName("nlpba-train.conll"));
-		NLPBA2ConllMapper.transformNLPBAToConllFile(mapper.makeFileName("nlpba-test.txt"), mapper.makeFileName("nlpba-test.conll"));
-		
-		NLPBA2ConllMapper.transcodeConllToSentenceFile(mapper.makeFileName("nlpba-train.conll"), mapper.makeFileName("nlpba-train-sents.txt"));
-		NLPBA2ConllMapper.transcodeConllToSentenceFile(mapper.makeFileName("nlpba-test.conll"), mapper.makeFileName("nlpba-test-sents.txt"));
+		NLPBA2ConllMapper.normalizeUnlabeledFile4Marlin(
+				"/Volumes/data1/BioNLPdata/PubMedXML/", 
+				"HumanGene-072013-sents.txt", 
+				"HumanGene-072013-sents-normalized.txt");
 	}
 
 }

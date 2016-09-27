@@ -93,11 +93,15 @@ public class EvalConllFile {
 		BufferedReader conllReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
 		File debugFileName = new File(sourceFileName+".debug");
+		File iobFileName = new File(sourceFileName+".iob");
 		File errorFileName = new File(sourceFileName+".errs");
 		BufferedWriter debugWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
 		BufferedWriter errorWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
+		BufferedWriter iobWriter = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(iobFileName),"UTF-8"));
+		
 		int goldPosCnt = 0;
 		int correctPosCnt = 0;
 		int goldOOVCnt = 0;
@@ -113,7 +117,9 @@ public class EvalConllFile {
 
 					String goldPos = tokenizedLine[2];
 					String predPos = tokenizedLine[3];
-
+					
+					iobWriter.write(word+"\t"+predPos+"\n");
+					
 					goldPosCnt++;
 					if (predPos.equals(goldPos)) correctPosCnt++;
 					else
@@ -131,6 +137,8 @@ public class EvalConllFile {
 
 				}
 			}
+			else
+				iobWriter.write("\n");
 		}
 		if (debug) {
 			this.setWrongTagsHash(sortByValue(this.getWrongTagsHash()));
@@ -139,10 +147,12 @@ public class EvalConllFile {
 		conllReader.close();
 		debugWriter.close();
 		errorWriter.close();
+		iobWriter.close();
 		if (!debug) 
 		{
 			debugFileName.delete();
 			errorFileName.delete();
+			iobFileName.delete();
 		}
 
 		// accuracy for all words of test file

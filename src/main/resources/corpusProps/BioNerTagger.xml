@@ -46,7 +46,7 @@
 	</entry>
 
 	<!-- Cluster file -->
-	<entry key="clusterIdSourceFileName">resources/cluster/marmot/en_marlin_cluster_1000</entry>
+	<entry key="clusterIdSourceFileName">resources/cluster/nlpba/BioNer_MouseHuman_1000_5</entry>
 
 	<!-- Training file -->
 	<!-- it is redundant, because also set in trainingLabeledData; however, 

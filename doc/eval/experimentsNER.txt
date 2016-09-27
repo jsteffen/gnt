@@ -33,10 +33,10 @@ Missing: ?? 				5,17
 Genia-Types from NLPBA challenge, 2004
 NLPBA, 2004 data:
 
-Test:		66,96
+Test:		F1=66,96
 			(Words/sec: 74184)
 
-Best 2008: 	77,6
+Best 2008: 	F1=77,6
 
 Missing:	10,64%
 

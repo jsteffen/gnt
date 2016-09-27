@@ -11,13 +11,10 @@ public static void main(String[] args) throws IOException{
 	runner.initRunner("resources/models/model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
 		
 	System.out.println("Tag text: ");
-//	runner.tagStringRunner(
-//			"Das Bremsregelsystem stellt mit seinen Funktionen ABS, ASR, ESP, ... "
-//			+ "fahrdynamische Funktionen bereit."
-//			+ "Ferner enthält es Mehrwertfunktionen (Seitenwindassistent, ...) "
-//			+ "die den Fahrer beim Führen des Fahrzeuges unterstützen.");	
+	runner.tagStringRunner(
+			"organized to work");	
 	
-	runner.tagFileRunner("/Users/gune00/data/InformationExtraction/GoogleRelations/all.txt", "UTF-8", "utf-8");
+	//runner.tagFileRunner("/Users/gune00/data/InformationExtraction/GoogleRelations/all.txt", "UTF-8", "utf-8");
 	}
 
 }
