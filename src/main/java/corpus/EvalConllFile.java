@@ -18,6 +18,16 @@ import java.util.TreeMap;
 import data.Data;
 import data.GlobalParams;
 
+/**
+ * This class takes as input a conll file of gold tags and predicted tags
+ * - computes accuracy
+ * - and writes out a file with extension .debug of all false tags in form of
+ * 	line number: word gold-tag predicted-tag
+ * - a file with extension .errs of all wrong tag-pairs gold-tag predicted-tag together with ist frequency
+ * - a file with extension .iob containing just the words and their predicetd tags
+ * @author gune00
+ *
+ */
 public class EvalConllFile {
 	private Data data = new Data();
 	private Map<String, Integer> wrongTagsHash = new HashMap<String, Integer>();
@@ -98,7 +108,7 @@ public class EvalConllFile {
 		BufferedWriter debugWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
 		BufferedWriter errorWriter = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(debugFileName),"UTF-8"));
+				new OutputStreamWriter(new FileOutputStream(errorFileName),"UTF-8"));
 		BufferedWriter iobWriter = new BufferedWriter(
 				new OutputStreamWriter(new FileOutputStream(iobFileName),"UTF-8"));
 		
@@ -107,9 +117,10 @@ public class EvalConllFile {
 		int goldOOVCnt = 0;
 		int correctOOVCnt = 0;
 		String line = "";
-
+		int lineCnt = 0;
 		this.resetWrongTagsHash();
 		while ((line = conllReader.readLine()) != null) {
+			lineCnt++;
 			if (!line.isEmpty()) {
 				if (!line.equals("-X- -X- -X- -X-")){
 					String[] tokenizedLine = line.split(" ");
@@ -118,18 +129,19 @@ public class EvalConllFile {
 					String goldPos = tokenizedLine[2];
 					String predPos = tokenizedLine[3];
 					
+					// Write out basic information only: word + predicted tag
 					iobWriter.write(word+"\t"+predPos+"\n");
 					
 					goldPosCnt++;
 					if (predPos.equals(goldPos)) correctPosCnt++;
 					else
 						if (debug) {
-							debugWriter.write(line+"\n");
+							debugWriter.write(lineCnt+": " + line+"\n");
 							this.countWrongTag(goldPos+":"+predPos);
 						}
 
 					// Counting our of vocabulary words
-					//TODO: note I do not lower case words when counting OOV -> correct? 
+					// TODO: note I do not lower case words when counting OOV -> correct? 
 					// I guess so, because words in getWordSet() are also not lower-cased -> not sure, better try lowercase it as well
 					boolean knownWord = data.getWordSet().getLabel2num().containsKey(word);
 					if (!knownWord) goldOOVCnt++;
@@ -138,7 +150,9 @@ public class EvalConllFile {
 				}
 			}
 			else
+				{
 				iobWriter.write("\n");
+				}
 		}
 		if (debug) {
 			this.setWrongTagsHash(sortByValue(this.getWrongTagsHash()));

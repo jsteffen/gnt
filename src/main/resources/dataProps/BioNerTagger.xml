@@ -11,7 +11,7 @@
 	<entry key="saveModelInputFile">false</entry>
 
 	<!-- Store wrong tag assignment in file resources/eval/*.debug -->
-	<entry key="debug">false</entry>
+	<entry key="debug">true</entry>
 
 	<!-- Liblinear settings -->
 	<entry key="solverType">MCSVM_CS</entry>
