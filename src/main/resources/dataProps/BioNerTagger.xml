@@ -26,7 +26,7 @@
 
 	<!-- features (not) activated -->
 	<entry key="withWordFeats">false</entry>
-	<entry key="withShapeFeats">true</entry>
+	<entry key="withShapeFeats">false</entry>
 	<entry key="withSuffixFeats">true</entry>
 	<entry key="withClusterFeats">true</entry>
 	<entry key="withLabelFeats">true</entry>

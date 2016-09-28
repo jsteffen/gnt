@@ -1,12 +1,12 @@
 NLPBA, 2004 data:
 Best results so far:
-F1=68.08%
+F1=68.11%
           
           
 Best system (Wang et al., 2008): 
 F1=77,57% (http://www.tmrfindia.org/ijcsa/v5i21.pdf)
 
-Difference: 9,49%
+Difference: 9,46%
 
 How to improve BioGNT?
 
@@ -179,6 +179,37 @@ Using 1000 clusters and 5 iterations:
 |  [-ALL-]  (8662) | 6165 (71.17% / 65.20% / 68.05%) | 6881 (79.44% / 72.77% / 75.96%) | 6546 (75.57% / 69.23% / 72.26%) |
 +------------------+---------------------------------+---------------------------------+---------------------------------+
 
+Without SHAPE Feature: BEST result
+
+|  [-ALL-]  (8662) | 6189 (71.45% / 65.07% / 68.11%) | 6934 (80.05% / 72.90% / 76.31%) | 6556 (75.69% / 68.92% / 72.15%) |
+
+Without SHAPE AND CLUSTER
+
+|  [-ALL-]  (8662) | 5926 (68.41% / 64.72% / 66.51%) | 6696 (77.30% / 73.12% / 75.16%) | 6299 (72.72% / 68.79% / 70.70%) |
+
+With Shape AND without cluster
+
+|  [-ALL-]  (8662) | 6016 (69.45% / 64.17% / 66.71%) | 6771 (78.17% / 72.22% / 75.08%) | 6394 (73.82% / 68.20% / 70.90%) |
+
+Without Shape, without label:
+
+|  [-ALL-]  (8662) | 5859 (67.64% / 63.28% / 65.39%) | 7148 (82.52% / 77.20% / 79.77%) | 6490 (74.92% / 70.09% / 72.43%) |
+
+Without Shape, without prefix:
+
+|  [-ALL-]  (8662) | 5853 (67.57% / 64.28% / 65.88%) | 6638 (76.63% / 72.90% / 74.72%) | 6213 (71.73% / 68.23% / 69.93%) |
+
+With shape, without prefix:
+
+|  [-ALL-]  (8662) | 5927 (68.43% / 64.33% / 66.32%) | 6695 (77.29% / 72.67% / 74.91%) | 6285 (72.56% / 68.22% / 70.32%) |
+
+Other window size:
+		window-size=3 -> 67.54% -> NIX
+		window-size=1 -> 64.74% -> NIX
+
 WHAT ELSE ?
 
-- lower case words when building normalized corpus files 
+- lower case words when building normalized corpus files
+- NUMBER instead of 000
+- better/other tokenizer
+	

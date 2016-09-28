@@ -3,6 +3,8 @@ HIERIX: August 2016
 - compute all prefixes AND eventually combine with suffixes
 	- or use as separate feature
 	
+- use different word embeddings
+	
 - set un-frequent features to 0 -> cf. comments in MDP/doc/GN-TODO.txt
 
 -	count and sort extracted names with: 

@@ -7,7 +7,7 @@ f_left(w) ::=
 	
 	where c_i is the word with frequency rank i in the corpus.
 	
-f_right(w) analougsly.
+f_right(w) analogously
 
 restrict n=500 indicator words.
 

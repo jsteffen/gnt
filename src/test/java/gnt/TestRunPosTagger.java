@@ -18,7 +18,7 @@ public class TestRunPosTagger {
 //				"resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
 //				"src/main/resources/corpusProps/DeNerKonvTagger.xml");
 		RunTagger.runner(
-				"resources/models/model_BIONER_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
+				"resources/models/model_BIONER_2_0iw-1sent_FFTTT_MCSVM_CS.zip", 
 				"src/main/resources/corpusProps/BioNerTagger.xml");
 //		RunTagger.runner(
 //				"resources/models/model_DETWEETPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip", 
