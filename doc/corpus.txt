@@ -41,4 +41,7 @@ sources are: /Users/gune00/data/twitter_gold
 Mapper to Conll format: /GNT/src/main/java/corpus/TweetToConllMapper.java
 
 DONE
+
+OntoNotes Rlease 5.0 coprus at /Volumes/data1/LDC/ontonotes-release-5.0_LDC2013T19.tgz
+- see also http://conll.cemantix.org/2011/data.html, http://conll.cemantix.org/2012/introduction.html
 	

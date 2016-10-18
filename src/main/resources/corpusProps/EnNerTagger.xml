@@ -25,7 +25,7 @@
 
 	<!-- CORPUS parameters - labeled data -->
 	<entry key="trainingLabeledData">
-		resources/data/ner/bilou/eng-train.conll
+		resources/data/ner/bilou/eng-traintesta.conll
 	</entry>
 	<entry key="devLabeledData">
 		resources/data/ner/bilou/eng-testa.conll
@@ -52,7 +52,7 @@
 	<!-- it is redundant, because also set in trainingLabeledData; however, 
 		there as a list of training files, which is actually currently not supported 
 		when calling the GNTrainer and GNTtagger -->
-	<entry key="trainingFile">resources/data/ner/bilou/eng-train.conll
+	<entry key="trainingFile">resources/data/ner/bilou/eng-traintesta.conll
 	</entry>
 
 </properties>

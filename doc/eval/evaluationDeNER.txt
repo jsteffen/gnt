@@ -178,4 +178,16 @@ accuracy:  96.29%; precision:  78.96%; recall:  64.28%; FB1:  70.87
               LOC: precision:  77.11%; recall:  71.59%; FB1:  74.25
              MISC: precision:  65.60%; recall:  48.96%; FB1:  56.07
               ORG: precision:  74.05%; recall:  55.37%; FB1:  63.36
-              PER: precision:  90.95%; recall:  72.30%; FB1:  80.56       
+              PER: precision:  90.95%; recall:  72.30%; FB1:  80.56    
+              
+              
+training with train and testa:
+
+./conlleval < eval/deu-testb.txt
+processed 52098 tokens with 3673 phrases; found: 3155 phrases; correct: 2507.
+accuracy:  96.61%; precision:  79.46%; recall:  68.25%; FB1:  73.43
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  78.24%; recall:  72.27%; FB1:  75.14
+             MISC: precision:  66.73%; recall:  50.90%; FB1:  57.75
+              ORG: precision:  73.08%; recall:  56.53%; FB1:  63.75
+              PER: precision:  90.08%; recall:  82.09%; FB1:  85.90   
