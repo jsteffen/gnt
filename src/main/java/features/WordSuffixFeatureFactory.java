@@ -173,6 +173,9 @@ public class WordSuffixFeatureFactory {
 		indices.sort(null);
 		return indices;
 	}
+	
+	//TODO
+	// define getAllKnownSubstringsForWordIntern()
 
 	/** 
 	 * compute all suffixes of a word starting from 0, which means the word is a suffix of itself.
@@ -186,6 +189,20 @@ public class WordSuffixFeatureFactory {
 			if (!isNonWord(suffix)) 
 				updateSuffixTable(suffix, i);
 		}
+	}
+	
+	private void computeAllSubstringsAndStore(String word){
+		int cnt = 0;
+		for (int i = 0; i < word.length(); i++) {
+	        for (int j = i+1; j <= word.length(); j++) {
+	        	String substring = word.substring(i,j);
+	        	if (!isNonWord(substring)) {
+					updateSuffixTable(substring, cnt);
+	        	}
+	        	// CORRECT ??
+	        	cnt++;
+	        }
+	    }
 	}
 
 	// ************************** Inserting or Updating extracted suffix/ngram **************************

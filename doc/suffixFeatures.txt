@@ -51,3 +51,11 @@ Combine suffix and ngram by concatenating both into same file
 	->	I simply forgot to re-sort the resulting concatenated lists!
 
 Compute prefixes - might be useful for NER (is used as feature their)
+
+Basically:
+in features.WordSuffixFeatureFactory.computeSuffixesAndStore(String)
+- compute all possible substrings of a string and use as feature
+- select it via parameter in data properties 
+- need to define also substring version for
+	features.WordSuffixFeatureFactory.getAllKnownSuffixForWordIntern(String)
+- make sure: substring-integer mappings are defined properly
