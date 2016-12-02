@@ -126,8 +126,8 @@ public class Alphabet {
 	public String toActiveFeatureString(){
 		String output = "\nActive features\n";
 		output += "withWordFeats= 	" + this.isWithWordFeats() +"\n";
-		output += "withShapeFeats=  " + this.isWithSuffixFeats() +"\n";
-		output += "withSuffixFeats= " + this.isWithShapeFeats() +"\n";
+		output += "withSuffixFeats=  " + this.isWithSuffixFeats() +"\n";
+		output += "withShapeFeats= " + this.isWithShapeFeats() +"\n";
 		output += "withClusterFeats= " + this.isWithClusterFeats() +"\n";
 		output += "withLabelFeats= " + this.isWithLabelFeats() +"\n";
 		return output;	
