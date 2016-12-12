@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import archive.Archivator;
-import data.GlobalParams;
 
 /**
  * Goal is to compute all lower-case suffixes from a training set of words.
@@ -53,7 +52,7 @@ public class WordSuffixFeatureFactory {
 	private int wordCnt = 0;
 	private int suffixCnt = 0;
 
-	
+
 	public Map<String, Integer> getSuffix2num() {
 		return suffix2num;
 	}
@@ -85,7 +84,11 @@ public class WordSuffixFeatureFactory {
 	// A simple flag for switching between suffix and ngram computation
 	public static boolean ngram = false;
 	public static int ngramSize = 3;
-	
+
+	// If true, then compute all substrings, else all suffixes
+	public static boolean subString = false;
+
+
 	private String featureFilePathname = "";
 
 	public String getFeatureFilePathname() {
@@ -98,16 +101,77 @@ public class WordSuffixFeatureFactory {
 	// Constructor
 	public WordSuffixFeatureFactory() {
 	}
-	
+
 	public WordSuffixFeatureFactory(String featureFilePathname2) {
 		this.setFeatureFilePathname(featureFilePathname2);
 	}
-	
-	
+
+
 	/*
 	 * Methods
 	 */
 
+	// ************************** Inserting or Updating extracted suffix/ngram **************************
+	
+	/** A number is a string which starts and ends with a digit.
+	 * This is used to filter out strings for which we do not want to compute suffixes, e.g., numbers
+	 * 
+	 * @param word
+	 * @return
+	 */
+	private boolean isNumber(String word) {
+		char lastChar = word.charAt(word.length()-1);
+		char firstChar = word.charAt(0);
+		return (Character.isDigit(lastChar) 
+				&& Character.isDigit(firstChar)
+				);
+	}
+	// ************************** Inserting or Updating extracted suffix/ngram **************************
+	
+	private boolean hasLastNonLetter(String word) {
+		char lastChar = word.charAt(word.length()-1);
+		return !Character.isLetter(lastChar);
+	}
+	// ************************** Inserting or Updating extracted suffix/ngram **************************
+	
+	private boolean hasOnlyNonLetters(String token){
+		boolean isValid = true;
+		for (int i=0 ; i < token.length(); i++){
+			char curChar = token.charAt(i);
+			if (Character.isLetter(curChar)) {
+				isValid = false; break;
+			}
+		}
+		return isValid;
+	}
+	// ************************** Inserting or Updating extracted suffix/ngram **************************
+	
+	/**
+	 * Returns true if token is not a word.
+	 * @param token
+	 * @return
+	 */
+	private boolean isNonWord(String token){
+		return (
+				false
+				//				(token.length() < 3) ||
+				//				 hasLastNonLetter(token)
+				//								|| hasOnlyNonLetters(token) 
+				//								|| isNumber(token)
+				);
+	}
+	// ************************** Inserting or Updating extracted suffix/ngram **************************
+	
+	// parameter i is just used as a flag for increasing the word counter 
+	private void updateSuffixTable(String suffix, int i) {
+		if (!this.getSuffix2num().containsKey(suffix)){
+			if (i==0) wordCnt++;
+	
+			this.suffixCnt++;
+			this.getSuffix2num().put(suffix, suffixCnt);
+			num2suffix.put(suffixCnt, suffix);
+		}
+	}
 	//*********************** Computation of ngrams *********************** 
 	/**
 	 * Compute ngrams from given word
@@ -173,9 +237,6 @@ public class WordSuffixFeatureFactory {
 		indices.sort(null);
 		return indices;
 	}
-	
-	//TODO
-	// define getAllKnownSubstringsForWordIntern()
 
 	/** 
 	 * compute all suffixes of a word starting from 0, which means the word is a suffix of itself.
@@ -191,75 +252,48 @@ public class WordSuffixFeatureFactory {
 		}
 	}
 	
-	private void computeAllSubstringsAndStore(String word){
-		int cnt = 0;
+	//*********************** Computation of substring *********************** 
+	
+	// Only triggered if substring = true;
+	
+	// TODO: these two methods are used to create all possible substrings and to use them 
+	// instead of all suffixes
+	
+	// Currently not used, because not clear whether it is properly implemented
+	private List<Integer> getAllKnownSubstringsForWordIntern(String word){
+		List<Integer> indices = new ArrayList<Integer>();
 		for (int i = 0; i < word.length(); i++) {
-	        for (int j = i+1; j <= word.length(); j++) {
-	        	String substring = word.substring(i,j);
-	        	if (!isNonWord(substring)) {
-					updateSuffixTable(substring, cnt);
-	        	}
-	        	// CORRECT ??
-	        	cnt++;
-	        }
-	    }
+			for (int j = i+1; j <= word.length(); j++) {
+				String substring = word.substring(i,j);
+				if (!isNonWord(substring)) {
+					if (this.getSuffix2num().containsKey(substring)) {
+						int index = this.getSuffix2num().get(substring);
+						// to run GNT technically, I need this test, but I do not know why
+						if (indices.contains(index))
+							indices.add(index);
+					}
+				}
+			}
+		}
+		indices.sort(null);
+		return indices;
+	}
+
+	// Triggered if substring=true;
+	private void computeAllSubstringsAndStore(String word){
+		for (int i = 0; i < word.length(); i++) {
+			for (int j = i+1; j <= word.length(); j++) {
+				String substring = word.substring(i,j);
+				if (!isNonWord(substring)) {
+					updateSuffixTable(substring, i);
+				}
+			}
+		}
 	}
 
 	// ************************** Inserting or Updating extracted suffix/ngram **************************
 
-	/** A number is a string which starts and ends with a digit.
-	 * This is used to filter out strings for which we do not want to compute suffixes, e.g., numbers
-	 * 
-	 * @param word
-	 * @return
-	 */
-	private boolean isNumber(String word) {
-		char lastChar = word.charAt(word.length()-1);
-		char firstChar = word.charAt(0);
-		return (Character.isDigit(lastChar) 
-				&& Character.isDigit(firstChar)
-				);
-	}
-
-	private boolean hasLastNonLetter(String word) {
-		char lastChar = word.charAt(word.length()-1);
-		return !Character.isLetter(lastChar);
-	}
-
-	private boolean hasOnlyNonLetters(String token){
-		boolean isValid = true;
-		for (int i=0 ; i < token.length(); i++){
-			char curChar = token.charAt(i);
-			if (Character.isLetter(curChar)) {
-				isValid = false; break;
-			}
-		}
-		return isValid;
-	}
-	/**
-	 * Returns true if token is not a word.
-	 * @param token
-	 * @return
-	 */
-	private boolean isNonWord(String token){
-		return (
-				false
-				//				(token.length() < 3) ||
-				//				 hasLastNonLetter(token)
-				//								|| hasOnlyNonLetters(token) 
-				//								|| isNumber(token)
-				);
-	}
-
-	private void updateSuffixTable(String suffix, int i) {
-		if (!this.getSuffix2num().containsKey(suffix)){
-			if (i==0) wordCnt++;
-
-			this.suffixCnt++;
-			this.getSuffix2num().put(suffix, suffixCnt);
-			num2suffix.put(suffixCnt, suffix);
-		}
-	}
+	
 
 	//*********************** generic caller *********************** 
 
@@ -272,7 +306,10 @@ public class WordSuffixFeatureFactory {
 			if (WordSuffixFeatureFactory.ngram)
 				computeNgramsAndStore(word);
 			else{
-				computeSuffixesAndStore(word);
+				if (WordSuffixFeatureFactory.subString)
+					this.computeAllSubstringsAndStore(word);
+				else
+					computeSuffixesAndStore(word);
 			}
 		}
 	}
@@ -291,8 +328,10 @@ public class WordSuffixFeatureFactory {
 			indices = getAllKnownNgramsForWord(word);
 		else
 		{
-			indices = getAllKnownSuffixForWordIntern(word);
-			//indices.addAll(getAllKnownNgramsForWord(word));
+			if (WordSuffixFeatureFactory.subString)
+				indices = getAllKnownSubstringsForWordIntern(word);
+			else
+				indices = getAllKnownSuffixForWordIntern(word);
 		}
 		return indices;
 	}
@@ -377,7 +416,7 @@ public class WordSuffixFeatureFactory {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void readSuffixFile(Archivator archivator, String string) {
 		BufferedReader reader;
 		int cnt = 1;
@@ -403,7 +442,7 @@ public class WordSuffixFeatureFactory {
 		this.readSuffixFile(suffixFileName);
 		System.out.println("... done");
 	}
-	
+
 	public void readSuffixList(Archivator archivator, String taggerName, String featureFilePath){
 		String suffixFileName = featureFilePath+taggerName+"/suffixList.txt";
 		System.out.println("Reading suffix list from archive: " + suffixFileName);
@@ -413,13 +452,17 @@ public class WordSuffixFeatureFactory {
 
 
 	private void computeSuffixesTest(String word) {
-		System.out.println("Word: " + word);
-		// Smallest suffix is just last character of a word
-		for (int i = 0; i < word.length(); i++){
-			String suffix = word.substring(i);
-			System.out.println("Suff: " + suffix);
-			String prefix = word.substring(0,i+1);
-			System.out.println("Pref : " + prefix);
+
+		int cnt = 0;
+		for (int i = 0; i < word.length(); i++) {
+			for (int j = i+1; j <= word.length(); j++) {
+				String substring = word.substring(i,j);
+				System.out.println("substring: " + substring + " cnt: " + cnt);
+				if (!isNonWord(substring)) {
+
+				}
+				cnt++;
+			}
 		}
 	}
 	public static void main(String[] args) throws IOException{

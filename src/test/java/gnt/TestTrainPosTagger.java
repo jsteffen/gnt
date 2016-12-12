@@ -16,24 +16,24 @@ public class TestTrainPosTagger {
 //		gntTrainer.trainer(
 //				"src/main/resources/dataProps/DeNerKonvTagger.xml", 
 //				"src/main/resources/corpusProps/DeNerKonvTagger.xml");
-		//				gntTrainer.trainer(
-		//						"src/main/resources/dataProps/DePosTagger.xml", 
-		//						"src/main/resources/corpusProps/DePosTagger.xml");
+						gntTrainer.trainer(
+								"src/main/resources/dataProps/DePosTagger.xml", 
+								"src/main/resources/corpusProps/DePosTagger.xml");
 //						gntTrainer.trainer(
 //								"src/main/resources/dataProps/DeNerTagger.xml", 
 //								"src/main/resources/corpusProps/DeNerTagger.xml");
-						gntTrainer.trainer(
-								"src/main/resources/dataProps/DeNerKonvTagger.xml", 
-								"src/main/resources/corpusProps/DeNerKonvTagger.xml");
+//						gntTrainer.trainer(
+//								"src/main/resources/dataProps/DeNerKonvTagger.xml", 
+//								"src/main/resources/corpusProps/DeNerKonvTagger.xml");
 		//				gntTrainer.trainer(
 		//						"src/main/resources/dataProps/DeTweetPosTagger.xml", 
 		//						"src/main/resources/corpusProps/DeTweetPosTagger.xml");
 		//				gntTrainer.trainer(
 		//						"src/main/resources/dataProps/DeMorphTagger.xml", 
 		//						"src/main/resources/corpusProps/DeMorphTagger.xml");
-		//				gntTrainer.trainer(
-		//						"src/main/resources/dataProps/EnPosTagger.xml", 
-		//						"src/main/resources/corpusProps/EnPosTagger.xml");
+//						gntTrainer.trainer(
+//								"src/main/resources/dataProps/EnPosTagger.xml", 
+//								"src/main/resources/corpusProps/EnPosTagger.xml");
 		//				gntTrainer.trainer(
 		//						"src/main/resources/dataProps/BioNerTagger.xml", 
 		//						"src/main/resources/corpusProps/BioNerTagger.xml");

@@ -14,9 +14,9 @@ public class TestRunPosTagger {
 //		RunTagger.runner(
 //				"resources/models/model_ENNER_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
 //				"src/main/resources/corpusProps/EnNerTagger.xml");
-		RunTagger.runner(
-				"resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
-				"src/main/resources/corpusProps/DeNerKonvTagger.xml");
+//		RunTagger.runner(
+//				"resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
+//				"src/main/resources/corpusProps/DeNerKonvTagger.xml");
 //		RunTagger.runner(
 //				"resources/models/model_BIONER_2_0iw-1sent_FFTTT_MCSVM_CS.zip", 
 //				"src/main/resources/corpusProps/BioNerTagger.xml");
@@ -30,10 +30,10 @@ public class TestRunPosTagger {
 //				"resources/models/model_DENER_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
 //				"src/main/resources/corpusProps/DeNerTagger.xml");
 //		RunTagger.runner(
-//				"resources/models/model_ENPOS_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
+//				"resources/models/model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip", 
 //				"src/main/resources/corpusProps/EnPosTagger.xml");
-//		RunTagger.runner(
-//				"resources/models/model_DEPOS_2_0iw-1sent_FTTTT_MCSVM_CS.zip", 
-//				"src/main/resources/corpusProps/DePosTagger.xml");
+		RunTagger.runner(
+				"resources/models/model_DEPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip", 
+				"src/main/resources/corpusProps/DePosTagger.xml");
 	}
 }

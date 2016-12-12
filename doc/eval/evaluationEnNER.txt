@@ -189,3 +189,14 @@ accuracy:  97.01%; precision:  87.65%; recall:  86.68%; FB1:  87.17
              MISC: precision:  80.92%; recall:  76.59%; FB1:  78.69
               ORG: precision:  83.28%; recall:  81.97%; FB1:  82.62
               PER: precision:  92.13%; recall:  92.07%; FB1:  92.10
+              
+              
+running with trained traintesta:
+
+02 phrases; found: 5547 phrases; correct: 4876.
+accuracy:  97.11%; precision:  87.90%; recall:  87.04%; FB1:  87.47
+                 : precision:   0.00%; recall:   0.00%; FB1:   0.00
+              LOC: precision:  90.30%; recall:  90.25%; FB1:  90.27
+             MISC: precision:  80.24%; recall:  77.46%; FB1:  78.82
+              ORG: precision:  84.67%; recall:  82.82%; FB1:  83.73
+              PER: precision:  91.91%; recall:  92.20%; FB1:  92.05

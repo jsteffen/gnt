@@ -56,6 +56,9 @@ Basically:
 in features.WordSuffixFeatureFactory.computeSuffixesAndStore(String)
 - compute all possible substrings of a string and use as feature
 - select it via parameter in data properties 
+
 - need to define also substring version for
 	features.WordSuffixFeatureFactory.getAllKnownSuffixForWordIntern(String)
 - make sure: substring-integer mappings are defined properly
+
+-> BRINGS not much for English NER and POS, also nix for DE POS
