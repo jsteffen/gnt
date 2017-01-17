@@ -5,10 +5,10 @@ English:
 CoNLL-2003:
 Devel: F1=91.75		 Test: 	F1=87.17 (trained with train and testa: 87.47%)
 (Words/sec: 57822)			 (Words/sec: 94849)
-Best 2016 (DL)
-Devel:  F1=94,03	 Test: F1=91,20
+Best 2016 (DL), https://transacl.org/ojs/index.php/tacl/article/view/792/202
+Devel:  F1=94,03	 Test: F1=91,62
 
-Missing: 2,28 				4,03	(3,73)
+Missing: 2,28 				4,45	(4,15)
 
 Deutsch:
 
@@ -42,8 +42,15 @@ Missing:	10,64%
 
 HIERIX:
 
+It seems that if sentence is all capitals, then performance is lower.
+How can I make use of statistics to improve performance ?
+
 I have additional NE-conll data
 	- improve training so that it can work with many files
+	
+I have the ontonotes version 5.0 corpus
+- /Volumes/data1/LDC/ontonotes-release-5.0
+- see /Users/gune00/data/ontonotes-release-5.0 for an example
 
 
 apply GntNER on NL and ES conll data

@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import data.GNTdataProperties;
-import data.GlobalParams;
-import data.ModelInfo;
 
 public class CorpusProcessor {
 

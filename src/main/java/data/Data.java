@@ -20,7 +20,7 @@ public class Data {
 	 * Index of wordform in conll format
 	 */
 	public static int wordFormIndex = 1;
-	// counted form 0, 5th column in conll
+	// counted from 0, 5th column in conll
 	public static int posTagIndex = 4;
 	
 	// Setters and getters

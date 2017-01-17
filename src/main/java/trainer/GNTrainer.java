@@ -89,7 +89,6 @@ public class GNTrainer {
 						this.getDataProps().getGlobalParams().getWindowSize()));
 	}
 
-
 	// Methods
 
 	// This is a method for on-demand creation of the indicator words

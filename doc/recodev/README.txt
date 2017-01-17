@@ -31,7 +31,7 @@ baseline1 training:
 - load dictionary map to natural order
 - for each document
 	- create binary feature vector for all words in doc
-- add labek and make problem and save in output file
+- add label and make problem and save in output file
 
 baseline2:
 - create count feature vector
@@ -41,12 +41,19 @@ STATUS:
 - created word set
 - create liblinear input file
 
+How to use it:
+- call recodev.DataProcessor.main(String[])
+	- reads all folders with cats
+	- creates label set and word set
+	- creates liblinear training file 
+
 HIERIX
-- test with liblinearC
-	MDP:
+- for baseline1:
+- training and cross-validation with liblinearC
+	MDP Linlinear parametes:
 	~/dfki/src/liblinear-2.1/train -v 10 -s 4 -c 0.1 -e 0.3 liblinearInputFile.txt 
 	Cross Validation Accuracy = 66.9875%
-	FLORS:
+	FLORS Linlinear parametes:
 	~/dfki/src/liblinear-2.1/train -v 10 -s 1 -q liblinearInputFile.txt 
 	Cross Validation Accuracy = 66.6795%
 

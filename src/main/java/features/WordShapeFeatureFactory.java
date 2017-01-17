@@ -109,8 +109,7 @@ public class WordShapeFeatureFactory {
 		this.writeShapeFeatureFile(shapeFileName);
 		System.out.println("... done");
 		// Add file to archivator
-		archivator.getFilesToPack().add(shapeFileName);
-		
+		archivator.getFilesToPack().add(shapeFileName);		
 	}
 
 	private void createShapeVectorsFromFile(String targetFileName, int max){

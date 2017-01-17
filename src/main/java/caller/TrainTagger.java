@@ -32,7 +32,7 @@ public class TrainTagger {
 		
 		dataProps.copyConfigFile(dataConfigFileName);
 		
-		//GN: Major difference with above.
+		//GN: Major difference to above method
 		dataProps.getModelInfo().setModelFile(archiveTxtName);
 		gnTrainer.getArchivator().setArchiveName(modelZipFileName);
 

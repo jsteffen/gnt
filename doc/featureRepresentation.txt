@@ -59,6 +59,6 @@ text is preprocessed by lowercasing everything.
 -> https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeature.java
 
 4. Cluster features:
-	I am using teh preprocessed clusters from Marmot (Mueller&Schuetze, ACL, 2015)
+	I am using the preprocessed clusters from Marmot (Mueller&Schuetze, ACL, 2015)
 	use cluster ID as feature -> upto 1000 cluster ID names
 	unknown words are mapped to clusterID of word <RARE>|<Rare>
