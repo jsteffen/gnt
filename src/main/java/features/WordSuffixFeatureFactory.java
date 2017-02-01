@@ -52,7 +52,16 @@ public class WordSuffixFeatureFactory {
 	private int wordCnt = 0;
 	private int suffixCnt = 0;
 
+	// A simple flag for switching between suffix and ngram computation
+	public static boolean ngram = false;
+	public static int ngramSize = 3;
 
+	// If true, then compute all substrings, else all suffixes
+	public static boolean subString = false;
+	private String featureFilePathname = "";
+
+	// Getters and setters
+	
 	public Map<String, Integer> getSuffix2num() {
 		return suffix2num;
 	}
@@ -80,17 +89,7 @@ public class WordSuffixFeatureFactory {
 	public void clean(){
 		num2suffix = new TreeMap<Integer, String>();
 	}
-
-	// A simple flag for switching between suffix and ngram computation
-	public static boolean ngram = false;
-	public static int ngramSize = 3;
-
-	// If true, then compute all substrings, else all suffixes
-	public static boolean subString = false;
-
-
-	private String featureFilePathname = "";
-
+	
 	public String getFeatureFilePathname() {
 		return featureFilePathname;
 	}
