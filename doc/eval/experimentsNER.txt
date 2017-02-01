@@ -42,7 +42,7 @@ Missing:	10,64%
 
 HIERIX:
 
-It seems that if sentence is all capitals, then performance is lower.
+It seems that if tokens of phrases are all capitals, then performance is lower.
 How can I make use of statistics to improve performance ?
 
 I have additional NE-conll data
@@ -53,30 +53,29 @@ I have the ontonotes version 5.0 corpus
 - see /Users/gune00/data/ontonotes-release-5.0 for an example
 
 
-apply GntNER on NL and ES conll data
+apply GNT-NER on NL and ES conll data
 data/conll2002
 
-Check features:
-add prefixes as features
-add POS tags
-add phrase clusters
-add Jon's clusters
-
-
-NER lexicons:
-	- although I have word clusters, it might be too small
-	- so very large NE lists could make sense
-	- or retraining of Marmot cluster using own NER relevant data files
+add prefixes as features -> I think I did, what not useful; see suffixFeatures.txt
 
 HOW to add gazeetteers to GNT 
 	- as post processor
-	- e.g., correcting assign labels as in with twitter tags?
+	- e.g., correcting assigned labels as in with twitter tags?
 	- as features like word classes
 	
 If I want to stick only on supervised data and unsupervised data (clusters, embeddings)
 and want to avoid feature engineering, what can I do?
+	-	More systemic way of integrating word reprsentations via improved table lookup
+	-	e.g., Merging of different clusters -> normalization of clusterIDs
+	-	integrate word embeddings via clustering
+	-	Retraining of Marlin and Jon's clustering
+
 - extract sort of character distribution from labeled data to use as shape features
-- used previous tagging decisions to model some sort of grammar
+	- adaptive shape features
+	- also implement it shape features ala Agerri&Rigau, 2016
+
+
+- used previous tagging decisions to model some sort of grammar -> I think I do it via previous predicted labels
 	-> both is considered important also in NN-based NER, cf. /Users/gune00/dfki/DeepLearning/NER/NAACL-2016.pdf
 	-> BUT, how can this be done as part of liblinear?
 	-> can I use a kind of second layer liblinear approach?
