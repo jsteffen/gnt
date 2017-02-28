@@ -509,27 +509,4 @@ public class GntTextSegmentizer {
 		tokenList = new ArrayList<String>();
 		sentenceList = new ArrayList<List<String>>();
 	}
-
-	public static void main(String[] args) throws Exception {
-		GntTextSegmentizer segmentizer = new GntTextSegmentizer(false, false);
-		
-		long time1 = System.currentTimeMillis();
-		segmentizer.scanText("Der Abriss wird schätzungsweise etwa 40 Jahre dauern, sagt Dr. Günter Neumann, der 3. Reiter danach! Alleh hopp noch e mal.");
-
-		System.out.println(segmentizer.sentenceListToString());
-
-		segmentizer.reset();
-		segmentizer.scanText("Current immunosuppression protocols to prevent lung transplant rejection reduce pro-inflammatory and T-helper type 1 "
-				+ "(Th1) cytokines. However, Th1 T-cell pro-inflammatory cytokine production is important in host defense against bacterial "
-				+ "infection in the lungs. Excessive immunosuppression of Th1 T-cell pro-inflammatory cytokines leaves patients susceptible to infection.");
-		System.out.println(segmentizer.sentenceListToString());
-
-		segmentizer.reset();
-		segmentizer.scanText("CELLULAR COMMUNICATIONS INC. sold 1,550,000 common shares at $21.75 each "
-				+ "yesterday, according to lead underwriter L.F. Rothschild & Inc. . Der 3.        Mann geht nahc hause 3. Und was macht er denn daheim? Weiss mnicht, weisst du es ? Wieso nicht?    Weil ");
-		System.out.println(segmentizer.sentenceListToString());
-
-		long time2 = System.currentTimeMillis();
-		System.err.println("System time (msec): " + (time2-time1));
-	}
 }
