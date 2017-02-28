@@ -1,0 +1,21 @@
+FEB, 2017:
+
+I have added a GntTextSegmentize class that does:
+
+- tokenization using a reimplementation of the Morphix reader
+
+	- this is a direct implementation of an FST
+	- it can recognize German ordinals and cardinals
+	
+- recognizes abbreviations with simple heuristics
+
+- triggers a sentence boundary flag
+
+- performs sentence splitting
+
+- returns sentence list as list of token lists
+
+TODO:
+
+- improve recognition of special tokens, e.g., numbers, date, abbrevs
+	- need better disambiguation etc.
