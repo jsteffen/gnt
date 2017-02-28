@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GntTokenizer {
+public class GntSplitTokenizer {
 
 	public static String[] splitTokenizer(String string){
 		//System.out.println(">>>"+string+"<<<");

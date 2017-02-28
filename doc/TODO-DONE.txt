@@ -119,8 +119,6 @@ MARCH, 2016
 - GNT: do multilingual tagging based on uniform tag set
 	-> doc/UniformTagSet.txt
 
-
-
 MAY, 2016
 - generated compressed folder of all data that is necessary for tagging
 	- /GNT/src/main/java/archive/package-info.java
@@ -136,4 +134,7 @@ JUNE, 2016:
 
 AUGUST, 2016:
 - add previous (predicted) labels for training and tagging
+
+FEBRUARY, 2017:
+- added morphix-based GntTextSegmenizer.java to package tokenizer
 	

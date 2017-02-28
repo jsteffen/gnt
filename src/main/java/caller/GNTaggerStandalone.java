@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import tagger.GNTagger;
-import tokenize.GntTokenizer;
+import tokenize.GntSplitTokenizer;
 
 public class GNTaggerStandalone {
 	private GNTagger posTagger = null;
@@ -27,7 +27,7 @@ public class GNTaggerStandalone {
 	 * @throws IOException
 	 */
 	public void tagStringRunner(String inputString) throws IOException{
-		String[] tokens = GntTokenizer.splitTokenizer(inputString);
+		String[] tokens = GntSplitTokenizer.splitTokenizer(inputString);
 
 		this.posTagger.tagUnlabeledTokens(tokens);
 
@@ -55,7 +55,7 @@ public class GNTaggerStandalone {
 		String line = "";
 		while ((line = fileReader.readLine()) != null) {
 			if (!line.isEmpty()){
-				String[] tokens = GntTokenizer.splitTokenizer(line);
+				String[] tokens = GntSplitTokenizer.splitTokenizer(line);
 				this.posTagger.tagUnlabeledTokens(tokens);
 				String taggedString = posTagger.taggedSentenceToString();
 				for (String token : taggedString.split(" ")){
