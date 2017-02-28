@@ -154,7 +154,7 @@ public class GntTextSegmentizer {
 		return outputString;
 	}
 
-	// TODO -> loosk already not that bad
+	// TODO -> looks already not that bad
 	// identify sentence boundary
 	// NOTE: what to do if we have no sentence boundary but only newline ?
 	// try some heuristics here
@@ -201,7 +201,7 @@ public class GntTextSegmentizer {
 	 *.
 	 * The original morphix-reader jumped from 3 and 4 to state 5
 	 * if the char followed the delimiter is a number.
-	 * I think this is wrong, because it leads to a separation the numbers after all 1+ delimiters, e.g.,
+	 * I think this is wrong, because it leads to a separation of the numbers after all 1+ delimiters, e.g.,
 	 * 1,500,000 etc.
 	 * For that reason, I changed the FST so that it jumps back to state 2.
 	 * This will then keep all digits together, e.g., also in date like tokens of form: 
