@@ -47,7 +47,7 @@ How to use it:
 	- creates label set and word set
 	- creates liblinear training file 
 
-HIERIX
+Training with LibLinear
 - for baseline1:
 - training and cross-validation with liblinearC
 	MDP Linlinear parametes:
@@ -57,4 +57,11 @@ HIERIX
 	~/dfki/src/liblinear-2.1/train -v 10 -s 1 -q liblinearInputFile.txt 
 	Cross Validation Accuracy = 66.6795%
 
-	
+Next step:
+
+- run with different corpus
+	- Reuters
+	- 20 newsgroup
+
+- different tokenization from SimpleSegmentizer
+	- recodev.Tokenizer.tokenizeString(String)

@@ -11,8 +11,6 @@ public class Data {
 	
 	// Setters and getters
 
-	
-	
 	public SetIndexMap getWordSet() {
 		return wordSet;
 	}
@@ -53,16 +51,13 @@ public class Data {
 		return this.getLabelSet().updateSetIndexMap(label);
 	}
 
-	
-
 	public void cleanWordSet(){
 		wordSet = new SetIndexMap();
 	}
 	public void cleanLabelSet(){
 		labelSet = new SetIndexMap();
 	}
-	
-	
+		
 	public void saveLabelSet(){
 		this.getLabelSet().writeSetIndexMap(this.getLabelMapFileName());	
 	}
