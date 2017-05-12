@@ -2,46 +2,46 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties version="1.0">
 
-	<!-- Tagger name -->
-	<entry key="taggerName">DETWEETPOS</entry>
+  <!-- Tagger name -->
+  <entry key="taggerName">DETWEETPOS</entry>
 
-	<!-- HERE ARE THE MAIN CORPUS BASED SETTINGS -->
+  <!-- HERE ARE THE MAIN CORPUS BASED SETTINGS -->
 
-	<!-- Corpus access parameters: Index of relevant tags in conll format -->
-	<entry key="wordFormIndex">1</entry>
-	<entry key="posTagIndex">4</entry>
+  <!-- Corpus access parameters: Index of relevant tags in conll format -->
+  <entry key="wordFormIndex">1</entry>
+  <entry key="posTagIndex">4</entry>
 
-	<!-- CORPUS parameters - labeled data -->
-	<entry key="trainingLabeledData">
-		resources/data/twitter/twitter.gold.train.conll
-	</entry>
-	<entry key="devLabeledData">
-		resources/data/twitter/twitter.gold.dev.conll
-	</entry>
-	<entry key="testLabeledData">
-		resources/data/twitter/twitter.gold.test.conll
-	</entry>
+  <!-- CORPUS parameters - labeled data -->
+  <entry key="trainingLabeledData">
+    resources/data/twitter/twitter.gold.train.conll
+  </entry>
+  <entry key="devLabeledData">
+    resources/data/twitter/twitter.gold.dev.conll
+  </entry>
+  <entry key="testLabeledData">
+    resources/data/twitter/twitter.gold.test.conll
+  </entry>
 
-	<!-- CORPUS parameters - unlabeled data -->
-	<entry key="trainingUnLabeledData">
-		resources/data/twitter/twitter.gold.train-sents.txt
-	</entry>
-	<entry key="devUnLabeledData">
-		resources/data/twitter/twitter.gold.dev-sents.txt,
-		resources/data/german/unlab/de-wikidump-sents500000.txt
-	</entry>
-	<entry key="testUnLabeledData">
-		resources/data/twitter/twitter.gold.test-sents.txt
-	</entry>
+  <!-- CORPUS parameters - unlabeled data -->
+  <entry key="trainingUnLabeledData">
+    resources/data/twitter/twitter.gold.train-sents.txt
+  </entry>
+  <entry key="devUnLabeledData">
+    resources/data/twitter/twitter.gold.dev-sents.txt,
+    resources/data/german/unlab/de-wikidump-sents500000.txt
+  </entry>
+  <entry key="testUnLabeledData">
+    resources/data/twitter/twitter.gold.test-sents.txt
+  </entry>
 
-	<!-- Cluster file -->
-	<entry key="clusterIdSourceFileName">resources/cluster/marmot/de_marlin_cluster_1000</entry>
+  <!-- Cluster file -->
+  <entry key="clusterIdSourceFileName">resources/cluster/marmot/de_marlin_cluster_1000</entry>
 
-	<!-- Training file -->
-	<!-- it is redundant, because also set in trainingLabeledData; however, 
-		there as a list of training files, which is actually currently not supported 
-		when calling the GNTrainer and GNTtagger -->
-	<entry key="trainingFile">resources/data/twitter/twitter.gold.train.conll
-	</entry>
+  <!-- Training file -->
+  <!-- it is redundant, because also set in trainingLabeledData; however, 
+    there as a list of training files, which is actually currently not supported 
+    when calling the GNTrainer and GNTtagger -->
+  <entry key="trainingFile">resources/data/twitter/twitter.gold.train.conll
+  </entry>
 
 </properties>

@@ -1,9 +1,9 @@
 package recodev;
 
 public class TokenNormalizer {
-	
-	public String normalize(String token){
-		return token;
-	}
+  
+  public String normalize(String token){
+    return token;
+  }
 
 }

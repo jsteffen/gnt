@@ -27,87 +27,87 @@ import features.WordFeatures;
  */
 
 public class ProblemInstance {
-	private FeatureNode[] featureNodes;
+  private FeatureNode[] featureNodes;
 
-	// Setters and getters
+  // Setters and getters
 
-	public FeatureNode[] getFeatureNodes() {
-		return featureNodes;
-	}
-	public void setfeatureNodes(FeatureNode[] featureNodes) {
-		this.featureNodes = featureNodes;
-	}
+  public FeatureNode[] getFeatureNodes() {
+    return featureNodes;
+  }
+  public void setfeatureNodes(FeatureNode[] featureNodes) {
+    this.featureNodes = featureNodes;
+  }
 
-	// Instance
+  // Instance
 
-	public ProblemInstance() {
-	}
+  public ProblemInstance() {
+  }
 
-	// Methods
+  // Methods
 
-	//HIERIX
-	public void createProblemInstanceFromWindow(FeatureMap featureMap) {
+  //HIERIX
+  public void createProblemInstanceFromWindow(FeatureMap featureMap) {
 
-		this.setfeatureNodes(new FeatureNode[featureMap.getFeatureMap().size()]);
-		
-		int offSet = 0;
-		for(Map.Entry<Integer,Double> entry : featureMap.getFeatureMap().entrySet()) {
-			 Integer key = entry.getKey();
-			 Double value = entry.getValue();
-			 featureNodes[offSet] = new FeatureNode(key, value);
-			 offSet++;
-			 
-		}
-	}
+    this.setfeatureNodes(new FeatureNode[featureMap.getFeatureMap().size()]);
+    
+    int offSet = 0;
+    for(Map.Entry<Integer,Double> entry : featureMap.getFeatureMap().entrySet()) {
+       Integer key = entry.getKey();
+       Double value = entry.getValue();
+       featureNodes[offSet] = new FeatureNode(key, value);
+       offSet++;
+       
+    }
+  }
 
-	/**
-	 * This is a method that checks whether a feature vector is well-formed
-	 * wrt. to the definition of liblinear which requires that the features in the vector are in natural order.
-	 * <p>
-	 * It is activated when TrainerInMem.debug = true;
-	 * @param tokenWindow
-	 */
-	private void checkfeatureNodes(Window tokenWindow){
-		int lastValue = 0;
-		int fLen = this.featureNodes.length-1;
-		for (int i = 0; i < fLen;i++){
-			FeatureNode x = this.featureNodes[i];
-			if (x.getIndex() <= lastValue){
-				System.err.println(tokenWindow.toString());
-				throw new IllegalArgumentException("GN: feature nodes must be sorted by index in ascending order: " 
-						+ lastValue + "..." + x.getIndex() + " i= " + i + " value: " + x.getValue());
-			}
-			lastValue = x.getIndex();
-		}
-	}
+  /**
+   * This is a method that checks whether a feature vector is well-formed
+   * wrt. to the definition of liblinear which requires that the features in the vector are in natural order.
+   * <p>
+   * It is activated when TrainerInMem.debug = true;
+   * @param tokenWindow
+   */
+  private void checkfeatureNodes(Window tokenWindow){
+    int lastValue = 0;
+    int fLen = this.featureNodes.length-1;
+    for (int i = 0; i < fLen;i++){
+      FeatureNode x = this.featureNodes[i];
+      if (x.getIndex() <= lastValue){
+        System.err.println(tokenWindow.toString());
+        throw new IllegalArgumentException("GN: feature nodes must be sorted by index in ascending order: " 
+            + lastValue + "..." + x.getIndex() + " i= " + i + " value: " + x.getValue());
+      }
+      lastValue = x.getIndex();
+    }
+  }
 
-	/**
-	 * This method saves the feature vector of the current window plus its given label directly
-	 * as liblinear vector
-	 * @param instanceWriter
-	 * @param labelIndex
-	 */
-	public void saveProblemInstance(BufferedWriter instanceWriter, int labelIndex){
-		
-		try {
-			instanceWriter.write(labelIndex+" "+this.toString());
-			instanceWriter.newLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
-	}
+  /**
+   * This method saves the feature vector of the current window plus its given label directly
+   * as liblinear vector
+   * @param instanceWriter
+   * @param labelIndex
+   */
+  public void saveProblemInstance(BufferedWriter instanceWriter, int labelIndex){
+    
+    try {
+      instanceWriter.write(labelIndex+" "+this.toString());
+      instanceWriter.newLine();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }  
+  }
 
-	public String toString(){
-		String output = "";
-		int fLen = this.featureNodes.length-1;
-		for (int i = 0; i < fLen;i++){
-			FeatureNode x = this.featureNodes[i];
-			output += x.getIndex()+":"+x.getValue()+" ";
-		}
-		output += this.featureNodes[fLen].getIndex()
-				+":"+this.featureNodes[fLen].getValue();
-		return output;
-	}
+  public String toString(){
+    String output = "";
+    int fLen = this.featureNodes.length-1;
+    for (int i = 0; i < fLen;i++){
+      FeatureNode x = this.featureNodes[i];
+      output += x.getIndex()+":"+x.getValue()+" ";
+    }
+    output += this.featureNodes[fLen].getIndex()
+        +":"+this.featureNodes[fLen].getValue();
+    return output;
+  }
 
 
 }

@@ -84,101 +84,101 @@ Future:
  *
  */
 public class WikiPediaConllReader {
-	/**
-	 * Receives a file in CONLL format and maps each CONLL sentence to a sentence, where each sentence
-	 * is a line of words extracted from the CONLL sentence.
-	 * @param sourceFileName
-	 * @param sourceEncoding
-	 * @param targetFileName
-	 * @param targetEncoding
-	 * @throws IOException
-	 */
-	
-	// From http://stackoverflow.com/questions/4834721/java-read-bz2-file-and-uncompress-parse-on-the-fly
-	// Reads in a compressed file
-	// Note: the accepted formats are: gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z. 
-	// As seen in the link, the correct one is automatically assigned – Danielson Aug 15 at 10:01 
-	public static BufferedReader getBufferedReaderForCompressedFile(String fileIn) 
-			throws FileNotFoundException, CompressorException {
-	    FileInputStream fin = new FileInputStream(fileIn);
-	    BufferedInputStream bis = new BufferedInputStream(fin);
-	    CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis);
-	    BufferedReader br2 = new BufferedReader(new InputStreamReader(input));
-	    return br2;
-	}
-	
-	public static BufferedWriter getBufferedWriterForTextFile(String fileOut) throws FileNotFoundException, CompressorException, UnsupportedEncodingException {
-		FileOutputStream fout = new FileOutputStream(fileOut);
-		BufferedOutputStream bout = new BufferedOutputStream(fout);
-		CompressorOutputStream out = new CompressorStreamFactory().createCompressorOutputStream("bzip2", bout);
-		BufferedWriter br2 = new BufferedWriter(new OutputStreamWriter(out, "utf-8"));
-		return br2;
-	}
-	
-	private void transcodeConllToSentenceFile(String sourceFileName, String sourceEncoding,
-			String targetFileName, String targetEncoding, int maxSent)
-					throws IOException, CompressorException {
+  /**
+   * Receives a file in CONLL format and maps each CONLL sentence to a sentence, where each sentence
+   * is a line of words extracted from the CONLL sentence.
+   * @param sourceFileName
+   * @param sourceEncoding
+   * @param targetFileName
+   * @param targetEncoding
+   * @throws IOException
+   */
+  
+  // From http://stackoverflow.com/questions/4834721/java-read-bz2-file-and-uncompress-parse-on-the-fly
+  // Reads in a compressed file
+  // Note: the accepted formats are: gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z. 
+  // As seen in the link, the correct one is automatically assigned – Danielson Aug 15 at 10:01 
+  public static BufferedReader getBufferedReaderForCompressedFile(String fileIn) 
+      throws FileNotFoundException, CompressorException {
+      FileInputStream fin = new FileInputStream(fileIn);
+      BufferedInputStream bis = new BufferedInputStream(fin);
+      CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis);
+      BufferedReader br2 = new BufferedReader(new InputStreamReader(input));
+      return br2;
+  }
+  
+  public static BufferedWriter getBufferedWriterForTextFile(String fileOut) throws FileNotFoundException, CompressorException, UnsupportedEncodingException {
+    FileOutputStream fout = new FileOutputStream(fileOut);
+    BufferedOutputStream bout = new BufferedOutputStream(fout);
+    CompressorOutputStream out = new CompressorStreamFactory().createCompressorOutputStream("bzip2", bout);
+    BufferedWriter br2 = new BufferedWriter(new OutputStreamWriter(out, "utf-8"));
+    return br2;
+  }
+  
+  private void transcodeConllToSentenceFile(String sourceFileName, String sourceEncoding,
+      String targetFileName, String targetEncoding, int maxSent)
+          throws IOException, CompressorException {
 
-		// init reader for CONLL style file
-//		BufferedReader reader = new BufferedReader(
-//				new InputStreamReader(
-//						new FileInputStream(sourceFileName),
-//						sourceEncoding));
-		
-		BufferedReader reader = WikiPediaConllReader.getBufferedReaderForCompressedFile(sourceFileName);
+    // init reader for CONLL style file
+//    BufferedReader reader = new BufferedReader(
+//        new InputStreamReader(
+//            new FileInputStream(sourceFileName),
+//            sourceEncoding));
+    
+    BufferedReader reader = WikiPediaConllReader.getBufferedReaderForCompressedFile(sourceFileName);
 
-		// init writer for line-wise file
-		BufferedWriter writer = new BufferedWriter(
-				new OutputStreamWriter(
-						new FileOutputStream(targetFileName),
-						targetEncoding));
+    // init writer for line-wise file
+    BufferedWriter writer = new BufferedWriter(
+        new OutputStreamWriter(
+            new FileOutputStream(targetFileName),
+            targetEncoding));
 
-		String line = "";
-		int sentCnt = 0;
-		int lineCnt = 0;
-		int mod = 1000000;
-		List<String> tokens = new ArrayList<String>();
-		while ((line = reader.readLine()) != null) {
-			if (line.isEmpty()) {
-				// If ew read a newline it means we know we have just extracted the words
-				// of a sentence, so write them to file
-				writer.write(sentenceToString(tokens)+"\n");
-				tokens = new ArrayList<String>();
-				// Increase sentence counter
-				sentCnt++;
-				// Stop if maxSent has been processed
-				// if maxSent is < 0 this means: read until end of file.
-				if  ((maxSent > 0) && (sentCnt >= maxSent)) break;
-				if ((lineCnt % mod) == 0) System.out.println(lineCnt);
-				lineCnt++;
-			}
-			else
-			{
-				// Extract the word from each CONLL token line
-				String[] tokenizedLine = line.split("\t");
-				tokens.add(tokenizedLine[1]);
-			}
+    String line = "";
+    int sentCnt = 0;
+    int lineCnt = 0;
+    int mod = 1000000;
+    List<String> tokens = new ArrayList<String>();
+    while ((line = reader.readLine()) != null) {
+      if (line.isEmpty()) {
+        // If ew read a newline it means we know we have just extracted the words
+        // of a sentence, so write them to file
+        writer.write(sentenceToString(tokens)+"\n");
+        tokens = new ArrayList<String>();
+        // Increase sentence counter
+        sentCnt++;
+        // Stop if maxSent has been processed
+        // if maxSent is < 0 this means: read until end of file.
+        if  ((maxSent > 0) && (sentCnt >= maxSent)) break;
+        if ((lineCnt % mod) == 0) System.out.println(lineCnt);
+        lineCnt++;
+      }
+      else
+      {
+        // Extract the word from each CONLL token line
+        String[] tokenizedLine = line.split("\t");
+        tokens.add(tokenizedLine[1]);
+      }
 
-		}
-		reader.close();
-		writer.close();
-	}
+    }
+    reader.close();
+    writer.close();
+  }
 
-	private String sentenceToString(List<String> tokens){
-		String sentenceString = "";
-		for (int i=0; i < tokens.size()-1; i++){
-			sentenceString = sentenceString + tokens.get(i)+" ";
-		}
-		return sentenceString+tokens.get(tokens.size()-1);
-	}
+  private String sentenceToString(List<String> tokens){
+    String sentenceString = "";
+    for (int i=0; i < tokens.size()-1; i++){
+      sentenceString = sentenceString + tokens.get(i)+" ";
+    }
+    return sentenceString+tokens.get(tokens.size()-1);
+  }
 
-	public static void main(String[] args) throws IOException, CompressorException {
-		WikiPediaConllReader mapper = new WikiPediaConllReader();
-		
-		mapper.transcodeConllToSentenceFile(
-				"/Users/gune00/data/Marmot/en.wikidump.bz2", "dummy", 
-				"/Users/gune00/data/Marmot/en-wikidump-sents5millions.txt", "utf-8", 
-				5000000);
-		
-	}
+  public static void main(String[] args) throws IOException, CompressorException {
+    WikiPediaConllReader mapper = new WikiPediaConllReader();
+    
+    mapper.transcodeConllToSentenceFile(
+        "/Users/gune00/data/Marmot/en.wikidump.bz2", "dummy", 
+        "/Users/gune00/data/Marmot/en-wikidump-sents5millions.txt", "utf-8", 
+        5000000);
+    
+  }
 }

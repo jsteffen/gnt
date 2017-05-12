@@ -24,152 +24,152 @@ import features.WordFeatures;
  */
 
 public class ProblemInstance {
-	public static int cumLength = 0;
-	private FeatureNode[] featureVector;
+  public static int cumLength = 0;
+  private FeatureNode[] featureVector;
 
-	// Setters and getters
+  // Setters and getters
 
-	public FeatureNode[] getFeatureVector() {
-		return featureVector;
-	}
-	public void setFeatureVector(FeatureNode[] featureVector) {
-		this.featureVector = featureVector;
-	}
+  public FeatureNode[] getFeatureVector() {
+    return featureVector;
+  }
+  public void setFeatureVector(FeatureNode[] featureVector) {
+    this.featureVector = featureVector;
+  }
 
-	// Instance
+  // Instance
 
-	public ProblemInstance() {
-	}
+  public ProblemInstance() {
+  }
 
-	// Methods
-	/**
-	 * Given a tokenWindow (which is a list of Wordfeatures (which each is a list of feature-value pairs)),
-	 * compute a feature vector which is a naturally ordered enumeration of all feature values nodes of a problem instance
-	 * @param tokenWindow
-	 */
-	public void createProblemInstanceFromWindow(Window tokenWindow) {
-		// This means that the feature vector has size window length
-		// and window length is the number of non-zero features with relative feature index and value
-		this.setFeatureVector(new FeatureNode[tokenWindow.getWindowLength()]);
-		// Add to cumulative length: only needed for computing average length of window
-		ProblemInstance.cumLength+=featureVector.length;
+  // Methods
+  /**
+   * Given a tokenWindow (which is a list of Wordfeatures (which each is a list of feature-value pairs)),
+   * compute a feature vector which is a naturally ordered enumeration of all feature values nodes of a problem instance
+   * @param tokenWindow
+   */
+  public void createProblemInstanceFromWindow(Window tokenWindow) {
+    // This means that the feature vector has size window length
+    // and window length is the number of non-zero features with relative feature index and value
+    this.setFeatureVector(new FeatureNode[tokenWindow.getWindowLength()]);
+    // Add to cumulative length: only needed for computing average length of window
+    ProblemInstance.cumLength+=featureVector.length;
 
-		int offSet = 0;
+    int offSet = 0;
 
-		for (WordFeatures wordFeats : tokenWindow.getElements()){
-			// Add left word embedding length
-			for (int i = 0; i < wordFeats.getLeft().size(); i++){
-				Pair<Integer, Double> pair = wordFeats.getLeft().get(i);
-				featureVector[offSet+i] = new FeatureNode(pair.getL(), pair.getR());
-			}
-			offSet += wordFeats.getLeft().size();
-			// Add right word embedding length
-			for (int i = 0; i < wordFeats.getRight().size(); i++){
-				Pair<Integer, Double> pair = wordFeats.getRight().get(i);
-				featureVector[offSet+i] = new FeatureNode(pair.getL(), pair.getR());
-			}
-			offSet += wordFeats.getRight().size();
-			// Add shape length
-			for (int i = 0; i < wordFeats.getShape().size(); i++){
-				Pair<Integer, Boolean> pair = wordFeats.getShape().get(i);
-				featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
-			}
-			offSet += wordFeats.getShape().size();
-			// Add suffix length
-			for (int i = 0; i < wordFeats.getSuffix().size(); i++){
-				Pair<Integer, Boolean> pair = wordFeats.getSuffix().get(i);
-				featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
-			}
-			offSet += wordFeats.getSuffix().size();
-			// Add cluster length
-			for (int i = 0; i < wordFeats.getCluster().size(); i++){
-				Pair<Integer, Boolean> pair = wordFeats.getCluster().get(i);
-				featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
-			}
+    for (WordFeatures wordFeats : tokenWindow.getElements()){
+      // Add left word embedding length
+      for (int i = 0; i < wordFeats.getLeft().size(); i++){
+        Pair<Integer, Double> pair = wordFeats.getLeft().get(i);
+        featureVector[offSet+i] = new FeatureNode(pair.getL(), pair.getR());
+      }
+      offSet += wordFeats.getLeft().size();
+      // Add right word embedding length
+      for (int i = 0; i < wordFeats.getRight().size(); i++){
+        Pair<Integer, Double> pair = wordFeats.getRight().get(i);
+        featureVector[offSet+i] = new FeatureNode(pair.getL(), pair.getR());
+      }
+      offSet += wordFeats.getRight().size();
+      // Add shape length
+      for (int i = 0; i < wordFeats.getShape().size(); i++){
+        Pair<Integer, Boolean> pair = wordFeats.getShape().get(i);
+        featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
+      }
+      offSet += wordFeats.getShape().size();
+      // Add suffix length
+      for (int i = 0; i < wordFeats.getSuffix().size(); i++){
+        Pair<Integer, Boolean> pair = wordFeats.getSuffix().get(i);
+        featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
+      }
+      offSet += wordFeats.getSuffix().size();
+      // Add cluster length
+      for (int i = 0; i < wordFeats.getCluster().size(); i++){
+        Pair<Integer, Boolean> pair = wordFeats.getCluster().get(i);
+        featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
+      }
 
-			offSet += wordFeats.getCluster().size();
-			// Add label length
-			for (int i = 0; i < wordFeats.getLabel().size(); i++){
-				Pair<Integer, Boolean> pair = wordFeats.getLabel().get(i);
-				featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
-			}
-			
-			offSet += wordFeats.getLabel().size();
-		}
+      offSet += wordFeats.getCluster().size();
+      // Add label length
+      for (int i = 0; i < wordFeats.getLabel().size(); i++){
+        Pair<Integer, Boolean> pair = wordFeats.getLabel().get(i);
+        featureVector[offSet+i] = new FeatureNode(pair.getL(), 1);
+      }
+      
+      offSet += wordFeats.getLabel().size();
+    }
 
-		//this.normalizeFeatureVectorToUnitLenght();
+    //this.normalizeFeatureVectorToUnitLenght();
 
-		if (TrainerInMem.debug) this.checkFeatureVector(tokenWindow);
+    if (TrainerInMem.debug) this.checkFeatureVector(tokenWindow);
 
-	}
+  }
 
-	/**
-	 * TODO
-	 * This method is used to normaliuze a feature vector. It is yet not used, because
-	 * not yet clear whether it is correctly defined.
-	 */
-	private void normalizeFeatureVectorToUnitLenght(){
-		double vecLength = computeUnitLength();
-		for (FeatureNode node : this.featureVector) {
-			node.setValue(node.getValue()/vecLength);
-		}
-	}
+  /**
+   * TODO
+   * This method is used to normaliuze a feature vector. It is yet not used, because
+   * not yet clear whether it is correctly defined.
+   */
+  private void normalizeFeatureVectorToUnitLenght(){
+    double vecLength = computeUnitLength();
+    for (FeatureNode node : this.featureVector) {
+      node.setValue(node.getValue()/vecLength);
+    }
+  }
 
-	private double computeUnitLength() {
-		double vecLength = 0.0;
-		for (FeatureNode node : this.featureVector){
-			vecLength += node.getValue()*node.getValue();	
-		}
-		return Math.sqrt(vecLength);
-	}
+  private double computeUnitLength() {
+    double vecLength = 0.0;
+    for (FeatureNode node : this.featureVector){
+      vecLength += node.getValue()*node.getValue();  
+    }
+    return Math.sqrt(vecLength);
+  }
 
-	/**
-	 * This is a method that checks whether a feature vector is well-formed
-	 * wrt. to the definition of liblinear which requires that the features in the vector are in natural order.
-	 * <p>
-	 * It is activated when TrainerInMem.debug = true;
-	 * @param tokenWindow
-	 */
-	private void checkFeatureVector(Window tokenWindow){
-		int lastValue = 0;
-		int fLen = this.featureVector.length-1;
-		for (int i = 0; i < fLen;i++){
-			FeatureNode x = this.featureVector[i];
-			if (x.getIndex() <= lastValue){
-				System.err.println(tokenWindow.toString());
-				throw new IllegalArgumentException("GN: feature nodes must be sorted by index in ascending order: " 
-						+ lastValue + "..." + x.getIndex() + " i= " + i + " value: " + x.getValue());
-			}
-			lastValue = x.getIndex();
-		}
-	}
+  /**
+   * This is a method that checks whether a feature vector is well-formed
+   * wrt. to the definition of liblinear which requires that the features in the vector are in natural order.
+   * <p>
+   * It is activated when TrainerInMem.debug = true;
+   * @param tokenWindow
+   */
+  private void checkFeatureVector(Window tokenWindow){
+    int lastValue = 0;
+    int fLen = this.featureVector.length-1;
+    for (int i = 0; i < fLen;i++){
+      FeatureNode x = this.featureVector[i];
+      if (x.getIndex() <= lastValue){
+        System.err.println(tokenWindow.toString());
+        throw new IllegalArgumentException("GN: feature nodes must be sorted by index in ascending order: " 
+            + lastValue + "..." + x.getIndex() + " i= " + i + " value: " + x.getValue());
+      }
+      lastValue = x.getIndex();
+    }
+  }
 
-	/**
-	 * This method save the feature vector of the current window plus its given label directly
-	 * as liblinear vector
-	 * @param instanceWriter
-	 * @param labelIndex
-	 */
-	public void saveProblemInstance(BufferedWriter instanceWriter, int labelIndex){
-		try {
-			instanceWriter.write(labelIndex+" "+this.toString());
-			instanceWriter.newLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
-	}
+  /**
+   * This method save the feature vector of the current window plus its given label directly
+   * as liblinear vector
+   * @param instanceWriter
+   * @param labelIndex
+   */
+  public void saveProblemInstance(BufferedWriter instanceWriter, int labelIndex){
+    try {
+      instanceWriter.write(labelIndex+" "+this.toString());
+      instanceWriter.newLine();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }  
+  }
 
-	public String toString(){
-		String output = "";
-		int fLen = this.featureVector.length-1;
-		for (int i = 0; i < fLen;i++){
-			FeatureNode x = this.featureVector[i];
-			output += x.getIndex()+":"+x.getValue()+" ";
-		}
-		output += this.featureVector[fLen].getIndex()
-				+":"+this.featureVector[fLen].getValue();
-		return output;
-	}
+  public String toString(){
+    String output = "";
+    int fLen = this.featureVector.length-1;
+    for (int i = 0; i < fLen;i++){
+      FeatureNode x = this.featureVector[i];
+      output += x.getIndex()+":"+x.getValue()+" ";
+    }
+    output += this.featureVector[fLen].getIndex()
+        +":"+this.featureVector[fLen].getValue();
+    return output;
+  }
 
 
 }
