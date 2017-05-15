@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 public class FeatureMap {
 
-  Map<Integer, Double> featureMap = new TreeMap<Integer, Double>();
+  private Map<Integer, Double> featureMap = new TreeMap<Integer, Double>();
 
 
   private Data dataObj = new Data();

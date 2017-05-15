@@ -92,8 +92,8 @@ public class TigerToConllMapper {
    * @param testFile
    * @throws IOException
    */
-  public static boolean fromExport = false;
-  public static String whatTags = "pos"; // "posmorph", "morph"
+  private static boolean fromExport = false;
+  private static String whatTags = "pos"; // "posmorph", "morph"
 
 
   /**

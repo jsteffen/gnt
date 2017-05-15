@@ -11,7 +11,7 @@ import de.bwaldvogel.liblinear.SolverType;
 public class ModelInfo {
 
   private SolverType solver = SolverType.L2R_LR; // -s 0
-  private double C = 1.0; // cost of constraints violation
+  private double cost = 1.0; // cost of constraints violation
   private double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
 
   private String modelFilePrefix = "resources/models/model_";
@@ -49,9 +49,9 @@ public class ModelInfo {
   }
 
 
-  public void setC(double c) {
+  public void setCost(double cost) {
 
-    this.C = c;
+    this.cost = cost;
   }
 
 
@@ -69,7 +69,7 @@ public class ModelInfo {
 
   public double getC() {
 
-    return this.C;
+    return this.cost;
   }
 
 
@@ -155,7 +155,7 @@ public class ModelInfo {
 
     // L2-regularized L2-loss support vector classification (primal)
     this.setSolver(SolverType.L2R_L2LOSS_SVC);
-    this.setC(1.0);
+    this.setCost(1.0);
     this.setEps(0.01);
   }
 
@@ -164,7 +164,7 @@ public class ModelInfo {
 
     // multi-class SVM by Crammer and Singer
     this.setSolver(SolverType.MCSVM_CS);
-    this.setC(0.1);
+    this.setCost(0.1);
     this.setEps(0.1);
   }
 
@@ -173,7 +173,7 @@ public class ModelInfo {
 
     // L2-regularized logistic regression (primal)
     this.setSolver(SolverType.L2R_LR);
-    this.setC(1.0);
+    this.setCost(1.0);
     this.setEps(0.01);
   }
 

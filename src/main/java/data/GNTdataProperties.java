@@ -9,14 +9,12 @@ import java.nio.file.Path;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import javax.xml.stream.XMLStreamException;
-
 import de.bwaldvogel.liblinear.SolverType;
 import features.WordSuffixFeatureFactory;
 
 public class GNTdataProperties extends Properties {
 
-  public static String configTmpFileName = "src/main/resources/dataConfig.xml";
+  public static final String configTmpFileName = "src/main/resources/dataConfig.xml";
 
   private static final long serialVersionUID = 1L;
 
@@ -32,10 +30,9 @@ public class GNTdataProperties extends Properties {
       this.setGlobalParamsFromProperties();
       this.setModelInfoParametersFromProperties();
       this.setActivatedFeatureExtractors();
-    } catch (IOException | XMLStreamException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
-
   }
 
 
@@ -88,7 +85,7 @@ public class GNTdataProperties extends Properties {
 
 
   public void setGntProps(String propsFileName)
-      throws InvalidPropertiesFormatException, IOException, XMLStreamException {
+      throws InvalidPropertiesFormatException, IOException {
 
     FileInputStream fileIn = new FileInputStream(new File(propsFileName));
     this.loadFromXML(fileIn);
@@ -129,7 +126,7 @@ public class GNTdataProperties extends Properties {
   private void setModelInfoParametersFromProperties() {
 
     this.getModelInfo().setSolver(this.parseSolverType(this.getProperty("solverType")));
-    this.getModelInfo().setC(Double.parseDouble(this.getProperty("c")));
+    this.getModelInfo().setCost(Double.parseDouble(this.getProperty("c")));
     this.getModelInfo().setEps(Double.parseDouble(this.getProperty("eps")));
   }
 
@@ -142,9 +139,9 @@ public class GNTdataProperties extends Properties {
     this.getAlphabet().setWithClusterFeats(Boolean.parseBoolean(this.getProperty("withClusterFeats")));
     this.getAlphabet().setWithLabelFeats(Boolean.parseBoolean(this.getProperty("withLabelFeats")));
 
-    WordSuffixFeatureFactory.ngram = Boolean.parseBoolean(this.getProperty("WordSuffixFeatureFactory.ngram"));
+    WordSuffixFeatureFactory.setNgram(Boolean.parseBoolean(this.getProperty("WordSuffixFeatureFactory.ngram")));
     if (this.getProperty("WordSuffixFeatureFactory.ngramSize") != null) {
-      WordSuffixFeatureFactory.ngramSize = Integer.parseInt(this.getProperty("WordSuffixFeatureFactory.ngramSize"));
+      WordSuffixFeatureFactory.setNgramSize(Integer.parseInt(this.getProperty("WordSuffixFeatureFactory.ngramSize")));
     }
   }
 

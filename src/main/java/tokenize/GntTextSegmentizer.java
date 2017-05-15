@@ -190,14 +190,14 @@ public class GntTextSegmentizer {
    * Thus the input string should be processed as a global variable
    */
 
-  private String makeToken(int start, int end, boolean lowerCase) {
+  private String makeToken(int start, int end, boolean lowerCaseParam) {
 
     int sl = Math.max(1, (end - start));
     char c = '\0';
     StringBuilder newToken = new StringBuilder(sl);
 
     for (int i = 0; i < sl; i++) {
-      c = (lowerCase)
+      c = (lowerCaseParam)
           ? (Character.toLowerCase(this.inputString.charAt(i + start))) : this.inputString.charAt(i + start);
       newToken.append(c);
     }
@@ -301,10 +301,10 @@ public class GntTextSegmentizer {
    * check e.g.,
    * 13 : 55 -> 13:55, 2001 / 2002 -> 2001/2002
    */
-  public void scanText(String inputString) {
+  public void scanText(String inputStringParam) {
 
     // Initialization
-    this.inputString = inputString;
+    this.inputString = inputStringParam;
     int il = this.inputString.length();
     int state = 0;
     int start = 0;
@@ -406,6 +406,7 @@ public class GntTextSegmentizer {
               state = 0;
               start = (1 + end);
             } else if (Character.isDigit(c)) {
+              // do nothing
             } else {
               state = 1;
             }
@@ -552,16 +553,18 @@ public class GntTextSegmentizer {
             }
           }
           break;
+        default:
+          System.err.println("unknown state " + state + ", will be ignored");
       }
       end++;
     }
   }
 
 
-  public String tokenListToString(List<String> tokenList) {
+  public String tokenListToString(List<String> tokenListParam) {
 
     String outputString = "";
-    for (String token : tokenList) {
+    for (String token : tokenListParam) {
       outputString += token + " ";
     }
     return outputString;
@@ -572,9 +575,9 @@ public class GntTextSegmentizer {
 
     String outputString = "";
     int id = 0;
-    for (List<String> tokenList : this.sentenceList) {
-      if (!tokenList.isEmpty()) {
-        outputString += id + ": " + this.tokenListToString(tokenList) + "\n";
+    for (List<String> tokenListOfSentence : this.sentenceList) {
+      if (!tokenListOfSentence.isEmpty()) {
+        outputString += id + ": " + this.tokenListToString(tokenListOfSentence) + "\n";
         id++;
       }
     }

@@ -264,28 +264,28 @@ public class WordFeatures {
   }
 
 
-  public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train) {
+  public void fillWordFeatures(String wordParam, int indexParam, Alphabet alphabet, boolean train) {
 
     // if word is a sentence padding element, then just return an empty WordFeatures
-    if (word.endsWith("<BOUNDARY>")) {
+    if (wordParam.endsWith("<BOUNDARY>")) {
       return;
     }
 
     if (alphabet.isWithWordFeats()) {
-      fillLeftDistributedWordFeatures(word, alphabet, train, true);
-      fillRightDistributedWordFeatures(word, alphabet, train, true);
+      fillLeftDistributedWordFeatures(wordParam, alphabet, train, true);
+      fillRightDistributedWordFeatures(wordParam, alphabet, train, true);
     }
     if (alphabet.isWithShapeFeats()) {
-      fillShapeFeatures(word, index, alphabet, true);
+      fillShapeFeatures(wordParam, indexParam, alphabet, true);
     }
     if (alphabet.isWithSuffixFeats()) {
-      fillSuffixFeatures(word, alphabet, true);
+      fillSuffixFeatures(wordParam, alphabet, true);
     }
     if (alphabet.isWithClusterFeats()) {
-      fillClusterIdFeatures(word, alphabet, true);
+      fillClusterIdFeatures(wordParam, alphabet, true);
     }
     if (alphabet.isWithLabelFeats()) {
-      fillLabelFeatures(word, alphabet, true);
+      fillLabelFeatures(wordParam, alphabet, true);
     }
   }
 
@@ -293,20 +293,20 @@ public class WordFeatures {
   // boolean flag offline means: assume that features have been pre-loaded into to memory
   // boolean train means: training phase, which means do not handle unknown words
   // NOTE: since word is from input stream, need to lower-case it first
-  private void fillLeftDistributedWordFeatures(String word,
+  private void fillLeftDistributedWordFeatures(String wordParam,
       Alphabet alphabet, boolean train, boolean offline) {
 
-    String lowWord = word.toLowerCase();
+    String lowWord = wordParam.toLowerCase();
     String lowLeftWord = this.getLeftWord().toLowerCase();
     String lowRightWord = this.getRightWord().toLowerCase();
     // This may return a dynamically created word vector for unknown words
     WordDistributedFeature distributedWordVector =
         alphabet.getWordVectorFactory().getWordVector(lowWord, lowLeftWord, lowRightWord, train);
     for (int i = 0; i < distributedWordVector.getLeftContext().length; i++) {
-      int index = ((this.isAdjust()) ? (this.leftOffset + i) : i);
+      int localIndex = ((this.isAdjust()) ? (this.leftOffset + i) : i);
       double value = distributedWordVector.getLeftContext()[i];
       if (value > 0) {
-        Pair<Integer, Double> node = new Pair<Integer, Double>(index, value);
+        Pair<Integer, Double> node = new Pair<Integer, Double>(localIndex, value);
         this.left.add(node);
       }
     }
@@ -314,20 +314,20 @@ public class WordFeatures {
   }
 
 
-  private void fillRightDistributedWordFeatures(String word,
+  private void fillRightDistributedWordFeatures(String wordParam,
       Alphabet alphabet, boolean train, boolean offline) {
 
     // since word is from input stream, need to lower-case it first
-    String lowWord = word.toLowerCase();
+    String lowWord = wordParam.toLowerCase();
     String lowLeftWord = this.getLeftWord().toLowerCase();
     String lowRightWord = this.getRightWord().toLowerCase();
     WordDistributedFeature distributedWordVector =
         alphabet.getWordVectorFactory().getWordVector(lowWord, lowLeftWord, lowRightWord, train);
     for (int i = 0; i < distributedWordVector.getRightContext().length; i++) {
-      int index = ((this.isAdjust()) ? (this.rightOffset + i) : i);
+      int localIndex = ((this.isAdjust()) ? (this.rightOffset + i) : i);
       double value = distributedWordVector.getRightContext()[i];
       if (value > 0) {
-        Pair<Integer, Double> node = new Pair<Integer, Double>(index, value);
+        Pair<Integer, Double> node = new Pair<Integer, Double>(localIndex, value);
         this.right.add(node);
       }
     }
@@ -347,9 +347,9 @@ public class WordFeatures {
    */
   // NOTE: it is an overhead to keep a list of shapes, because we always have a single element,
   // but it keeps code more transparent
-  private void fillShapeFeatures(String word, int index, Alphabet alphabet, boolean offline) {
+  private void fillShapeFeatures(String wordParam, int indexParam, Alphabet alphabet, boolean offline) {
 
-    int wordShapeIndex = alphabet.getWordShapeFactory().getShapeFeature(word, index);
+    int wordShapeIndex = alphabet.getWordShapeFactory().getShapeFeature(wordParam, indexParam);
     if (wordShapeIndex > -1) {
       /*
       System.out.println("Word: " + word + " Shape: "
@@ -361,7 +361,7 @@ public class WordFeatures {
     } else {
       // we have an unknown signature, so we cannot add it to the list
       // which basically means that shape-size() will remain 0
-      System.err.println("Word: " + word + " at loc: " + index + ": unknown signature!");
+      System.err.println("Word: " + wordParam + " at loc: " + indexParam + ": unknown signature!");
 
     }
     // should be always 1
@@ -373,7 +373,7 @@ public class WordFeatures {
    * and pre-loaded into to memory
    * NOTE: word is lowerCased!
    */
-  private void fillSuffixFeatures(String word, Alphabet alphabet, boolean offline) {
+  private void fillSuffixFeatures(String wordParam, Alphabet alphabet, boolean offline) {
 
     /*
      * Lowercase word
@@ -382,7 +382,7 @@ public class WordFeatures {
      * Return suffixes list of Pairs (index, true)
      */
     // since word is from input stream, need to lower-case it first
-    String lowWord = word.toLowerCase();
+    String lowWord = wordParam.toLowerCase();
     List<Integer> suffixIndices = alphabet.getWordSuffixFactory().getAllKnownSubstringsForWord(lowWord);
     //if (suffixIndices.isEmpty()) System.err.println("No known suffixes: " + word);
     for (int x : suffixIndices) {
@@ -406,9 +406,9 @@ public class WordFeatures {
    */
   // NOTE: it is an overhead to keep a list of cluster IDs, because we always have a single element,
   // but it keeps code more transparent
-  private void fillClusterIdFeatures(String word, Alphabet alphabet, boolean offline) {
+  private void fillClusterIdFeatures(String wordParam, Alphabet alphabet, boolean offline) {
 
-    int wordClusterIndex = alphabet.getWordClusterFactory().getClusterIdFeature(word);
+    int wordClusterIndex = alphabet.getWordClusterFactory().getClusterIdFeature(wordParam);
     if (wordClusterIndex > -1) {
       int realIndex = (this.isAdjust()) ? (this.clusterIdOffset + wordClusterIndex) : wordClusterIndex;
       //System.out.println("Word: " + word + " ClusterId: " + wordClusterIndex + " Realindex: " + realIndex);
@@ -418,22 +418,23 @@ public class WordFeatures {
       // we have an unknown word with no cluster Id,
       // This should not happen, because unknown words are matched to <RARE> dummy word, if
       // not found
-      System.err.println("Word: " + word + ": unknown clusterID!");
+      System.err.println("Word: " + wordParam + ": unknown clusterID!");
     }
     // should be always 1
     this.length += this.cluster.size();
   }
 
 
-  private void fillLabelFeatures(String word, Alphabet alphabet, boolean offline) {
+  private void fillLabelFeatures(String wordParam, Alphabet alphabet, boolean offline) {
 
-    int labelIndex = (this.getLabelIndex() > -1) ? this.getLabelIndex() : this.getOffSets().getLabelVectorSize();
-    int realIndex = (this.isAdjust()) ? (this.labelOffset + labelIndex) : labelIndex;
+    int localLabelIndex = (this.getLabelIndex() > -1) ? this.getLabelIndex() : this.getOffSets().getLabelVectorSize();
+    int realIndex = (this.isAdjust()) ? (this.labelOffset + localLabelIndex) : localLabelIndex;
 
     /*
-    System.out.println("Word: " + word + " LabelId: " + this.getLabelIndex()
-        + " LabelIndex: " + labelIndex + " Realindex: " + realIndex);
+    System.out.println("Word: " + wordParam + " LabelId: " + this.getLabelIndex()
+        + " LabelIndex: " + localLabelIndex + " Realindex: " + realIndex);
     */
+
     Pair<Integer, Boolean> node = new Pair<Integer, Boolean>(realIndex, true);
     this.label.add(node);
     // should be always 1

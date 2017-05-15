@@ -4,12 +4,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +28,9 @@ import data.GlobalParams;
  */
 public class EvalConllFile {
 
-  public static double acc;
-  public static double accOOV;
-  public static double accInV;
+  private static double acc;
+  private static double accOOV;
+  private static double accInV;
 
   private Data data = new Data();
   private Map<String, Integer> wrongTagsHash = new HashMap<String, Integer>();
@@ -116,8 +114,7 @@ public class EvalConllFile {
   }
 
 
-  private void writeWrongTagsHash(BufferedWriter errorWriter)
-      throws UnsupportedEncodingException, FileNotFoundException {
+  private void writeWrongTagsHash(BufferedWriter errorWriter) {
 
     try {
       for (Map.Entry<String, Integer> entry : this.getWrongTagsHash().entrySet()) {

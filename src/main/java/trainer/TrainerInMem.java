@@ -61,7 +61,7 @@ import de.bwaldvogel.liblinear.SolverType;
 
 public class TrainerInMem {
 
-  public static boolean debug = false;
+  private static boolean debug = false;
   private Data data = new Data();
   private Alphabet alphabet = new Alphabet();
   private Archivator archivator;
@@ -96,7 +96,7 @@ public class TrainerInMem {
   //
   //    this.setParameter(new Parameter(
   //        modelInfo.getSolver(),
-  //        modelInfo.getC(),
+  //        modelInfo.getCost(),
   //        modelInfo.getEps()));
   //  }
 
@@ -118,6 +118,19 @@ public class TrainerInMem {
 
 
   // Setters and getters
+
+
+  public static void setDebug(boolean debug) {
+
+    TrainerInMem.debug = debug;
+  }
+
+
+  public static boolean getDebug() {
+
+    return TrainerInMem.debug;
+  }
+
 
   public Data getData() {
 
@@ -269,7 +282,7 @@ public class TrainerInMem {
    * I do this because I do not know in advance the number of sentences and hence, the number of tokens in a file.
    * @throws IOException
    */
-  private void createWindowFramesFromSentence() throws IOException {
+  private void createWindowFramesFromSentence() {
 
     // for each token t_i of current training sentence do
     // System.out.println("Sentence no: " + data.getSentenceCnt());
@@ -284,9 +297,9 @@ public class TrainerInMem {
       this.getData().getInstances().add(tokenWindow);
 
       // Print how many windows are created so far, and pretty print every mod-th window
-      if ((Window.windowCnt % mod) == 0) {
+      if ((Window.getWindowCnt() % mod) == 0) {
         System.out.println("\n************");
-        System.out.println("# Window instances: " + Window.windowCnt);
+        System.out.println("# Window instances: " + Window.getWindowCnt());
       }
     }
   }
@@ -345,19 +358,17 @@ public class TrainerInMem {
    */
   private void initProblem() {
 
-    Problem problem = new Problem();
-    problem.l = Window.windowCnt;
+    this.problem = new Problem();
+    this.problem.l = Window.getWindowCnt();
     //problem.n = OffSets.windowVectorSize;
-    problem.x = new FeatureNode[problem.l][];
-    problem.y = new double[problem.l];
-    problem.bias = this.getBias();
+    this.problem.x = new FeatureNode[this.problem.l][];
+    this.problem.y = new double[this.problem.l];
+    this.problem.bias = this.getBias();
 
-    this.setProblem(problem);
-
-    System.out.println("problem.l: " + problem.l);
-    System.out.println("problem.n: " + problem.n);
-    System.out.println("problem.y.size: " + problem.y.length);
-    System.out.println("problem.x.size: " + problem.x.length);
+    System.out.println("problem.l: " + this.problem.l);
+    System.out.println("problem.n: " + this.problem.n);
+    System.out.println("problem.y.size: " + this.problem.y.length);
+    System.out.println("problem.x.size: " + this.problem.x.length);
   }
 
 
@@ -370,7 +381,7 @@ public class TrainerInMem {
    * @param adjust
    * @throws IOException
    */
-  private void constructProblem(boolean train, boolean adjust) throws IOException {
+  private void constructProblem(boolean train, boolean adjust) {
 
     int mod = 10000;
     int problemCnt = 0;
@@ -425,6 +436,7 @@ public class TrainerInMem {
 
       if (nodes == null) {
         System.out.println("shit!!");
+        continue;
       }
       int indexBefore = 0;
       for (Feature n : nodes) {
@@ -494,7 +506,7 @@ public class TrainerInMem {
     System.out.println("Offsets: " + this.getOffSets().toString());
     System.out.println("Sentences: " + this.getData().getSentenceCnt());
     System.out.println("Feature instances size: " + this.getOffSets().getWindowVectorSize());
-    System.out.println("Training instances: " + Window.windowCnt);
+    System.out.println("Training instances: " + Window.getWindowCnt());
 
     // Construct training problem
     System.out.println("Construct problem:");
@@ -503,9 +515,10 @@ public class TrainerInMem {
     time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (time2 - time1));
 
-    System.out.println("Average window vector lenght: " + ProblemInstance.cumLength / Window.windowCnt);
+    System.out.println("Average window vector lenght: " + ProblemInstance.getCumLength() / Window.getWindowCnt());
     System.out.println("Approx. GB needed: "
-        + ((ProblemInstance.cumLength / Window.windowCnt) * Window.windowCnt * 8 + Window.windowCnt) / 1000000000.0);
+        + ((ProblemInstance.getCumLength() / Window.getWindowCnt()) * Window.getWindowCnt() * 8 + Window.getWindowCnt())
+            / 1000000000.0);
 
     // Do learning
     /*

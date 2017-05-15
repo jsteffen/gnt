@@ -17,7 +17,7 @@ import archive.Archivator;
 
 public class SetIndexMap {
 
-  Map<Integer, String> num2label = new TreeMap<Integer, String>();
+  private Map<Integer, String> num2label = new TreeMap<Integer, String>();
   private Map<String, Integer> label2num = new HashMap<String, Integer>();
   private int labelCnt = 0;
 

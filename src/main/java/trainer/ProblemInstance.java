@@ -25,7 +25,7 @@ import features.WordFeatures;
 
 public class ProblemInstance {
 
-  public static int cumLength = 0;
+  private static int cumLength = 0;
   private FeatureNode[] featureVector;
 
 
@@ -36,6 +36,13 @@ public class ProblemInstance {
 
 
   // Setters and getters
+
+
+  public static int getCumLength() {
+
+    return cumLength;
+  }
+
 
   public FeatureNode[] getFeatureVector() {
 
@@ -69,38 +76,38 @@ public class ProblemInstance {
       // Add left word embedding length
       for (int i = 0; i < wordFeats.getLeft().size(); i++) {
         Pair<Integer, Double> pair = wordFeats.getLeft().get(i);
-        this.featureVector[offSet + i] = new FeatureNode(pair.getL(), pair.getR());
+        this.featureVector[offSet + i] = new FeatureNode(pair.getLeft(), pair.getRight());
       }
       offSet += wordFeats.getLeft().size();
       // Add right word embedding length
       for (int i = 0; i < wordFeats.getRight().size(); i++) {
         Pair<Integer, Double> pair = wordFeats.getRight().get(i);
-        this.featureVector[offSet + i] = new FeatureNode(pair.getL(), pair.getR());
+        this.featureVector[offSet + i] = new FeatureNode(pair.getLeft(), pair.getRight());
       }
       offSet += wordFeats.getRight().size();
       // Add shape length
       for (int i = 0; i < wordFeats.getShape().size(); i++) {
         Pair<Integer, Boolean> pair = wordFeats.getShape().get(i);
-        this.featureVector[offSet + i] = new FeatureNode(pair.getL(), 1);
+        this.featureVector[offSet + i] = new FeatureNode(pair.getLeft(), 1);
       }
       offSet += wordFeats.getShape().size();
       // Add suffix length
       for (int i = 0; i < wordFeats.getSuffix().size(); i++) {
         Pair<Integer, Boolean> pair = wordFeats.getSuffix().get(i);
-        this.featureVector[offSet + i] = new FeatureNode(pair.getL(), 1);
+        this.featureVector[offSet + i] = new FeatureNode(pair.getLeft(), 1);
       }
       offSet += wordFeats.getSuffix().size();
       // Add cluster length
       for (int i = 0; i < wordFeats.getCluster().size(); i++) {
         Pair<Integer, Boolean> pair = wordFeats.getCluster().get(i);
-        this.featureVector[offSet + i] = new FeatureNode(pair.getL(), 1);
+        this.featureVector[offSet + i] = new FeatureNode(pair.getLeft(), 1);
       }
 
       offSet += wordFeats.getCluster().size();
       // Add label length
       for (int i = 0; i < wordFeats.getLabel().size(); i++) {
         Pair<Integer, Boolean> pair = wordFeats.getLabel().get(i);
-        this.featureVector[offSet + i] = new FeatureNode(pair.getL(), 1);
+        this.featureVector[offSet + i] = new FeatureNode(pair.getLeft(), 1);
       }
 
       offSet += wordFeats.getLabel().size();
@@ -108,7 +115,7 @@ public class ProblemInstance {
 
     //this.normalizeFeatureVectorToUnitLenght();
 
-    if (TrainerInMem.debug) {
+    if (TrainerInMem.getDebug()) {
       this.checkFeatureVector(tokenWindow);
     }
 

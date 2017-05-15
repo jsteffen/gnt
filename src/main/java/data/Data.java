@@ -11,9 +11,9 @@ public class Data {
   /**
    * Index of wordform in conll format
    */
-  public static int wordFormIndex = 1;
+  private static int wordFormIndex = 1;
   // counted from 0, 5th column in conll
-  public static int posTagIndex = 4;
+  private static int posTagIndex = 4;
 
   private SetIndexMap wordSet = new SetIndexMap();
   private SetIndexMap labelSet = new SetIndexMap();
@@ -37,6 +37,31 @@ public class Data {
 
 
   // Setters and getters
+
+
+  public static int getWordFormIndex() {
+
+    return wordFormIndex;
+  }
+
+
+  public static void setWordFormIndex(int wordFormIndex) {
+
+    Data.wordFormIndex = wordFormIndex;
+  }
+
+
+  public static int getPosTagIndex() {
+
+    return posTagIndex;
+  }
+
+
+  public static void setPosTagIndex(int posTagIndex) {
+
+    Data.posTagIndex = posTagIndex;
+  }
+
 
   public List<Window> getInstances() {
 
@@ -150,15 +175,15 @@ public class Data {
     // tokens are of form
     // "1  The  The  DT  DT  _  2  NMOD"
     // NOTE: No lower case here of word
-    Sentence sentence = new Sentence(tokens.size());
+    Sentence newSentence = new Sentence(tokens.size());
     for (int i = 0; i < tokens.size(); i++) {
       // Extract word and pos from conll sentence, create index for both
       // and create sentence using word/pos index
-      sentence.addNextToken(i,
+      newSentence.addNextToken(i,
           updateWordMap(tokens.get(i)[Data.wordFormIndex]),
           updateLabelMap(tokens.get(i)[Data.posTagIndex]));
     }
-    this.setSentence(sentence);
+    this.setSentence(newSentence);
     this.sentenceCnt++;
   }
 
@@ -172,15 +197,15 @@ public class Data {
    */
   public void generateSentenceObjectFromConllUnLabeledSentence(List<String[]> tokens) {
 
-    Sentence sentence = new Sentence(tokens.size());
+    Sentence newSentence = new Sentence(tokens.size());
     for (int i = 0; i < tokens.size(); i++) {
       // Extract word and pos from conll sentence, create index for both
       // and create sentence using word/pos index
-      sentence.addNextToken(i,
+      newSentence.addNextToken(i,
           updateWordMap(tokens.get(i)[Data.wordFormIndex]),
           -1);
     }
-    this.setSentence(sentence);
+    this.setSentence(newSentence);
     this.sentenceCnt++;
   }
 
@@ -194,16 +219,16 @@ public class Data {
    */
   public void generateSentenceObjectFromUnlabeledTokens(String[] tokens) {
 
-    Sentence sentence = new Sentence(tokens.length);
+    Sentence newSentence = new Sentence(tokens.length);
     for (int i = 0; i < tokens.length; i++) {
       // tokens are strings
       // NOTE: No lower case here of word
       // Using a dummy POS -1
-      sentence.addNextToken(i,
+      newSentence.addNextToken(i,
           updateWordMap(tokens[i]),
           -1);
     }
-    this.setSentence(sentence);
+    this.setSentence(newSentence);
     this.sentenceCnt++;
 
   }

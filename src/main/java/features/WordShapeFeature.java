@@ -24,7 +24,7 @@ public class WordShapeFeature {
    * @author gune00
    *
    */
-  public static enum MorphFeature {
+  enum MorphFeature {
     ALL_CAPS,
     HAS_DASH,
     HAS_DIGIT,

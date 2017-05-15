@@ -43,12 +43,8 @@ public class GNTrainer {
     this.corpus = new Corpus(corpusProps, this.getDataProps().getGlobalParams());
     CorpusProcessor mapper = new CorpusProcessor(this.corpus, this.dataProps);
 
-    try {
-      // Make sure that they are all in correct CONLL format
-      mapper.processConllFiles();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    // Make sure that they are all in correct CONLL format
+    mapper.processConllFiles();
 
     // set the ZIP archivator
     this.setArchivator(
@@ -208,7 +204,7 @@ public class GNTrainer {
     System.out.println("Create windows with size: " + this.getTrainer().getWindowSize());
     this.time1 = System.currentTimeMillis();
     System.out.println("Set window count: ");
-    Window.windowCnt = 0;
+    Window.setWindowCnt(0);
 
     this.getTrainer().trainFromConllTrainingFileInMemory(trainingFileName, maxExamples);
 
@@ -221,10 +217,11 @@ public class GNTrainer {
     System.out.println("Offsets: " + this.getTrainer().getOffSets().toString());
     System.out.println("Sentences: " + this.getTrainer().getData().getSentenceCnt());
     System.out.println("Feature instances size: " + this.getTrainer().getProblem().n);
-    System.out.println("Average window vector lenght: " + ProblemInstance.cumLength / Window.windowCnt);
+    System.out.println("Average window vector lenght: " + ProblemInstance.getCumLength() / Window.getWindowCnt());
     System.out.println("Training instances: " + this.getTrainer().getProblem().l);
     System.out.println("Approx. GB needed: "
-        + ((ProblemInstance.cumLength / Window.windowCnt) * Window.windowCnt * 8 + Window.windowCnt) / 1000000000.0);
+        + ((ProblemInstance.getCumLength() / Window.getWindowCnt()) * Window.getWindowCnt() * 8 + Window.getWindowCnt())
+            / 1000000000.0);
   }
 
 

@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GntSplitTokenizer {
+public final class GntSplitTokenizer {
+
+  private GntSplitTokenizer() {
+
+    // private constructor to enforce noninstantiability
+  }
+
 
   public static String[] splitTokenizer(String string) {
     //System.out.println(">>>"+string+"<<<");

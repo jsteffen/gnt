@@ -30,8 +30,8 @@ import archive.Archivator;
  */
 public class IndicatorWordsCreator {
 
-  static int lineCnt = 0;
-  static int tokenCnt = 0;
+  private static int lineCnt = 0;
+  private static int tokenCnt = 0;
   private Map<String, Integer> wordToNum = new HashMap<String, Integer>();
   private String featureFilePathname = "";
 

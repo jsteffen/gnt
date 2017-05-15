@@ -36,9 +36,9 @@ public class TweetToConllMapper {
   private static final QName Text_ELE = new QName("text");
   private static final QName Word_ELE = new QName("w");
 
-  XMLInputFactory factory = XMLInputFactory.newInstance();
+  private XMLInputFactory factory = XMLInputFactory.newInstance();
 
-  XMLEventReader parser = null;
+  private XMLEventReader parser = null;
 
   private String encoding = "UTF-8";
 
@@ -69,6 +69,7 @@ public class TweetToConllMapper {
             // Activate start tags based on individual actions
             StartElement start = event.asStartElement();
             if (start.getName().equals(Text_ELE)) {
+              // do nothing
             }
 
             if (start.getName().equals(Word_ELE)) {

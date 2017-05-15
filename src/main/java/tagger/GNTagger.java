@@ -28,7 +28,7 @@ import trainer.ProblemInstance;
 
 public class GNTagger {
 
-  public static long tokenPersec = 0;
+  private static long tokenPersec = 0;
 
   private Data data = new Data();
   private Alphabet alphabet = new Alphabet();
@@ -237,14 +237,14 @@ public class GNTagger {
 
   // Methods
 
-  public void initGNTagger(int windowSize, int dim) throws UnsupportedEncodingException, IOException {
+  public void initGNTagger(int windowSizeParam, int dim) throws UnsupportedEncodingException, IOException {
 
     this.time1 = System.currentTimeMillis();
 
-    System.out.println("Set window size: " + windowSize);
-    this.setWindowSize(windowSize);
+    System.out.println("Set window size: " + windowSizeParam);
+    this.setWindowSize(windowSizeParam);
     System.out.println("Set window count: ");
-    Window.windowCnt = 0;
+    Window.setWindowCnt(0);
     GNTagger.tokenPersec = 0;
 
     System.out.println("Load feature files with dim: " + dim);
@@ -288,7 +288,7 @@ public class GNTagger {
    * The same as trainer.TrainerInMem.createWindowFramesFromSentence()!
    * @throws IOException
    */
-  private void createWindowFramesFromSentence() throws IOException {
+  private void createWindowFramesFromSentence() {
 
     // for each token t_i of current training sentence do
     // System.out.println("Sentence no: " + data.getSentenceCnt());
@@ -306,8 +306,8 @@ public class GNTagger {
       this.getData().getInstances().add(tokenWindow);
 
       // Print how many windows are created so far, and pretty print every mod-th window
-      if ((Window.windowCnt % mod) == 0) {
-        System.out.println("# Window instances: " + Window.windowCnt);
+      if ((Window.getWindowCnt() % mod) == 0) {
+        System.out.println("# Window instances: " + Window.getWindowCnt());
       }
     }
   }
@@ -361,7 +361,7 @@ public class GNTagger {
   }
 
 
-  public void tagSentenceObject() throws IOException {
+  public void tagSentenceObject() {
 
     // create window frames from sentence and store in list
     this.createWindowFramesFromSentence();
@@ -379,7 +379,7 @@ public class GNTagger {
    * @param tokens
    * @throws IOException
    */
-  public void tagUnlabeledTokens(String[] tokens) throws IOException {
+  public void tagUnlabeledTokens(String[] tokens) {
 
     // create internal sentence object
     this.getData().generateSentenceObjectFromUnlabeledTokens(tokens);
@@ -462,14 +462,14 @@ public class GNTagger {
       String[] token = tokens.get(i);
       String label = this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
 
-      String word = token[Data.wordFormIndex];
+      String word = token[Data.getWordFormIndex()];
 
       label = PostProcessor.determineTwitterLabel(word, label);
 
 
       String newConllToken = token[0] + " "
           + word + " "
-          + token[Data.posTagIndex] + " "
+          + token[Data.getPosTagIndex()] + " "
           + label
           + "\n";
 
@@ -483,8 +483,8 @@ public class GNTagger {
   public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName, int sentenceCnt)
       throws IOException {
 
-    long time1;
-    long time2;
+    long localTime1;
+    long localTime2;
 
     BufferedReader conllReader = new BufferedReader(
         new InputStreamReader(new FileInputStream(sourceFileName), "UTF-8"));
@@ -506,9 +506,9 @@ public class GNTagger {
     System.out.println("\n++++\nDo testing from file: " + sourceFileName);
     // Reset some data to make sure each file has same change
     this.getData().setSentenceCnt(0);
-    Window.windowCnt = 0;
+    Window.setWindowCnt(0);
 
-    time1 = System.currentTimeMillis();
+    localTime1 = System.currentTimeMillis();
 
     this.tagAndWriteSentencesFromConllReader(conllReader, conllWriter, sentenceCnt);
     // close the buffers
@@ -518,13 +518,13 @@ public class GNTagger {
       this.getModelInfo().getModelInputFileWriter().close();
     }
 
-    time2 = System.currentTimeMillis();
-    System.out.println("System time (msec): " + (time2 - time1));
+    localTime2 = System.currentTimeMillis();
+    System.out.println("System time (msec): " + (localTime2 - localTime1));
 
-    GNTagger.tokenPersec = (Window.windowCnt * 1000) / (time2 - time1);
+    GNTagger.tokenPersec = (Window.getWindowCnt() * 1000) / (localTime2 - localTime1);
     System.out.println("Sentences: " + this.getData().getSentenceCnt());
-    System.out.println("Testing instances: " + Window.windowCnt);
-    System.out.println("Sentences/sec: " + (this.getData().getSentenceCnt() * 1000) / (time2 - time1));
+    System.out.println("Testing instances: " + Window.getWindowCnt());
+    System.out.println("Sentences/sec: " + (this.getData().getSentenceCnt() * 1000) / (localTime2 - localTime1));
     System.out.println("Words/sec: " + GNTagger.tokenPersec);
   }
 }

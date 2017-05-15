@@ -153,20 +153,20 @@ public class BIO2BILOUtransformer {
    * @param bioPhrase
    * @return
    */
-  private List<String> mapBio2Bilou(List<String> bioPhrase) {
+  private List<String> mapBio2Bilou(List<String> bioPhraseParam) {
 
     List<String> bilouPhrase = new ArrayList<String>();
-    if (bioPhrase.size() == 1) {
-      String bilouLine = makeNewBilouLine(bioPhrase.get(0), "U-");
+    if (bioPhraseParam.size() == 1) {
+      String bilouLine = makeNewBilouLine(bioPhraseParam.get(0), "U-");
       bilouPhrase.add(bilouLine);
 
-    } else if (bioPhrase.size() > 1) {
-      String firstBilouLine = makeNewBilouLine(bioPhrase.get(0), "B-");
+    } else if (bioPhraseParam.size() > 1) {
+      String firstBilouLine = makeNewBilouLine(bioPhraseParam.get(0), "B-");
       bilouPhrase.add(firstBilouLine);
-      for (int i = 1; i < bioPhrase.size() - 1; i++) {
-        bilouPhrase.add(bioPhrase.get(i));
+      for (int i = 1; i < bioPhraseParam.size() - 1; i++) {
+        bilouPhrase.add(bioPhraseParam.get(i));
       }
-      String lastBilouLine = makeNewBilouLine(bioPhrase.get(bioPhrase.size() - 1), "L-");
+      String lastBilouLine = makeNewBilouLine(bioPhraseParam.get(bioPhraseParam.size() - 1), "L-");
       bilouPhrase.add(lastBilouLine);
     }
     return bilouPhrase;
@@ -189,11 +189,11 @@ public class BIO2BILOUtransformer {
   }
 
 
-  private void writeBioPhrase(List<String> bioPhrase, BufferedWriter writer) {
+  private void writeBioPhrase(List<String> bioPhraseParam, BufferedWriter writer) {
 
-    for (int i = 0; i < bioPhrase.size(); i++) {
+    for (int i = 0; i < bioPhraseParam.size(); i++) {
       try {
-        writer.write(bioPhrase.get(i) + "\n");
+        writer.write(bioPhraseParam.get(i) + "\n");
       } catch (IOException e) {
         e.printStackTrace();
       }

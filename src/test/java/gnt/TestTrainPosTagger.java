@@ -9,7 +9,7 @@ public class TestTrainPosTagger {
 
   public static void main(String[] args) throws IOException {
     TrainTagger gntTrainer = new TrainTagger();
-    TrainerInMem.debug = true;
+    TrainerInMem.setDebug(true);
 //    gntTrainer.trainer(
 //        "src/main/resources/dataProps/EnNerTagger.xml",
 //        "src/main/resources/corpusProps/EnNerTagger.xml");

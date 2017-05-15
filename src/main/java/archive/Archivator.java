@@ -133,6 +133,8 @@ public class Archivator {
     while ((entry = zis.getNextEntry()) != null) {
       this.archiveMap.put(entry.getName(), zip.getInputStream(entry));
     }
+    zip.close();
+    zis.close();
   }
 
 

@@ -78,6 +78,8 @@ public class GNT {
         case "-outEncode":
           this.outEncode = args[i + 1];
           break;
+        default:
+          System.err.println("unknown argument " + args[i]);
       }
     }
   }
@@ -120,7 +122,7 @@ public class GNT {
   }
 
 
-  private void runGNTrainer(String[] args) throws IOException {
+  private void runGNTrainer() throws IOException {
 
     System.out.println("Run GNTrainer: ");
     System.out.println(this.toString());
@@ -133,7 +135,7 @@ public class GNT {
   }
 
 
-  private void runGNTagger(String[] args) throws IOException {
+  private void runGNTagger() throws IOException {
 
     System.out.println("Run GNTagger: ");
     System.out.println(this.toString());
@@ -158,9 +160,9 @@ public class GNT {
     newGNT.setArgValues(args);
 
     if (newGNT.mode.equalsIgnoreCase("train")) {
-      newGNT.runGNTrainer(args);
+      newGNT.runGNTrainer();
     } else if (newGNT.mode.equalsIgnoreCase("test")) {
-      newGNT.runGNTagger(args);
+      newGNT.runGNTagger();
     } else {
       System.exit(1);
     }

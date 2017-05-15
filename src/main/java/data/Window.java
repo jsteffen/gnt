@@ -20,10 +20,10 @@ import features.WordFeatures;
 public class Window {
 
   // Used to control the use of labels from left context as features in predicting label for current token
-  public static boolean recurrent = false;
+  private static boolean recurrent = false;
 
 
-  public static int windowCnt = 0;
+  private static int windowCnt = 0;
   private Data data;
   private Alphabet alphabet;
   private OffSets offSets;
@@ -51,6 +51,19 @@ public class Window {
 
 
   // Setters and getters
+
+
+  public static int getWindowCnt() {
+
+    return windowCnt;
+  }
+
+
+  public static void setWindowCnt(int windowCnt) {
+
+    Window.windowCnt = windowCnt;
+  }
+
 
   public OffSets getOffSets() {
 
@@ -143,6 +156,7 @@ public class Window {
     // the surface word string determined from the training examples
     // Use "<BOUNDARY>" as dummy for padding elements
     String wordString = "";
+    WordFeatures wordFeatures = null;
     // counts the dynamically created window element and use it as index in WordFeatures
     int elementCnt = 0;
 
@@ -159,7 +173,7 @@ public class Window {
       if (i <= this.sentence.getLabelArray().length) {
         wordString = "<BOUNDARY>";
         // wordLoc does not matter here, because empty WordFeatures class is created
-        WordFeatures wordFeatures = createWordFeatures(this.sentence, wordString, i, elementCnt, train, adjust);
+        wordFeatures = createWordFeatures(this.sentence, wordString, i, elementCnt, train, adjust);
         this.windowLength += wordFeatures.getLength();
         this.elements.add(wordFeatures);
         elementCnt++;
@@ -172,8 +186,8 @@ public class Window {
 
     // Add left context elements
     for (int i = (this.center - leftContext); i < this.center; i++) {
-      wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
-      WordFeatures wordFeatures = createWordFeatures(this.sentence, wordString, i, elementCnt, train, adjust);
+      wordString = this.data.getWordSet().getNum2label().get(this.sentence.getWordArray()[i]);
+      wordFeatures = createWordFeatures(this.sentence, wordString, i, elementCnt, train, adjust);
       this.windowLength += wordFeatures.getLength();
       this.elements.add(wordFeatures);
       elementCnt++;
@@ -181,19 +195,17 @@ public class Window {
 
     Window.recurrent = false;
     // Add token center element
-    {
-      wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center]);
-      WordFeatures wordFeatures = createWordFeatures(this.sentence, wordString, this.center, elementCnt, train, adjust);
-      this.windowLength += wordFeatures.getLength();
-      this.elements.add(wordFeatures);
-      elementCnt++;
-    }
+    wordString = this.data.getWordSet().getNum2label().get(this.sentence.getWordArray()[this.center]);
+    wordFeatures = createWordFeatures(this.sentence, wordString, this.center, elementCnt, train, adjust);
+    this.windowLength += wordFeatures.getLength();
+    this.elements.add(wordFeatures);
+    elementCnt++;
 
     // right content elements;
     // set wordLoc always to 1, because can never be 0
     for (int i = this.center + 1; i < (this.center + 1 + rightContext); i++) {
-      wordString = this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]);
-      WordFeatures wordFeatures = createWordFeatures(this.sentence, wordString, i, elementCnt, train, adjust);
+      wordString = this.data.getWordSet().getNum2label().get(this.sentence.getWordArray()[i]);
+      wordFeatures = createWordFeatures(this.sentence, wordString, i, elementCnt, train, adjust);
       this.windowLength += wordFeatures.getLength();
       this.elements.add(wordFeatures);
       elementCnt++;
@@ -205,7 +217,7 @@ public class Window {
       if (i <= this.sentence.getLabelArray().length) {
         wordString = "<BOUNDARY>";
         // wordLoc does not matter here, because empty WordFeatures class is created
-        WordFeatures wordFeatures = createWordFeatures(this.sentence, wordString, i, elementCnt, train, adjust);
+        wordFeatures = createWordFeatures(this.sentence, wordString, i, elementCnt, train, adjust);
         this.windowLength += wordFeatures.getLength();
         this.elements.add(wordFeatures);
         elementCnt++;
@@ -223,13 +235,13 @@ public class Window {
    * @param adjust
    * @return
    */
-  private WordFeatures createWordFeatures(Sentence sentence, String word, int wordPosition, int elementCnt,
+  private WordFeatures createWordFeatures(Sentence sentenceParam, String word, int wordPosition, int elementCnt,
       boolean train, boolean adjust) {
 
     // Get left and right word of word -> later used for handing unknown words
-    Pair<String, String> contextWords = getContextWords(sentence, wordPosition);
+    Pair<String, String> contextWords = getContextWords(sentenceParam, wordPosition);
     // create a new WordFeatures element
-    WordFeatures wordFeatures = new WordFeatures(word, contextWords.getL(), contextWords.getR());
+    WordFeatures wordFeatures = new WordFeatures(word, contextWords.getLeft(), contextWords.getRight());
     // set its index
     wordFeatures.setIndex(elementCnt);
     // set its offsets using the values from OffSets which are pre-initialised after data has been loaded and before
@@ -245,7 +257,7 @@ public class Window {
         // Treat as dummy
         wordFeatures.setLabelIndex(this.offSets.getLabelVectorSize());
       } else {
-        wordFeatures.setLabelIndex(sentence.getLabelArray()[wordPosition]);
+        wordFeatures.setLabelIndex(sentenceParam.getLabelArray()[wordPosition]);
 
       }
       //System.out.println("Word: " + word + ", Label index: " + wordFeatures.getLabelIndex());
@@ -258,13 +270,13 @@ public class Window {
   }
 
 
-  private Pair<String, String> getContextWords(Sentence sentence, int wordIndex) {
+  private Pair<String, String> getContextWords(Sentence sentenceParam, int wordIndex) {
 
     //System.out.println("Sentence: " + sentence.getWordArray().length + " Wordindex: " + wordIndex);
     String leftWord = (wordIndex == 0)
-        ? "<BOUNDARY>" : this.data.getWordSet().num2label.get(this.sentence.getWordArray()[wordIndex - 1]);
-    String rightWord = (wordIndex >= sentence.getWordArray().length - 1)
-        ? "<BOUNDARY>" : this.data.getWordSet().num2label.get(this.sentence.getWordArray()[wordIndex + 1]);
+        ? "<BOUNDARY>" : this.data.getWordSet().getNum2label().get(this.sentence.getWordArray()[wordIndex - 1]);
+    String rightWord = (wordIndex >= sentenceParam.getWordArray().length - 1)
+        ? "<BOUNDARY>" : this.data.getWordSet().getNum2label().get(this.sentence.getWordArray()[wordIndex + 1]);
 
     return new Pair<String, String>(leftWord, rightWord);
   }
@@ -296,13 +308,13 @@ public class Window {
     }
     // lef context elements
     for (int i = (this.center - lc); i < this.center; i++) {
-      testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]) + " ";
+      testString += this.data.getWordSet().getNum2label().get(this.sentence.getWordArray()[i]) + " ";
     }
     // center elelemt
-    testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[this.center]) + " ";
+    testString += this.data.getWordSet().getNum2label().get(this.sentence.getWordArray()[this.center]) + " ";
     // right content elements
     for (int i = this.center + 1; i < (this.center + 1 + rc); i++) {
-      testString += this.data.getWordSet().num2label.get(this.sentence.getWordArray()[i]) + " ";
+      testString += this.data.getWordSet().getNum2label().get(this.sentence.getWordArray()[i]) + " ";
     }
     // right sentence pads
     for (int i = (this.center + rc); i < (this.center + rc + rp); i++) {
@@ -324,6 +336,4 @@ public class Window {
     }
     return output;
   }
-
-
 }

@@ -5,10 +5,10 @@ import java.util.Map;
 
 final class ValueComparator implements Comparator<String> {
 
-  Map<String, Integer> map;
+  private Map<String, Integer> map;
 
 
-  public ValueComparator(Map<String, Integer> base) {
+  ValueComparator(Map<String, Integer> base) {
     this.map = base;
   }
 

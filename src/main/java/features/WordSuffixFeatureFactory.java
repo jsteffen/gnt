@@ -44,11 +44,11 @@ import archive.Archivator;
 public class WordSuffixFeatureFactory {
 
   // A simple flag for switching between suffix and ngram computation
-  public static boolean ngram = false;
-  public static int ngramSize = 3;
+  private static boolean ngram = false;
+  private static int ngramSize = 3;
 
   // If true, then compute all substrings, else all suffixes
-  public static boolean subString = false;
+  private static final boolean subString = false;
   private String featureFilePathname = "";
 
   // stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
@@ -62,9 +62,6 @@ public class WordSuffixFeatureFactory {
   private int suffixCnt = 0;
 
 
-  // Getters and setters
-
-
   // Constructor
   public WordSuffixFeatureFactory() {
   }
@@ -72,6 +69,32 @@ public class WordSuffixFeatureFactory {
 
   public WordSuffixFeatureFactory(String featureFilePathname2) {
     this.setFeatureFilePathname(featureFilePathname2);
+  }
+
+
+  // Getters and setters
+
+  public static boolean isNgram() {
+
+    return ngram;
+  }
+
+
+  public static void setNgram(boolean ngram) {
+
+    WordSuffixFeatureFactory.ngram = ngram;
+  }
+
+
+  public static int getNgramSize() {
+
+    return ngramSize;
+  }
+
+
+  public static void setNgramSize(int ngramSize) {
+
+    WordSuffixFeatureFactory.ngramSize = ngramSize;
   }
 
 
@@ -243,10 +266,10 @@ public class WordSuffixFeatureFactory {
 
     List<Integer> indices = new ArrayList<Integer>();
     Set<String> ngrams = this.generateNgrams(word, WordSuffixFeatureFactory.ngramSize);
-    for (String ngram : ngrams) {
-      if (!isNonWord(ngram)) {
-        if (this.getSuffix2num().containsKey(ngram)) {
-          indices.add(this.getSuffix2num().get(ngram));
+    for (String oneNgram : ngrams) {
+      if (!isNonWord(oneNgram)) {
+        if (this.getSuffix2num().containsKey(oneNgram)) {
+          indices.add(this.getSuffix2num().get(oneNgram));
         }
       }
     }
@@ -259,9 +282,9 @@ public class WordSuffixFeatureFactory {
 
     int i = 0;
     Set<String> ngrams = this.generateNgrams(word, WordSuffixFeatureFactory.ngramSize);
-    for (String ngram : ngrams) {
-      if (!isNonWord(ngram)) {
-        updateSuffixTable(ngram, i);
+    for (String oneNgram : ngrams) {
+      if (!isNonWord(oneNgram)) {
+        updateSuffixTable(oneNgram, i);
       }
       i++;
     }
@@ -542,7 +565,7 @@ public class WordSuffixFeatureFactory {
         String substring = word.substring(i, j);
         System.out.println("substring: " + substring + " cnt: " + cnt);
         if (!isNonWord(substring)) {
-
+          // do nothing
         }
         cnt++;
       }
@@ -550,7 +573,7 @@ public class WordSuffixFeatureFactory {
   }
 
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
     WordSuffixFeatureFactory wsf = new WordSuffixFeatureFactory();
 

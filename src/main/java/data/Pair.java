@@ -2,43 +2,43 @@ package data;
 
 public class Pair<L, R> {
 
-  private L l;
-  private R r;
+  private L left;
+  private R right;
 
 
-  public Pair(L l, R r) {
-    this.l = l;
-    this.r = r;
+  public Pair(L left, R right) {
+    this.left = left;
+    this.right = right;
   }
 
 
-  public L getL() {
+  public L getLeft() {
 
-    return this.l;
+    return this.left;
   }
 
 
-  public R getR() {
+  public R getRight() {
 
-    return this.r;
+    return this.right;
   }
 
 
-  public void setL(L l) {
+  public void setLeft(L left) {
 
-    this.l = l;
+    this.left = left;
   }
 
 
-  public void setR(R r) {
+  public void setRight(R right) {
 
-    this.r = r;
+    this.right = right;
   }
 
 
   @Override
   public String toString() {
 
-    return "<" + this.getL() + "," + this.getR() + ">";
+    return "<" + this.getLeft() + "," + this.getRight() + ">";
   }
 }

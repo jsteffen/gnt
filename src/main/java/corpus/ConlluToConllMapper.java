@@ -14,13 +14,21 @@ import java.util.Properties;
 
 import data.Pair;
 
-public class ConlluToConllMapper {
+public final class ConlluToConllMapper {
 
-  public static String conlluPath = "/Users/gune00/data/UniversalDependencies/";
-  public static String conllPath = "/Users/gune00/data/UniversalDependencies/conll/";
+  public static final String conlluPath = "/Users/gune00/data/UniversalDependencies/";
+  public static final String conllPath = "/Users/gune00/data/UniversalDependencies/conll/";
 
   private static Properties configProps = new Properties();
   private static Properties dataProps = new Properties();
+
+
+  private ConlluToConllMapper() {
+
+    // private constructor to enforce noninstantiability
+  }
+
+
 
   /* Create corpusProp.xml file
    * E.g., conll/Arabic/arabicCorpusProps.xml
@@ -359,13 +367,13 @@ public class ConlluToConllMapper {
 
     for (Pair<String, String> language : languages) {
       System.out.println("Processing: " + language);
-      ConlluToConllMapper.initLanguageConfigPropsFile(language.getR());
-      ConlluToConllMapper.initLanguageDataPropsFile(language.getR());
+      ConlluToConllMapper.initLanguageConfigPropsFile(language.getRight());
+      ConlluToConllMapper.initLanguageDataPropsFile(language.getRight());
 
-      ConlluToConllMapper.transformer(language.getL(), language.getR());
+      ConlluToConllMapper.transformer(language.getLeft(), language.getRight());
 
-      ConlluToConllMapper.writeLanguageConfigPropsFile(language.getL(), language.getR());
-      ConlluToConllMapper.writeLanguageDataPropsFile(language.getL(), language.getR());
+      ConlluToConllMapper.writeLanguageConfigPropsFile(language.getLeft(), language.getRight());
+      ConlluToConllMapper.writeLanguageDataPropsFile(language.getLeft(), language.getRight());
     }
   }
 

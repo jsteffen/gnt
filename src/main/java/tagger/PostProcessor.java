@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PostProcessor {
+public final class PostProcessor {
 
   private static Set<String> emoticon =
       new HashSet<String>(
@@ -22,6 +22,12 @@ public class PostProcessor {
   private static Set<String> pause =
       new HashSet<String>(
           Arrays.asList("..", "...", "....", ".....", "........", "..........."));
+
+
+  private PostProcessor() {
+
+    // private constructor to enforce noninstantiability
+  }
 
 
   public static String determineTwitterLabel(String word, String label) {

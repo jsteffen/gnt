@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import javax.xml.stream.XMLStreamException;
-
 import data.Data;
 
 public class GNTcorpusProperties extends Properties {
@@ -23,14 +21,14 @@ public class GNTcorpusProperties extends Properties {
     try {
       this.setGntProps(propsFileName);
       this.setDataAccessors();
-    } catch (IOException | XMLStreamException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
 
   public void setGntProps(String propsFileName)
-      throws InvalidPropertiesFormatException, IOException, XMLStreamException {
+      throws InvalidPropertiesFormatException, IOException {
 
     FileInputStream fileIn = new FileInputStream(new File(propsFileName));
     this.loadFromXML(fileIn);
@@ -53,8 +51,8 @@ public class GNTcorpusProperties extends Properties {
 
     if ((this.getProperty("wordFormIndex") != null)
         && (this.getProperty("posTagIndex") != null)) {
-      Data.wordFormIndex = Integer.parseInt(this.getProperty("wordFormIndex"));
-      Data.posTagIndex = Integer.parseInt(this.getProperty("posTagIndex"));
+      Data.setWordFormIndex(Integer.parseInt(this.getProperty("wordFormIndex")));
+      Data.setPosTagIndex(Integer.parseInt(this.getProperty("posTagIndex")));
     }
   }
 

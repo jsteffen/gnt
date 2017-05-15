@@ -13,14 +13,11 @@ import java.io.UnsupportedEncodingException;
 
 public class DataProcessor {
 
-  /**
-   * The main path to the base directory which hosts the label directories
-   */
-  String basePath = "/Users/gune00/dfki/NLP4Software/RecoDevGN/";
-  /**
-   * The name of the base directory
-   */
-  String baseDirectory = "eclipse_jdt_new";
+  // The main path to the base directory which hosts the label directories
+  private String basePath = "/Users/gune00/dfki/NLP4Software/RecoDevGN/";
+
+  // The name of the base directory
+  private String baseDirectory = "eclipse_jdt_new";
 
   private String liblinearInputFile = "resources/recodev/liblinearInputFile.txt";
 
@@ -346,7 +343,7 @@ public class DataProcessor {
   }
 
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
     DataProcessor dp = new DataProcessor(new Tokenizer(), new TokenNormalizer());
     System.out.println("Processing classified documents from: " + dp.getBasePath() + dp.getBaseDirectory());

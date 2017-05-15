@@ -16,7 +16,13 @@ import corpus.GNTcorpusProperties;
  * @author gune00
  *
  */
-public class RunTagger {
+public final class RunTagger {
+
+  private RunTagger() {
+
+    // private constructor to enforce noninstantiability
+  }
+
 
   public static void runner(String archiveName, String corpusConfigFileName) throws IOException {
 
@@ -110,10 +116,10 @@ public class RunTagger {
         time2 = System.currentTimeMillis();
         System.out.println("System time (msec): " + (time2 - time1));
       }
-    } catch (IOException x) {
+    } catch (IOException e) {
       // IOException can never be thrown by the iteration.
-      // In this snippet, it can // only be thrown by newDirectoryStream.
-      System.err.println(x);
+      // In this snippet, it can only be thrown by newDirectoryStream.
+      e.printStackTrace();
     }
   }
 }

@@ -149,13 +149,12 @@ public class CorpusProcessor {
       if (line.isEmpty()) {
         tokenCnt = 0;
         writer.newLine();
-      } else { //if (!line.equals("-DOCSTART- -X- O O"))
-        {
-          tokenCnt++;
-          String[] tokenizedLine = line.split(" ");
-          writer.write(this.nerTokenToString(tokenizedLine, tokenCnt));
-          writer.newLine();
-        }
+      } else {
+        //if (!line.equals("-DOCSTART- -X- O O"))
+        tokenCnt++;
+        String[] tokenizedLine = line.split(" ");
+        writer.write(this.nerTokenToString(tokenizedLine, tokenCnt));
+        writer.newLine();
       }
     }
 
@@ -275,7 +274,7 @@ public class CorpusProcessor {
   }
 
 
-  public void processConllFiles() throws IOException {
+  public void processConllFiles() {
 
     this.transcodeSourceFileToProperConllFormatFiles();
     this.transcodeConllToSentenceFiles();

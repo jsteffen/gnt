@@ -30,7 +30,7 @@ public class GNTaggerStandalone {
    * @param inputString
    * @throws IOException
    */
-  public void tagStringRunner(String inputString) throws IOException {
+  public void tagStringRunner(String inputString) {
 
     String[] tokens = GntSplitTokenizer.splitTokenizer(inputString);
 
