@@ -5,7 +5,7 @@
 package archive;
 
 /**
- * 
+ *
  * April, 2016
 
 - generate compressed folder of all data that is necessary for tagging
@@ -32,10 +32,10 @@ I need to make sure to be flexible with new feature files not yet implemented.
 
 How to pack an archive ?
 
-Current files created and mainly loaded from 
+Current files created and mainly loaded from
   - Alphabet
     feature files
-  - Data 
+  - Data
     label set and word set
   - ModelInfo
     data.ModelInfo.taggerName
@@ -51,27 +51,27 @@ Files which are created:
     String shapeFileName = "resources/features/"+taggerName+"/shapeList.txt";
   clusterId
     String fileName = "resources/features/"+taggerName+"/clusterId.txt";
-  
+
   Data
     labelMapFileName = "resources/features/"+taggerName+"/labelSet.txt";
     wordMapFileName = "resources/features/"+taggerName+"/wordSet.txt";
 
 ModelFile name can be used as archive name
   or inside archive and then tagger name as archive name
-  
+
 If ModelInfo.saveModelInputFile = true
   then save training input file
     needed for training with liblinearC version
-  in this case, do training up  to that point in 
+  in this case, do training up  to that point in
       trainer.TrainerInMem.trainFromConllTrainingFileInMemory(String, int)
       create archive add all feature files etc. also label/word files
       call liblinearC externally and add model file to archive
-      
+
 So, in any case, I can define and call a method unpack
   define slot archivator as part of trainer.TrainerInMem
-  Archivator.pack() 
+  Archivator.pack()
     as last statement in trainer.TrainerInMem.trainFromConllTrainingFileInMemory
-    
+
 */
 
 /**
@@ -88,14 +88,15 @@ How to unpack an archive ?
 
 /*
  * How to do it?
- * 
+ *
  - Provide archive file to trainer and tagger
    - select archive name based on modelfile/taggername
    - use model file name path as target dir
    - store also dim within archive -> used for distributed word features
- 
- 
--    When a feature file is created I could store its full pathname(?) name in a list of a archive object carried by the trainer
+
+
+-    When a feature file is created I could store its full pathname(?) name in a list
+     of a archive object carried by the trainer
 -   then add feature file name to archive
 -  same for model file; and labelSet and wordSet
 -  finally create archive and close archive
@@ -105,7 +106,7 @@ How to unpack an archive ?
 
 Problem:
 I would need to know which reading function to call for which filename
-  
+
 Approach for unpacking:
 -  data.Alphabet.loadFeaturesFromArchive()
 -  it calls all feature reading methods with archive as argument
@@ -119,7 +120,7 @@ Approach for unpacking:
     compressed version to the archive.
   - in principle can be avoided if archive is used in trainer.GNTrainer.createTrainingFeatureFiles(String, String, int)
 -> after archive is created delete the non-compressed features files
-  
+
 - same for data() labelSet and wordSet
 -> DONE, also using duplicate reading methods
 
@@ -131,9 +132,9 @@ Approach for unpacking:
     - e.g., -mode test -config src/main/resources/props/EnNerTagger.xml
   -> and then with distributed word features
     - OK
-    
+
 -> integrate used config file into archive
-  
+
 -> simple version first:
   - copy and add config file with name config.xml to archive during training
     - then config.xml can be safely deleted
@@ -143,7 +144,7 @@ Approach for unpacking:
     - and adapt tagger so to extract and load config.xml file from archive
   - use config file as first file, so that it can be used initially
   -> DONE
-  
+
 HIERIX
 -> CLEAN CODE
 

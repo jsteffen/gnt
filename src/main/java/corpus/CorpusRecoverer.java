@@ -8,71 +8,79 @@ import java.nio.file.StandardCopyOption;
 /**
  * A class for recovering corpus files which have been nomrlaized by class CorpusNormalizer.
  * That class saves the orig files to files with extension ".orig" before normalization is done.
- * The task of the CorpusRecoverer is to restore the original .conll and -sents.txt files and deleting the .orig files afterwards.
+ * The task of the CorpusRecoverer is to restore the original .conll and -sents.txt files and deleting
+ * the .orig files afterwards.
  * @author gune00
  *
  */
 public class CorpusRecoverer {
+
   private Corpus corpus = null;
 
+
   public Corpus getCorpus() {
-    return corpus;
+
+    return this.corpus;
   }
+
+
   public void setCorpus(Corpus corpus) {
+
     this.corpus = corpus;
   }
 
+
   // These methods are for recovering the orig files
 
-  private static void recoverCopyConllFile(String fileNameOrig) throws IOException{
-    File fileOrig= new File(fileNameOrig);
+  private static void recoverCopyConllFile(String fileNameOrig) throws IOException {
 
-    String fileNameCopy = (String) fileNameOrig.subSequence(0, (fileNameOrig.length()-".orig".length()));
+    File fileOrig = new File(fileNameOrig);
+
+    String fileNameCopy = (String)fileNameOrig.subSequence(0, (fileNameOrig.length() - ".orig".length()));
     File fileCopyConll = new File(fileNameCopy);
 
     if (!fileOrig.exists()) {
-      System.out.println(fileOrig.toString()+" already recovered!");
-    }
-    else {
+      System.out.println(fileOrig.toString() + " already recovered!");
+    } else {
       Files.copy(fileOrig.toPath(), fileCopyConll.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      System.out.println(fileCopyConll.toString()+" recovered!");
+      System.out.println(fileCopyConll.toString() + " recovered!");
     }
     if (!fileOrig.exists()) {
-      System.out.println(fileOrig.toString()+" already recovered!");
-    }
-    else
-    {
+      System.out.println(fileOrig.toString() + " already recovered!");
+    } else {
       Files.deleteIfExists(fileOrig.toPath());
-      System.out.println(fileOrig.toString()+" deleted!");
+      System.out.println(fileOrig.toString() + " deleted!");
     }
   }
 
-  private void recoverCopiedFilesFromCorpus() throws IOException{
+
+  private void recoverCopiedFilesFromCorpus() throws IOException {
+
     // Labeled data
-    for (String fileName : this.getCorpus().getTrainingLabeledData()){
-      String fileNameComplete = fileName+".conll.orig";
+    for (String fileName : this.getCorpus().getTrainingLabeledData()) {
+      String fileNameComplete = fileName + ".conll.orig";
       recoverCopyConllFile(fileNameComplete);
     }
-    for (String fileName : this.getCorpus().getDevLabeledData()){
-      String fileNameComplete = fileName+".conll.orig";
+    for (String fileName : this.getCorpus().getDevLabeledData()) {
+      String fileNameComplete = fileName + ".conll.orig";
       recoverCopyConllFile(fileNameComplete);
     }
-    for (String fileName : this.getCorpus().getTestLabeledData()){
-      String fileNameComplete = fileName+".conll.orig";
+    for (String fileName : this.getCorpus().getTestLabeledData()) {
+      String fileNameComplete = fileName + ".conll.orig";
       recoverCopyConllFile(fileNameComplete);
     }
 
     // Unlabeled data
-    for (String fileName : this.getCorpus().getTrainingUnLabeledData()){
-      String fileNameComplete = fileName+".orig";
+    for (String fileName : this.getCorpus().getTrainingUnLabeledData()) {
+      String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
-    for (String fileName : this.getCorpus().getDevUnLabeledData()){
-      String fileNameComplete = fileName+".orig";
+    for (String fileName : this.getCorpus().getDevUnLabeledData()) {
+      String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
-    for (String fileName : this.getCorpus().getTestUnLabeledData()){
-      String fileNameComplete = fileName+".orig";
+    for (String fileName : this.getCorpus().getTestUnLabeledData()) {
+      String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
   }

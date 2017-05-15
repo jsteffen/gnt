@@ -1,22 +1,18 @@
 package recodev;
 
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Map;
 
-import data.Pair;
 import data.Window;
 import de.bwaldvogel.liblinear.FeatureNode;
-import features.WordFeatures;
 
 /*
  * If I understand MDP correctly, then first all training instances are collected
  * in two parallel list yList and xList, where yList keeps the label of instance i, and
- * xList keeps the feature vector of i which is a FeatureNode[]; 
+ * xList keeps the feature vector of i which is a FeatureNode[];
  * together with the max feature size
- * a problem is actually created; 
+ * a problem is actually created;
  * From de.dfki.lt.mdparser.parser.Trainer.constructProblem(List<Integer>, List<FeatureNode[]>, int)
  * problem.y is an array of size problem.l and each element keeps the label index of that training instance i
  * problem.x is a parallel array where each element keeps the FeatureNode[]
@@ -27,38 +23,48 @@ import features.WordFeatures;
  */
 
 public class ProblemInstance {
+
   private FeatureNode[] featureNodes;
 
-  // Setters and getters
-
-  public FeatureNode[] getFeatureNodes() {
-    return featureNodes;
-  }
-  public void setfeatureNodes(FeatureNode[] featureNodes) {
-    this.featureNodes = featureNodes;
-  }
 
   // Instance
 
   public ProblemInstance() {
   }
 
+
+  // Setters and getters
+
+  public FeatureNode[] getFeatureNodes() {
+
+    return this.featureNodes;
+  }
+
+
+  public void setfeatureNodes(FeatureNode[] featureNodes) {
+
+    this.featureNodes = featureNodes;
+  }
+
+
   // Methods
+
 
   //HIERIX
   public void createProblemInstanceFromWindow(FeatureMap featureMap) {
 
     this.setfeatureNodes(new FeatureNode[featureMap.getFeatureMap().size()]);
-    
+
     int offSet = 0;
-    for(Map.Entry<Integer,Double> entry : featureMap.getFeatureMap().entrySet()) {
-       Integer key = entry.getKey();
-       Double value = entry.getValue();
-       featureNodes[offSet] = new FeatureNode(key, value);
-       offSet++;
-       
+    for (Map.Entry<Integer, Double> entry : featureMap.getFeatureMap().entrySet()) {
+      Integer key = entry.getKey();
+      Double value = entry.getValue();
+      this.featureNodes[offSet] = new FeatureNode(key, value);
+      offSet++;
+
     }
   }
+
 
   /**
    * This is a method that checks whether a feature vector is well-formed
@@ -67,19 +73,21 @@ public class ProblemInstance {
    * It is activated when TrainerInMem.debug = true;
    * @param tokenWindow
    */
-  private void checkfeatureNodes(Window tokenWindow){
+  private void checkfeatureNodes(Window tokenWindow) {
+
     int lastValue = 0;
-    int fLen = this.featureNodes.length-1;
-    for (int i = 0; i < fLen;i++){
+    int fLen = this.featureNodes.length - 1;
+    for (int i = 0; i < fLen; i++) {
       FeatureNode x = this.featureNodes[i];
-      if (x.getIndex() <= lastValue){
+      if (x.getIndex() <= lastValue) {
         System.err.println(tokenWindow.toString());
-        throw new IllegalArgumentException("GN: feature nodes must be sorted by index in ascending order: " 
+        throw new IllegalArgumentException("GN: feature nodes must be sorted by index in ascending order: "
             + lastValue + "..." + x.getIndex() + " i= " + i + " value: " + x.getValue());
       }
       lastValue = x.getIndex();
     }
   }
+
 
   /**
    * This method saves the feature vector of the current window plus its given label directly
@@ -87,25 +95,28 @@ public class ProblemInstance {
    * @param instanceWriter
    * @param labelIndex
    */
-  public void saveProblemInstance(BufferedWriter instanceWriter, int labelIndex){
-    
+  public void saveProblemInstance(BufferedWriter instanceWriter, int labelIndex) {
+
     try {
-      instanceWriter.write(labelIndex+" "+this.toString());
+      instanceWriter.write(labelIndex + " " + this.toString());
       instanceWriter.newLine();
     } catch (IOException e) {
       e.printStackTrace();
-    }  
+    }
   }
 
-  public String toString(){
+
+  @Override
+  public String toString() {
+
     String output = "";
-    int fLen = this.featureNodes.length-1;
-    for (int i = 0; i < fLen;i++){
+    int fLen = this.featureNodes.length - 1;
+    for (int i = 0; i < fLen; i++) {
       FeatureNode x = this.featureNodes[i];
-      output += x.getIndex()+":"+x.getValue()+" ";
+      output += x.getIndex() + ":" + x.getValue() + " ";
     }
     output += this.featureNodes[fLen].getIndex()
-        +":"+this.featureNodes[fLen].getValue();
+        + ":" + this.featureNodes[fLen].getValue();
     return output;
   }
 

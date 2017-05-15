@@ -22,10 +22,10 @@ O - 'outside'
 U - 'unit'
 
 each line of input file is of form:
- dekonvens format: 
+ dekonvens format:
    8  Ecce  B-OTH  O
 
- conll 2003 format: 
+ conll 2003 format:
    4  Stadtverordnetenversammlung  NN  I-NC  I-ORG
    1  Nadim  NNP  I-NP  I-PER
 
@@ -41,10 +41,11 @@ Tag the last I-tagged token as L-tagged token.
 
 Everything else remains as it is.
 
-NOTE: 
+NOTE:
 Here I can later also add additional Tags for specific O-tags etc.
  */
 public class BIO2BILOUtransformer {
+
   private List<String> bioPhrase = new ArrayList<String>();
 
   private int labelPos = 0;
@@ -52,92 +53,96 @@ public class BIO2BILOUtransformer {
 
   // Setters and getters
 
+
   // Initialization
-  public BIO2BILOUtransformer(boolean conll2003){
-    if (conll2003)
-      labelPos = 4;
-    else
-      labelPos = 2;
+  public BIO2BILOUtransformer(boolean conll2003) {
+    if (conll2003) {
+      this.labelPos = 4;
+    } else {
+      this.labelPos = 2;
+    }
   }
+
 
   // Methods
 
   /**
    * Main mapper loop:
    * Idea is to firstly collect a bio-phrase, and then to map the BIO schema to the BILOU schema.
-   * 
+   *
    * @param line
    * @param writer
    */
 
   public void mapBIOtoBILOUschema(String line, BufferedWriter writer) {
-    String[] splitLine = line.split(sepChar);
 
-    if (splitLine.length==1)
-    {
+    String[] splitLine = line.split(this.sepChar);
+
+    if (splitLine.length == 1) {
       try {
         writer.write(line + "\n");
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }
-    else {
-      String neLabel = splitLine[labelPos];
+    } else {
+      String neLabel = splitLine[this.labelPos];
 
-      if (neLabel.equals("O")){
+      if (neLabel.equals("O")) {
         // no NE label found, but we have an open bioPhrase, so close it and store it.
-        if (!bioPhrase.isEmpty()){
+        if (!this.bioPhrase.isEmpty()) {
           // close, map and save open bioPhrase
           mapAndWriteBioPhrase(writer);
           // - and reset it
-          bioPhrase = new ArrayList<String>();}
+          this.bioPhrase = new ArrayList<String>();
+        }
         // - write other line
         try {
           writer.write(line + "\n");
         } catch (IOException e) {
           e.printStackTrace();
         }
-      }
-      else
+      } else
         // neLabel starts with B- and we have an open bioPhrase
         // covers cases like O I-PER I-PER B-PER-I-PER I-ORG
         // close open bioPhrase and make a new bioPhrase
-        if (neLabel.startsWith("B-")){
+        if (neLabel.startsWith("B-")) {
           // close, map and save open bioPhrase
           mapAndWriteBioPhrase(writer);
           // - and reset it
-          bioPhrase = new ArrayList<String>();
-          bioPhrase.add(line);
-        }
-        else
+          this.bioPhrase = new ArrayList<String>();
+          this.bioPhrase.add(line);
+        } else
           // should start with "I-"
-          if (neLabel.startsWith("I-")){
-            if (this.bioPhraseLastElemHasSameLabel(neLabel)){
+          if (neLabel.startsWith("I-")) {
+            if (this.bioPhraseLastElemHasSameLabel(neLabel)) {
               // open bioPhrase and current token have same type
-              bioPhrase.add(line);
-            }
-            else {
+              this.bioPhrase.add(line);
+            } else {
               // close, map and save open bioPhrase
               mapAndWriteBioPhrase(writer);
               // - and reset it
-              bioPhrase = new ArrayList<String>();
-              bioPhrase.add(line);
+              this.bioPhrase = new ArrayList<String>();
+              this.bioPhrase.add(line);
             }
           }
     }
   }
 
+
   private boolean bioPhraseLastElemHasSameLabel(String neLabel) {
-    return (!bioPhrase.isEmpty() &&
-        bioPhrase.get(bioPhrase.size()-1).split(sepChar)[labelPos].equals(neLabel)
-        );
+
+    return (!this.bioPhrase.isEmpty()
+        && this.bioPhrase.get(this.bioPhrase.size() - 1).split(this.sepChar)[this.labelPos].equals(neLabel));
   }
 
+
   private void mapAndWriteBioPhrase(BufferedWriter writer) {
+
     writeBioPhrase(
-        mapBio2Bilou(bioPhrase), 
+        mapBio2Bilou(this.bioPhrase),
         writer);
   }
+
 
   /**
    * Main mapper function for BOI to BILOU
@@ -149,41 +154,44 @@ public class BIO2BILOUtransformer {
    * @return
    */
   private List<String> mapBio2Bilou(List<String> bioPhrase) {
+
     List<String> bilouPhrase = new ArrayList<String>();
-    if (bioPhrase.size()==1){
+    if (bioPhrase.size() == 1) {
       String bilouLine = makeNewBilouLine(bioPhrase.get(0), "U-");
       bilouPhrase.add(bilouLine);
 
-    }
-    else
-      if (bioPhrase.size() > 1){
-        String firstBilouLine = makeNewBilouLine(bioPhrase.get(0), "B-");
-        bilouPhrase.add(firstBilouLine);
-        for (int i=1; i < bioPhrase.size()-1; i++){
-          bilouPhrase.add(bioPhrase.get(i));
-        }
-        String lastBilouLine = makeNewBilouLine(bioPhrase.get(bioPhrase.size()-1), "L-");
-        bilouPhrase.add(lastBilouLine);
+    } else if (bioPhrase.size() > 1) {
+      String firstBilouLine = makeNewBilouLine(bioPhrase.get(0), "B-");
+      bilouPhrase.add(firstBilouLine);
+      for (int i = 1; i < bioPhrase.size() - 1; i++) {
+        bilouPhrase.add(bioPhrase.get(i));
       }
+      String lastBilouLine = makeNewBilouLine(bioPhrase.get(bioPhrase.size() - 1), "L-");
+      bilouPhrase.add(lastBilouLine);
+    }
     return bilouPhrase;
   }
+
 
   // This actually changes the BOI tag to an BILOU tag, by copying the string and only change the label part
   // TODO
   // Could be more efficient by using a internal data structure instead of the line.
   private String makeNewBilouLine(String bioLine, String neLabelPrefix) {
-    String[] lineSplit = bioLine.split(sepChar);
+
+    String[] lineSplit = bioLine.split(this.sepChar);
     String bilouLine = lineSplit[0];
-    String newlabel = neLabelPrefix + lineSplit[labelPos].split("-")[1];
-    lineSplit[labelPos] = newlabel;
-    for (int i = 1; i < lineSplit.length; i++){
-      bilouLine += sepChar+lineSplit[i];
+    String newlabel = neLabelPrefix + lineSplit[this.labelPos].split("-")[1];
+    lineSplit[this.labelPos] = newlabel;
+    for (int i = 1; i < lineSplit.length; i++) {
+      bilouLine += this.sepChar + lineSplit[i];
     }
     return bilouLine;
   }
 
+
   private void writeBioPhrase(List<String> bioPhrase, BufferedWriter writer) {
-    for (int i=0; i < bioPhrase.size(); i++){
+
+    for (int i = 0; i < bioPhrase.size(); i++) {
       try {
         writer.write(bioPhrase.get(i) + "\n");
       } catch (IOException e) {
@@ -193,6 +201,7 @@ public class BIO2BILOUtransformer {
 
   }
 
+
   /**
    * Main driver for handling a BIO input file and makign a BILOU outfile
    * @param sourceFileName
@@ -201,9 +210,10 @@ public class BIO2BILOUtransformer {
    * @param targetEncoding
    * @throws IOException
    */
-  public  void transcode(String sourceFileName, String sourceEncoding,
+  public void transcode(String sourceFileName, String sourceEncoding,
       String targetFileName, String targetEncoding)
           throws IOException {
+
     // init reader
     BufferedReader reader = new BufferedReader(
         new InputStreamReader(
@@ -232,46 +242,47 @@ public class BIO2BILOUtransformer {
 
 
   public static void main(String[] args) throws Exception {
+
     BIO2BILOUtransformer bilou = new BIO2BILOUtransformer(true);
     // EN data
-    bilou.transcode("resources/data/ner/en/eng-train.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/en/eng-train.conll",
+        "utf-8",
         "resources/data/ner/bilou/eng-train.conll",
         "utf-8");
-    bilou.transcode("resources/data/ner/en/eng-testa.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/en/eng-testa.conll",
+        "utf-8",
         "resources/data/ner/bilou/eng-testa.conll",
         "utf-8");
-    bilou.transcode("resources/data/ner/en/eng-testb.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/en/eng-testb.conll",
+        "utf-8",
         "resources/data/ner/bilou/eng-testb.conll",
         "utf-8");
 
     // DE data
-    bilou.transcode("resources/data/ner/de/deu-train.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/de/deu-train.conll",
+        "utf-8",
         "resources/data/ner/bilou/deu-train.conll",
         "utf-8");
-    bilou.transcode("resources/data/ner/de/deu-testa.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/de/deu-testa.conll",
+        "utf-8",
         "resources/data/ner/bilou/deu-testa.conll",
         "utf-8");
-    bilou.transcode("resources/data/ner/de/deu-testb.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/de/deu-testb.conll",
+        "utf-8",
         "resources/data/ner/bilou/deu-testb.conll",
         "utf-8");
     // DE konvens data
     bilou = new BIO2BILOUtransformer(false);
-    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.train.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.train.conll",
+        "utf-8",
         "resources/data/ner/bilou/deu.konvens.train.conll",
         "utf-8");
-    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.dev.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.dev.conll",
+        "utf-8",
         "resources/data/ner/bilou/deu.konvens.dev.conll",
         "utf-8");
-    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.test.conll", 
-        "utf-8", 
+    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.test.conll",
+        "utf-8",
         "resources/data/ner/bilou/deu.konvens.test.conll",
         "utf-8");
   }

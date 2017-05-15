@@ -6,7 +6,7 @@ import java.util.List;
 
 public class GntSplitTokenizer {
 
-  public static String[] splitTokenizer(String string){
+  public static String[] splitTokenizer(String string) {
     //System.out.println(">>>"+string+"<<<");
 
     String delims = "[ |\\,|\\:|\\.|\\\"|\\(|\\)|\\!|\\?]+";
@@ -15,8 +15,8 @@ public class GntSplitTokenizer {
     String[] tokens = string.split(delims);
 
     // GN: This is a cheap trick to remove empty strings
-    final List<String> list =  new ArrayList<String>();
-    Collections.addAll(list, tokens); 
+    final List<String> list = new ArrayList<String>();
+    Collections.addAll(list, tokens);
     list.remove("");
     tokens = list.toArray(new String[list.size()]);
     return tokens;

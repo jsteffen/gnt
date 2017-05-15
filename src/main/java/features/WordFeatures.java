@@ -10,17 +10,18 @@ import data.Pair;
 /**
  * A word features consists  of its components:
  * - left distributed word features
- * - right distributed word features 
+ * - right distributed word features
  * - shape features
  * - suffix features
  * - cluster features
- * 
+ *
  * they are represented by a list of pairs using relative index and value.
  * Where value can be double or boolean
  *  @author gune00
  *
  */
 public class WordFeatures {
+
   private String word = "";
   private String leftWord = "";
   private String rightWord = "";
@@ -34,207 +35,309 @@ public class WordFeatures {
   private int labelOffset = 0;
   private boolean adjust = false;
   private int length = 0;
-  
+
 
   private int labelIndex = -1;
   private OffSets offSets;
 
 
-  private List<Pair<Integer,Double>> left = new ArrayList<Pair<Integer,Double>>();
-  private List<Pair<Integer,Double>> right = new ArrayList<Pair<Integer,Double>>();
-  private List<Pair<Integer,Boolean>> suffix = new ArrayList<Pair<Integer,Boolean>>();
+  private List<Pair<Integer, Double>> left = new ArrayList<Pair<Integer, Double>>();
+  private List<Pair<Integer, Double>> right = new ArrayList<Pair<Integer, Double>>();
+  private List<Pair<Integer, Boolean>> suffix = new ArrayList<Pair<Integer, Boolean>>();
   // I am using here lists although we only have always one element
-  private List<Pair<Integer,Boolean>> shape = new ArrayList<Pair<Integer,Boolean>>();
-  private List<Pair<Integer,Boolean>> cluster = new ArrayList<Pair<Integer,Boolean>>();
-  private List<Pair<Integer,Boolean>> label = new ArrayList<Pair<Integer,Boolean>>();
+  private List<Pair<Integer, Boolean>> shape = new ArrayList<Pair<Integer, Boolean>>();
+  private List<Pair<Integer, Boolean>> cluster = new ArrayList<Pair<Integer, Boolean>>();
+  private List<Pair<Integer, Boolean>> label = new ArrayList<Pair<Integer, Boolean>>();
 
-  //Setters and getters
-  
-  
-  public List<Pair<Integer, Double>> getLeft() {
-    return left;
-  }
-  public void setLeft(List<Pair<Integer, Double>> left) {
-    this.left = left;
-  }
-  
-  public OffSets getOffSets() {
-    return offSets;
-  }
-  public void setOffSets(OffSets offSets) {
-    this.offSets = offSets;
-  }
-  public int getLabelIndex() {
-    return labelIndex;
-  }
-  public void setLabelIndex(int labelIndex) {
-    this.labelIndex = labelIndex;
-  }
-  
-  public List<Pair<Integer, Boolean>> getLabel() {
-    return label;
-  }
-  public void setLabel(List<Pair<Integer, Boolean>> label) {
-    this.label = label;
-  }
-  public List<Pair<Integer, Double>> getRight() {
-    return right;
-  }
-  public void setRight(List<Pair<Integer, Double>> right) {
-    this.right = right;
-  }
-  public List<Pair<Integer, Boolean>> getSuffix() {
-    return suffix;
-  }
-  public void setSuffix(List<Pair<Integer, Boolean>> suffix) {
-    this.suffix = suffix;
-  }
-  public List<Pair<Integer, Boolean>> getShape() {
-    return shape;
-  }
-  public void setShape(List<Pair<Integer, Boolean>> shape) {
-    this.shape = shape;
-  }
-  public List<Pair<Integer, Boolean>> getCluster() {
-    return cluster;
-  }
-  public void setCluster(List<Pair<Integer, Boolean>> cluster) {
-    this.cluster = cluster;
-  }
-  public int getIndex() {
-    return index;
-  }
-  public void setIndex(int index) {
-    this.index = index;
-  }
-  public boolean isAdjust() {
-    return adjust;
-  }
-  public void setAdjust(boolean adjust) {
-    this.adjust = adjust;
-  }
-  public int getLength() {
-    return length;
-  }
-  public void setLength(int length) {
-    this.length = length;
-  }
-  public String getWord() {
-    return word;
-  }
-  public void setWord(String word) {
-    this.word = word;
-  }
-  public String getLeftWord() {
-    return leftWord;
-  }
-  public void setLeftWord(String leftWord) {
-    this.leftWord = leftWord;
-  }
-  public String getRightWord() {
-    return rightWord;
-  }
-  public void setRightWord(String rightWord) {
-    this.rightWord = rightWord;
-  }
+
   // Instantiation
   public WordFeatures(String word) {
     this.word = word;
   }
 
-  // Methods
 
   public WordFeatures(String word2, String l, String r) {
     this.word = word2;
     this.leftWord = l;
     this.rightWord = r;
   }
+
+
+  //Setters and getters
+
+  public List<Pair<Integer, Double>> getLeft() {
+
+    return this.left;
+  }
+
+
+  public void setLeft(List<Pair<Integer, Double>> left) {
+
+    this.left = left;
+  }
+
+
+  public OffSets getOffSets() {
+
+    return this.offSets;
+  }
+
+
+  public void setOffSets(OffSets offSets) {
+
+    this.offSets = offSets;
+  }
+
+
+  public int getLabelIndex() {
+
+    return this.labelIndex;
+  }
+
+
+  public void setLabelIndex(int labelIndex) {
+
+    this.labelIndex = labelIndex;
+  }
+
+
+  public List<Pair<Integer, Boolean>> getLabel() {
+
+    return this.label;
+  }
+
+
+  public void setLabel(List<Pair<Integer, Boolean>> label) {
+
+    this.label = label;
+  }
+
+
+  public List<Pair<Integer, Double>> getRight() {
+
+    return this.right;
+  }
+
+
+  public void setRight(List<Pair<Integer, Double>> right) {
+
+    this.right = right;
+  }
+
+
+  public List<Pair<Integer, Boolean>> getSuffix() {
+
+    return this.suffix;
+  }
+
+
+  public void setSuffix(List<Pair<Integer, Boolean>> suffix) {
+
+    this.suffix = suffix;
+  }
+
+
+  public List<Pair<Integer, Boolean>> getShape() {
+
+    return this.shape;
+  }
+
+
+  public void setShape(List<Pair<Integer, Boolean>> shape) {
+
+    this.shape = shape;
+  }
+
+
+  public List<Pair<Integer, Boolean>> getCluster() {
+
+    return this.cluster;
+  }
+
+
+  public void setCluster(List<Pair<Integer, Boolean>> cluster) {
+
+    this.cluster = cluster;
+  }
+
+
+  public int getIndex() {
+
+    return this.index;
+  }
+
+
+  public void setIndex(int index) {
+
+    this.index = index;
+  }
+
+
+  public boolean isAdjust() {
+
+    return this.adjust;
+  }
+
+
+  public void setAdjust(boolean adjust) {
+
+    this.adjust = adjust;
+  }
+
+
+  public int getLength() {
+
+    return this.length;
+  }
+
+
+  public void setLength(int length) {
+
+    this.length = length;
+  }
+
+
+  public String getWord() {
+
+    return this.word;
+  }
+
+
+  public void setWord(String word) {
+
+    this.word = word;
+  }
+
+
+  public String getLeftWord() {
+
+    return this.leftWord;
+  }
+
+
+  public void setLeftWord(String leftWord) {
+
+    this.leftWord = leftWord;
+  }
+
+
+  public String getRightWord() {
+
+    return this.rightWord;
+  }
+
+
+  public void setRightWord(String rightWord) {
+
+    this.rightWord = rightWord;
+  }
+
+
+  // Methods
+
+
   // GN on 14.10.2015
   // I have to shift offset by OffSets.tokenVectorSize + 1, and so later have to remove the +1
   // NOTE: I need to know which offset I need to substract the final -1
   public void setOffSetsOld(Alphabet alphabet, OffSets offSets) {
-    elementOffset = (index * offSets.getTokenVectorSize()) + 1;
-    leftOffset = elementOffset;
-    rightOffset = leftOffset + offSets.getWvLeftSize();
-    shapeOffset = rightOffset + offSets.getWvRightSize();
-    suffixOffset = shapeOffset + offSets.getShapeSize();
-    suffixOffset = (alphabet.isWithClusterFeats())?suffixOffset:suffixOffset-1;
-    clusterIdOffset = suffixOffset + offSets.getSuffixSize() -1;
-  }
-  
-  public void setOffSets(Alphabet alphabet, OffSets offSets) {
-    elementOffset = (index * offSets.getTokenVectorSize()) + 1;
-    leftOffset = elementOffset;
-    rightOffset = leftOffset + offSets.getWvLeftSize();
-    shapeOffset = rightOffset + offSets.getWvRightSize();
-    suffixOffset = shapeOffset + offSets.getShapeSize();
-    clusterIdOffset = suffixOffset + offSets.getSuffixSize();
-    clusterIdOffset = (alphabet.isWithLabelFeats())?clusterIdOffset:clusterIdOffset-1;
-    labelOffset = clusterIdOffset + offSets.getClusterIdSize() ;
+
+    this.elementOffset = (this.index * offSets.getTokenVectorSize()) + 1;
+    this.leftOffset = this.elementOffset;
+    this.rightOffset = this.leftOffset + offSets.getWvLeftSize();
+    this.shapeOffset = this.rightOffset + offSets.getWvRightSize();
+    this.suffixOffset = this.shapeOffset + offSets.getShapeSize();
+    this.suffixOffset = (alphabet.isWithClusterFeats()) ? this.suffixOffset : this.suffixOffset - 1;
+    this.clusterIdOffset = this.suffixOffset + offSets.getSuffixSize() - 1;
   }
 
-  public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train){
+
+  public void setOffSets(Alphabet alphabet, OffSets offSets) {
+
+    this.elementOffset = (this.index * offSets.getTokenVectorSize()) + 1;
+    this.leftOffset = this.elementOffset;
+    this.rightOffset = this.leftOffset + offSets.getWvLeftSize();
+    this.shapeOffset = this.rightOffset + offSets.getWvRightSize();
+    this.suffixOffset = this.shapeOffset + offSets.getShapeSize();
+    this.clusterIdOffset = this.suffixOffset + offSets.getSuffixSize();
+    this.clusterIdOffset = (alphabet.isWithLabelFeats()) ? this.clusterIdOffset : this.clusterIdOffset - 1;
+    this.labelOffset = this.clusterIdOffset + offSets.getClusterIdSize();
+  }
+
+
+  public void fillWordFeatures(String word, int index, Alphabet alphabet, boolean train) {
+
     // if word is a sentence padding element, then just return an empty WordFeatures
-    if (word.endsWith("<BOUNDARY>")) return;
+    if (word.endsWith("<BOUNDARY>")) {
+      return;
+    }
 
     if (alphabet.isWithWordFeats()) {
       fillLeftDistributedWordFeatures(word, alphabet, train, true);
       fillRightDistributedWordFeatures(word, alphabet, train, true);
     }
-    if (alphabet.isWithShapeFeats())
+    if (alphabet.isWithShapeFeats()) {
       fillShapeFeatures(word, index, alphabet, true);
-    if (alphabet.isWithSuffixFeats())
+    }
+    if (alphabet.isWithSuffixFeats()) {
       fillSuffixFeatures(word, alphabet, true);
-    if (alphabet.isWithClusterFeats())
+    }
+    if (alphabet.isWithClusterFeats()) {
       fillClusterIdFeatures(word, alphabet, true);
-    if (alphabet.isWithLabelFeats())
+    }
+    if (alphabet.isWithLabelFeats()) {
       fillLabelFeatures(word, alphabet, true);
+    }
   }
+
 
   // boolean flag offline means: assume that features have been pre-loaded into to memory
   // boolean train means: training phase, which means do not handle unknown words
   // NOTE: since word is from input stream, need to lower-case it first
   private void fillLeftDistributedWordFeatures(String word,
       Alphabet alphabet, boolean train, boolean offline) {
+
     String lowWord = word.toLowerCase();
     String lowLeftWord = this.getLeftWord().toLowerCase();
     String lowRightWord = this.getRightWord().toLowerCase();
     // This may return a dynamically created word vector for unknown words
-    WordDistributedFeature distributedWordVector = 
+    WordDistributedFeature distributedWordVector =
         alphabet.getWordVectorFactory().getWordVector(lowWord, lowLeftWord, lowRightWord, train);
-    for (int i = 0; i < distributedWordVector.getLeftContext().length; i++){
-      int index = ((this.isAdjust())?(this.leftOffset+i):i);
+    for (int i = 0; i < distributedWordVector.getLeftContext().length; i++) {
+      int index = ((this.isAdjust()) ? (this.leftOffset + i) : i);
       double value = distributedWordVector.getLeftContext()[i];
       if (value > 0) {
-        Pair<Integer,Double> node = new Pair<Integer,Double>(index, value);
-        left.add(node);
+        Pair<Integer, Double> node = new Pair<Integer, Double>(index, value);
+        this.left.add(node);
       }
     }
-    length += left.size();
+    this.length += this.left.size();
   }
+
 
   private void fillRightDistributedWordFeatures(String word,
       Alphabet alphabet, boolean train, boolean offline) {
+
     // since word is from input stream, need to lower-case it first
     String lowWord = word.toLowerCase();
     String lowLeftWord = this.getLeftWord().toLowerCase();
     String lowRightWord = this.getRightWord().toLowerCase();
-    WordDistributedFeature distributedWordVector = 
+    WordDistributedFeature distributedWordVector =
         alphabet.getWordVectorFactory().getWordVector(lowWord, lowLeftWord, lowRightWord, train);
-    for (int i = 0; i < distributedWordVector.getRightContext().length; i++){
-      int index = ((this.isAdjust())?(this.rightOffset+i):i);
+    for (int i = 0; i < distributedWordVector.getRightContext().length; i++) {
+      int index = ((this.isAdjust()) ? (this.rightOffset + i) : i);
       double value = distributedWordVector.getRightContext()[i];
       if (value > 0) {
-        Pair<Integer,Double> node = new Pair<Integer,Double>(index, value);
-        right.add(node);
+        Pair<Integer, Double> node = new Pair<Integer, Double>(index, value);
+        this.right.add(node);
       }
     }
-    length += right.size();
+    this.length += this.right.size();
   }
 
-  /** 
+
+  /**
    * boolean flag offline means: assume that known signatures have been pre-loaded into to memory
-   * NOTE: even in training phase, signature are computed dynamically 
+   * NOTE: even in training phase, signature are computed dynamically
    * NOTE: we assume that a word has a unique signature so the list shape actually only contains a single element.
    * NOTE: word is case-sensitive, because otherwise shape feature can be computed reliable!
    * @param word
@@ -245,29 +348,33 @@ public class WordFeatures {
   // NOTE: it is an overhead to keep a list of shapes, because we always have a single element,
   // but it keeps code more transparent
   private void fillShapeFeatures(String word, int index, Alphabet alphabet, boolean offline) {
+
     int wordShapeIndex = alphabet.getWordShapeFactory().getShapeFeature(word, index);
     if (wordShapeIndex > -1) {
-      //System.out.println("Word: " + word + " Shape: " + alphabet.getWordShapeFactory().getIndex2signature().get(wordShapeIndex));
-      int realIndex = (this.isAdjust())?(this.shapeOffset+wordShapeIndex):wordShapeIndex;
-      Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
-      shape.add(node);
-    }
-    else
-    {
+      /*
+      System.out.println("Word: " + word + " Shape: "
+          + alphabet.getWordShapeFactory().getIndex2signature().get(wordShapeIndex));
+      */
+      int realIndex = (this.isAdjust()) ? (this.shapeOffset + wordShapeIndex) : wordShapeIndex;
+      Pair<Integer, Boolean> node = new Pair<Integer, Boolean>(realIndex, true);
+      this.shape.add(node);
+    } else {
       // we have an unknown signature, so we cannot add it to the list
       // which basically means that shape-size() will remain 0
       System.err.println("Word: " + word + " at loc: " + index + ": unknown signature!");
 
     }
     // should be always 1
-    length += shape.size();
+    this.length += this.shape.size();
   }
 
-  /** boolean flag offline means: assume that suffixes have been preprocessed 
+
+  /** boolean flag offline means: assume that suffixes have been preprocessed
    * and pre-loaded into to memory
    * NOTE: word is lowerCased!
    */
   private void fillSuffixFeatures(String word, Alphabet alphabet, boolean offline) {
+
     /*
      * Lowercase word
      * Create all suffixes for word
@@ -278,18 +385,19 @@ public class WordFeatures {
     String lowWord = word.toLowerCase();
     List<Integer> suffixIndices = alphabet.getWordSuffixFactory().getAllKnownSubstringsForWord(lowWord);
     //if (suffixIndices.isEmpty()) System.err.println("No known suffixes: " + word);
-    for (int x : suffixIndices){
-      int realIndex = (this.isAdjust())?(this.suffixOffset+x):x;
-      Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
-      suffix.add(node);
+    for (int x : suffixIndices) {
+      int realIndex = (this.isAdjust()) ? (this.suffixOffset + x) : x;
+      Pair<Integer, Boolean> node = new Pair<Integer, Boolean>(realIndex, true);
+      this.suffix.add(node);
     }
     // this means that if word has no known suffix, then suffix list is 0
-    length += suffix.size();
+    this.length += this.suffix.size();
   }
 
-  /** 
+
+  /**
    * boolean flag offline means: assume that known cluster IDs have been pre-loaded into to memory
-   * NOTE: even in training phase, signature are computed dynamically 
+   * NOTE: even in training phase, signature are computed dynamically
    * NOTE: we assume that a word has a unique signature so the list cluster IDs actually only contains a single element.
    * NOTE: word is case-sensitive, because otherwise cluster IDs feature can be computed reliable!
    * @param word
@@ -299,79 +407,88 @@ public class WordFeatures {
   // NOTE: it is an overhead to keep a list of cluster IDs, because we always have a single element,
   // but it keeps code more transparent
   private void fillClusterIdFeatures(String word, Alphabet alphabet, boolean offline) {
+
     int wordClusterIndex = alphabet.getWordClusterFactory().getClusterIdFeature(word);
     if (wordClusterIndex > -1) {
-      int realIndex = (this.isAdjust())?(this.clusterIdOffset+wordClusterIndex):wordClusterIndex;
+      int realIndex = (this.isAdjust()) ? (this.clusterIdOffset + wordClusterIndex) : wordClusterIndex;
       //System.out.println("Word: " + word + " ClusterId: " + wordClusterIndex + " Realindex: " + realIndex);
-      Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
-      cluster.add(node);
-    }
-    else
-    {
+      Pair<Integer, Boolean> node = new Pair<Integer, Boolean>(realIndex, true);
+      this.cluster.add(node);
+    } else {
       // we have an unknown word with no cluster Id,
       // This should not happen, because unknown words are matched to <RARE> dummy word, if
       // not found
       System.err.println("Word: " + word + ": unknown clusterID!");
     }
     // should be always 1
-    length += cluster.size();
+    this.length += this.cluster.size();
   }
-  
+
+
   private void fillLabelFeatures(String word, Alphabet alphabet, boolean offline) {
-    int labelIndex = (this.getLabelIndex() > -1)?this.getLabelIndex():this.getOffSets().getLabelVectorSize();
-    int realIndex = (this.isAdjust())?(this.labelOffset+labelIndex):labelIndex;
-    
-    //System.out.println("Word: " + word + " LabelId: " + this.getLabelIndex() + " LabelIndex: " + labelIndex + " Realindex: " + realIndex);
-    Pair<Integer,Boolean> node = new Pair<Integer,Boolean>(realIndex, true);
-    label.add(node);
+
+    int labelIndex = (this.getLabelIndex() > -1) ? this.getLabelIndex() : this.getOffSets().getLabelVectorSize();
+    int realIndex = (this.isAdjust()) ? (this.labelOffset + labelIndex) : labelIndex;
+
+    /*
+    System.out.println("Word: " + word + " LabelId: " + this.getLabelIndex()
+        + " LabelIndex: " + labelIndex + " Realindex: " + realIndex);
+    */
+    Pair<Integer, Boolean> node = new Pair<Integer, Boolean>(realIndex, true);
+    this.label.add(node);
     // should be always 1
-    length += label.size();
+    this.length += this.label.size();
   }
+
 
   // String representations
 
-  public String toOffSetsString(){
-    String output = "\nElement-"+this.getIndex()+"\n";
+  public String toOffSetsString() {
+
+    String output = "\nElement-" + this.getIndex() + "\n";
     output += "OffSets:\n";
-    output += "Element: " + this.elementOffset +"\n";
-    output += "Length: " + this.length +"\n";
-    output += "Left: " + this.leftOffset +"\n";
-    output += "Right: " + this.rightOffset +"\n";
-    output += "Shape: " + this.shapeOffset +"\n";
-    output += "Suffix: " + this.suffixOffset +"\n";
-    output += "ClusterId: " + this.clusterIdOffset +"\n";
-    output += "Label: " + this.labelOffset +"\n";
-    return output;  
+    output += "Element: " + this.elementOffset + "\n";
+    output += "Length: " + this.length + "\n";
+    output += "Left: " + this.leftOffset + "\n";
+    output += "Right: " + this.rightOffset + "\n";
+    output += "Shape: " + this.shapeOffset + "\n";
+    output += "Suffix: " + this.suffixOffset + "\n";
+    output += "ClusterId: " + this.clusterIdOffset + "\n";
+    output += "Label: " + this.labelOffset + "\n";
+    return output;
   }
 
-  public String toString(){
-    String output = "\nElement-"+this.getIndex();
+
+  @Override
+  public String toString() {
+
+    String output = "\nElement-" + this.getIndex();
     output += this.toOffSetsString();
-    output +="\nLeft: ";
-    for (Pair<Integer,Double> pair : this.left){
-      output+=pair.toString();
+    output += "\nLeft: ";
+    for (Pair<Integer, Double> pair : this.left) {
+      output += pair.toString();
     }
-    output +="\nRight: ";
-    for (Pair<Integer,Double> pair : this.right){
-      output+=pair.toString();
+    output += "\nRight: ";
+    for (Pair<Integer, Double> pair : this.right) {
+      output += pair.toString();
     }
-    output +="\nSuffix: ";
-    for (Pair<Integer,Boolean> pair : this.suffix){
-      output+=pair.toString();
+    output += "\nSuffix: ";
+    for (Pair<Integer, Boolean> pair : this.suffix) {
+      output += pair.toString();
     }
-    output +="\nShape: ";
-    for (Pair<Integer,Boolean> pair : this.shape){
-      output+=pair.toString();
+    output += "\nShape: ";
+    for (Pair<Integer, Boolean> pair : this.shape) {
+      output += pair.toString();
     }
-    
-    output +="\nCluster: ";
-    for (Pair<Integer,Boolean> pair : this.cluster){
-      output+=pair.toString();
+
+    output += "\nCluster: ";
+    for (Pair<Integer, Boolean> pair : this.cluster) {
+      output += pair.toString();
     }
-    
-    output +="\nLabel: ";
-    for (Pair<Integer,Boolean> pair : this.label){
-      output+=pair.toString();
+
+    output += "\nLabel: ";
+    for (Pair<Integer, Boolean> pair : this.label) {
+      output += pair.toString();
     }
     return output;
   }

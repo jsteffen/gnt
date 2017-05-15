@@ -50,9 +50,9 @@ import de.bwaldvogel.liblinear.SolverType;
  *<p>
  * My idea is to create directly a FeatureNode list from a training instance
  * by using the relative indices from the alphabet and using corresponding offsets.
- * In order to do so, I need the tokenVectorSize in advance (non-incremental version) or 
- * I need to create an intermediate representation with window-size many sublists of sublist (for the token feature parts)
- * with relative indices, for which I then create the final one (incremental version);
+ * In order to do so, I need the tokenVectorSize in advance (non-incremental version) or
+ * I need to create an intermediate representation with window-size many sublists of sublist (for the token
+ * feature parts) with relative indices, for which I then create the final one (incremental version);
  * such a intermediate representation should be useful for testing anyway.
  * </p>
  * @author gune00
@@ -60,14 +60,15 @@ import de.bwaldvogel.liblinear.SolverType;
  */
 
 public class TrainerInMem {
+
+  public static boolean debug = false;
   private Data data = new Data();
   private Alphabet alphabet = new Alphabet();
-  private Archivator archivator ;
+  private Archivator archivator;
   private OffSets offSets = new OffSets();
   private GlobalParams globalParams = new GlobalParams();
   private int windowSize = 2;
   private ModelInfo modelInfo = new ModelInfo();
-  public static boolean debug = false;
 
   // API/Values for Liblinear
   // GN: biased -> used in Problem() -> if => 0 add extra feature
@@ -80,88 +81,28 @@ public class TrainerInMem {
 
   private Problem problem = new Problem();
 
-  // Setters and getters
-
-  public Data getData() {
-    return data;
-  }
-  public void setData(Data data) {
-    this.data = data;
-  }
-  public ModelInfo getModelInfo() {
-    return modelInfo;
-  }
-  public void setModelInfo(ModelInfo modelInfo) {
-    this.modelInfo = modelInfo;
-  }
-  public Alphabet getAlphabet() {
-    return alphabet;
-  }
-  public void setAlphabet(Alphabet alphabet) {
-    this.alphabet = alphabet;
-  }
-  public Archivator getArchivator() {
-    return archivator;
-  }
-  public void setArchivator(Archivator archivator) {
-    this.archivator = archivator;
-  }
-  public OffSets getOffSets() {
-    return offSets;
-  }
-  public void setOffSets(OffSets offSets) {
-    this.offSets = offSets;
-  }
-  public int getWindowSize() {
-    return windowSize;
-  }
-  public void setWindowSize(int windowSize) {
-    this.windowSize = windowSize;
-  }
-  public double getBias() {
-    return bias;
-  }
-  public void setBias(double bias) {
-    this.bias = bias;
-  }
-  public Parameter getParameter() {
-    return parameter;
-  }
-  public void setParameter(Parameter parameter) {
-    this.parameter = parameter;
-  }
-  public Problem getProblem() {
-    return problem;
-  }
-  public void setProblem(Problem problem) {
-    this.problem = problem;
-  }
-  public GlobalParams getGlobalParams() {
-    return globalParams;
-  }
-  public void setGlobalParams(GlobalParams globalParams) {
-    this.globalParams = globalParams;
-  }
   // Instances
-//  public TrainerInMem (){
-//  }
-//
-//  public TrainerInMem (int windowSize){
-//    this.setWindowSize(windowSize);
-//  }
-//
-//  public TrainerInMem (ModelInfo modelInfo, int windowSize){
-//    this.setWindowSize(windowSize);
-//    this.setModelInfo(modelInfo);
-//    this.setData(new Data());
-//
-//    this.setParameter(new Parameter(
-//        modelInfo.getSolver(),
-//        modelInfo.getC(),
-//        modelInfo.getEps()));
-//  }
-  
-  public TrainerInMem (Archivator archivator, ModelInfo modelInfo, Alphabet alphabet, GlobalParams globals, int windowSize){
+  //  public TrainerInMem (){
+  //  }
+  //
+  //  public TrainerInMem (int windowSize){
+  //    this.setWindowSize(windowSize);
+  //  }
+  //
+  //  public TrainerInMem (ModelInfo modelInfo, int windowSize){
+  //    this.setWindowSize(windowSize);
+  //    this.setModelInfo(modelInfo);
+  //    this.setData(new Data());
+  //
+  //    this.setParameter(new Parameter(
+  //        modelInfo.getSolver(),
+  //        modelInfo.getC(),
+  //        modelInfo.getEps()));
+  //  }
+
+
+  public TrainerInMem(Archivator archivator, ModelInfo modelInfo, Alphabet alphabet, GlobalParams globals,
+      int windowSize) {
     this.setGlobalParams(globals);
     this.setWindowSize(windowSize);
     this.setModelInfo(modelInfo);
@@ -175,6 +116,129 @@ public class TrainerInMem {
         modelInfo.getEps()));
   }
 
+
+  // Setters and getters
+
+  public Data getData() {
+
+    return this.data;
+  }
+
+
+  public void setData(Data data) {
+
+    this.data = data;
+  }
+
+
+  public ModelInfo getModelInfo() {
+
+    return this.modelInfo;
+  }
+
+
+  public void setModelInfo(ModelInfo modelInfo) {
+
+    this.modelInfo = modelInfo;
+  }
+
+
+  public Alphabet getAlphabet() {
+
+    return this.alphabet;
+  }
+
+
+  public void setAlphabet(Alphabet alphabet) {
+
+    this.alphabet = alphabet;
+  }
+
+
+  public Archivator getArchivator() {
+
+    return this.archivator;
+  }
+
+
+  public void setArchivator(Archivator archivator) {
+
+    this.archivator = archivator;
+  }
+
+
+  public OffSets getOffSets() {
+
+    return this.offSets;
+  }
+
+
+  public void setOffSets(OffSets offSets) {
+
+    this.offSets = offSets;
+  }
+
+
+  public int getWindowSize() {
+
+    return this.windowSize;
+  }
+
+
+  public void setWindowSize(int windowSize) {
+
+    this.windowSize = windowSize;
+  }
+
+
+  public double getBias() {
+
+    return this.bias;
+  }
+
+
+  public void setBias(double bias) {
+
+    this.bias = bias;
+  }
+
+
+  public Parameter getParameter() {
+
+    return this.parameter;
+  }
+
+
+  public void setParameter(Parameter parameter) {
+
+    this.parameter = parameter;
+  }
+
+
+  public Problem getProblem() {
+
+    return this.problem;
+  }
+
+
+  public void setProblem(Problem problem) {
+
+    this.problem = problem;
+  }
+
+
+  public GlobalParams getGlobalParams() {
+
+    return this.globalParams;
+  }
+
+
+  public void setGlobalParams(GlobalParams globalParams) {
+
+    this.globalParams = globalParams;
+  }
+
+
   // Methods
 
   /*
@@ -184,10 +248,10 @@ public class TrainerInMem {
    * - init window
    * - init offsets
    * - init liblinear (non-incremental version, since needs feature vector size)
-   * 
+   *
    * - readConllTrainingFile
    * - create sentence object
-   * 
+   *
    * - loop through sentence object
    * - create training instance frames and store
    * - after all frames have been computed
@@ -206,14 +270,15 @@ public class TrainerInMem {
    * @throws IOException
    */
   private void createWindowFramesFromSentence() throws IOException {
+
     // for each token t_i of current training sentence do
     // System.out.println("Sentence no: " + data.getSentenceCnt());
     int mod = 100000;
-    for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++){
+    for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++) {
       int labelIndex = this.getData().getSentence().getLabelArray()[i];
       // create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 
-      Window tokenWindow = new Window(this.getData().getSentence(), i, windowSize, data, alphabet);
+      Window tokenWindow = new Window(this.getData().getSentence(), i, this.windowSize, this.data, this.alphabet);
       tokenWindow.setLabelIndex(labelIndex);
 
       this.getData().getInstances().add(tokenWindow);
@@ -226,29 +291,33 @@ public class TrainerInMem {
     }
   }
 
+
   /**
-   * Loops through a file where each line is conll encoded, collect tokens to a sentence 
+   * Loops through a file where each line is conll encoded, collect tokens to a sentence
    * and call windows creator on sentence.
    * Steps involved:
    * <p>- collect conll tokens in list
    * <p>- create internal sentence object and label maps
-   * <p>- create window frames and store in list (non-feature filled windows): 
+   * <p>- create window frames and store in list (non-feature filled windows):
    *      I do this, because each window is then filled iteratively when calling the trainer; it actually saves space
    * <p>-  Finally, feature files for label set and word set lists are created and stored for taggerName
    * @param conllReader
    * @param max if -1 then infinite else max sentences are processed and then methods stops
    * @throws IOException
    */
-  private void createTrainingInstancesFromConllReader(BufferedReader conllReader, int max) throws IOException{
+  private void createTrainingInstancesFromConllReader(BufferedReader conllReader, int max) throws IOException {
+
     String line = "";
     List<String[]> tokens = new ArrayList<String[]>();
 
     while ((line = conllReader.readLine()) != null) {
       if (line.isEmpty()) {
-        if  ((max > 0) && (data.getSentenceCnt() > max)) break;
+        if ((max > 0) && (this.data.getSentenceCnt() > max)) {
+          break;
+        }
 
         // create internal sentence object and label maps
-        data.generateSentenceObjectFromConllLabeledSentence(tokens);
+        this.data.generateSentenceObjectFromConllLabeledSentence(tokens);
 
         // System.out.println("In:  " + this.taggedSentenceToString());
 
@@ -257,24 +326,25 @@ public class TrainerInMem {
 
         // reset tokens
         tokens = new ArrayList<String[]>();
-      }
-      else {
+      } else {
         String[] tokenizedLine = line.split("\t");
         tokens.add(tokenizedLine);
       }
     }
     conllReader.close();
-    data.saveLabelSet();
-    data.saveWordSet();
+    this.data.saveLabelSet();
+    this.data.saveWordSet();
     System.out.println("... done");
   }
+
 
   /**
    * initialize problem for liblinear using
    * Window.windowCnt for problem.l (training instance size)
    * OffSets.windowVectorSize for problem.n (OffSets.tokenVectorSize*windowSize+1)
    */
-  private void initProblem(){
+  private void initProblem() {
+
     Problem problem = new Problem();
     problem.l = Window.windowCnt;
     //problem.n = OffSets.windowVectorSize;
@@ -290,6 +360,7 @@ public class TrainerInMem {
     System.out.println("problem.x.size: " + problem.x.length);
   }
 
+
   /**
    * Loop through all window frames. Fill the window, adjust the feature indices
    * and create a feature vector for the filled window.
@@ -297,9 +368,10 @@ public class TrainerInMem {
    * is added to problem.y
    * @param train
    * @param adjust
-   * @throws IOException 
+   * @throws IOException
    */
   private void constructProblem(boolean train, boolean adjust) throws IOException {
+
     int mod = 10000;
     int problemCnt = 0;
 
@@ -308,21 +380,22 @@ public class TrainerInMem {
     // current element has index i
     this.initProblem();
 
-    for (int i = 0; i < data.getInstances().size();i++){
-      Window nextWindow = data.getInstances().get(i);
+    for (int i = 0; i < this.data.getInstances().size(); i++) {
+      Window nextWindow = this.data.getInstances().get(i);
       nextWindow.setOffSets(this.getOffSets());
       nextWindow.fillWindow(train, adjust);
       ProblemInstance problemInstance = new ProblemInstance();
       problemInstance.createProblemInstanceFromWindow(nextWindow);
       problemCnt++;
 
-      this.getProblem().y[i]=nextWindow.getLabelIndex();
-      this.getProblem().x[i]=problemInstance.getFeatureVector();
+      this.getProblem().y[i] = nextWindow.getLabelIndex();
+      this.getProblem().x[i] = problemInstance.getFeatureVector();
 
-      if (this.getGlobalParams().isSaveModelInputFile())
+      if (this.getGlobalParams().isSaveModelInputFile()) {
         problemInstance.saveProblemInstance(
             this.getModelInfo().getModelInputFileWriter(),
             nextWindow.getLabelIndex());
+      }
 
       nextWindow.clean();
 
@@ -332,7 +405,7 @@ public class TrainerInMem {
         System.out.println("************");
         System.out.println("Problem instances created: " + problemCnt);
       }
-    }  
+    }
 
     // Number of feature can be set here, because we know the number of examples now.
     System.out.println("Window lenght: " + this.getProblem().x[0].length);
@@ -340,25 +413,31 @@ public class TrainerInMem {
 
   }
 
+
   /**
    * The wrapper to liblinear trainer.
    * @throws IOException
    */
-  
-  private void checkProblem(){
+
+  private void checkProblem() {
+
     for (Feature[] nodes : this.getProblem().x) {
 
-            if (nodes == null) System.out.println("shit!!");
-            int indexBefore = 0;
-            for (Feature n : nodes) {
-                if (n.getIndex() <= indexBefore) {
-                    throw new IllegalArgumentException("feature nodes must be sorted by index in ascending order");
-                }
-            }
+      if (nodes == null) {
+        System.out.println("shit!!");
+      }
+      int indexBefore = 0;
+      for (Feature n : nodes) {
+        if (n.getIndex() <= indexBefore) {
+          throw new IllegalArgumentException("feature nodes must be sorted by index in ascending order");
         }
+      }
+    }
   }
-  
+
+
   private void runLiblinearTrainer() throws IOException {
+
     long time1;
     long time2;
     Linear.disableDebugOutput();
@@ -369,18 +448,19 @@ public class TrainerInMem {
     System.out.println("Do training:");
     Model model = Linear.train(this.getProblem(), this.getParameter());
     time2 = System.currentTimeMillis();
-    System.out.println("System time (msec): " + (time2-time1));
+    System.out.println("System time (msec): " + (time2 - time1));
 
-    System.out.println("Save  model file: " + modelInfo.getModelFile());
+    System.out.println("Save  model file: " + this.modelInfo.getModelFile());
     time1 = System.currentTimeMillis();
-    model.save(new File(modelInfo.getModelFile()));
+    model.save(new File(this.modelInfo.getModelFile()));
     time2 = System.currentTimeMillis();
-    System.out.println("System time (msec): " + (time2-time1));    
+    System.out.println("System time (msec): " + (time2 - time1));
   }
+
 
   /**
    * Main pipeline for training a liblinear model from a training file with conll encoded labeled
-   * examples. 
+   * examples.
    * @param sourceFileName
    * @param max
    * @throws IOException
@@ -388,11 +468,12 @@ public class TrainerInMem {
   //TODO: currently runs only a single training file
   public void trainFromConllTrainingFileInMemory(String sourceFileName, int max)
       throws IOException {
+
     long time1;
     long time2;
 
     BufferedReader conllReader = new BufferedReader(
-        new InputStreamReader(new FileInputStream(sourceFileName),"UTF-8"));
+        new InputStreamReader(new FileInputStream(sourceFileName), "UTF-8"));
     boolean train = true;
     boolean adjust = true;
 
@@ -405,8 +486,8 @@ public class TrainerInMem {
     System.out.println("Create conll training instances ...");
     this.createTrainingInstancesFromConllReader(conllReader, max);
     time2 = System.currentTimeMillis();
-    System.out.println("System time (msec): " + (time2-time1));
-    
+    System.out.println("System time (msec): " + (time2 - time1));
+
     this.getOffSets().initializeOffsets(
         this.getAlphabet(), this.getData(), this.getWindowSize());
 
@@ -420,32 +501,30 @@ public class TrainerInMem {
     time1 = System.currentTimeMillis();
     this.constructProblem(train, adjust);
     time2 = System.currentTimeMillis();
-    System.out.println("System time (msec): " + (time2-time1));  
+    System.out.println("System time (msec): " + (time2 - time1));
 
-    System.out.println("Average window vector lenght: " + ProblemInstance.cumLength/Window.windowCnt);
-    System.out.println("Approx. GB needed: " + 
-        ((ProblemInstance.cumLength/Window.windowCnt)*
-            Window.windowCnt*8+Window.windowCnt)/1000000000.0);
+    System.out.println("Average window vector lenght: " + ProblemInstance.cumLength / Window.windowCnt);
+    System.out.println("Approx. GB needed: "
+        + ((ProblemInstance.cumLength / Window.windowCnt) * Window.windowCnt * 8 + Window.windowCnt) / 1000000000.0);
 
     // Do learning
     /*
-     * If ModelInfo.saveModelInputFile=true, then close model input file stream 
+     * If ModelInfo.saveModelInputFile=true, then close model input file stream
      * but do not do training; useful if liblinear should be run directly from shell, e.g., using the C-implementation
      */
     // NOTE this is the only place, where I make use of the model input file
-    if (this.getGlobalParams().isSaveModelInputFile()){
+    if (this.getGlobalParams().isSaveModelInputFile()) {
       time1 = System.currentTimeMillis();
       // Close the model input file writer buffer
       this.getModelInfo().getModelInputFileWriter().close();
       time2 = System.currentTimeMillis();
-      System.out.println("Complete time for creating  and writing model input file (msec): " + (time2-time1));
-    } 
-    // ELSE DO training with java library
-    else {
+      System.out.println("Complete time for creating  and writing model input file (msec): " + (time2 - time1));
+    } else {
+      // ELSE DO training with java library
       time1 = System.currentTimeMillis();
       this.runLiblinearTrainer();
       time2 = System.currentTimeMillis();
-      System.out.println("Complete time for training and writing model (msec): " + (time2-time1));
+      System.out.println("Complete time for training and writing model (msec): " + (time2 - time1));
     }
     // Add labelSet and wordSet from Data()
     this.getArchivator().getFilesToPack().add(this.getData().getLabelMapFileName());
@@ -458,16 +537,20 @@ public class TrainerInMem {
     System.out.println("... Done!");
   }
 
+
   // Printing helpers
-  public String taggedSentenceToString(){
-    String output ="";
+  public String taggedSentenceToString() {
+
+    String output = "";
     int mod = 10;
     int cnt = 0;
-    for (int i=0; i < this.getData().getSentence().getWordArray().length;i++){
-      output += this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i])+"/"+
-          this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i])+" ";
+    for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++) {
+      output += this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i]) + "/"
+          + this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i]) + " ";
       cnt++;
-      if ((cnt % mod)==0) output+="\n";
+      if ((cnt % mod) == 0) {
+        output += "\n";
+      }
     }
     return output;
 
