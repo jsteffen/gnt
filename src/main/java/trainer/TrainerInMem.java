@@ -23,42 +23,42 @@ import de.bwaldvogel.liblinear.Parameter;
 import de.bwaldvogel.liblinear.Problem;
 import de.bwaldvogel.liblinear.SolverType;
 
-
 /**
+ * <pre>
+ * <code>
  * General usage of API (from http://liblinear.bwaldvogel.de/ & https://github.com/bwaldvogel/liblinear-java):
-
-  <p>Problem problem = new Problem();
-  <p>problem.l = ... // number of training examples
-  <p>problem.n = ... // number of features
-  <p>problem.x = ... // feature nodes
-  <p>problem.y = ... // target values
-
-  <p>SolverType solver = SolverType.L2R_LR; // -s 0
-  <p>double C = 1.0;    // cost of constraints violation
-  <p>double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
-
-  <p>Parameter parameter = new Parameter(solver, C, eps);
-  <p>Model model = Linear.train(problem, parameter);
-  <p>File modelFile = new File("model");
-  <p>model.save(modelFile);
-  <p>// load model or use it directly
-  <p>model = Model.load(modelFile);
-<p>
-  <p>Feature[] instance = { new FeatureNode(1, 4), new FeatureNode(2, 2) };
-  <p>double prediction = Linear.predict(model, instance);
-
- *<p>
+ *
+ * Problem problem = new Problem();
+ * problem.l = ... // number of training examples
+ * problem.n = ... // number of features
+ * problem.x = ... // feature nodes
+ * problem.y = ... // target values
+ *
+ * SolverType solver = SolverType.L2R_LR; // -s 0
+ * double cost = 1.0;    // cost of constraints violation
+ * double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
+ *
+ * Parameter parameter = new Parameter(solver, cost, eps);
+ * Model model = Linear.train(problem, parameter);
+ * File modelFile = new File("model");
+ * model.save(modelFile);
+ * // load model or use it directly
+ * model = Model.load(modelFile);
+ *
+ * Feature[] instance = { new FeatureNode(1, 4), new FeatureNode(2, 2) };
+ * double prediction = Linear.predict(model, instance);
+ *
  * My idea is to create directly a FeatureNode list from a training instance
  * by using the relative indices from the alphabet and using corresponding offsets.
  * In order to do so, I need the tokenVectorSize in advance (non-incremental version) or
  * I need to create an intermediate representation with window-size many sublists of sublist (for the token
  * feature parts) with relative indices, for which I then create the final one (incremental version);
  * such a intermediate representation should be useful for testing anyway.
- * </p>
- * @author gune00
+ * </code>
+ * </pre>
  *
+ * @author Günter Neumann, DFKI
  */
-
 public class TrainerInMem {
 
   private static boolean debug = false;
@@ -74,14 +74,13 @@ public class TrainerInMem {
   // GN: biased -> used in Problem() -> if => 0 add extra feature
   private double bias = -1;
   // GN: default values as used in Flors
-  // C -> cost of constraints violation
+  // cost -> cost of constraints violation
   // eps -> stopping criteria; influences number of iterations performed, the higher the less
 
   private Parameter parameter = new Parameter(SolverType.L2R_LR, 1.0, 0.01);
 
   private Problem problem = new Problem();
 
-  // Instances
   //  public TrainerInMem (){
   //  }
   //
@@ -112,12 +111,9 @@ public class TrainerInMem {
 
     this.setParameter(new Parameter(
         modelInfo.getSolver(),
-        modelInfo.getC(),
+        modelInfo.getCost(),
         modelInfo.getEps()));
   }
-
-
-  // Setters and getters
 
 
   public static void setDebug(boolean debug) {
@@ -252,8 +248,6 @@ public class TrainerInMem {
   }
 
 
-  // Methods
-
   /*
    * training steps
    * - init corpus
@@ -352,7 +346,7 @@ public class TrainerInMem {
 
 
   /**
-   * initialize problem for liblinear using
+   * Initialize problem for liblinear using
    * Window.windowCnt for problem.l (training instance size)
    * OffSets.windowVectorSize for problem.n (OffSets.tokenVectorSize*windowSize+1)
    */
@@ -429,7 +423,6 @@ public class TrainerInMem {
    * The wrapper to liblinear trainer.
    * @throws IOException
    */
-
   private void checkProblem() {
 
     for (Feature[] nodes : this.getProblem().x) {
@@ -566,6 +559,5 @@ public class TrainerInMem {
       }
     }
     return output;
-
   }
 }

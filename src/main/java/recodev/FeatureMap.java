@@ -3,6 +3,11 @@ package recodev;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class FeatureMap {
 
   private Map<Integer, Double> featureMap = new TreeMap<Integer, Double>();
@@ -33,6 +38,4 @@ public class FeatureMap {
 
     this.featureMap = featureMap;
   }
-
-
 }

@@ -16,6 +16,11 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class Archivator {
 
   private String archiveName;
@@ -23,14 +28,12 @@ public class Archivator {
   private List<String> filesToPack = new ArrayList<String>();
 
 
-  // Creator
   public Archivator(String archiveName) {
     this.archiveName = archiveName;
     this.archiveMap = new HashMap<String, InputStream>();
   }
 
 
-  //Setters and getters
   public List<String> getFilesToPack() {
 
     return this.filesToPack;
@@ -67,11 +70,8 @@ public class Archivator {
   }
 
 
-  // Methods
-
   /**
-   * Creates a stream to the archive name, and adds all files collected in variable
-   * filesToPack
+   * Creates a stream to the archive name, and adds all files collected in variable filesToPack.
    * @throws IOException
    */
   public void pack() throws IOException {

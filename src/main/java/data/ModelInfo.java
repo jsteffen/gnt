@@ -8,6 +8,11 @@ import java.io.UnsupportedEncodingException;
 
 import de.bwaldvogel.liblinear.SolverType;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class ModelInfo {
 
   private SolverType solver = SolverType.L2R_LR; // -s 0
@@ -23,7 +28,6 @@ public class ModelInfo {
   private BufferedWriter modelInputFileWriter = null;
 
 
-  //
   public ModelInfo() {
   }
 
@@ -67,7 +71,7 @@ public class ModelInfo {
   }
 
 
-  public double getC() {
+  public double getCost() {
 
     return this.cost;
   }
@@ -183,7 +187,7 @@ public class ModelInfo {
 
     String output = "ModelInfo:\n";
     output += "Solver: " + this.getSolver() + "\n";
-    output += "C: " + this.getC() + "\n";
+    output += "Cost: " + this.getCost() + "\n";
     output += "Eps: " + this.getEps() + "\n";
     output += "ModelFilePrefix: " + this.getModelFilePrefix() + "\n";
     output += "ModelFileNames: " + this.getModelFile() + "\n";

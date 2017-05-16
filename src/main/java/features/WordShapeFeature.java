@@ -3,26 +3,27 @@ package features;
 /**
  * We use the Berkeley parser word signatures (Petrov and Klein, 2007).
  * cf.
+ * <pre>
+ * {@code
  * https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeatureExtractor.java
  * https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeature.java
- *
+ * }
+ * </pre>
  * Each word is mapped to a bit string encompassing 16 binary indicators that correspond to different orthographic
  * (e.g., does the word contain a digit, hyphen, upper case character) and morphological (e.g., does the
  * word end in -ed or -ing) features.
- * There are 50 unique signatures in WSJ.
- * We set the dimension of f_shape(w) that corresponds to the signature of w to 1 and all other dimensions to 0.
+ * <p>There are 50 unique signatures in WSJ.
+ * <p>We set the dimension of f_shape(w) that corresponds to the signature of w to 1 and all other dimensions to 0.
  * We note that the shape features we use were designed for English and probably would have to be adjusted for other
  * languages.
- * @author gune00
  *
+ * @author Günter Neumann, DFKI
  */
-
 public class WordShapeFeature {
 
-  /** I guess: ALL_CAPS means: always initial capital (as for NE in English); INIT_CAP means:
+  /**
+   * I guess: ALL_CAPS means: always initial capital (as for NE in English); INIT_CAP means:
    * only capital in initial sentence position.
-   * @author gune00
-   *
    */
   enum MorphFeature {
     ALL_CAPS,
@@ -65,7 +66,6 @@ public class WordShapeFeature {
   }
 
 
-  // getters and setters
   public MorphFeature[] getNum2MorphFeature() {
 
     return this.num2MorphFeature;
@@ -112,7 +112,10 @@ public class WordShapeFeature {
   }
 
 
-  // Default truth value is false, so flipping means, change it to true
+  /**
+   * Default truth value is false, so flipping means, change it to true
+   * @param morphFeature
+   */
   public void setBit(MorphFeature morphFeature) {
 
     switch (morphFeature) {
@@ -268,8 +271,10 @@ public class WordShapeFeature {
   }
 
 
-  // Define: make binary string and use this for signature cache -> eventually is faster -> YES
-
+  /**
+   * Define: make binary string and use this for signature cache -> eventually is faster -> YES
+   * @return
+   */
   public String toBinaryString() {
 
     String bitsetString = "";

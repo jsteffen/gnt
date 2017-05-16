@@ -5,6 +5,11 @@ import java.util.List;
 
 import archive.Archivator;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class Data {
 
   // counted from 0, 2nd column in conll in case of POS, else 0 for NER
@@ -24,7 +29,6 @@ public class Data {
   private String wordMapFileName = null;
 
 
-  // Instances
   public Data() {
 
   }
@@ -34,9 +38,6 @@ public class Data {
     this.labelMapFileName = featureFilePathname + taggerName + "/labelSet.txt";
     this.wordMapFileName = featureFilePathname + taggerName + "/wordSet.txt";
   }
-
-
-  // Setters and getters
 
 
   public static int getWordFormIndex() {
@@ -147,9 +148,6 @@ public class Data {
   }
 
 
-  // Methods
-
-
   private int updateWordMap(String word) {
 
     return this.getWordSet().updateSetIndexMap(word);
@@ -189,10 +187,10 @@ public class Data {
 
 
   /**
-   * tokens are a list of words in form of conll strings.
-   * - the words are unlabeled
-   * - No lower case here of word
-   * - Using a dummy POS "UNK" encoded as -1
+   * Tokens are a list of words in form of conll strings.
+   * <li> the words are unlabeled
+   * <li> No lower case here of word
+   * <li> Using a dummy POS "UNK" encoded as -1
    * @param tokens
    */
   public void generateSentenceObjectFromConllUnLabeledSentence(List<String[]> tokens) {
@@ -211,10 +209,10 @@ public class Data {
 
 
   /**
-   * tokens are a vector of words in form of strings.
-   * - the words are unlabeled
-   * - No lower case here of word
-   * - Using a dummy POS "UNK" encoded as -1
+   * Tokens are a vector of words in form of strings.
+   * <li> the words are unlabeled
+   * <li> No lower case here of word
+   * <li> Using a dummy POS "UNK" encoded as -1
    * @param tokens
    */
   public void generateSentenceObjectFromUnlabeledTokens(String[] tokens) {
@@ -297,6 +295,4 @@ public class Data {
         + " labels: " + this.getLabelSet().getLabelCnt() + "\n";
     return output;
   }
-
-
 }

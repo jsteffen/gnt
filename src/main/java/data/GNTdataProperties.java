@@ -12,6 +12,11 @@ import java.util.Properties;
 import de.bwaldvogel.liblinear.SolverType;
 import features.WordSuffixFeatureFactory;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class GNTdataProperties extends Properties {
 
   public static final String configTmpFileName = "src/main/resources/dataConfig.xml";
@@ -23,8 +28,8 @@ public class GNTdataProperties extends Properties {
   private ModelInfo modelInfo = new ModelInfo();
 
 
-  // call setters via class instantiation
   public GNTdataProperties(String propsFileName) {
+    // call setters via class instantiation
     try {
       this.setGntProps(propsFileName);
       this.setGlobalParamsFromProperties();
@@ -157,6 +162,4 @@ public class GNTdataProperties extends Properties {
       e.printStackTrace();
     }
   }
-
-
 }

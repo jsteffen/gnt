@@ -9,16 +9,16 @@ import data.Pair;
 
 /**
  * A word features consists  of its components:
- * - left distributed word features
- * - right distributed word features
- * - shape features
- * - suffix features
- * - cluster features
+ * <li> left distributed word features
+ * <li> right distributed word features
+ * <li> shape features
+ * <li> suffix features
+ * <li> cluster features
  *
- * they are represented by a list of pairs using relative index and value.
+ * They are represented by a list of pairs using relative index and value.
  * Where value can be double or boolean
- *  @author gune00
  *
+ * @author Günter Neumann, DFKI
  */
 public class WordFeatures {
 
@@ -50,7 +50,6 @@ public class WordFeatures {
   private List<Pair<Integer, Boolean>> label = new ArrayList<Pair<Integer, Boolean>>();
 
 
-  // Instantiation
   public WordFeatures(String word) {
     this.word = word;
   }
@@ -62,8 +61,6 @@ public class WordFeatures {
     this.rightWord = r;
   }
 
-
-  //Setters and getters
 
   public List<Pair<Integer, Double>> getLeft() {
 
@@ -233,9 +230,6 @@ public class WordFeatures {
   }
 
 
-  // Methods
-
-
   // GN on 14.10.2015
   // I have to shift offset by OffSets.tokenVectorSize + 1, and so later have to remove the +1
   // NOTE: I need to know which offset I need to substract the final -1
@@ -369,7 +363,8 @@ public class WordFeatures {
   }
 
 
-  /** boolean flag offline means: assume that suffixes have been preprocessed
+  /**
+   * boolean flag offline means: assume that suffixes have been preprocessed
    * and pre-loaded into to memory
    * NOTE: word is lowerCased!
    */
@@ -441,8 +436,6 @@ public class WordFeatures {
     this.length += this.label.size();
   }
 
-
-  // String representations
 
   public String toOffSetsString() {
 

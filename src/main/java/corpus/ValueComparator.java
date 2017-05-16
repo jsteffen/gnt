@@ -3,6 +3,11 @@ package corpus;
 import java.util.Comparator;
 import java.util.Map;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 final class ValueComparator implements Comparator<String> {
 
   private Map<String, Integer> map;

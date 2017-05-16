@@ -18,13 +18,13 @@ import data.GlobalParams;
 
 /**
  * This class takes as input a conll file of gold tags and predicted tags
- * - computes accuracy
- * - and writes out a file with extension .debug of all false tags in form of
- *   line number: word gold-tag predicted-tag
- * - a file with extension .errs of all wrong tag-pairs gold-tag predicted-tag together with ist frequency
- * - a file with extension .iob containing just the words and their predicetd tags
- * @author gune00
+ * <li> computes accuracy
+ * <li> and writes out a file with extension .debug of all false tags in form of line number: word gold-tag
+ * predicted-tag
+ * <li> a file with extension .errs of all wrong tag-pairs gold-tag predicted-tag together with ist frequency
+ * <li> a file with extension .iob containing just the words and their predicetd tags
  *
+ * @author Günter Neumann, DFKI
  */
 public class EvalConllFile {
 
@@ -220,7 +220,7 @@ public class EvalConllFile {
   }
 
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
     // This is for testing
     // This reads saved vocabulary from training corpus
@@ -229,6 +229,10 @@ public class EvalConllFile {
     EvalConllFile evalFile = new EvalConllFile();
     evalFile.data.readWordSet();
 
-    evalFile.computeAccuracy(globals.getEvalFilePathname() + "/tiger2_posmorph_devel.txt", true);
+    try {
+      evalFile.computeAccuracy(globals.getEvalFilePathname() + "/tiger2_posmorph_devel.txt", true);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

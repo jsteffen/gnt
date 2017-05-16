@@ -4,6 +4,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public final class PostProcessor {
 
   private static Set<String> emoticon =
@@ -47,7 +52,5 @@ public final class PostProcessor {
     } else {
       return label;
     }
-
   }
-
 }

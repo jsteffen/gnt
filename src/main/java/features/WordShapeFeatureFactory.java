@@ -17,15 +17,14 @@ import archive.Archivator;
 
 /**
  * For each word given, check all shape features and set bit vector map accordingly.
- * Maintain a map of word - bit vector, so that a output file for the training set can be created - really needed ?
+ * <p>Maintain a map of word - bit vector, so that a output file for the training set can be created - really needed ?
  * Anyway, processing PTB should give me 50 different bit vectors instances (or signatures).
  * -> Basically I get only 49 !
- *
+ * <p>
  * NOTE: in principle: file operation not really needed here, because will be later done in one training class.
  * BUT then: take care that words are not lower cased, before calling this.
  *
- * @author gune00
- *
+ * @author Günter Neumann, DFKI
  */
 public class WordShapeFeatureFactory {
 
@@ -56,8 +55,6 @@ public class WordShapeFeatureFactory {
   private String featureFilePathname = "";
 
 
-  // Instances
-
   public WordShapeFeatureFactory() {
   }
 
@@ -78,8 +75,6 @@ public class WordShapeFeatureFactory {
     this.featureFilePathname = featureFilePathname;
   }
 
-
-  // Setters and getters
 
   public Map<String, WordShapeFeature> getWord2signature() {
 
@@ -116,8 +111,6 @@ public class WordShapeFeatureFactory {
     this.index2signature = index2signature;
   }
 
-
-  // Methods
 
   public void clean() {
 

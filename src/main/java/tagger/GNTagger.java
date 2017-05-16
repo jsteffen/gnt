@@ -26,6 +26,11 @@ import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
 import trainer.ProblemInstance;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class GNTagger {
 
   private static long tokenPersec = 0;
@@ -44,7 +49,6 @@ public class GNTagger {
   private long time2;
 
 
-  // Init
   public GNTagger() {
   }
 
@@ -95,7 +99,6 @@ public class GNTagger {
         this.dataProps.getGlobalParams().getNumberOfSentences(),
         this.dataProps.getAlphabet(),
         this.dataProps.getGlobalParams());
-
   }
 
 
@@ -124,8 +127,6 @@ public class GNTagger {
 
   }
 
-
-  // Setters and getters
 
   public GNTdataProperties getDataProps() {
 
@@ -235,8 +236,6 @@ public class GNTagger {
   }
 
 
-  // Methods
-
   public void initGNTagger(int windowSizeParam, int dim) throws UnsupportedEncodingException, IOException {
 
     this.time1 = System.currentTimeMillis();
@@ -284,10 +283,7 @@ public class GNTagger {
   }
 
 
-  /**
-   * The same as trainer.TrainerInMem.createWindowFramesFromSentence()!
-   * @throws IOException
-   */
+  // the same as trainer.TrainerInMem.createWindowFramesFromSentence()!
   private void createWindowFramesFromSentence() {
 
     // for each token t_i of current training sentence do
@@ -377,7 +373,6 @@ public class GNTagger {
   /**
    * A method for tagging a single sentence given as list of tokens.
    * @param tokens
-   * @throws IOException
    */
   public void tagUnlabeledTokens(String[] tokens) {
 
@@ -491,9 +486,7 @@ public class GNTagger {
     BufferedWriter conllWriter = new BufferedWriter(
         new OutputStreamWriter(new FileOutputStream(evalFileName), "UTF-8"));
 
-    /*
-     * Set the writer buffer for the model input file based on the given sourceFileName
-     */
+    // Set the writer buffer for the model input file based on the given sourceFileName
     if (this.getDataProps().getGlobalParams().isSaveModelInputFile()) {
       String fileName = new File(sourceFileName).getName();
       this.getModelInfo().setModelInputFileWriter(

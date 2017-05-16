@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public final class GntSplitTokenizer {
 
   private GntSplitTokenizer() {
@@ -27,5 +32,4 @@ public final class GntSplitTokenizer {
     tokens = list.toArray(new String[list.size()]);
     return tokens;
   }
-
 }

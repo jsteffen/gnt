@@ -10,8 +10,8 @@ import java.nio.file.StandardCopyOption;
  * That class saves the orig files to files with extension ".orig" before normalization is done.
  * The task of the CorpusRecoverer is to restore the original .conll and -sents.txt files and deleting
  * the .orig files afterwards.
- * @author gune00
  *
+ * @author Günter Neumann, DFKI
  */
 public class CorpusRecoverer {
 

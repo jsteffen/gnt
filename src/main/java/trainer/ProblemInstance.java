@@ -8,34 +8,30 @@ import data.Window;
 import de.bwaldvogel.liblinear.FeatureNode;
 import features.WordFeatures;
 
-/*
+/**
  * If I understand MDP correctly, then first all training instances are collected
  * in two parallel list yList and xList, where yList keeps the label of instance i, and
  * xList keeps the feature vector of i which is a FeatureNode[];
  * together with the max feature size
  * a problem is actually created;
- * From de.dfki.lt.mdparser.parser.Trainer.constructProblem(List<Integer>, List<FeatureNode[]>, int)
+ * <p>From de.dfki.lt.mdparser.parser.Trainer.constructProblem(List<Integer>, List<FeatureNode[]>, int)
  * problem.y is an array of size problem.l and each element keeps the label index of that training instance i
  * problem.x is a parallel array where each element keeps the FeatureNode[]
  * the size of each  FeatureNode[] depends on non-zero values; each element is a feature node.
  * so, in order to use a similar approach, I would need to collect all labels and feature vectors of
  * the training examples in some variables, and then create the problem.
  * At least, it seems that I cannot do it online without knowing prob.l and prob.n in advance.
+ *
+ * @author Günter Neumann, DFKI
  */
-
 public class ProblemInstance {
 
   private static int cumLength = 0;
   private FeatureNode[] featureVector;
 
 
-  // Instance
-
   public ProblemInstance() {
   }
-
-
-  // Setters and getters
 
 
   public static int getCumLength() {
@@ -56,7 +52,6 @@ public class ProblemInstance {
   }
 
 
-  // Methods
   /**
    * Given a tokenWindow (which is a list of Wordfeatures (which each is a list of feature-value pairs)),
    * compute a feature vector which is a naturally ordered enumeration of all feature values nodes of a problem instance
@@ -118,13 +113,12 @@ public class ProblemInstance {
     if (TrainerInMem.getDebug()) {
       this.checkFeatureVector(tokenWindow);
     }
-
   }
 
 
   /**
    * TODO
-   * This method is used to normaliuze a feature vector. It is yet not used, because
+   * Normalizes a feature vector. It is yet not used, because
    * not yet clear whether it is correctly defined.
    */
   private void normalizeFeatureVectorToUnitLenght() {
@@ -147,7 +141,7 @@ public class ProblemInstance {
 
 
   /**
-   * This is a method that checks whether a feature vector is well-formed
+   * Checks whether a feature vector is well-formed
    * wrt. to the definition of liblinear which requires that the features in the vector are in natural order.
    * <p>
    * It is activated when TrainerInMem.debug = true;
@@ -170,7 +164,7 @@ public class ProblemInstance {
 
 
   /**
-   * This method save the feature vector of the current window plus its given label directly
+   * Saves the feature vector of the current window plus its given label directly
    * as liblinear vector
    * @param instanceWriter
    * @param labelIndex
@@ -199,6 +193,4 @@ public class ProblemInstance {
         + ":" + this.featureVector[fLen].getValue();
     return output;
   }
-
-
 }

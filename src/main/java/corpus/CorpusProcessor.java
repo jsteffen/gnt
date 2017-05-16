@@ -12,6 +12,11 @@ import java.util.List;
 
 import data.GNTdataProperties;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class CorpusProcessor {
 
   private Corpus corpus = null;
@@ -53,20 +58,23 @@ public class CorpusProcessor {
   }
 
 
-  /*
-   * reads in a file of sentences in conll format and reads out each sentence lines-wise in a output file.
+  /**
+   * <pre>
+   * {@code
+   * Reads in a file of sentences in CONLL format and reads out each sentence lines-wise in a output file.
    * CONLL format:
    * - each word a line, sentence ends with newline
    * - word is at second position:
    * 1       The     _       DT      DT      _       2       NMOD
-   */
-  /**
-   * Receives a file in CONLL format and maps each CONLL sentence to a sentence, where each sentence
-   * is a line of words extracted from the CONLL sentence.
+   *
+   * Maps each CONLL sentence to a sentence, where each sentence is a line of words extracted from the CONLL sentence.
+   * }
+   * </pre>
    * @param sourceFileName
    * @param sourceEncoding
    * @param targetFileName
    * @param targetEncoding
+   * @param maxSent
    * @throws IOException
    */
   private void transcodeConllToSentenceFile(String sourceFileName, String sourceEncoding,
@@ -211,7 +219,7 @@ public class CorpusProcessor {
   // Main wrappers for processing all files defined in corpus for current used taggerName
 
   /**
-   * This is a wrapper to process a set of NER files. Currently, assuming conll 2003 format
+   * This is a wrapper to process a set of NER files. Currently, assuming conll 2003 format.
    */
   private void transcodeSourceFileToProperConllFormatFiles() {
 

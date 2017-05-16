@@ -1,12 +1,15 @@
 package data;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class Sentence {
 
   private int[] wordArray = new int[0];
   private int[] labelArray = new int[0];
 
-
-  // Instance
 
   public Sentence() {
   }
@@ -18,7 +21,6 @@ public class Sentence {
   }
 
 
-  // Setters and getters
   public int[] getWordArray() {
 
     return this.wordArray;
@@ -48,6 +50,4 @@ public class Sentence {
     this.getWordArray()[i] = wordIndex;
     this.getLabelArray()[i] = posIndex;
   }
-
-
 }

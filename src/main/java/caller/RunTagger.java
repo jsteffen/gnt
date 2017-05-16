@@ -13,8 +13,8 @@ import corpus.GNTcorpusProperties;
 /**
  * A test method for running GNT on same data set as FLORS and computing accuracies.
  * Actually, the first file is run in order to initialize compilation of all java objects.
- * @author gune00
  *
+ * @author Günter Neumann, DFKI
  */
 public final class RunTagger {
 
@@ -56,7 +56,14 @@ public final class RunTagger {
   }
 
 
-  // Used for running universal dependency treebanks as defined in project UniversalDepedencyBuilder
+  /**
+   * Used for running universal dependency treebanks as defined in project UniversalDepedencyBuilder
+   * @param archiveZipName
+   * @param corpusConfigFileName
+   * @param archiveTxtName
+   * @param debugTest
+   * @throws IOException
+   */
   public static void runner(String archiveZipName, String corpusConfigFileName, String archiveTxtName,
       boolean debugTest) throws IOException {
 

@@ -10,8 +10,7 @@ import features.WordSuffixFeatureFactory;
  * This class holds storage for the feature to liblinear indexing mappings.
  * It also defines which features are active/inactive
  *
- * @author gune00
- *
+ * @author Günter Neumann, DFKI
  */
 public class Alphabet {
 
@@ -27,7 +26,6 @@ public class Alphabet {
   private boolean withLabelFeats = false;
 
 
-  // Setters and getters
   public WordDistributedFeatureFactory getWordVectorFactory() {
 
     return this.wordVectorFactory;
@@ -136,12 +134,11 @@ public class Alphabet {
   }
 
 
-  // Methods
-
   /**
    * Load the precomputed features from file during training phase.
    * @param taggerName
    * @param dim
+   * @param featureFilePath
    */
   public void loadFeaturesFromFiles(String taggerName, int dim, String featureFilePath) {
 
@@ -165,6 +162,7 @@ public class Alphabet {
    * @param archivator
    * @param taggerName
    * @param dim
+   * @param featureFilePath
    */
   public void loadFeaturesFromFiles(Archivator archivator, String taggerName, int dim, String featureFilePath) {
 

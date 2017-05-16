@@ -1,32 +1,25 @@
 package data;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class GlobalParams {
 
-  /**
-   * Unique name of the tagger
-   */
+  // Unique name of the tagger
   private String taggerName = "";
 
-  /**
-   * Global path to features
-   */
+  // Global path to features
   private String featureFilePathname = "resources/features/";
 
-  /**
-   * Global path to eval files
-   */
+  // Global path to eval files
   private String evalFilePathname = "resources/eval/";
 
-  /**
-   * This is a global flag to trigger saving of model input file;
-   */
+  // This is a global flag to trigger saving of model input file
   private boolean saveModelInputFile = false;
 
-  /**
-   * Globals flags for defining window size, number of sentences, vector dimension and
-   * subsampling range.
-   */
-
+  // Globals flags for defining window size, number of sentences, vector dimension and subsampling range.
   private int windowSize = 2;
   private int numberOfSentences = -1;
   private int dim = 0;

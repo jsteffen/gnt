@@ -11,8 +11,8 @@ import java.util.List;
  * Punctuation are also isolated as single strings so can be used to split the token list into a list of sentences.
  * Output tokens can be lowCased or not.
  * Currently, developed for EN/DE like languages.
- * @author gune00
  *
+ * @author Günter Neumann, DFKI
  */
 public class GntTextSegmentizer {
 
@@ -39,7 +39,6 @@ public class GntTextSegmentizer {
   private List<List<String>> sentenceList = new ArrayList<List<String>>();
 
 
-  // Init classes
   public GntTextSegmentizer() {
   }
 
@@ -50,7 +49,6 @@ public class GntTextSegmentizer {
   }
 
 
-  // getters and setters
   public List<Character> getSpecialChars() {
 
     return this.specialChars;
@@ -183,12 +181,10 @@ public class GntTextSegmentizer {
   }
 
 
-  /*
-   * The idea is to define two points s and e which define a possible span over the input string vector.
-   * Depending on the type of char, a substring is extracted using current span information and a token is created.
-   * By making a new string form the substring and eventually lower-case the char or not.
-   * Thus the input string should be processed as a global variable
-   */
+  // The idea is to define two points s and e which define a possible span over the input string vector.
+  // Depending on the type of char, a substring is extracted using current span information and a token is created.
+  // By making a new string form the substring and eventually lower-case the char or not.
+  // Thus the input string should be processed as a global variable
 
   private String makeToken(int start, int end, boolean lowerCaseParam) {
 
@@ -272,14 +268,11 @@ public class GntTextSegmentizer {
     this.tokenList = new ArrayList<String>();
 
   }
-  /*
-   * This will be a loop which is terminated inside;
-   */
 
 
   /*
    * NOTE:
-   * in state 2, the FST jumbs to state 3 and 4
+   * in state 2, the FST jumps to state 3 and 4
    * to handle delimiters in numbers, as in 23.456 or 3,4e
    *.
    * The original morphix-reader jumped from 3 and 4 to state 5
@@ -314,6 +307,7 @@ public class GntTextSegmentizer {
 
     // System.err.println("Input (#" + il + "): " + inputString);
 
+    // This will be a loop which is terminated inside
     while (true) {
       //System.err.println("Start: " + start + " end: " + end + " State " + state +  " c: " + c);
 

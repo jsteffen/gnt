@@ -3,20 +3,11 @@ package caller;
 import java.io.IOException;
 
 /**
- * The main calls for training and tagging and testing with GNTagger
- * with arguments;
+ * The main calls for training and tagging and testing with GNTagger with arguments.
+ * <p>
  * Will be the main class for the self-contained image.
- * @author gune00
  *
- */
-
-/*
- * arguments:
- *
- * -mode train -dataConfig src/main/resources/dataProps/<configFile.xml>
- *   -corpusConfig src/main/resources/corpusProps/<configFile.xml> |
- * -mode test -archiveName resources/models/<archive.zip>
- *   -corpusConfig src/main/resources/corpusProps/<configFile.xml>
+ * @author Günter Neumann, DFKI
  */
 public class GNT {
 
@@ -154,18 +145,39 @@ public class GNT {
   }
 
 
-  public static void main(String[] args) throws IOException {
+  /**
+   * arguments:
+   * <pre>
+   * {@code
+   * -mode train
+   * -dataConfig src/main/resources/dataProps/<configFile.xml>
+   * -corpusConfig src/main/resources/corpusProps/<configFile.xml>
+   *
+   * or
+   *
+   * -mode test
+   * -archiveName resources/models/<archive.zip>
+   * -corpusConfig src/main/resources/corpusProps/<configFile.xml>
+   * }
+   * </pre>
+   *
+   * @param args
+   */
+  public static void main(String[] args) {
 
-    GNT newGNT = new GNT();
-    newGNT.setArgValues(args);
+    try {
+      GNT newGNT = new GNT();
+      newGNT.setArgValues(args);
 
-    if (newGNT.mode.equalsIgnoreCase("train")) {
-      newGNT.runGNTrainer();
-    } else if (newGNT.mode.equalsIgnoreCase("test")) {
-      newGNT.runGNTagger();
-    } else {
-      System.exit(1);
+      if (newGNT.mode.equalsIgnoreCase("train")) {
+        newGNT.runGNTrainer();
+      } else if (newGNT.mode.equalsIgnoreCase("test")) {
+        newGNT.runGNTagger();
+      } else {
+        System.exit(1);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
-
 }

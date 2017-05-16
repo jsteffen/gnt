@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 /**
+ * <pre>
+ * {@code
  * Map the tiger2 export format to conll POS format and create three conll files from it:
  * First 40,474 sentences -> tiger2-train-conll
  * Next 5000 -> tiger2-devel.conll
@@ -18,94 +20,75 @@ import java.io.OutputStreamWriter;
  *
  * Currently I will only map information needed for POS tagging, later also for
  * Chunk parsing, and eventually dependencies and NER;
- *
- *
- * @author gune00
- *
- */
-
-/**
  * Approach:
  * Tiger 2 relevant format:
-#BOS 1 0 1098266456 1 %% @SB2AV@
-``                      --                      $(      --              --      0
-Ross                    Ross                    NE      Nom.Sg.Masc     PNC     500
-Perot                   Perot                   NE      Nom.Sg.Masc     PNC     500
-w<E4>re                 sein                    VAFIN   3.Sg.Past.Subj  HD      502
-vielleicht              vielleicht              ADV     --              MO      502
-ein                     ein                     ART     Nom.Sg.Masc     NK      501
-pr<E4>chtiger           pr<E4>chtig             ADJA    Pos.Nom.Sg.Masc NK      501
-Diktator                Diktator                NN      Nom.Sg.Masc     NK      501
-''                      --                      $(      --              --      0
-#500                    --                      PN      --              SB      502
-#501                    --                      NP      --              PD      502
-#502                    --                      S       --              --      0
-#EOS 1
-
-Map to:
-
-1  ``  _  $(  $(  _  4  PUNC  4  PUNC
-2  Ross  _  NE  NE  _  4  SB  4  SB
-3  Perot  _  NE  NE  _  2  PNC  2  PNC
-4  wäre  _  VAFIN  VAFIN  _  0  ROOT  0  ROOT
-5  vielleicht  _  ADV  ADV  _  4  MO  4  MO
-6  ein  _  ART  ART  _  8  NK  8  NK
-7  prächtiger  _  ADJA  ADJA  _  8  NK  8  NK
-8  Diktator  _  NN  NN  _  4  PD  4  PD
-9  ''  _  $(  $(  _  4  PUNC  4  PUNC
-
-Thus:
-- if line begins with #BOS sentId
-  -> sent sentCnt to sentId
-  -> set start = true (should be false!)
-  -> set tokenCnt = 0
-- next line
-- if startSentence = true, tokenCnt++
-- create conll format for next line and write to selected file
-- if startSentence = true and line begins with #500
-- write \newline to selected file, set start=false
-
+ * #BOS 1 0 1098266456 1 %% @SB2AV@
+ * ``                      --                      $(      --              --      0
+ * Ross                    Ross                    NE      Nom.Sg.Masc     PNC     500
+ * Perot                   Perot                   NE      Nom.Sg.Masc     PNC     500
+ * w<E4>re                 sein                    VAFIN   3.Sg.Past.Subj  HD      502
+ * vielleicht              vielleicht              ADV     --              MO      502
+ * ein                     ein                     ART     Nom.Sg.Masc     NK      501
+ * pr<E4>chtiger           pr<E4>chtig             ADJA    Pos.Nom.Sg.Masc NK      501
+ * Diktator                Diktator                NN      Nom.Sg.Masc     NK      501
+ * ''                      --                      $(      --              --      0
+ * #500                    --                      PN      --              SB      502
+ * #501                    --                      NP      --              PD      502
+ * #502                    --                      S       --              --      0
+ * #EOS 1
+ *
+ * Map to:
+ *
+ * 1  ``  _  $(  $(  _  4  PUNC  4  PUNC
+ * 2  Ross  _  NE  NE  _  4  SB  4  SB
+ * 3  Perot  _  NE  NE  _  2  PNC  2  PNC
+ * 4  wäre  _  VAFIN  VAFIN  _  0  ROOT  0  ROOT
+ * 5  vielleicht  _  ADV  ADV  _  4  MO  4  MO
+ * 6  ein  _  ART  ART  _  8  NK  8  NK
+ * 7  prächtiger  _  ADJA  ADJA  _  8  NK  8  NK
+ * 8  Diktator  _  NN  NN  _  4  PD  4  PD
+ * 9  ''  _  $(  $(  _  4  PUNC  4  PUNC
+ *
+ * Thus:
+ * - if line begins with #BOS sentId
+ *   -> sent sentCnt to sentId
+ *   -> set start = true (should be false!)
+ *   -> set tokenCnt = 0
+ * - next line
+ * - if startSentence = true, tokenCnt++
+ * - create conll format for next line and write to selected file
+ * - if startSentence = true and line begins with #500
+ * - write \newline to selected file, set start=false
+ *
  ****************************************************************
  *
-Transform tiger2 conll format and create train/devel/test files:
-
-2_2  lehnen  lehnen  _  VVFIN  _  number=pl|person=3|tense=pres|mood=ind  _  0  _  --  _  _  _  _
-
-to
-
-2  lehnen  lehnen  _  VVFIN  _  number=pl|person=3|tense=pres|mood=ind  _  0  _  --  _  _  _  _
-
-
- * @author gune00
+ * Transform tiger2 conll format and create train/devel/test files:
  *
+ * 2_2  lehnen  lehnen  _  VVFIN  _  number=pl|person=3|tense=pres|mood=ind  _  0  _  --  _  _  _  _
+ *
+ * to
+ *
+ * 2  lehnen  lehnen  _  VVFIN  _  number=pl|person=3|tense=pres|mood=ind  _  0  _  --  _  _  _  _
+ * }
+ * </pre>
+ *
+ * @author Günter Neumann, DFKI
  */
-
 public class TigerToConllMapper {
 
-  /**
-   * Parse the tiger export file and create three conll format files for train/devel/test according to
-   * Müller et al. 2013.
-   * Parsing is then quite straight.
-   * @param sourceFileName
-   * @param trainFile
-   * @param develFile
-   * @param testFile
-   * @throws IOException
-   */
   private static boolean fromExport = false;
   private static String whatTags = "pos"; // "posmorph", "morph"
 
 
   /**
    * Create tags:
-   * for POS just POSTag
-   * for Morph: if MorphTag = -- then POSTag else MorphTag
-   * for POS and Morph make POS+MORPH
+   * <li> for POS just POSTag
+   * <li> for Morph: if MorphTag = -- then POSTag else MorphTag
+   * <li> for POS and Morph make POS+MORPH
    * @param string
    * @param morphTagIn
    * @return
    */
-
   private String createPosTag(String string, String morphTagIn) {
 
     String posTag = string;
@@ -148,7 +131,7 @@ public class TigerToConllMapper {
 
 
   /**
-   * gets a line which represents the token information in tiger export format
+   * Gets a line which represents the token information in tiger export format.
    * Splitting the string is a bit complex, because the token elements are not always
    * separated by a \t as I expected. Sometimes a tab can be empty, so I need to check this carefully.
    * Currently, I do not take into account other information than POS.
@@ -222,8 +205,18 @@ public class TigerToConllMapper {
   }
 
 
-  private void transcodeTigerExportSourcefile(String sourceFileName, String trainFile, String develFile,
-      String testFile)
+  /**
+   * Parse the tiger export file and create three conll format files for train/devel/test according to
+   * Müller et al. 2013.
+   * Parsing is then quite straight.
+   * @param sourceFileName
+   * @param trainFile
+   * @param develFile
+   * @param testFile
+   * @throws IOException
+   */
+  private void transcodeTigerExportSourcefile(
+      String sourceFileName, String trainFile, String develFile, String testFile)
           throws IOException {
 
     BufferedReader reader = new BufferedReader(
@@ -381,15 +374,19 @@ public class TigerToConllMapper {
   }
 
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
     TigerToConllMapper mapper = new TigerToConllMapper();
     TigerToConllMapper.fromExport = false;
     String sourceFile = (TigerToConllMapper.fromExport)
         ? "/Users/gune00/data/tigercorpus2/corpus/tiger_release_dec05.export"
             : "/Users/gune00/data/tigercorpus2.2/tiger_release_aug07.corrected.16012013.conll09";
-    mapper.makePOSconll(sourceFile);
-    mapper.makeMorphconll(sourceFile);
-    mapper.makePOSandMorphconll(sourceFile);
+    try {
+      mapper.makePOSconll(sourceFile);
+      mapper.makeMorphconll(sourceFile);
+      mapper.makePOSandMorphconll(sourceFile);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

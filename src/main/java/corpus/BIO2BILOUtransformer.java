@@ -10,39 +10,43 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
-
-Maps a taged file in BIO format to a tagged file in BILOU format.
-
-B - 'beginning'
-I - 'inside'
-L - 'last'
-O - 'outside'
-U - 'unit'
-
-each line of input file is of form:
- dekonvens format:
-   8  Ecce  B-OTH  O
-
- conll 2003 format:
-   4  Stadtverordnetenversammlung  NN  I-NC  I-ORG
-   1  Nadim  NNP  I-NP  I-PER
-
-
-Rules for mapping:
-
-If we have a single NE-token word then tag it as
-word\ U-NeType
-
-else
-
-Tag the last I-tagged token as L-tagged token.
-
-Everything else remains as it is.
-
-NOTE:
-Here I can later also add additional Tags for specific O-tags etc.
+ * <pre>
+ * {@code
+ * Maps a taged file in BIO format to a tagged file in BILOU format.
+ *
+ * B - 'beginning'
+ * I - 'inside'
+ * L - 'last'
+ * O - 'outside'
+ * U - 'unit'
+ *
+ * each line of input file is of form:
+ * dekonvens format:
+ * 8  Ecce  B-OTH  O
+ *
+ * conll 2003 format:
+ *    4  Stadtverordnetenversammlung  NN  I-NC  I-ORG
+ *    1  Nadim  NNP  I-NP  I-PER
+ *
+ *
+ * Rules for mapping:
+ *
+ * If we have a single NE-token word then tag it as
+ * word\ U-NeType
+ *
+ * else
+ *
+ * Tag the last I-tagged token as L-tagged token.
+ *
+ * Everything else remains as it is.
+ *
+ * NOTE:
+ * Here I can later also add additional Tags for specific O-tags etc.
+ * }
+ * </pre>
+ *
+ * @author Günter Neumann, DFKI
  */
 public class BIO2BILOUtransformer {
 
@@ -51,10 +55,7 @@ public class BIO2BILOUtransformer {
   private int labelPos = 0;
   private String sepChar = "\t";
 
-  // Setters and getters
 
-
-  // Initialization
   public BIO2BILOUtransformer(boolean conll2003) {
     if (conll2003) {
       this.labelPos = 4;
@@ -64,16 +65,13 @@ public class BIO2BILOUtransformer {
   }
 
 
-  // Methods
-
   /**
    * Main mapper loop:
+   * <p>
    * Idea is to firstly collect a bio-phrase, and then to map the BIO schema to the BILOU schema.
-   *
    * @param line
    * @param writer
    */
-
   public void mapBIOtoBILOUschema(String line, BufferedWriter writer) {
 
     String[] splitLine = line.split(this.sepChar);
@@ -145,12 +143,11 @@ public class BIO2BILOUtransformer {
 
 
   /**
-   * Main mapper function for BOI to BILOU
-   * Since I have a bioPhrase, it is easy:
-   * - if bioPhrase only has a single token, make it an U- one
-   * - else just change the first element to B- and the last element to L-,
-   * - and leave the others (if any) untouched
-   * @param bioPhrase
+   * Main mapper function for BOI to BILOU; Since I have a bioPhrase, it is easy:
+   * <li> if bioPhrase only has a single token, make it an U- one
+   * <li> else just change the first element to B- and the last element to L-,
+   * <li> and leave the others (if any) untouched
+   * @param bioPhraseParam
    * @return
    */
   private List<String> mapBio2Bilou(List<String> bioPhraseParam) {
@@ -198,7 +195,6 @@ public class BIO2BILOUtransformer {
         e.printStackTrace();
       }
     }
-
   }
 
 
@@ -212,7 +208,7 @@ public class BIO2BILOUtransformer {
    */
   public void transcode(String sourceFileName, String sourceEncoding,
       String targetFileName, String targetEncoding)
-          throws IOException {
+      throws IOException {
 
     // init reader
     BufferedReader reader = new BufferedReader(
@@ -241,49 +237,53 @@ public class BIO2BILOUtransformer {
   }
 
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
 
-    BIO2BILOUtransformer bilou = new BIO2BILOUtransformer(true);
-    // EN data
-    bilou.transcode("resources/data/ner/en/eng-train.conll",
-        "utf-8",
-        "resources/data/ner/bilou/eng-train.conll",
-        "utf-8");
-    bilou.transcode("resources/data/ner/en/eng-testa.conll",
-        "utf-8",
-        "resources/data/ner/bilou/eng-testa.conll",
-        "utf-8");
-    bilou.transcode("resources/data/ner/en/eng-testb.conll",
-        "utf-8",
-        "resources/data/ner/bilou/eng-testb.conll",
-        "utf-8");
+    try {
+      BIO2BILOUtransformer bilou = new BIO2BILOUtransformer(true);
+      // EN data
+      bilou.transcode("resources/data/ner/en/eng-train.conll",
+          "utf-8",
+          "resources/data/ner/bilou/eng-train.conll",
+          "utf-8");
+      bilou.transcode("resources/data/ner/en/eng-testa.conll",
+          "utf-8",
+          "resources/data/ner/bilou/eng-testa.conll",
+          "utf-8");
+      bilou.transcode("resources/data/ner/en/eng-testb.conll",
+          "utf-8",
+          "resources/data/ner/bilou/eng-testb.conll",
+          "utf-8");
 
-    // DE data
-    bilou.transcode("resources/data/ner/de/deu-train.conll",
-        "utf-8",
-        "resources/data/ner/bilou/deu-train.conll",
-        "utf-8");
-    bilou.transcode("resources/data/ner/de/deu-testa.conll",
-        "utf-8",
-        "resources/data/ner/bilou/deu-testa.conll",
-        "utf-8");
-    bilou.transcode("resources/data/ner/de/deu-testb.conll",
-        "utf-8",
-        "resources/data/ner/bilou/deu-testb.conll",
-        "utf-8");
-    // DE konvens data
-    bilou = new BIO2BILOUtransformer(false);
-    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.train.conll",
-        "utf-8",
-        "resources/data/ner/bilou/deu.konvens.train.conll",
-        "utf-8");
-    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.dev.conll",
-        "utf-8",
-        "resources/data/ner/bilou/deu.konvens.dev.conll",
-        "utf-8");
-    bilou.transcode("resources/data/ner/dekonvens/deu.konvens.test.conll",
-        "utf-8",
-        "resources/data/ner/bilou/deu.konvens.test.conll",
-        "utf-8");
+      // DE data
+      bilou.transcode("resources/data/ner/de/deu-train.conll",
+          "utf-8",
+          "resources/data/ner/bilou/deu-train.conll",
+          "utf-8");
+      bilou.transcode("resources/data/ner/de/deu-testa.conll",
+          "utf-8",
+          "resources/data/ner/bilou/deu-testa.conll",
+          "utf-8");
+      bilou.transcode("resources/data/ner/de/deu-testb.conll",
+          "utf-8",
+          "resources/data/ner/bilou/deu-testb.conll",
+          "utf-8");
+      // DE konvens data
+      bilou = new BIO2BILOUtransformer(false);
+      bilou.transcode("resources/data/ner/dekonvens/deu.konvens.train.conll",
+          "utf-8",
+          "resources/data/ner/bilou/deu.konvens.train.conll",
+          "utf-8");
+      bilou.transcode("resources/data/ner/dekonvens/deu.konvens.dev.conll",
+          "utf-8",
+          "resources/data/ner/bilou/deu.konvens.dev.conll",
+          "utf-8");
+      bilou.transcode("resources/data/ner/dekonvens/deu.konvens.test.conll",
+          "utf-8",
+          "resources/data/ner/bilou/deu.konvens.test.conll",
+          "utf-8");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

@@ -6,7 +6,11 @@ import java.util.List;
 
 import data.GlobalParams;
 
-// The class that holds all corpus files for training, testing etc.
+/**
+ * The class that holds all corpus files for training, testing etc.
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class Corpus {
 
   private GNTcorpusProperties gntProps = null;
@@ -122,8 +126,6 @@ public class Corpus {
   }
 
 
-  // Constructor;
-
   private void setTrainingLabeledSourceFilesFromProps(String property) {
 
     if (property != null) {
@@ -236,6 +238,5 @@ public class Corpus {
   public String makeEvalFileName(String labeledFile) {
 
     return this.getGlobalParams().getEvalFilePathname() + new File(labeledFile).getName() + ".txt";
-
   }
 }

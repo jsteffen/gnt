@@ -26,8 +26,8 @@ import archive.Archivator;
  * of liblinear;
  * This file should be saved and loaded for use in training and application phase.
  * This file should be part of Alphabet class.
- * @author gune00
  *
+ * @author Günter Neumann, DFKI
  */
 public class WordClusterFeatureFactory {
 
@@ -38,9 +38,6 @@ public class WordClusterFeatureFactory {
   private Map<String, Integer> word2index = new HashMap<String, Integer>();
   private int clusterIdcnt = 0;
   private String featureFilePathname = "";
-
-
-  // Instances
 
 
   public WordClusterFeatureFactory(String featureFilePathname) {
@@ -88,7 +85,6 @@ public class WordClusterFeatureFactory {
   }
 
 
-  // Methods
   public void clean() {
 
     this.word2index.clear();
@@ -97,14 +93,15 @@ public class WordClusterFeatureFactory {
 
 
   /**
+   * Used to fill cluster feature vector in training and tagging.
+   * <p>
    * For CASE-SENSITIVE word, look it up in word2liblinear index;
-   * If it exists, return index else return index of unknown word <RARE>|<Rare>|<STOP>.
+   * If it exists, return index else return index of unknown word {@code <RARE>|<Rare>|<STOP>}.
    * During training phase, all words from training files are used and cluster id is used.
    * During testing, for each word in cluster-dictionary, its cluster id is used
    * @param word
    * @return
    */
-  // Used to fill cluster feature vector in training and tagging
   public int getClusterIdFeature(String word) {
 
     String normalizedDigitString = word.replaceAll("\\d", "0");
@@ -128,7 +125,12 @@ public class WordClusterFeatureFactory {
   }
 
 
-  // Used to internalize word2cluster id by ajusting cluster id by +1
+  /**
+   * Used to internalize word2cluster id by ajusting cluster id by +1
+   * @param archivator
+   * @param taggerName
+   * @param clusterIDfileName
+   */
   public void createAndSaveClusterIdFeature(Archivator archivator, String taggerName, String clusterIDfileName) {
 
     System.out.println("Create cluster ID list from: " + clusterIDfileName);

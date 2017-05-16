@@ -17,16 +17,16 @@ import archive.Archivator;
 /**
  * A indicator word is used to define a dimension of distributed word vectors
  * a indicator word is selected on basis of its rank.
- *<p><p>
+ *<p>
  * A class for creating the indicator words for a given text corpus
- * - each line of a text file corresponds to a sentence of lower-cased words
- * - depending on the corpus sources, some cleaning has to be done
- * - then term frequency TF is computed and finally a ranked list is computed in decreasing order of TF
- * - the final list is then output - either completely or only N highest terms
- *
+ * <li> each line of a text file corresponds to a sentence of lower-cased words
+ * <li> depending on the corpus sources, some cleaning has to be done
+ * <li> then term frequency TF is computed and finally a ranked list is computed in decreasing order of TF
+ * <li> the final list is then output - either completely or only N highest terms
+ * <p>
  * NOTE: it is open for other corpora as well
- * @author gune00
  *
+ * @author Günter Neumann, DFKI
  */
 public class IndicatorWordsCreator {
 
@@ -39,10 +39,6 @@ public class IndicatorWordsCreator {
   public IndicatorWordsCreator() {
   }
 
-
-  // Clean text line according to given type
-  // AND lower case text
-  // It is assumed that line is a tokenized sentence
 
   public IndicatorWordsCreator(String featureFilePathname) {
     this.setFeatureFilePathname(featureFilePathname);
@@ -73,7 +69,9 @@ public class IndicatorWordsCreator {
   }
 
 
-  //
+  // Clean text line according to given type
+  // AND lower case text
+  // It is assumed that line is a tokenized sentence
   private String[] cleanTextLine(String line, String type) {
 
     String[] words = {};
@@ -111,7 +109,10 @@ public class IndicatorWordsCreator {
   }
 
 
-  // Count frequency of words
+  /**
+   * Count frequency of words
+   * @param words
+   */
   public void countWords(String[] words) {
 
     for (String word : words) {
@@ -123,20 +124,24 @@ public class IndicatorWordsCreator {
     }
   }
 
-  // Printing methods
 
-
-  // Print size of hash
+  /**
+   * Prints size of hash.
+   */
   public void printWordNumSize() {
 
     System.out.println("Token: " + tokenCnt + " Types: " + this.wordToNum.size());
   }
 
 
-  // MAIN methods
-  // iterate through input file linewise
-  // clean line according to given type (depends on corpus encoding)
-  // count words according to term frequency
+  /**
+   * <li> iterate through input file linewise
+   * <li> clean line according to given type (depends on corpus encoding)
+   * <li> count words according to term frequency
+   * @param fileName
+   * @param type
+   * @param max
+   */
   public void readAndProcessInputTextLineWise(String fileName, String type, int max) {
 
     BufferedReader reader;
@@ -238,8 +243,8 @@ public class IndicatorWordsCreator {
   }
 
 
-  //***
-  /**The following two functions are used to create word vectors from a list of relevant source files defined in Corpus
+  /**
+   * The following two functions are used to create word vectors from a list of relevant source files defined in Corpus
    * Class for the selected tagger with name taggerName.
    * @param corpus
    */

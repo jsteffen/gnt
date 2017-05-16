@@ -17,7 +17,8 @@ import archive.Archivator;
 import corpus.Corpus;
 
 /**
- *
+ * <pre>
+ * {@code
  * Goal is to create a file that represents distributed word vectors for a given set of words.
  * The words are from a given corpus.
  * These are processed line wise, where each line corresponds to a tokenized lower-cased sentence.
@@ -44,8 +45,25 @@ import corpus.Corpus;
  *   right vector
  * - this way we obtain a static knowledge base of distributed vectors for a set of words
  * - finally, provide methods that enable reading and loading embedded word vectors from files directly.
- * @author gune00
+ * }
+ * </pre>
  *
+ * @author Günter Neumann, DFKI
+ */
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
  */
 public class WordDistributedFeatureFactory {
 
@@ -75,13 +93,9 @@ public class WordDistributedFeatureFactory {
   private String featureFilePathname = "";
 
 
-  // Instantiation
-
   public WordDistributedFeatureFactory() {
   }
 
-
-  // Methods
 
   public WordDistributedFeatureFactory(String featureFilePathname) {
     this.setFeatureFilePathname(featureFilePathname);
@@ -100,7 +114,6 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  // Setters and getters
   public Map<String, Integer> getIw2num() {
 
     return this.iw2num;
@@ -174,8 +187,6 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  // Methods
-
   public void clean() {
 
     this.num2iw = new HashMap<Integer, String>();
@@ -219,7 +230,6 @@ public class WordDistributedFeatureFactory {
     return words;
   }
 
-  //***
   // NOW, create and fill the distributed word vectors
 
   // Iterate from left to right through the words of a sentence and construct/extend distributed vector of each word
@@ -260,7 +270,6 @@ public class WordDistributedFeatureFactory {
   // Update the distributed word vector:
   // Map the word and its left/right adjacent word to integer
   // Since  context vectors start from index 0 -> increase rank by -1
-
   private void word2Bigram(String leftWord, String word, String rightWord) {
 
     // System.out.println(leftWord + "#" + word + "#" + rightWord);
@@ -344,11 +353,14 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  // A dummy for handling unknown words, if a word is tested in isolation
-  // Word is known to be unknown in test phase, that is, it is not yet part of the distributed vector model
-  // but if a unknown feature vector is computed then it is added to the distributed feature vector as a side effect
-  // so next time it is known; in some sense it is cached
-
+  /**
+   * A dummy for handling unknown words, if a word is tested in isolation.
+   * Word is known to be unknown in test phase, that is, it is not yet part of the distributed vector model
+   * but if a unknown feature vector is computed then it is added to the distributed feature vector as a side effect
+   * so next time it is known; in some sense it is cached
+   * @param word
+   * @return
+   */
   public WordDistributedFeature handleUnknownWordWithoutContext(String word) {
 
     // initialize bigrams <BOUNDARY>/word, and word/<BOUNDARY>
@@ -377,7 +389,7 @@ public class WordDistributedFeatureFactory {
 
 
   /**
-   * return the distributed word vector of a word. Only in non training phase handle unknown words phase
+   * Returns the distributed word vector of a word. Only in non training phase handle unknown words phase
    * @param word
    * @param unknown
    * @return
@@ -395,11 +407,15 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  //***
-  // read file line-wise - basically the same as in indicator words creator
-  // NOTE: this means that the model is created incrementally;
-  // in principle corpus.DistributedWordVectorFactory.sentence2Bigrams(String[]) can be called after each word !
-  // as I do it in handleUnknownWordWithoutContext
+  /**
+   * Read file line-wise - basically the same as in indicator words creator.
+   * <p>NOTE: this means that the model is created incrementally;
+   * in principle corpus.DistributedWordVectorFactory.sentence2Bigrams(String[]) can be called after each word !
+   * as I do it in handleUnknownWordWithoutContext
+   * @param fileName
+   * @param type
+   * @param max
+   */
   public void readAndProcessInputTextLineWise(String fileName, String type, int max) {
 
     BufferedReader reader;
@@ -429,7 +445,6 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  //***
   // Save learned word vectors to file: which means: store relevant listed of indicator words,
   // and then vocabulary words and left/right context words.
   // Note, sort num2word according to natural order, and write value of entry key.
@@ -481,7 +496,6 @@ public class WordDistributedFeatureFactory {
 
   // Store it only in ONE FILE:
   // left ### right
-
   private void writeContextFile(String targetFileName) {
 
     BufferedWriter contextReader;
@@ -502,11 +516,11 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  //***
   // The following two functions are used to create word vectors from a list of relevant source files
   // and then stored on file.
   // I call the resulting files condensed because only non-zero weights are stored. This helps reducing space
   // very much !
+
   public void readGNTCorpus(Corpus corpus) {
 
     for (String fileName : corpus.getTrainingUnLabeledData()) {
@@ -560,11 +574,9 @@ public class WordDistributedFeatureFactory {
     archivator.getFilesToPack().add(wordFile);
     archivator.getFilesToPack().add(vocFile);
     archivator.getFilesToPack().add(vocContextFile);
-
   }
 
 
-  //***
   // The following methods are used to load an existing word vector into the main memory.
   // This also means that the bijective word-index maps have to be restored.
   // The result is basically a fully instantiated DistributedWordVectorFactory class.

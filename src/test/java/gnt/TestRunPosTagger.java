@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import caller.RunTagger;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class TestRunPosTagger {
 
   public static void main(String[] args) throws IOException {

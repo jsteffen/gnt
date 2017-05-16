@@ -14,6 +14,11 @@ import java.util.Properties;
 
 import data.Pair;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public final class ConlluToConllMapper {
 
   public static final String conlluPath = "/Users/gune00/data/UniversalDependencies/";
@@ -142,11 +147,10 @@ public final class ConlluToConllMapper {
   /**
    * Example
    *
-   * Input: "/Users/gune00/data/UniversalDependencies/" "Arabic" "ar" "dev"
+   * <li> Input: "/Users/gune00/data/UniversalDependencies/" "Arabic" "ar" "dev"
    *
-   * Output: "/Users/gune00/data/UniversalDependencies/UD_Arabic-master/ar-ud-dev.conllu"
+   * <li> Output: "/Users/gune00/data/UniversalDependencies/UD_Arabic-master/ar-ud-dev.conllu"
    *
-   * @param conlluPath
    * @param languageName
    * @param languageID
    * @param mode
@@ -190,7 +194,7 @@ public final class ConlluToConllMapper {
 
 
   /**
-   * bascially maps a conllu to conll format - very simple process so far.
+   * Bascially maps a conllu to conll format - very simple process so far.
    * @param sourceFileName
    * @param targetFileName
    * @throws IOException
@@ -376,5 +380,4 @@ public final class ConlluToConllMapper {
       ConlluToConllMapper.writeLanguageDataPropsFile(language.getLeft(), language.getRight());
     }
   }
-
 }

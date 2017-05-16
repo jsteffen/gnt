@@ -11,6 +11,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class DataProcessor {
 
   // The main path to the base directory which hosts the label directories
@@ -49,8 +54,6 @@ public class DataProcessor {
     }
   }
 
-
-  // setters and getters
 
   public BufferedWriter getWriter() {
 
@@ -141,19 +144,13 @@ public class DataProcessor {
   }
 
 
-  // Methods
-
-
   //*****************************************************************************************************
 
   /**
-   * It receives a string, tokenizes it, normalizes the token and then inserts it into the dictionary set.
+   * Receives a string, tokenizes it, normalizes the token and then inserts it into the dictionary set.
    * @param line
    */
-  /*
-   * TODO
-   * check here: different tokenization, normalization, filtering, counting etc on token level
-   */
+  // TODO check here: different tokenization, normalization, filtering, counting etc on token level
   private void updateDictionaryFromString(String line) {
 
     // Tokenization
@@ -169,7 +166,7 @@ public class DataProcessor {
 
 
   /**
-   * it receives a document and processes it line-wise
+   * Receives a document and processes it line-wise
    * @param document
    * @throws IOException
    */
@@ -337,12 +334,14 @@ public class DataProcessor {
     try {
       this.getWriter().close();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
 
 
+  /**
+   * @param args
+   */
   public static void main(String[] args) {
 
     DataProcessor dp = new DataProcessor(new Tokenizer(), new TokenNormalizer());
@@ -359,5 +358,4 @@ public class DataProcessor {
 
     System.out.println(dp.getDataObj().toString());
   }
-
 }

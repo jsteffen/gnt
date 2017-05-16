@@ -6,6 +6,11 @@ import corpus.GNTcorpusProperties;
 import trainer.GNTrainer;
 import data.GNTdataProperties;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class TrainTagger {
 
   public void trainer(String dataConfigFileName, String corpusConfigFileName) throws IOException {
@@ -23,8 +28,15 @@ public class TrainTagger {
   }
 
 
-  // This one used for processing the universal dependency treebanks
-  // cf. com.gn.UDlanguageGNTmodelFactory.trainLanguage(String, String)
+  /**
+   * This one used for processing the universal dependency treebanks
+   * cf. com.gn.UDlanguageGNTmodelFactory.trainLanguage(String, String)
+   * @param dataConfigFileName
+   * @param corpusConfigFileName
+   * @param modelZipFileName
+   * @param archiveTxtName
+   * @throws IOException
+   */
   public void trainer(String dataConfigFileName, String corpusConfigFileName,
       String modelZipFileName, String archiveTxtName) throws IOException {
 

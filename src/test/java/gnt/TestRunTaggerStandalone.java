@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import caller.GNTaggerStandalone;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class TestRunTaggerStandalone {
 
   public static void main(String[] args) throws IOException {

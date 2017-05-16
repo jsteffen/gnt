@@ -14,14 +14,12 @@ import features.WordFeatures;
  * They are needed to make sure that offSets are computed correctly
  * I will do in that way, that I treat pads as empty WordFeatures with some dummy string.
  *
- * @author gune00
- *
+ * @author Günter Neumann, DFKI
  */
 public class Window {
 
   // Used to control the use of labels from left context as features in predicting label for current token
   private static boolean recurrent = false;
-
 
   private static int windowCnt = 0;
   private Data data;
@@ -38,7 +36,6 @@ public class Window {
   private int labelIndex = -1;
 
 
-  // Instance
   public Window(Sentence sentence, int i, int windowSize, Data data,
       Alphabet alphabet) {
     Window.windowCnt++;
@@ -48,9 +45,6 @@ public class Window {
     this.sentence = sentence;
     this.center = i;
   }
-
-
-  // Setters and getters
 
 
   public static int getWindowCnt() {
@@ -133,12 +127,17 @@ public class Window {
 
   /**
    * The general structure of a window is:
+   * <pre>
+   * {@code
    * <leftPads, leftContext, Center, rightContext, rightPad>
+   * }
+   * </pre>
    * where center is a single element, and the other elements are sequences of elements
    * depending on the actually value of this.windowSize; this means that the total number of elements
    * is #|leftPads + leftContext| == this.windowSize
-   *
+   * <p>
    * boolean train means: we are in the training mode
+   * <p>
    * boolean adjust means: add offsets to each index in order to get Liblinear-consitent feature names
    * (numerical indices)
    * @param train
@@ -281,8 +280,6 @@ public class Window {
     return new Pair<String, String>(leftWord, rightWord);
   }
 
-
-  // Print functions
 
   /**
    * Only for printing the borders of the window elements

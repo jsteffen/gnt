@@ -1,5 +1,10 @@
 package data;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class OffSets {
 
   private int wvLeftSize = -1;
@@ -138,5 +143,4 @@ public class OffSets {
         + "; total window vector size: " + this.windowVectorSize;
     return output;
   }
-
 }

@@ -30,6 +30,11 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class TweetToConllMapper {
 
   // relevant tweet elements defined as constants
@@ -128,18 +133,23 @@ public class TweetToConllMapper {
   }
 
 
-  public static void main(String[] args) throws IOException, XMLStreamException {
+  public static void main(String[] args) {
 
-    TweetToConllMapper mapper = new TweetToConllMapper();
-    mapper.parseTweetXMLFile(
-        "/Users/gune00/data/twitter_gold/twitter.gold.train.xml",
-        "/Users/gune00/data/twitter_gold/twitter.gold.train.conll");
-    mapper.parseTweetXMLFile(
-        "/Users/gune00/data/twitter_gold/twitter.gold.dev.xml",
-        "/Users/gune00/data/twitter_gold/twitter.gold.dev.conll");
-    mapper.parseTweetXMLFile(
-        "/Users/gune00/data/twitter_gold/twitter.gold.test.xml",
-        "/Users/gune00/data/twitter_gold/twitter.gold.test.conll");
+    try {
+      TweetToConllMapper mapper = new TweetToConllMapper();
+      mapper.parseTweetXMLFile(
+          "/Users/gune00/data/twitter_gold/twitter.gold.train.xml",
+          "/Users/gune00/data/twitter_gold/twitter.gold.train.conll");
+      mapper.parseTweetXMLFile(
+          "/Users/gune00/data/twitter_gold/twitter.gold.dev.xml",
+          "/Users/gune00/data/twitter_gold/twitter.gold.dev.conll");
+      mapper.parseTweetXMLFile(
+          "/Users/gune00/data/twitter_gold/twitter.gold.test.xml",
+          "/Users/gune00/data/twitter_gold/twitter.gold.test.conll");
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (XMLStreamException e) {
+      e.printStackTrace();
+    }
   }
-
 }

@@ -1,5 +1,12 @@
 package data;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ * @param <L>
+ * @param <R>
+ */
 public class Pair<L, R> {
 
   private L left;

@@ -11,18 +11,15 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 
 /**
- * The idea of this class is to process all files from Corpus and normalize
- * the content.
+ * <pre>
+ * {@code
+ * The idea of this class is to process all files from Corpus and normalize the content.
  * Currently normalization will be restricted to numbers:
  * - map each digit to 0
  * - everything else remains as it is.
  *
  * I will also only consider labeled conll files (train/devel/test) and the unlabeled data
- * @author gune00
  *
- */
-
-/*
  * Define:
  *
  * - read labeled data
@@ -34,6 +31,10 @@ import java.nio.file.Files;
  * - normalize it and return sentence
  * - write unlabeled data
  * - read
+ * }
+ * </pre>
+ *
+ * @author Günter Neumann, DFKI
  */
 public class CorpusNormalizer {
 
@@ -53,9 +54,10 @@ public class CorpusNormalizer {
 
 
   // Code for normalization of all corpus files
+
   /**
    * Copy the file named fileNameOrig to fileNameOrig.orig if it does not exist.
-   * it is assumed that fileNameOrig is complete name.
+   * It is assumed that fileNameOrig is complete name.
    * @param fileNameOrig
    * @throws IOException
    */

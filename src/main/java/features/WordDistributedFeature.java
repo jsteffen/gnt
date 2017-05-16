@@ -2,7 +2,13 @@ package features;
 
 import java.util.Map;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class WordDistributedFeature {
+
   // leftContext and rightContext both corresponds to a vector constructed from the indicator words
   // leftContext[0] == indicator word with rank 1
   // leftContext[n] == indicator word with rank n+1
@@ -97,7 +103,11 @@ public class WordDistributedFeature {
   }
 
 
-  // This is a self-made function that concatenates the left and right vector to a single one
+  /**
+   * This is a self-made function that concatenates the left and right vector to a single one
+   *
+   * @return
+   */
   // TODO Could also be done offline, finally, and then left and right could be deleted
   public double[] concatenateLeftAndRightVector() {
 
@@ -193,6 +203,4 @@ public class WordDistributedFeature {
     outputString = outputString + "\n";
     return outputString;
   }
-
-
 }

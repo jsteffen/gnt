@@ -2,6 +2,11 @@ package recodev;
 
 import data.SetIndexMap;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class Data {
 
   private SetIndexMap wordSet = new SetIndexMap();
@@ -10,12 +15,9 @@ public class Data {
   private String wordMapFileName = "resources/recodev/wordSet.txt";
 
 
-  // Instances
   public Data() {
   }
 
-
-  // Setters and getters
 
   public SetIndexMap getWordSet() {
 
@@ -63,9 +65,6 @@ public class Data {
 
     this.wordMapFileName = wordMapFileName;
   }
-
-
-  // Methods
 
 
   public int updateWordMap(String word) {
@@ -124,6 +123,4 @@ public class Data {
         + " labels: " + this.getLabelSet().getLabelCnt() + "\n";
     return output;
   }
-
-
 }

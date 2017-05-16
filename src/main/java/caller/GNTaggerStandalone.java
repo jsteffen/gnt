@@ -11,6 +11,11 @@ import java.io.OutputStreamWriter;
 import tagger.GNTagger;
 import tokenize.GntSplitTokenizer;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class GNTaggerStandalone {
 
   private GNTagger posTagger = null;
@@ -26,9 +31,8 @@ public class GNTaggerStandalone {
 
 
   /**
-   * Receives a string and calls GNT tagger. Then splits resulting tagged strings into a line-oriented format
+   * Receives a string and calls GNT tagger. Then splits resulting tagged strings into a line-oriented format.
    * @param inputString
-   * @throws IOException
    */
   public void tagStringRunner(String inputString) {
 

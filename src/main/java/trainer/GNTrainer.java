@@ -14,6 +14,11 @@ import features.WordDistributedFeatureFactory;
 import features.WordShapeFeatureFactory;
 import features.WordSuffixFeatureFactory;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class GNTrainer {
 
   private TrainerInMem trainer;
@@ -23,8 +28,6 @@ public class GNTrainer {
   private Archivator archivator;
   private GNTdataProperties dataProps;
 
-
-  // Creators
 
   public GNTrainer(GNTdataProperties dataProps, GNTcorpusProperties corpusProps) {
 
@@ -56,9 +59,6 @@ public class GNTrainer {
             this.getDataProps().getGlobalParams(),
             this.getDataProps().getGlobalParams().getWindowSize()));
   }
-
-
-  // Setters and getters
 
 
   public Archivator getArchivator() {
@@ -109,11 +109,7 @@ public class GNTrainer {
   }
 
 
-  // Methods
-
-
   // This is a method for on-demand creation of the indicator words
-
   private void createIndicatorWords(String taggerName, double subSamplingThreshold) {
 
     IndicatorWordsCreator iwp =
@@ -124,7 +120,6 @@ public class GNTrainer {
 
 
   // This is a method for on-demand creation of the feature files
-
   private void createWordVectors(String taggerName, int dim) throws IOException {
 
     if (dim > 0) {
@@ -161,7 +156,6 @@ public class GNTrainer {
 
 
   // This is a method for on-demand creation of the feature files
-
   private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim)
       throws IOException {
 
@@ -180,7 +174,6 @@ public class GNTrainer {
     if (this.getDataProps().getAlphabet().isWithClusterFeats()) {
       this.createClusterFeatures(taggerName, clusterIdSourceFileName);
     }
-
   }
 
 

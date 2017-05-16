@@ -15,6 +15,11 @@ import java.util.TreeMap;
 
 import archive.Archivator;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class SetIndexMap {
 
   private Map<Integer, String> num2label = new TreeMap<Integer, String>();
@@ -22,7 +27,6 @@ public class SetIndexMap {
   private int labelCnt = 0;
 
 
-  // Setters and getters
   public Map<String, Integer> getLabel2num() {
 
     return this.label2num;
@@ -59,7 +63,6 @@ public class SetIndexMap {
   }
 
 
-  // Methods
   public int updateSetIndexMap(String label) {
 
     int index = -1;
@@ -144,5 +147,4 @@ public class SetIndexMap {
     }
     return output;
   }
-
 }

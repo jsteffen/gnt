@@ -23,24 +23,22 @@ import archive.Archivator;
  * Goal is to compute all lower-case suffixes from a training set of words.
  * For suffix s, we set the dimension corresponding to s in f_suffix(w) to 1 if lowercased w ends in s
  * and to 0 otherwise. Note that w is a suffix of itself.
- * In FLORS: 91,161 suffix features from PTB - I guess - and PTB as about 32.500 words.
+ * <p>In FLORS: 91,161 suffix features from PTB - I guess - and PTB as about 32.500 words.
  * As far as I understand, a word should match just one suffix, so we have a very sparse vector in principle
  * but we can represent it for each word good, if we only have non-zero feature values.
  * For training it means we can determine, which suffix is particular for some POS tag, and for testing, we
  * simple compute it.
- *
+ * <p>
  * Current result when using PTB version three: #word: 32491 #suffixes: 98358
  * I have different numbers. I do not know how how exactly Flors defines word, but so maybe they have some filters.
  * I will use it, e.g., no number tokens or other specialized tokens.
  * I filter string which starts and ends with a digit.
  * This gives: #word: 28481 #suffixes: 91144
- *
+ * <p>
  * NOTE: in principle: file operation not really needed here, because will be later done in one training class
  *
- * @author gune00
- *
+ * @author Günter Neumann, DFKI
  */
-
 public class WordSuffixFeatureFactory {
 
   // A simple flag for switching between suffix and ngram computation
@@ -62,7 +60,6 @@ public class WordSuffixFeatureFactory {
   private int suffixCnt = 0;
 
 
-  // Constructor
   public WordSuffixFeatureFactory() {
   }
 
@@ -71,8 +68,6 @@ public class WordSuffixFeatureFactory {
     this.setFeatureFilePathname(featureFilePathname2);
   }
 
-
-  // Getters and setters
 
   public static boolean isNgram() {
 
@@ -164,14 +159,10 @@ public class WordSuffixFeatureFactory {
   }
 
 
-  /*
-   * Methods
-   */
-
-
   // ************************** Inserting or Updating extracted suffix/ngram **************************
 
-  /** A number is a string which starts and ends with a digit.
+  /**
+   * A number is a string which starts and ends with a digit.
    * This is used to filter out strings for which we do not want to compute suffixes, e.g., numbers
    *
    * @param word
@@ -317,7 +308,7 @@ public class WordSuffixFeatureFactory {
 
 
   /**
-   * compute all suffixes of a word starting from 0, which means the word is a suffix of itself.
+   * Compute all suffixes of a word starting from 0, which means the word is a suffix of itself.
    * If suffix is not a word, then do not store it.
    * @param word
    */
@@ -406,9 +397,7 @@ public class WordSuffixFeatureFactory {
    * @param word
    * @return
    */
-
-  //TODO
-  // after adding also ngrams, indices must be sorted again!!
+  //TODO after adding also ngrams, indices must be sorted again!!
   public List<Integer> getAllKnownSubstringsForWord(String word) {
 
     List<Integer> indices = new ArrayList<Integer>();
@@ -474,7 +463,6 @@ public class WordSuffixFeatureFactory {
   }
 
 
-  //**
   // after the above has been done, write out vocabulary into files:
   // Firstly, sort num2word according to natural order, and write value of entry key.
   private void writeSuffixFile(String targetFileName) {
@@ -496,7 +484,6 @@ public class WordSuffixFeatureFactory {
   }
 
 
-  //***
   // read preprocessed suffix list from file
   private void readSuffixFile(String string) {
 
@@ -578,6 +565,5 @@ public class WordSuffixFeatureFactory {
     WordSuffixFeatureFactory wsf = new WordSuffixFeatureFactory();
 
     wsf.computeSuffixesTest("Hausmann");
-
   }
 }

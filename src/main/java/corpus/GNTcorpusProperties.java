@@ -8,15 +8,16 @@ import java.util.Properties;
 
 import data.Data;
 
+/**
+ *
+ *
+ * @author Günter Neumann, DFKI
+ */
 public class GNTcorpusProperties extends Properties {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
 
 
-  // call setters via class instantiation
   public GNTcorpusProperties(String propsFileName) {
     try {
       this.setGntProps(propsFileName);
@@ -55,5 +56,4 @@ public class GNTcorpusProperties extends Properties {
       Data.setPosTagIndex(Integer.parseInt(this.getProperty("posTagIndex")));
     }
   }
-
 }
