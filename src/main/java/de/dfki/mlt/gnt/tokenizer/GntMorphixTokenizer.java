@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A reimplementation of our morphix-reader which is a very simple but effective and fast automaton for mapping a
  * string into a list of tokens.
@@ -16,84 +19,36 @@ import java.util.List;
  */
 public class GntMorphixTokenizer {
 
+  private static final Logger logger = LoggerFactory.getLogger(GntMorphixTokenizer.class);
+
   // the last one should be #\^D, the Fill Down character
-  private List<Character> specialChars =
+  private static final List<Character> SPECIAL_CHARS =
       Arrays.asList('.', ',', ';', '!', '?', ':', '(', ')', '{', '}', '[', ']', '$', '€', '\'', '\b');
 
-  private List<Character> eosChars =
+  private static final List<Character> EOS_CHARS =
       Arrays.asList('.', '!', '?');
 
-  private List<Character> delimiterChars =
+  private static final List<Character> DELIMITER_CHARS =
       Arrays.asList('-', '_');
 
-  private List<Character> tokenSepChars =
+  private static final List<Character> TOKEN_SEP_CHARS =
       Arrays.asList(' ', '\n', '\t');
 
-  private boolean splitString = false;
-  private boolean lowerCase = false;
-  private boolean createSentence = false;
-  private boolean isCandidateAbrev = false;
+  private boolean lowerCase;
+  private boolean splitString;
 
-  private String inputString = "";
-  private List<String> tokenList = new ArrayList<String>();
-  private List<List<String>> sentenceList = new ArrayList<List<String>>();
+  private boolean createSentence;
+  private boolean isCandidateAbrev;
 
-
-  public GntMorphixTokenizer() {
-  }
+  private String inputString;
+  private List<String> tokenList;
+  private List<List<String>> sentenceList;
 
 
   public GntMorphixTokenizer(boolean lowerCase, boolean splitString) {
+
     this.lowerCase = lowerCase;
     this.splitString = splitString;
-  }
-
-
-  public List<Character> getSpecialChars() {
-
-    return this.specialChars;
-  }
-
-
-  public void setSpecialChars(List<Character> specialChars) {
-
-    this.specialChars = specialChars;
-  }
-
-
-  public List<Character> getEosChars() {
-
-    return this.eosChars;
-  }
-
-
-  public void setEosChars(List<Character> eosChars) {
-
-    this.eosChars = eosChars;
-  }
-
-
-  public List<Character> getDelimiterChars() {
-
-    return this.delimiterChars;
-  }
-
-
-  public void setDelimiterChars(List<Character> delimiterChars) {
-
-    this.delimiterChars = delimiterChars;
-  }
-
-
-  public List<Character> getTokenSepChars() {
-
-    return this.tokenSepChars;
-  }
-
-
-  public void setTokenSepChars(List<Character> tokenSepChars) {
-
-    this.tokenSepChars = tokenSepChars;
   }
 
 
@@ -118,66 +73,6 @@ public class GntMorphixTokenizer {
   public void setLowerCase(boolean lowerCase) {
 
     this.lowerCase = lowerCase;
-  }
-
-
-  public boolean isCreateSentence() {
-
-    return this.createSentence;
-  }
-
-
-  public void setCreateSentence(boolean createSentence) {
-
-    this.createSentence = createSentence;
-  }
-
-
-  public boolean isCandidateAbrev() {
-
-    return this.isCandidateAbrev;
-  }
-
-
-  public void setCandidateAbrev(boolean isCandidateAbrev) {
-
-    this.isCandidateAbrev = isCandidateAbrev;
-  }
-
-
-  public String getInputString() {
-
-    return this.inputString;
-  }
-
-
-  public void setInputString(String inputString) {
-
-    this.inputString = inputString;
-  }
-
-
-  public List<String> getTokenList() {
-
-    return this.tokenList;
-  }
-
-
-  public void setTokenList(List<String> tokenList) {
-
-    this.tokenList = tokenList;
-  }
-
-
-  public List<List<String>> getSentenceList() {
-
-    return this.sentenceList;
-  }
-
-
-  public void setSentenceList(List<List<String>> sentenceList) {
-
-    this.sentenceList = sentenceList;
   }
 
 
@@ -238,23 +133,23 @@ public class GntMorphixTokenizer {
   // I need left/right context
   private void setCandidateAbrev(String token) {
 
-    //System.err.println("Abrev? " + token);
+    logger.debug("Abrev? " + token);
     if ((token.length() <= 3)) {
       this.isCandidateAbrev = true;
     } else {
       this.isCandidateAbrev = false;
-      //System.err.println("this.isCandidateAbrev=" + this.isCandidateAbrev);
+      logger.debug("this.isCandidateAbrev=" + this.isCandidateAbrev);
     }
   }
 
 
   private void setCreateSentenceFlag(char c) {
 
-    //    System.err.println("Create sent: " + c);
-    if (this.eosChars.contains(c)
+    logger.debug("Create sent: " + c);
+    if (EOS_CHARS.contains(c)
         && !this.isCandidateAbrev) {
       this.createSentence = true;
-      //    System.err.println("this.createSentence=" + this.createSentence);
+      logger.debug("this.createSentence=" + this.createSentence);
     }
   }
 
@@ -268,7 +163,6 @@ public class GntMorphixTokenizer {
     // reset sensible class parameters
     this.createSentence = false;
     this.tokenList = new ArrayList<String>();
-
   }
 
 
@@ -296,10 +190,14 @@ public class GntMorphixTokenizer {
    * check e.g.,
    * 13 : 55 -> 13:55, 2001 / 2002 -> 2001/2002
    */
-  public void scanText(String inputStringParam) {
+  public List<List<String>> tokenize(String inputStringParam) {
 
     // Initialization
+    this.createSentence = false;
+    this.isCandidateAbrev = false;
     this.inputString = inputStringParam;
+    this.tokenList = new ArrayList<>();
+    this.sentenceList = new ArrayList<>();
     int il = this.inputString.length();
     int state = 0;
     int start = 0;
@@ -307,11 +205,11 @@ public class GntMorphixTokenizer {
     int end = 0;
     char c = '\0'; // used as dummy instead of nil or null
 
-    // System.err.println("Input (#" + il + "): " + inputString);
+    logger.debug("Input (#" + il + "): " + this.inputString);
 
     // This will be a loop which is terminated inside
     while (true) {
-      //System.err.println("Start: " + start + " end: " + end + " State " + state +  " c: " + c);
+      logger.debug("Start: " + start + " end: " + end + " State " + state + " c: " + c);
 
       if (end > il) {
         if (this.createSentence) {
@@ -335,17 +233,17 @@ public class GntMorphixTokenizer {
         // state actions
 
         case 1: // 1 is the character state, so most likely
-          if ((c == '\0') || this.tokenSepChars.contains(c)) {
+          if ((c == '\0') || TOKEN_SEP_CHARS.contains(c)) {
             String newToken = this.makeToken(start, end, this.lowerCase);
             this.tokenList.add(newToken);
             state = 0;
             start = (1 + end);
           } else {
-            if (this.splitString && this.delimiterChars.contains(c)) {
+            if (this.splitString && DELIMITER_CHARS.contains(c)) {
               state = 6;
               delimCnt++;
             } else {
-              if (this.specialChars.contains(c)) {
+              if (SPECIAL_CHARS.contains(c)) {
                 String newToken = this.makeToken(start, end, this.lowerCase);
                 this.tokenList.add(newToken);
                 this.setCandidateAbrev(newToken);
@@ -359,12 +257,12 @@ public class GntMorphixTokenizer {
           break;
 
         case 0: // state zero covers: space, tab, specials
-          if (this.tokenSepChars.contains(c)) {
+          if (TOKEN_SEP_CHARS.contains(c)) {
             start++;
           } else if ((c == '\0')) {
             this.createSentence = true;
           } else {
-            if (this.specialChars.contains(c)) {
+            if (SPECIAL_CHARS.contains(c)) {
               String newToken = this.makeToken(start, end, this.lowerCase);
               this.tokenList.add(newToken);
               // newToken is a char-string like "!"
@@ -382,7 +280,7 @@ public class GntMorphixTokenizer {
           break;
 
         case 2: // state two: integer part of digit
-          if ((c == '\0') || this.tokenSepChars.contains(c)) {
+          if ((c == '\0') || TOKEN_SEP_CHARS.contains(c)) {
             String newToken = this.makeToken(start, end, this.lowerCase);
             String cardinalString = convertToCardinal(newToken);
             this.tokenList.add(cardinalString);
@@ -393,7 +291,7 @@ public class GntMorphixTokenizer {
               state = 4;
             } else if (c == ',') {
               state = 3;
-            } else if (this.specialChars.contains(c)) {
+            } else if (SPECIAL_CHARS.contains(c)) {
               String newToken = this.makeToken(start, end, this.lowerCase);
               String cardinalString = convertToCardinal(newToken);
               this.tokenList.add(cardinalString);
@@ -411,7 +309,7 @@ public class GntMorphixTokenizer {
           break;
 
         case 3: // state three: floating point designated by #\,
-          if ((c == '\0') || this.tokenSepChars.contains(c)) {
+          if ((c == '\0') || TOKEN_SEP_CHARS.contains(c)) {
             String newToken = this.makeToken(start, (1 - end), this.lowerCase);
             String cardinalString = convertToCardinal(newToken);
             this.tokenList.add(cardinalString);
@@ -419,7 +317,7 @@ public class GntMorphixTokenizer {
             state = 0;
             start = (1 + end);
           } else {
-            if (this.specialChars.contains(c)) {
+            if (SPECIAL_CHARS.contains(c)) {
               String newToken = this.makeToken(start, (1 - end), this.lowerCase);
               String cardinalString = convertToCardinal(newToken);
               this.tokenList.add(cardinalString);
@@ -455,14 +353,14 @@ public class GntMorphixTokenizer {
             state = 0;
             start = (1 + end);
           } else {
-            if (this.tokenSepChars.contains(c)) {
+            if (TOKEN_SEP_CHARS.contains(c)) {
               String newToken = this.makeToken(start, end, this.lowerCase);
               String numberString = convertToOrdinal(newToken);
               this.tokenList.add(numberString);
               state = 0;
               start = (1 + end);
             } else {
-              if (this.specialChars.contains(c)) {
+              if (SPECIAL_CHARS.contains(c)) {
 
                 String newToken = this.makeToken(start, end, this.lowerCase);
                 String numberString = convertToOrdinal(newToken);
@@ -489,14 +387,14 @@ public class GntMorphixTokenizer {
           break;
 
         case 5: // state five: digits
-          if ((c == '\0') || this.tokenSepChars.contains(c)) {
+          if ((c == '\0') || TOKEN_SEP_CHARS.contains(c)) {
             String newToken = this.makeToken(start, end, this.lowerCase);
             String cardinalString = convertToCardinal(newToken);
             this.tokenList.add(cardinalString);
             state = 0;
             start = (1 + end);
           } else {
-            if (this.specialChars.contains(c)) {
+            if (SPECIAL_CHARS.contains(c)) {
               String newToken = this.makeToken(start, end, this.lowerCase);
               String cardinalString = convertToCardinal(newToken);
               this.tokenList.add(cardinalString);
@@ -517,17 +415,17 @@ public class GntMorphixTokenizer {
           break;
 
         case 6: // state six: handle delimiters like #\-
-          if ((c == '\0') || this.tokenSepChars.contains(c)) {
+          if ((c == '\0') || TOKEN_SEP_CHARS.contains(c)) {
             String newToken = this.makeToken(start, (end - delimCnt), this.lowerCase);
             this.tokenList.add(newToken);
             state = 0;
             delimCnt = 0;
             start = (1 + end);
           } else {
-            if (this.delimiterChars.contains(c)) {
+            if (DELIMITER_CHARS.contains(c)) {
               delimCnt++;
             } else {
-              if (this.specialChars.contains(c)) {
+              if (SPECIAL_CHARS.contains(c)) {
                 String newToken = this.makeToken(start, (end - delimCnt), this.lowerCase);
                 this.tokenList.add(newToken);
                 this.tokenList.add(Character.toString(c));
@@ -550,40 +448,35 @@ public class GntMorphixTokenizer {
           }
           break;
         default:
-          System.err.println("unknown state " + state + ", will be ignored");
+          logger.error("unknown state " + state + ", will be ignored");
       }
       end++;
     }
+
+    return this.sentenceList;
   }
 
 
-  public String tokenListToString(List<String> tokenListParam) {
+  public static String sentenceListToString(List<List<String>> sentenceListParam) {
 
-    String outputString = "";
-    for (String token : tokenListParam) {
-      outputString += token + " ";
-    }
-    return outputString;
-  }
-
-
-  public String sentenceListToString() {
-
-    String outputString = "";
+    StringBuilder output = new StringBuilder();
     int id = 0;
-    for (List<String> tokenListOfSentence : this.sentenceList) {
+    for (List<String> tokenListOfSentence : sentenceListParam) {
       if (!tokenListOfSentence.isEmpty()) {
-        outputString += id + ": " + this.tokenListToString(tokenListOfSentence) + "\n";
+        output.append(String.format("%d: %s%n", id, tokenListToString(tokenListOfSentence)));
         id++;
       }
     }
-    return outputString;
+    return output.toString();
   }
 
 
-  public void reset() {
+  private static String tokenListToString(List<String> tokenListParam) {
 
-    this.tokenList = new ArrayList<String>();
-    this.sentenceList = new ArrayList<List<String>>();
+    StringBuilder output = new StringBuilder();
+    for (String token : tokenListParam) {
+      output.append(token + " ");
+    }
+    return output.toString().trim();
   }
 }
