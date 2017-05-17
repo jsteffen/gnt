@@ -5,17 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Test class for {@link GntSimpleTokenizer}.
  *
  * @author Jörg Steffen, DFKI
  */
 public class GntSimpleTokenizerTest {
-
-  private static final Logger logger = LoggerFactory.getLogger(GntSimpleTokenizerTest.class);
 
   @Test
   public void test1() {
@@ -23,7 +19,7 @@ public class GntSimpleTokenizerTest {
     String text = "Der Abriss wird schätzungsweise etwa 40 Jahre dauern, sagt Dr. Günter Neumann, der "
         + "3. Reiter danach! Alleh hopp noch e mal.";
 
-    String[] tokens = GntSimpleTokenizer.splitTokenizer(text);
+    List<String> tokens = GntSimpleTokenizer.tokenize(text);
     assertThat(tokens).hasSize(21);
   }
 
@@ -36,7 +32,7 @@ public class GntSimpleTokenizerTest {
         + "important in host defense against bacterial infection in the lungs. Excessive immunosuppression of "
         + "Th1 T-cell pro-inflammatory cytokines leaves patients susceptible to infection.";
 
-    String[] tokens = GntSimpleTokenizer.splitTokenizer(text);
+    List<String> tokens = GntSimpleTokenizer.tokenize(text);
     assertThat(tokens).hasSize(45);
   }
 
@@ -49,7 +45,7 @@ public class GntSimpleTokenizerTest {
         + "Der 3.        Mann geht nahc hause 3. Und was macht er denn daheim? Weiss mnicht, weisst du es ? "
         + "Wieso nicht?    Weil ";
 
-    String[] tokens = GntSimpleTokenizer.splitTokenizer(text);
+    List<String> tokens = GntSimpleTokenizer.tokenize(text);
     assertThat(tokens).hasSize(44);
   }
 
@@ -85,7 +81,7 @@ public class GntSimpleTokenizerTest {
         + "-  We also perform a final optimization step on the trained model which eliminates features with "
         + "a weight of zero.";
 
-    String[] tokens = GntSimpleTokenizer.splitTokenizer(text);
+    List<String> tokens = GntSimpleTokenizer.tokenize(text);
     assertThat(tokens).hasSize(285);
   }
 }

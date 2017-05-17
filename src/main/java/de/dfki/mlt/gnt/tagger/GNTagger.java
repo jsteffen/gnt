@@ -374,7 +374,7 @@ public class GNTagger {
    * A method for tagging a single sentence given as list of tokens.
    * @param tokens
    */
-  public void tagUnlabeledTokens(String[] tokens) {
+  public void tagUnlabeledTokens(List<String> tokens) {
 
     // create internal sentence object
     this.getData().generateSentenceObjectFromUnlabeledTokens(tokens);

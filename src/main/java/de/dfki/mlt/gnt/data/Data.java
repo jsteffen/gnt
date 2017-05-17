@@ -215,15 +215,15 @@ public class Data {
    * <li> Using a dummy POS "UNK" encoded as -1
    * @param tokens
    */
-  public void generateSentenceObjectFromUnlabeledTokens(String[] tokens) {
+  public void generateSentenceObjectFromUnlabeledTokens(List<String> tokens) {
 
-    Sentence newSentence = new Sentence(tokens.length);
-    for (int i = 0; i < tokens.length; i++) {
+    Sentence newSentence = new Sentence(tokens.size());
+    for (int i = 0; i < tokens.size(); i++) {
       // tokens are strings
       // NOTE: No lower case here of word
       // Using a dummy POS -1
       newSentence.addNextToken(i,
-          updateWordMap(tokens[i]),
+          updateWordMap(tokens.get(i)),
           -1);
     }
     this.setSentence(newSentence);

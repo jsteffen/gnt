@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.List;
 
 import de.dfki.mlt.gnt.tagger.GNTagger;
 import de.dfki.mlt.gnt.tokenizer.GntSimpleTokenizer;
@@ -36,7 +37,7 @@ public class GNTaggerStandalone {
    */
   public void tagStringRunner(String inputString) {
 
-    String[] tokens = GntSimpleTokenizer.splitTokenizer(inputString);
+    List<String> tokens = GntSimpleTokenizer.tokenize(inputString);
 
     this.posTagger.tagUnlabeledTokens(tokens);
 
@@ -66,7 +67,7 @@ public class GNTaggerStandalone {
     String line = "";
     while ((line = fileReader.readLine()) != null) {
       if (!line.isEmpty()) {
-        String[] tokens = GntSimpleTokenizer.splitTokenizer(line);
+        List<String> tokens = GntSimpleTokenizer.tokenize(line);
         this.posTagger.tagUnlabeledTokens(tokens);
         String taggedString = this.posTagger.taggedSentenceToString();
         for (String token : taggedString.split(" ")) {

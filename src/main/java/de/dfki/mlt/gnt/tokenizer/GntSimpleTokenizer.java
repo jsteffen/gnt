@@ -1,11 +1,10 @@
 package de.dfki.mlt.gnt.tokenizer;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Simple tokenizer without sentence recognition.
  *
  * @author Günter Neumann, DFKI
  */
@@ -17,19 +16,9 @@ public final class GntSimpleTokenizer {
   }
 
 
-  public static String[] splitTokenizer(String string) {
-    //System.out.println(">>>"+string+"<<<");
+  public static List<String> tokenize(String string) {
 
     String delims = "[ |\\,|\\:|\\.|\\\"|\\(|\\)|\\!|\\?]+";
-    //delims = "[\\W]+";
-
-    String[] tokens = string.split(delims);
-
-    // GN: This is a cheap trick to remove empty strings
-    final List<String> list = new ArrayList<String>();
-    Collections.addAll(list, tokens);
-    list.remove("");
-    tokens = list.toArray(new String[list.size()]);
-    return tokens;
+    return Arrays.asList(string.split(delims));
   }
 }
