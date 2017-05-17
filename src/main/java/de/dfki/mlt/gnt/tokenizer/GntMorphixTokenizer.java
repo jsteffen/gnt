@@ -262,7 +262,9 @@ public class GntMorphixTokenizer {
   private void extendSentenceList() {
 
     // make a sentence
-    this.sentenceList.add(this.tokenList);
+    if (!this.tokenList.isEmpty()) {
+      this.sentenceList.add(this.tokenList);
+    }
     // reset sensible class parameters
     this.createSentence = false;
     this.tokenList = new ArrayList<String>();

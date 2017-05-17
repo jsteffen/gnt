@@ -1,37 +1,63 @@
 package de.dfki.mlt.gnt.tokenizer;
 
-import de.dfki.mlt.gnt.tokenizer.GntTextSegmentizer;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestTextSegmentizer {
+import java.util.List;
 
-  public static void main(String[] args) throws Exception {
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    GntTextSegmentizer segmentizer = new GntTextSegmentizer(false, false);
+/**
+ *
+ *
+ * @author Jörg Steffen, DFKI
+ */
+public class GntSimpleTokenizerTest {
 
-    long time1 = System.currentTimeMillis();
-    segmentizer.scanText(
-        "Der Abriss wird schätzungsweise etwa 40 Jahre dauern, sagt Dr. Günter Neumann, der 3. Reiter danach! "
-            + "Alleh hopp noch e mal.");
+  private static final Logger logger = LoggerFactory.getLogger(GntSimpleTokenizerTest.class);
 
-    System.out.println(segmentizer.sentenceListToString());
+  @Test
+  public void test1() {
 
-    segmentizer.reset();
-    segmentizer.scanText(
-        "Current immunosuppression protocols to prevent lung transplant rejection reduce pro-inflammatory and "
-            + "T-helper type 1 (Th1) cytokines. However, Th1 T-cell pro-inflammatory cytokine production is "
-            + "important in host defense against bacterial infection in the lungs. Excessive immunosuppression of "
-            + "Th1 T-cell pro-inflammatory cytokines leaves patients susceptible to infection.");
-    System.out.println(segmentizer.sentenceListToString());
+    String text = "Der Abriss wird schätzungsweise etwa 40 Jahre dauern, sagt Dr. Günter Neumann, der "
+        + "3. Reiter danach! Alleh hopp noch e mal.";
 
-    segmentizer.reset();
-    segmentizer.scanText("CELLULAR COMMUNICATIONS INC. sold 1,550,000 common shares at $21.75 each "
+    String[] tokens = GntSimpleTokenizer.splitTokenizer(text);
+    assertThat(tokens).hasSize(21);
+  }
+
+
+  @Test
+  public void test2() {
+
+    String text = "Current immunosuppression protocols to prevent lung transplant rejection reduce pro-inflammatory "
+        + "and T-helper type 1 (Th1) cytokines. However, Th1 T-cell pro-inflammatory cytokine production is "
+        + "important in host defense against bacterial infection in the lungs. Excessive immunosuppression of "
+        + "Th1 T-cell pro-inflammatory cytokines leaves patients susceptible to infection.";
+
+    String[] tokens = GntSimpleTokenizer.splitTokenizer(text);
+    assertThat(tokens).hasSize(45);
+  }
+
+
+  @Test
+  public void test3() {
+
+    String text = "CELLULAR COMMUNICATIONS INC. sold 1,550,000 common shares at $21.75 each "
         + "yesterday, according to lead underwriter L.F. Rothschild & Inc. . "
         + "Der 3.        Mann geht nahc hause 3. Und was macht er denn daheim? Weiss mnicht, weisst du es ? "
-        + "Wieso nicht?    Weil ");
-    System.out.println(segmentizer.sentenceListToString());
+        + "Wieso nicht?    Weil ";
 
-    segmentizer.reset();
-    segmentizer.scanText("From paper Optimizing Dependency Parsing Throughput "
+    String[] tokens = GntSimpleTokenizer.splitTokenizer(text);
+    assertThat(tokens).hasSize(44);
+  }
+
+
+  @Test
+  public void test4() {
+
+    String text = "From paper Optimizing Dependency Parsing Throughput "
         + "-  MDParser transforms String features to integer values since the used liblinear classifier "
         + "operates on numerical values. "
         + "This step requires a total of 27 transformations for every word, since MDParser computes 27 "
@@ -57,10 +83,10 @@ public class TestTextSegmentizer {
         + "once rather than twice "
         + "(for potential dependency n_i -> n_j and n_j -> n_i) ."
         + "-  We also perform a final optimization step on the trained model which eliminates features with "
-        + "a weight of zero.");
-    System.out.println(segmentizer.sentenceListToString());
+        + "a weight of zero.";
 
-    long time2 = System.currentTimeMillis();
-    System.err.println("System time (msec): " + (time2 - time1));
+    String[] tokens = GntSimpleTokenizer.splitTokenizer(text);
+    assertThat(tokens).hasSize(285);
   }
 }
+
