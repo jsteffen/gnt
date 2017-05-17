@@ -28,7 +28,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>caller.GNT</mainClass>
+							<mainClass>de.dfki.mlt.gnt.caller.GNT</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
