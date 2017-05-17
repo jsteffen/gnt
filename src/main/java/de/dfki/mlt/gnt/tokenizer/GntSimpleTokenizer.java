@@ -9,9 +9,9 @@ import java.util.List;
  *
  * @author Günter Neumann, DFKI
  */
-public final class GntSplitTokenizer {
+public final class GntSimpleTokenizer {
 
-  private GntSplitTokenizer() {
+  private GntSimpleTokenizer() {
 
     // private constructor to enforce noninstantiability
   }

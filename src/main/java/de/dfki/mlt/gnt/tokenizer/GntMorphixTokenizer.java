@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author Günter Neumann, DFKI
  */
-public class GntTextSegmentizer {
+public class GntMorphixTokenizer {
 
   // the last one should be #\^D, the Fill Down character
   private List<Character> specialChars =
@@ -39,11 +39,11 @@ public class GntTextSegmentizer {
   private List<List<String>> sentenceList = new ArrayList<List<String>>();
 
 
-  public GntTextSegmentizer() {
+  public GntMorphixTokenizer() {
   }
 
 
-  public GntTextSegmentizer(boolean lowerCase, boolean splitString) {
+  public GntMorphixTokenizer(boolean lowerCase, boolean splitString) {
     this.lowerCase = lowerCase;
     this.splitString = splitString;
   }
