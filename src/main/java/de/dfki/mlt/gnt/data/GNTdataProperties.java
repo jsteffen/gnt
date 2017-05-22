@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
@@ -156,7 +157,7 @@ public class GNTdataProperties extends Properties {
     Path sourceFile = new File(propsFileName).toPath();
     Path targetFile = new File(GNTdataProperties.configTmpFileName).toPath();
     try {
-      Files.copy(sourceFile, targetFile);
+      Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
