@@ -84,5 +84,15 @@ public class GntSimpleTokenizerTest {
     List<String> tokens = GntSimpleTokenizer.tokenize(text);
     assertThat(tokens).hasSize(285);
   }
+
+
+  @Test
+  public void test5() {
+
+    String text = ":Text with separator at the beginning.";
+
+    List<String> tokens = GntSimpleTokenizer.tokenize(text);
+    assertThat(tokens).hasSize(6);
+  }
 }
 
