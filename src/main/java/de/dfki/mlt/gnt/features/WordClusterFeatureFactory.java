@@ -87,8 +87,7 @@ public class WordClusterFeatureFactory {
 
   public void clean() {
 
-    this.word2index.clear();
-    this.clusterIdcnt = 0;
+    // do nothing
   }
 
 
