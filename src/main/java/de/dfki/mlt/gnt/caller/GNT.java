@@ -349,7 +349,7 @@ public final class GNT {
         break;
       } catch (ParseException e) {
         // only log if parse exception is NOT related to mode
-        if (!e.getMessage().contains(args[0])) {
+        if (args.length > 0 && !e.getMessage().contains(args[0])) {
           logger.error(e.getLocalizedMessage());
           break;
         }
