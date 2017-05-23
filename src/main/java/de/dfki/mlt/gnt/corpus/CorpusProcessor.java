@@ -7,162 +7,127 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import de.dfki.mlt.gnt.data.GNTdataProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Provides methods to prepare a corpus for model training.
  *
  * @author Günter Neumann, DFKI
+ * @author Jörg Steffen, DFKI
  */
-public class CorpusProcessor {
+public final class CorpusProcessor {
 
-  private Corpus corpus = null;
-  private GNTdataProperties dataProps = null;
-
-
-  public CorpusProcessor(Corpus corpus) {
-    this.setCorpus(corpus);
-  }
+  private static final Logger logger = LoggerFactory.getLogger(CorpusProcessor.class);
 
 
-  public CorpusProcessor(Corpus corpus, GNTdataProperties dataProps) {
-    this.setCorpus(corpus);
-    this.setDataProps(dataProps);
-  }
+  private CorpusProcessor() {
 
-
-  public GNTdataProperties getDataProps() {
-
-    return this.dataProps;
-  }
-
-
-  public void setDataProps(GNTdataProperties dataProps) {
-
-    this.dataProps = dataProps;
-  }
-
-
-  public Corpus getCorpus() {
-
-    return this.corpus;
-  }
-
-
-  public void setCorpus(Corpus corpus) {
-
-    this.corpus = corpus;
+    // private constructor to enforce noninstantiability
   }
 
 
   /**
-   * <pre>
-   * {@code
-   * Reads in a file of sentences in CONLL format and reads out each sentence lines-wise in a output file.
-   * CONLL format:
-   * - each word a line, sentence ends with newline
-   * - word is at second position:
-   * 1       The     _       DT      DT      _       2       NMOD
+   * Prepares the corpus specified in the given corpus config for mode training.
    *
-   * Maps each CONLL sentence to a sentence, where each sentence is a line of words extracted from the CONLL sentence.
-   * }
-   * </pre>
-   * @param sourceFileName
+   * @param corpusProps
+   *          the corpus config
+   */
+  public static void prepreCorpus(GNTcorpusProperties corpusProps) {
+
+    // transcode NER source files into proper CoNLL format
+    transcodeNerSourceFilesToConllFiles(corpusProps);
+    // transcode CoNLL files into plain text sentence files
+    transcodeConllFilesToSentenceFiles(corpusProps);
+  }
+
+
+  /**
+   * Transcodes NER source files to CoNLL files; currently, assuming CoNLL 2003 format.
+   *
+   * @param corpusProps
+   *          the corpus config
+   */
+  private static void transcodeNerSourceFilesToConllFiles(GNTcorpusProperties corpusProps) {
+
+    // collect all NER source files to transcode
+    String[] propKeys = new String[] {
+        "trainingLabeledSourceFiles", "devLabeledSourceFiles", "testLabeledSourceFiles" };
+    List<String> nerSourceFilesToTranscode = new ArrayList<>();
+    for (String oneKey : propKeys) {
+      if (corpusProps.containsKey(oneKey)) {
+        String[] nerSourceFiles = corpusProps.getProperty(oneKey).split(",");
+        nerSourceFilesToTranscode.addAll(Arrays.asList(nerSourceFiles));
+      }
+    }
+
+    if (nerSourceFilesToTranscode.isEmpty()) {
+      return;
+    }
+
+    logger.info("transcoding NER source files to CoNLL files...");
+
+    // language is required to distinguish between different NER source file formats
+    String lang = "EN";
+    if (corpusProps.getProperty("taggerName").equals("DENER")) {
+      lang = "DE";
+    }
+
+    // transcode NER source files
+    for (String fileName : nerSourceFilesToTranscode) {
+      try {
+        logger.info(fileName.trim());
+        transcodeNerSourceFileToConllFile(fileName.trim(), "ISO-8859-1", "utf-8", lang);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+  /**
+   * Reads in a file in NER source format and converts it into CoNLL format.
+   *
+   * @param nerSourceFileName
    * @param sourceEncoding
-   * @param targetFileName
    * @param targetEncoding
-   * @param maxSent
+   * @param lang
    * @throws IOException
    */
-  private void transcodeConllToSentenceFile(String sourceFileName, String sourceEncoding,
-      String targetFileName, String targetEncoding, int maxSent)
-      throws IOException {
-
-    // init reader for CONLL style file
-
-    BufferedReader reader = new BufferedReader(
-        new InputStreamReader(
-            new FileInputStream(sourceFileName),
-            sourceEncoding));
-
-    // init writer for line-wise file
-    BufferedWriter writer = new BufferedWriter(
-        new OutputStreamWriter(
-            new FileOutputStream(targetFileName),
-            targetEncoding));
-
-    String line = "";
-    int sentCnt = 0;
-    List<String> tokens = new ArrayList<String>();
-    while ((line = reader.readLine()) != null) {
-      if (line.isEmpty()) {
-        // If ew read a newline it means we know we have just extracted the words
-        // of a sentence, so write them to file
-        if (!tokens.isEmpty()) {
-          writer.write(sentenceToString(tokens) + "\n");
-          tokens = new ArrayList<String>();
-          // Increase sentence counter
-          sentCnt++;
-          // Stop if maxSent has been processed
-          // if maxSent is < 0 this means: read until end of file.
-          if ((maxSent > 0) && (sentCnt >= maxSent)) {
-            break;
-          }
-        }
-      } else {
-        // Extract the word from each CONLL token line
-        String[] tokenizedLine = line.split("\t");
-        tokens.add(tokenizedLine[1]);
-      }
-
-    }
-    reader.close();
-    writer.close();
-  }
-
-
-  private String sentenceToString(List<String> tokens) {
-
-    String sentenceString = "";
-    for (int i = 0; i < tokens.size() - 1; i++) {
-      sentenceString = sentenceString + tokens.get(i) + " ";
-    }
-    return sentenceString + tokens.get(tokens.size() - 1);
-  }
-
-
-  // Processing NER files
-  private void transcodeNERfile(String sourceFileName, String sourceEncoding,
-      String targetFileName, String targetEncoding)
+  private static void transcodeNerSourceFileToConllFile(
+      String nerSourceFileName, String sourceEncoding, String targetEncoding, String lang)
       throws IOException {
 
     // init reader for CONLL style file
     BufferedReader reader = new BufferedReader(
         new InputStreamReader(
-            new FileInputStream(sourceFileName),
+            new FileInputStream(nerSourceFileName),
             sourceEncoding));
 
     // init writer for line-wise file
-    BufferedWriter writer = new BufferedWriter(
-        new OutputStreamWriter(
-            new FileOutputStream(targetFileName),
-            targetEncoding));
+    String conllFileName = nerSourceFileName.substring(0, nerSourceFileName.lastIndexOf(".")) + ".conll";
+    PrintWriter writer = new PrintWriter(
+        new BufferedWriter(
+            new OutputStreamWriter(
+                new FileOutputStream(conllFileName),
+                targetEncoding)));
 
     String line = "";
     int tokenCnt = 0;
     while ((line = reader.readLine()) != null) {
       if (line.isEmpty()) {
         tokenCnt = 0;
-        writer.newLine();
+        writer.println();
       } else {
         //if (!line.equals("-DOCSTART- -X- O O"))
         tokenCnt++;
         String[] tokenizedLine = line.split(" ");
-        writer.write(this.nerTokenToString(tokenizedLine, tokenCnt));
-        writer.newLine();
+        writer.println(nerTokenToString(tokenizedLine, tokenCnt, lang));
       }
     }
 
@@ -171,78 +136,62 @@ public class CorpusProcessor {
   }
 
 
-  private String enNerTokenToString(String[] tokenizedLine, int index) {
+  private static String nerTokenToString(String[] tokenizedLine, int index, String lang) {
 
-    // EN
-    // West NNP I-NP I-MISC
-    // index West NNP I-NP I-MISC
-    String output = index + "\t";
-    output += tokenizedLine[0] + "\t";
-    output += tokenizedLine[1] + "\t";
-    output += tokenizedLine[2] + "\t";
-    output += tokenizedLine[3];
-    return output;
-
-  }
-
-
-  private String deNerTokenToString(String[] tokenizedLine, int index) {
-
-    // DE
-    // Nordendler <unknown> NN I-NC I-ORG
-    // index Nordendler NN I-NC I-ORG
-    String output = index + "\t";
-    output += tokenizedLine[0] + "\t";
-    output += tokenizedLine[2] + "\t";
-    output += tokenizedLine[3] + "\t";
-    output += tokenizedLine[4];
-    return output;
-
-  }
-
-
-  private String nerTokenToString(String[] tokenizedLine, int index) {
-
-    String output = "";
-    if (this.getDataProps().getGlobalParams().getTaggerName().equals("NER")
-        || this.getDataProps().getGlobalParams().getTaggerName().equals("ENNER")) {
-      output = enNerTokenToString(tokenizedLine, index);
-    } else if (this.getDataProps().getGlobalParams().getTaggerName().equals("DENER")) {
-      output = deNerTokenToString(tokenizedLine, index);
+    StringBuilder output = new StringBuilder();
+    if (lang.equals("EN")) {
+      // EN
+      // West NNP I-NP I-MISC
+      // index West NNP I-NP I-MISC
+      output.append(index + "\t")
+          .append(tokenizedLine[0] + "\t")
+          .append(tokenizedLine[1] + "\t")
+          .append(tokenizedLine[2] + "\t")
+          .append(tokenizedLine[3]);
+    } else if (lang.equals("DE")) {
+      // DE
+      // Nordendler <unknown> NN I-NC I-ORG
+      // index Nordendler NN I-NC I-ORG
+      output.append(index + "\t")
+          .append(tokenizedLine[0] + "\t")
+          .append(tokenizedLine[2] + "\t")
+          .append(tokenizedLine[3] + "\t")
+          .append(tokenizedLine[4]);
     }
-
-    return output;
-
+    return output.toString();
   }
 
-
-  // Main wrappers for processing all files defined in corpus for current used taggerName
 
   /**
-   * This is a wrapper to process a set of NER files. Currently, assuming conll 2003 format.
+   * Transcodes NER source files to CoNLL files.
+   *
+   * @param corpusProps
+   *          the corpus config
    */
-  private void transcodeSourceFileToProperConllFormatFiles() {
+  private static void transcodeConllFilesToSentenceFiles(GNTcorpusProperties corpusProps) {
 
-    for (String fileName : this.getCorpus().getTrainingLabeledSourceFiles()) {
-      try {
-        System.out.println(fileName + ".src");
-        transcodeNERfile(fileName + ".src", "ISO-8859-1", fileName + ".conll", "utf-8");
-      } catch (IOException e) {
-        e.printStackTrace();
+    // collect all CoNLL files to transcode
+    String[] propKeys = new String[] {
+        "trainingLabeledData", "devLabeledData", "testLabeledData" };
+    List<String> conllFilesToTranscode = new ArrayList<>();
+    for (String oneKey : propKeys) {
+      if (corpusProps.containsKey(oneKey)) {
+        String[] conllFiles = corpusProps.getProperty(oneKey).split(",");
+        conllFilesToTranscode.addAll(Arrays.asList(conllFiles));
       }
     }
-    for (String fileName : this.getCorpus().getDevLabeledSourceFiles()) {
-      try {
-        System.out.println(fileName + ".src");
-        transcodeNERfile(fileName + ".src", "ISO-8859-1", fileName + ".conll", "utf-8");
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+
+    if (conllFilesToTranscode.isEmpty()) {
+      return;
     }
-    for (String fileName : this.getCorpus().getTestLabeledSourceFiles()) {
+
+    logger.info("transcoding CoNLL files to sentence files...");
+
+    for (String fileName : conllFilesToTranscode) {
       try {
-        System.out.println(fileName + ".src");
-        transcodeNERfile(fileName + ".src", "ISO-8859-1", fileName + ".conll", "utf-8");
+        logger.info(fileName.trim());
+        // transcode ALL files -> -1 as last parameter
+        transcodeConllFileToSentenceFile(fileName.trim(), "utf-8", "utf-8", -1);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -251,40 +200,77 @@ public class CorpusProcessor {
 
 
   /**
-   * This is a wrapper to process a set of files! -1 means: all files
+   * <pre>
+   * {@code
+   * Reads in a file of sentences in CoNLL format and writes out each sentence lines-wise in a output file.
+   * CoNLL format:
+   * - each word a line, sentence ends with newline
+   * - word is at second position:
+   * 1       The     _       DT      DT      _       2       NMOD
+   * }
+   * </pre>
+   *
+   * @param conllSourceFileName
+   * @param sourceEncoding
+   * @param targetEncoding
+   * @param maxSent
+   *          max number of sentences to process; use -1 to process all sentences
+   * @throws IOException
    */
-  private void transcodeConllToSentenceFiles() {
+  private static void transcodeConllFileToSentenceFile(
+      String conllSourceFileName, String sourceEncoding, String targetEncoding, int maxSent)
+      throws IOException {
 
-    for (String fileName : this.getCorpus().getTrainingLabeledData()) {
-      try {
-        System.out.println(fileName + ".conll");
-        transcodeConllToSentenceFile(fileName + ".conll", "utf-8", fileName + "-sents.txt", "utf-8", -1);
-      } catch (IOException e) {
-        e.printStackTrace();
+    // init reader for CoNLL style file
+    BufferedReader reader = new BufferedReader(
+        new InputStreamReader(
+            new FileInputStream(conllSourceFileName),
+            sourceEncoding));
+
+    // init writer for line-wise sentences file
+    String sentenceFileName =
+        conllSourceFileName.substring(0, conllSourceFileName.lastIndexOf(".")) + "-sents.txt";
+    PrintWriter writer = new PrintWriter(
+        new BufferedWriter(
+            new OutputStreamWriter(
+                new FileOutputStream(sentenceFileName),
+                targetEncoding)));
+
+    String line = "";
+    int sentCnt = 0;
+    List<String> tokens = new ArrayList<String>();
+    while ((line = reader.readLine()) != null) {
+      if (line.isEmpty()) {
+        // if we read a newline it means we know we have just extracted the words
+        // of a sentence, so write them to file
+        if (!tokens.isEmpty()) {
+          writer.println(sentenceToString(tokens));
+          tokens = new ArrayList<String>();
+          // increase sentence counter
+          sentCnt++;
+          // stop if maxSent sentences has been processed;
+          // if maxSent is < 0 this means: read until end of file
+          if ((maxSent > 0) && (sentCnt >= maxSent)) {
+            break;
+          }
+        }
+      } else {
+        // extract the word from each CoNLL token line
+        String[] tokenizedLine = line.split("\t");
+        tokens.add(tokenizedLine[1]);
       }
     }
-    for (String fileName : this.getCorpus().getDevLabeledData()) {
-      try {
-        System.out.println(fileName + ".conll");
-        transcodeConllToSentenceFile(fileName + ".conll", "utf-8", fileName + "-sents.txt", "utf-8", -1);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    for (String fileName : this.getCorpus().getTestLabeledData()) {
-      try {
-        System.out.println(fileName + ".conll");
-        transcodeConllToSentenceFile(fileName + ".conll", "utf-8", fileName + "-sents.txt", "utf-8", -1);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
+    reader.close();
+    writer.close();
   }
 
 
-  public void processConllFiles() {
+  private static String sentenceToString(List<String> tokens) {
 
-    this.transcodeSourceFileToProperConllFormatFiles();
-    this.transcodeConllToSentenceFiles();
+    StringBuilder sentence = new StringBuilder();
+    for (int i = 0; i < tokens.size(); i++) {
+      sentence.append(tokens.get(i) + " ");
+    }
+    return sentence.toString().trim();
   }
 }
