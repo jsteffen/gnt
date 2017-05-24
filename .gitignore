@@ -1,3 +1,4 @@
 /target/
+/gnt.log*
 /**/.DS_Store
 /resources/

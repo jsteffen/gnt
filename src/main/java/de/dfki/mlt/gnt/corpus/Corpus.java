@@ -132,7 +132,7 @@ public class Corpus {
       String[] fileList = property.split(",");
       for (String fileName : fileList) {
         String fileNameWithoutExtension = fileName.split("\\.src")[0].replaceAll("[\n\r\t]", "");
-        this.trainingLabeledSourceFiles.add(fileNameWithoutExtension);
+        this.trainingLabeledSourceFiles.add(fileNameWithoutExtension.trim());
       }
     }
   }
@@ -144,7 +144,7 @@ public class Corpus {
       String[] fileList = property.split(",");
       for (String fileName : fileList) {
         String fileNameWithoutExtension = fileName.split("\\.src")[0].replaceAll("[\n\r\t]", "");
-        this.devLabeledSourceFiles.add(fileNameWithoutExtension);
+        this.devLabeledSourceFiles.add(fileNameWithoutExtension.trim());
       }
     }
   }
@@ -156,7 +156,7 @@ public class Corpus {
       String[] fileList = property.split(",");
       for (String fileName : fileList) {
         String fileNameWithoutExtension = fileName.split("\\.src")[0].replaceAll("[\n\r\t]", "");
-        this.testLabeledSourceFiles.add(fileNameWithoutExtension);
+        this.testLabeledSourceFiles.add(fileNameWithoutExtension.trim());
       }
     }
   }
@@ -167,7 +167,7 @@ public class Corpus {
     String[] fileList = property.split(",");
     for (String fileName : fileList) {
       String fileNameWithoutExtension = fileName.split("\\.conll")[0].replaceAll("[\n\r\t]", "");
-      this.trainingLabeledData.add(fileNameWithoutExtension);
+      this.trainingLabeledData.add(fileNameWithoutExtension.trim());
     }
   }
 
@@ -177,7 +177,7 @@ public class Corpus {
     String[] fileList = property.split(",");
     for (String fileName : fileList) {
       String fileNameWithoutExtension = fileName.split("\\.conll")[0].replaceAll("[\n\r\t]", "");
-      this.devLabeledData.add(fileNameWithoutExtension);
+      this.devLabeledData.add(fileNameWithoutExtension.trim());
     }
   }
 
@@ -187,7 +187,7 @@ public class Corpus {
     String[] fileList = property.split(",");
     for (String fileName : fileList) {
       String fileNameWithoutExtension = fileName.split("\\.conll")[0].replaceAll("[\n\r\t]", "");
-      this.testLabeledData.add(fileNameWithoutExtension);
+      this.testLabeledData.add(fileNameWithoutExtension.trim());
     }
   }
 
@@ -196,7 +196,7 @@ public class Corpus {
 
     String[] fileList = property.split(",");
     for (String fileName : fileList) {
-      this.trainingUnLabeledData.add(fileName.replaceAll("[\n\r\t]", ""));
+      this.trainingUnLabeledData.add(fileName.replaceAll("[\n\r\t]", "").trim());
     }
   }
 
@@ -205,7 +205,7 @@ public class Corpus {
 
     String[] fileList = property.split(",");
     for (String fileName : fileList) {
-      this.devUnLabeledData.add(fileName.replaceAll("[\n\r\t]", ""));
+      this.devUnLabeledData.add(fileName.replaceAll("[\n\r\t]", "").trim());
     }
   }
 
@@ -214,7 +214,7 @@ public class Corpus {
 
     String[] fileList = property.split(",");
     for (String fileName : fileList) {
-      this.testUnLabeledData.add(fileName.replaceAll("[\n\r\t]", ""));
+      this.testUnLabeledData.add(fileName.replaceAll("[\n\r\t]", "").trim());
     }
   }
 

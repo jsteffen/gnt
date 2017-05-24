@@ -44,10 +44,9 @@ public class GNTrainer {
 
     // Set the corpus files for performing training and testing
     this.corpus = new Corpus(corpusProps, this.getDataProps().getGlobalParams());
-    CorpusProcessor mapper = new CorpusProcessor(this.corpus, this.dataProps);
 
-    // Make sure that they are all in correct CONLL format
-    mapper.processConllFiles();
+    // make sure corpus is available in CoNLL format and as plain text sentences
+    CorpusProcessor.prepreCorpus(corpusProps);
 
     // set the ZIP archivator
     this.setArchivator(

@@ -1,6 +1,6 @@
 package de.dfki.mlt.gnt.tokenizer;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +19,14 @@ public final class GntSimpleTokenizer {
   public static List<String> tokenize(String string) {
 
     String delims = "[ |\\,|\\:|\\.|\\\"|\\(|\\)|\\!|\\?]+";
-    return Arrays.asList(string.split(delims));
+    String[] tokensArray = string.split(delims);
+    // collect non-empty tokens
+    List<String> tokens = new ArrayList<>();
+    for (int i = 0; i < tokensArray.length; i++) {
+      if (tokensArray[i].length() > 0) {
+        tokens.add(tokensArray[i]);
+      }
+    }
+    return tokens;
   }
 }
