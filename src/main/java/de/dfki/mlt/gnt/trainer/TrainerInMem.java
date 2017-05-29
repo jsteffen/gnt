@@ -21,6 +21,7 @@ import de.bwaldvogel.liblinear.Parameter;
 import de.bwaldvogel.liblinear.Problem;
 import de.bwaldvogel.liblinear.SolverType;
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.ConfigKeys;
 import de.dfki.mlt.gnt.config.GlobalConfig;
 import de.dfki.mlt.gnt.data.Alphabet;
 import de.dfki.mlt.gnt.data.Data;
@@ -402,7 +403,7 @@ public class TrainerInMem {
       this.getProblem().y[i] = nextWindow.getLabelIndex();
       this.getProblem().x[i] = problemInstance.getFeatureVector();
 
-      if (this.getGlobalParams().isSaveModelInputFile()) {
+      if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
         problemInstance.saveProblemInstance(
             this.getModelInfo().getModelInputFileWriter(),
             nextWindow.getLabelIndex());
@@ -527,7 +528,7 @@ public class TrainerInMem {
      * but do not do training; useful if liblinear should be run directly from shell, e.g., using the C-implementation
      */
     // NOTE this is the only place, where I make use of the model input file
-    if (this.getGlobalParams().isSaveModelInputFile()) {
+    if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
       time1 = System.currentTimeMillis();
       // Close the model input file writer buffer
       this.getModelInfo().getModelInputFileWriter().close();

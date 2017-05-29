@@ -9,12 +9,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.ConfigKeys;
 import de.dfki.mlt.gnt.config.GlobalConfig;
 import de.dfki.mlt.gnt.corpus.Corpus;
 import de.dfki.mlt.gnt.corpus.GNTcorpusProperties;
@@ -334,7 +338,7 @@ public class GNTagger {
       ProblemInstance problemInstance = new ProblemInstance();
       problemInstance.createProblemInstanceFromWindow(nextWindow);
 
-      if (this.getDataProps().getGlobalParams().isSaveModelInputFile()) {
+      if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
         problemInstance.saveProblemInstance(
             this.getModelInfo().getModelInputFileWriter(),
             nextWindow.getLabelIndex());
@@ -488,12 +492,16 @@ public class GNTagger {
         new OutputStreamWriter(new FileOutputStream(evalFileName), "UTF-8"));
 
     // Set the writer buffer for the model input file based on the given sourceFileName
-    if (this.getDataProps().getGlobalParams().isSaveModelInputFile()) {
+    if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
       String fileName = new File(sourceFileName).getName();
+      Path libLinearInputPath =
+          GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER)
+          .resolve("liblinear_input_" + fileName + ".txt");
+      if (libLinearInputPath.getParent() != null) {
+        Files.createDirectories(libLinearInputPath.getParent());
+      }
       this.getModelInfo().setModelInputFileWriter(
-          new BufferedWriter(
-              new OutputStreamWriter(
-                  new FileOutputStream("liblinear_input_" + fileName + ".txt"), "UTF-8")));
+          Files.newBufferedWriter(libLinearInputPath, StandardCharsets.UTF_8));
     }
     System.out.println("\n++++\nDo testing from file: " + sourceFileName);
     // Reset some data to make sure each file has same change
@@ -506,7 +514,7 @@ public class GNTagger {
     // close the buffers
     conllReader.close();
     conllWriter.close();
-    if (this.getDataProps().getGlobalParams().isSaveModelInputFile()) {
+    if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
       this.getModelInfo().getModelInputFileWriter().close();
     }
 

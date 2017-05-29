@@ -184,12 +184,15 @@ public class ModelInfo {
     this.modelFileArchive =
         GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(this.modelName + ".zip").toString();
 
-    if (globalParams.isSaveModelInputFile()) {
-      //Only if ModelInfo.saveModelInputFile=true then save the modelInputFile
-      Path libLinearInputPath =
-          GlobalConfig.getModelBuildFolder().resolve("liblinear_input_" + this.modelName + ".txt");
-      // And create and open the writerBuffer
+    if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
       try {
+        Path libLinearInputPath =
+            GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER)
+            .resolve("liblinear_input_" + this.modelName + ".txt");
+        if (libLinearInputPath.getParent() != null) {
+          Files.createDirectories(libLinearInputPath.getParent());
+        }
+        // create and open the writerBuffer
         this.setModelInputFileWriter(Files.newBufferedWriter(libLinearInputPath, StandardCharsets.UTF_8));
       } catch (IOException e) {
         e.printStackTrace();
