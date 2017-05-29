@@ -15,6 +15,7 @@ import java.util.List;
 import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 import de.dfki.mlt.gnt.corpus.Corpus;
 import de.dfki.mlt.gnt.corpus.GNTcorpusProperties;
 import de.dfki.mlt.gnt.data.Alphabet;
@@ -86,13 +87,12 @@ public class GNTagger {
     this.getArchivator().extract();
     System.out.println("Set dataProps ...");
     this.setDataProps(
-        new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
+        new GNTdataProperties(this.getArchivator().getArchiveMap().get(
+            GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE).toString())));
     this.setAlphabet(this.getDataProps().getAlphabet());
 
     this.setModelInfo(this.getDataProps().getModelInfo());
-    this.setData(
-        new Data(this.getDataProps().getGlobalParams().getFeatureFilePathname(),
-            this.getDataProps().getGlobalParams().getTaggerName()));
+    this.setData(new Data());
 
     this.modelInfo.createModelFileName(this.dataProps.getGlobalParams().getWindowSize(),
         this.dataProps.getGlobalParams().getDim(),
@@ -109,14 +109,15 @@ public class GNTagger {
     System.out.println("Extract archive ...");
     this.getArchivator().extract();
     System.out.println("Set dataProps ...");
+    System.out.println(GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE));
     this.setDataProps(
-        new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
+        new GNTdataProperties(
+            this.getArchivator().getArchiveMap().get(
+                GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE).toString())));
     this.setAlphabet(this.getDataProps().getAlphabet());
 
     this.setModelInfo(this.getDataProps().getModelInfo());
-    this.setData(
-        new Data(this.getDataProps().getGlobalParams().getFeatureFilePathname(),
-            this.getDataProps().getGlobalParams().getTaggerName()));
+    this.setData(new Data());
     this.corpus = new Corpus(props, this.getDataProps().getGlobalParams());
 
     this.modelInfo.createModelFileName(this.dataProps.getGlobalParams().getWindowSize(),
@@ -247,11 +248,9 @@ public class GNTagger {
     GNTagger.tokenPersec = 0;
 
     System.out.println("Load feature files with dim: " + dim);
-    this.getAlphabet().loadFeaturesFromFiles(
-        this.getArchivator(), this.getDataProps().getGlobalParams().getTaggerName(), dim,
-        this.getDataProps().getGlobalParams().getFeatureFilePathname());
+    this.getAlphabet().loadFeaturesFromFiles(this.getArchivator(), dim);
 
-    System.out.println("Load label set from archive: " + this.getData().getLabelMapFileName());
+    System.out.println("Load label set from archive: " + this.getData().getLabelMapPath());
     this.getData().readLabelSet(this.getArchivator());
 
     System.out.println("Cleaning non-used variables in Alphabet and in Data:");
@@ -268,12 +267,14 @@ public class GNTagger {
 
     this.time1 = System.currentTimeMillis();
 
-    System.out.println("Load model file from archive: " + this.getModelInfo().getModelFile());
+    System.out.println("Load model file from archive: " + this.getModelInfo().getModelName() + ".txt");
 
     //this.setModel(Model.load(new File(this.getModelInfo().getModelFile())));
     this.setModel(Linear.loadModel(
         new InputStreamReader(
-            this.getArchivator().getArchiveMap().get(this.getModelInfo().getModelFile()),
+            this.getArchivator().getArchiveMap().get(
+                GlobalConfig.getModelBuildFolder().resolve(
+                    this.getModelInfo().getModelName() + ".txt").toString()),
             "UTF-8")));
     System.out.println(".... DONE!");
 
@@ -492,9 +493,7 @@ public class GNTagger {
       this.getModelInfo().setModelInputFileWriter(
           new BufferedWriter(
               new OutputStreamWriter(
-                  new FileOutputStream(
-                      this.getModelInfo().getModelInputFilePrefix() + fileName + ".txt"),
-                  "UTF-8")));
+                  new FileOutputStream("liblinear_input_" + fileName + ".txt"), "UTF-8")));
     }
     System.out.println("\n++++\nDo testing from file: " + sourceFileName);
     // Reset some data to make sure each file has same change

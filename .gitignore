@@ -1,4 +1,6 @@
 /target/
+/model/
 /gnt.log*
+/*.zip
 /**/.DS_Store
 /resources/

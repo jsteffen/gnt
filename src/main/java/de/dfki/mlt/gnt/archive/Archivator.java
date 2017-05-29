@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -131,7 +132,7 @@ public class Archivator {
     ZipInputStream zis = new ZipInputStream(new FileInputStream(this.archiveName));
     ZipEntry entry;
     while ((entry = zis.getNextEntry()) != null) {
-      this.archiveMap.put(entry.getName(), zip.getInputStream(entry));
+      this.archiveMap.put(Paths.get(entry.getName()).toString(), zip.getInputStream(entry));
     }
   }
 

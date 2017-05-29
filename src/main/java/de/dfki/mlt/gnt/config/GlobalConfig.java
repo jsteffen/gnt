@@ -21,6 +21,9 @@ import org.slf4j.LoggerFactory;
  */
 public final class GlobalConfig {
 
+  /** name of model config file in model archive */
+  public static final String MODEL_CONFIG_FILE = "dataConfig.xml";
+
   private static final Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
   private static PropertiesConfiguration instance;
 

@@ -1,9 +1,11 @@
 package de.dfki.mlt.gnt.data;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  *
@@ -25,18 +27,13 @@ public class Data {
   private Sentence sentence = new Sentence();
   private int sentenceCnt = 0;
   private List<Window> instances = new ArrayList<Window>();
-  private String labelMapFileName = null;
-  private String wordMapFileName = null;
+  private Path labelMapPath;
+  private Path wordMapPath;
 
 
   public Data() {
-
-  }
-
-
-  public Data(String featureFilePathname, String taggerName) {
-    this.labelMapFileName = featureFilePathname + taggerName + "/labelSet.txt";
-    this.wordMapFileName = featureFilePathname + taggerName + "/wordSet.txt";
+    this.labelMapPath = GlobalConfig.getModelBuildFolder().resolve("labelSet.txt");
+    this.wordMapPath = GlobalConfig.getModelBuildFolder().resolve("wordSet.txt");
   }
 
 
@@ -124,27 +121,15 @@ public class Data {
   }
 
 
-  public String getLabelMapFileName() {
+  public Path getLabelMapPath() {
 
-    return this.labelMapFileName;
+    return this.labelMapPath;
   }
 
 
-  public void setLabelMapFileName(String labelMapFileName) {
+  public Path getWordMapPath() {
 
-    this.labelMapFileName = labelMapFileName;
-  }
-
-
-  public String getWordMapFileName() {
-
-    return this.wordMapFileName;
-  }
-
-
-  public void setWordMapFileName(String wordMapFileName) {
-
-    this.wordMapFileName = wordMapFileName;
+    return this.wordMapPath;
   }
 
 
@@ -252,37 +237,37 @@ public class Data {
 
   public void saveLabelSet() {
 
-    this.getLabelSet().writeSetIndexMap(this.getLabelMapFileName());
+    this.getLabelSet().writeSetIndexMap(this.getLabelMapPath());
   }
 
 
   public void readLabelSet() {
 
-    this.getLabelSet().readSetIndexMap(this.getLabelMapFileName());
+    this.getLabelSet().readSetIndexMap(this.getLabelMapPath());
   }
 
 
   public void readLabelSet(Archivator archivator) {
 
-    this.getLabelSet().readSetIndexMap(archivator, this.getLabelMapFileName());
+    this.getLabelSet().readSetIndexMap(archivator, this.getLabelMapPath());
   }
 
 
   public void saveWordSet() {
 
-    this.getWordSet().writeSetIndexMap(this.getWordMapFileName());
+    this.getWordSet().writeSetIndexMap(this.getWordMapPath());
   }
 
 
   public void readWordSet() {
 
-    this.getWordSet().readSetIndexMap(this.getWordMapFileName());
+    this.getWordSet().readSetIndexMap(this.getWordMapPath());
   }
 
 
   public void readWordSet(Archivator archivator) {
 
-    this.getWordSet().readSetIndexMap(archivator, this.getWordMapFileName());
+    this.getWordSet().readSetIndexMap(archivator, this.getWordMapPath());
   }
 
 

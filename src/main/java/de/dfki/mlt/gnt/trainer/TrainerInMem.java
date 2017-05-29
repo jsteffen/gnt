@@ -5,6 +5,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +21,7 @@ import de.bwaldvogel.liblinear.Parameter;
 import de.bwaldvogel.liblinear.Problem;
 import de.bwaldvogel.liblinear.SolverType;
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 import de.dfki.mlt.gnt.data.Alphabet;
 import de.dfki.mlt.gnt.data.Data;
 import de.dfki.mlt.gnt.data.GlobalParams;
@@ -106,7 +112,7 @@ public class TrainerInMem {
     this.setWindowSize(windowSize);
     this.setModelInfo(modelInfo);
     this.setAlphabet(alphabet);
-    this.setData(new Data(globals.getFeatureFilePathname(), globals.getTaggerName()));
+    this.setData(new Data());
     this.setArchivator(archivator);
 
     this.setParameter(new Parameter(
@@ -455,9 +461,11 @@ public class TrainerInMem {
     time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (time2 - time1));
 
-    System.out.println("Save  model file: " + this.modelInfo.getModelFile());
+    String modelFileName = GlobalConfig.getModelBuildFolder().resolve(
+        this.modelInfo.getModelName() + ".txt").toString();
+    System.out.println("Save  model file: " + modelFileName);
     time1 = System.currentTimeMillis();
-    model.save(new File(this.modelInfo.getModelFile()));
+    model.save(new File(modelFileName));
     time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (time2 - time1));
   }
@@ -532,12 +540,18 @@ public class TrainerInMem {
       time2 = System.currentTimeMillis();
       System.out.println("Complete time for training and writing model (msec): " + (time2 - time1));
     }
-    // Add labelSet and wordSet from Data()
-    this.getArchivator().getFilesToPack().add(this.getData().getLabelMapFileName());
-    this.getArchivator().getFilesToPack().add(this.getData().getWordMapFileName());
-    // Add model file
-    this.getArchivator().getFilesToPack().add(this.getModelInfo().getModelFile());
-    // Finally pack archive
+
+    // pack all files in model build folder
+    Files.walkFileTree(GlobalConfig.getModelBuildFolder(), new SimpleFileVisitor<Path>() {
+      @Override
+      public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+        if (!attrs.isDirectory()) {
+          System.out.println(" add to archive: " + path);
+          getArchivator().getFilesToPack().add(path.toString());
+        }
+        return FileVisitResult.CONTINUE;
+      }
+    });
     this.getArchivator().pack();
     System.out.println("Pack archive: " + this.getArchivator().getArchiveName());
     System.out.println("... Done!");

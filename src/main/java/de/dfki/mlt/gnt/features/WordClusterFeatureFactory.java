@@ -1,18 +1,20 @@
 package de.dfki.mlt.gnt.features;
 
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  * Given a word2clusterId file from /Users/gune00/data/Marmot/Word
@@ -37,27 +39,9 @@ public class WordClusterFeatureFactory {
   // store words to clusterId mapping as provided by Marmot tool!
   private Map<String, Integer> word2index = new HashMap<String, Integer>();
   private int clusterIdcnt = 0;
-  private String featureFilePathname = "";
-
-
-  public WordClusterFeatureFactory(String featureFilePathname) {
-    this.setFeatureFilePathname(featureFilePathname);
-  }
 
 
   public WordClusterFeatureFactory() {
-  }
-
-
-  public String getFeatureFilePathname() {
-
-    return this.featureFilePathname;
-  }
-
-
-  public void setFeatureFilePathname(String featureFilePathname) {
-
-    this.featureFilePathname = featureFilePathname;
   }
 
 
@@ -126,22 +110,18 @@ public class WordClusterFeatureFactory {
 
   /**
    * Used to internalize word2cluster id by ajusting cluster id by +1
-   * @param archivator
-   * @param taggerName
    * @param clusterIDfileName
    */
-  public void createAndSaveClusterIdFeature(Archivator archivator, String taggerName, String clusterIDfileName) {
+  public void createAndSaveClusterIdFeature(String clusterIDfileName) {
 
     System.out.println("Create cluster ID list from: " + clusterIDfileName);
     this.createWord2ClusterIdMapFromFile(clusterIDfileName, -1);
 
-    String fileName = this.getFeatureFilePathname() + taggerName + "/clusterId.txt";
-    System.out.println("Writing cluster ID list to: " + fileName);
-    this.writeClusterIdFeatureFile(fileName);
+    Path path = GlobalConfig.getModelBuildFolder().resolve("clusterId.txt");
+    System.out.println("Writing cluster ID list to: " + path.toString());
+    this.writeClusterIdFeatureFile(path);
 
     System.out.println("... done");
-    // Add file to archivator
-    archivator.getFilesToPack().add(fileName);
   }
 
 
@@ -202,47 +182,44 @@ public class WordClusterFeatureFactory {
   }
 
 
-  public void writeClusterIdFeatureFile(String targetFileName) {
+  private void writeClusterIdFeatureFile(Path targetPath) {
 
-    File file = new File(targetFileName);
-    file.getParentFile().mkdirs();
-    BufferedWriter writer;
     try {
-      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-      for (String word : this.getWord2index().keySet()) {
-        writer.write(word + "\t" + this.getWord2index().get(word) + "\n");
+      Files.createDirectories(targetPath.getParent());
+      try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+          targetPath, StandardCharsets.UTF_8))) {
+        for (String word : this.getWord2index().keySet()) {
+          out.println(word + "\t" + this.getWord2index().get(word));
+        }
       }
-      writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
 
-  private void readClusterIdFeatureFile(String string) {
+  private void readClusterIdFeatureFile(Path path) {
 
-    BufferedReader reader;
-    try {
-      reader = new BufferedReader(new InputStreamReader(new FileInputStream(string), "UTF-8"));
+    try (BufferedReader in = Files.newBufferedReader(
+        path, StandardCharsets.UTF_8)) {
       String line;
-      while ((line = reader.readLine()) != null) {
+      while ((line = in.readLine()) != null) {
         String[] entry = line.split("\t");
         int liblinearClusterId = Integer.parseInt(entry[1]);
         this.clusterIdcnt = Math.max(liblinearClusterId, this.clusterIdcnt);
         this.getWord2index().put(entry[0], liblinearClusterId);
       }
-      reader.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
 
-  private void readClusterIdFeatureFile(Archivator archivator, String string) {
+  private void readClusterIdFeatureFile(Archivator archivator, Path path) {
 
     BufferedReader reader;
     try {
-      InputStream inputStream = archivator.getArchiveMap().get(string);
+      InputStream inputStream = archivator.getArchiveMap().get(path.toString());
       reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
       String line;
       while ((line = reader.readLine()) != null) {
@@ -258,20 +235,20 @@ public class WordClusterFeatureFactory {
   }
 
 
-  public void readClusterIdList(String taggerName, String featureFilePath) {
+  public void readClusterIdList() {
 
-    String fileName = featureFilePath + taggerName + "/clusterId.txt";
-    System.out.println("Reading cluster ID list from: " + fileName);
-    this.readClusterIdFeatureFile(fileName);
+    Path path = GlobalConfig.getModelBuildFolder().resolve("clusterId.txt");
+    System.out.println("Reading cluster ID list from: " + path);
+    this.readClusterIdFeatureFile(path);
     System.out.println("... done");
   }
 
 
-  public void readClusterIdList(Archivator archivator, String taggerName, String featureFilePath) {
+  public void readClusterIdList(Archivator archivator) {
 
-    String fileName = featureFilePath + taggerName + "/clusterId.txt";
-    System.out.println("Reading cluster ID list from archive: " + fileName);
-    this.readClusterIdFeatureFile(archivator, fileName);
+    Path path = GlobalConfig.getModelBuildFolder().resolve("clusterId.txt");
+    System.out.println("Reading cluster ID list from archive: " + path);
+    this.readClusterIdFeatureFile(archivator, path);
     System.out.println("... done");
   }
 }

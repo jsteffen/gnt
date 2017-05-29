@@ -1,14 +1,14 @@
 package de.dfki.mlt.gnt.features;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  * Goal is to compute all lower-case suffixes from a training set of words.
@@ -47,7 +48,6 @@ public class WordSuffixFeatureFactory {
 
   // If true, then compute all substrings, else all suffixes
   private static final boolean subString = false;
-  private String featureFilePathname = "";
 
   // stores indicator word -> rank -> is needed when computing the left/right bigrams of a word
   private Map<String, Integer> suffix2num = new HashMap<String, Integer>();
@@ -61,11 +61,6 @@ public class WordSuffixFeatureFactory {
 
 
   public WordSuffixFeatureFactory() {
-  }
-
-
-  public WordSuffixFeatureFactory(String featureFilePathname2) {
-    this.setFeatureFilePathname(featureFilePathname2);
   }
 
 
@@ -144,18 +139,6 @@ public class WordSuffixFeatureFactory {
   public void clean() {
 
     this.num2suffix = new TreeMap<Integer, String>();
-  }
-
-
-  public String getFeatureFilePathname() {
-
-    return this.featureFilePathname;
-  }
-
-
-  public void setFeatureFilePathname(String featureFilePathname) {
-
-    this.featureFilePathname = featureFilePathname;
   }
 
 
@@ -416,19 +399,17 @@ public class WordSuffixFeatureFactory {
 
   //*********************** creating and storing ***********************
 
-  public void createAndSaveSuffixFeature(Archivator archivator, String taggerName, String trainingFileName) {
+  public void createAndSaveSuffixFeature(String trainingFileName) {
 
     System.out.println("Create suffix list from: " + trainingFileName);
     this.createSuffixListFromFile(trainingFileName, -1);
 
     System.out.println("#word: " + this.getWordCnt() + " #suffixes: " + this.getSuffixCnt());
 
-    String suffixFileName = this.getFeatureFilePathname() + taggerName + "/suffixList.txt";
-    System.out.println("Writing suffix list to: " + suffixFileName);
-    this.writeSuffixFile(suffixFileName);
+    Path suffixPath = GlobalConfig.getModelBuildFolder().resolve("suffixList.txt");
+    System.out.println("Writing suffix list to: " + suffixPath);
+    this.writeSuffixFile(suffixPath);
     System.out.println("... done");
-    // Add file to archivator
-    archivator.getFilesToPack().add(suffixFileName);
   }
 
 
@@ -465,19 +446,16 @@ public class WordSuffixFeatureFactory {
 
   // after the above has been done, write out vocabulary into files:
   // Firstly, sort num2word according to natural order, and write value of entry key.
-  private void writeSuffixFile(String targetFileName) {
+  private void writeSuffixFile(Path targetPath) {
 
-    File file = new File(targetFileName);
-    file.getParentFile().mkdirs();
-
-    BufferedWriter writer;
     try {
-      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-      for (int key : this.num2suffix.keySet()) {
-        writer.write(this.num2suffix.get(key) + "\n");
+      Files.createDirectories(targetPath.getParent());
+      try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+          targetPath, StandardCharsets.UTF_8))) {
+        for (int key : this.num2suffix.keySet()) {
+          out.println(this.num2suffix.get(key));
+        }
       }
-      writer.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -485,32 +463,29 @@ public class WordSuffixFeatureFactory {
 
 
   // read preprocessed suffix list from file
-  private void readSuffixFile(String string) {
+  private void readSuffixFile(Path path) {
 
-    BufferedReader reader;
-    int cnt = 1;
-    try {
-      reader = new BufferedReader(new InputStreamReader(new FileInputStream(string), "UTF-8"));
+    try (BufferedReader in = Files.newBufferedReader(
+        path, StandardCharsets.UTF_8)) {
       String line;
-      while ((line = reader.readLine()) != null) {
+      int cnt = 1;
+      while ((line = in.readLine()) != null) {
         this.getSuffix2num().put(line, cnt);
         this.getNum2suffix().put(cnt, line);
         cnt++;
       }
-      reader.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
 
-  private void readSuffixFile(Archivator archivator, String string) {
+  private void readSuffixFile(Archivator archivator, Path path) {
 
     BufferedReader reader;
     int cnt = 1;
     try {
-      InputStream inputStream = archivator.getArchiveMap().get(string);
+      InputStream inputStream = archivator.getArchiveMap().get(path.toString());
       reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
       String line;
       while ((line = reader.readLine()) != null) {
@@ -526,20 +501,20 @@ public class WordSuffixFeatureFactory {
   }
 
 
-  public void readSuffixList(String taggerName, String featureFilePath) {
+  public void readSuffixList() {
 
-    String suffixFileName = featureFilePath + taggerName + "/suffixList.txt";
-    System.out.println("Reading suffix list from: " + suffixFileName);
-    this.readSuffixFile(suffixFileName);
+    Path suffixPath = GlobalConfig.getModelBuildFolder().resolve("suffixList.txt");
+    System.out.println("Reading suffix list from: " + suffixPath);
+    this.readSuffixFile(suffixPath);
     System.out.println("... done");
   }
 
 
-  public void readSuffixList(Archivator archivator, String taggerName, String featureFilePath) {
+  public void readSuffixList(Archivator archivator) {
 
-    String suffixFileName = featureFilePath + taggerName + "/suffixList.txt";
-    System.out.println("Reading suffix list from archive: " + suffixFileName);
-    this.readSuffixFile(archivator, suffixFileName);
+    Path suffixPath = GlobalConfig.getModelBuildFolder().resolve("suffixList.txt");
+    System.out.println("Reading suffix list from archive: " + suffixPath);
+    this.readSuffixFile(archivator, suffixPath);
     System.out.println("... done");
   }
 

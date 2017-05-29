@@ -1,14 +1,13 @@
 package de.dfki.mlt.gnt.data;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -78,50 +77,45 @@ public class SetIndexMap {
   }
 
 
-  public void writeSetIndexMap(String targetFileName) {
+  public void writeSetIndexMap(Path targetPath) {
 
-    File file = new File(targetFileName);
-    file.getParentFile().mkdirs();
-    BufferedWriter writer;
     try {
-      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-      for (int key : this.getNum2label().keySet()) {
-        writer.write(this.getNum2label().get(key) + "\n");
+      Files.createDirectories(targetPath.getParent());
+      try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+          targetPath, StandardCharsets.UTF_8))) {
+        for (int key : this.getNum2label().keySet()) {
+          out.println(this.getNum2label().get(key));
+        }
       }
-      writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
+  public void readSetIndexMap(Path path) {
 
-  public void readSetIndexMap(String string) {
-
-    BufferedReader reader;
-    int cnt = 0;
-    try {
-      reader = new BufferedReader(new InputStreamReader(new FileInputStream(string), "UTF-8"));
+    try (BufferedReader in = Files.newBufferedReader(
+        path, StandardCharsets.UTF_8)) {
+      int cnt = 0;
       String line;
-      while ((line = reader.readLine()) != null) {
+      while ((line = in.readLine()) != null) {
         cnt++;
         this.getLabel2num().put(line, cnt);
         this.getNum2label().put(cnt, line);
       }
       this.labelCnt = cnt++;
-      reader.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
 
-  public void readSetIndexMap(Archivator archivator, String string) {
+  public void readSetIndexMap(Archivator archivator, Path path) {
 
     BufferedReader reader;
     int cnt = 0;
     try {
-      InputStream inputStream = archivator.getArchiveMap().get(string);
+      InputStream inputStream = archivator.getArchiveMap().get(path.toString());
       reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
       String line;
       while ((line = reader.readLine()) != null) {

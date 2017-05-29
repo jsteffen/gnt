@@ -138,21 +138,20 @@ public class Alphabet {
    * Load the precomputed features from file during training phase.
    * @param taggerName
    * @param dim
-   * @param featureFilePath
    */
-  public void loadFeaturesFromFiles(String taggerName, int dim, String featureFilePath) {
+  public void loadFeaturesFromFiles(int dim) {
 
     if (this.isWithWordFeats()) {
-      this.wordVectorFactory.readDistributedWordFeaturesSparse(taggerName, dim, featureFilePath);
+      this.wordVectorFactory.readDistributedWordFeaturesSparse(dim);
     }
     if (this.isWithSuffixFeats()) {
-      this.wordSuffixFactory.readSuffixList(taggerName, featureFilePath);
+      this.wordSuffixFactory.readSuffixList();
     }
     if (this.isWithShapeFeats()) {
-      this.wordShapeFactory.readShapeList(taggerName, featureFilePath);
+      this.wordShapeFactory.readShapeList();
     }
     if (this.isWithClusterFeats()) {
-      this.wordClusterFactory.readClusterIdList(taggerName, featureFilePath);
+      this.wordClusterFactory.readClusterIdList();
     }
   }
 
@@ -160,23 +159,21 @@ public class Alphabet {
   /**
    * Load the compressed features files from archive during tagging phase
    * @param archivator
-   * @param taggerName
    * @param dim
-   * @param featureFilePath
    */
-  public void loadFeaturesFromFiles(Archivator archivator, String taggerName, int dim, String featureFilePath) {
+  public void loadFeaturesFromFiles(Archivator archivator, int dim) {
 
     if (this.isWithWordFeats()) {
-      this.wordVectorFactory.readDistributedWordFeaturesSparse(archivator, taggerName, dim, featureFilePath);
+      this.wordVectorFactory.readDistributedWordFeaturesSparse(archivator, dim);
     }
     if (this.isWithSuffixFeats()) {
-      this.wordSuffixFactory.readSuffixList(archivator, taggerName, featureFilePath);
+      this.wordSuffixFactory.readSuffixList(archivator);
     }
     if (this.isWithShapeFeats()) {
-      this.wordShapeFactory.readShapeList(archivator, taggerName, featureFilePath);
+      this.wordShapeFactory.readShapeList(archivator);
     }
     if (this.isWithClusterFeats()) {
-      this.wordClusterFactory.readClusterIdList(archivator, taggerName, featureFilePath);
+      this.wordClusterFactory.readClusterIdList(archivator);
     }
   }
 

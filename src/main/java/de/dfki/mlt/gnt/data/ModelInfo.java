@@ -1,12 +1,14 @@
 package de.dfki.mlt.gnt.data;
 
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import de.bwaldvogel.liblinear.SolverType;
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  *
@@ -19,12 +21,8 @@ public class ModelInfo {
   private double cost = 1.0; // cost of constraints violation
   private double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
 
-  private String modelFilePrefix = "resources/models/model_";
-  private String modelFile = "";
+  private String modelName;
   private String modelFileArchive = "";
-
-  private String modelInputFilePrefix = "resources/modelInputFiles/modelInputFile_";
-  private String modelInputFile = "";
   private BufferedWriter modelInputFileWriter = null;
 
 
@@ -43,7 +41,6 @@ public class ModelInfo {
       System.err.println("Unknown model info type: " + type);
       System.exit(0);
     }
-    this.setModelFile(this.getModelFilePrefix() + this.getSolver() + ".txt");
   }
 
 
@@ -83,51 +80,15 @@ public class ModelInfo {
   }
 
 
-  public String getModelFilePrefix() {
+  public String getModelName() {
 
-    return this.modelFilePrefix;
+    return this.modelName;
   }
 
 
-  public void setModelFilePrefix(String modelFilePrefix) {
+  public void setModelName(String modelName) {
 
-    this.modelFilePrefix = modelFilePrefix;
-  }
-
-
-  public String getModelFile() {
-
-    return this.modelFile;
-  }
-
-
-  public void setModelFile(String modelFile) {
-
-    this.modelFile = modelFile;
-  }
-
-
-  public String getModelInputFilePrefix() {
-
-    return this.modelInputFilePrefix;
-  }
-
-
-  public void setModelInputFilePrefix(String modelInputFilePrefix) {
-
-    this.modelInputFilePrefix = modelInputFilePrefix;
-  }
-
-
-  public String getModelInputFile() {
-
-    return this.modelInputFile;
-  }
-
-
-  public void setModelInputFile(String modelInputFile) {
-
-    this.modelInputFile = modelInputFile;
+    this.modelName = modelName;
   }
 
 
@@ -189,8 +150,7 @@ public class ModelInfo {
     output += "Solver: " + this.getSolver() + "\n";
     output += "Cost: " + this.getCost() + "\n";
     output += "Eps: " + this.getEps() + "\n";
-    output += "ModelFilePrefix: " + this.getModelFilePrefix() + "\n";
-    output += "ModelFileNames: " + this.getModelFile() + "\n";
+    output += "ModelName: " + this.modelName + "\n";
     return output;
 
   }
@@ -216,22 +176,22 @@ public class ModelInfo {
       dim = 0;
     }
 
-    String fileNameDetails =
-        globalParams.getTaggerName() + "_" + windowSize + "_" + dim + "iw" + numberOfSentences + "sent_"
+    // TODO retrieve model name from model config
+    this.modelName =
+        "model_" + globalParams.getTaggerName() + "_" + windowSize + "_" + dim + "iw" + numberOfSentences + "sent_"
             + wordFeatString + shapeFeatString + suffixFeatString + clusterFeatString + labelFeatString + "_"
             + this.getSolver();
-
-    this.modelFile = this.modelFilePrefix + fileNameDetails + ".txt";
-    this.modelFileArchive = this.modelFilePrefix + fileNameDetails + ".zip";
+    this.modelFileArchive =
+        GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(this.modelName + ".zip").toString();
 
     if (globalParams.isSaveModelInputFile()) {
       //Only if ModelInfo.saveModelInputFile=true then save the modelInputFile
-      this.modelInputFile = this.modelInputFilePrefix + fileNameDetails + ".txt";
+      Path libLinearInputPath =
+          GlobalConfig.getModelBuildFolder().resolve("liblinear_input_" + this.modelName + ".txt");
       // And create and open the writerBuffer
       try {
-        this.setModelInputFileWriter(new BufferedWriter(
-            new OutputStreamWriter(new FileOutputStream(this.modelInputFile), "UTF-8")));
-      } catch (UnsupportedEncodingException | FileNotFoundException e) {
+        this.setModelInputFileWriter(Files.newBufferedWriter(libLinearInputPath, StandardCharsets.UTF_8));
+      } catch (IOException e) {
         e.printStackTrace();
       }
     }

@@ -40,11 +40,6 @@ public class EvalConllFile {
   }
 
 
-  public EvalConllFile(String featureFilePathname, String taggerName) {
-    this.setData(new Data(featureFilePathname, taggerName));
-  }
-
-
   public Data getData() {
 
     return this.data;

@@ -10,9 +10,6 @@ public class GlobalParams {
   // Unique name of the tagger
   private String taggerName = "";
 
-  // Global path to features
-  private String featureFilePathname = "resources/features/";
-
   // Global path to eval files
   private String evalFilePathname = "resources/eval/";
 
@@ -35,18 +32,6 @@ public class GlobalParams {
   public void setTaggerName(String taggerName) {
 
     this.taggerName = taggerName;
-  }
-
-
-  public String getFeatureFilePathname() {
-
-    return this.featureFilePathname;
-  }
-
-
-  public void setFeatureFilePathname(String featureFilePathname) {
-
-    this.featureFilePathname = featureFilePathname;
   }
 
 

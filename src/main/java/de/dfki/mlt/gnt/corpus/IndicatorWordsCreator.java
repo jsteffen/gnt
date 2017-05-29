@@ -1,18 +1,18 @@
 package de.dfki.mlt.gnt.corpus;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  * A indicator word is used to define a dimension of distributed word vectors
@@ -33,27 +33,9 @@ public class IndicatorWordsCreator {
   private static int lineCnt = 0;
   private static int tokenCnt = 0;
   private Map<String, Integer> wordToNum = new HashMap<String, Integer>();
-  private String featureFilePathname = "";
 
 
   public IndicatorWordsCreator() {
-  }
-
-
-  public IndicatorWordsCreator(String featureFilePathname) {
-    this.setFeatureFilePathname(featureFilePathname);
-  }
-
-
-  public String getFeatureFilePathname() {
-
-    return this.featureFilePathname;
-  }
-
-
-  public void setFeatureFilePathname(String featureFilePathname) {
-
-    this.featureFilePathname = featureFilePathname;
   }
 
 
@@ -208,35 +190,22 @@ public class IndicatorWordsCreator {
   }
 
 
-  private void writeSortedMap(int n, BufferedWriter writer) {
+  public void writeSortedIndicatorWords(Path targetPath, int maxCnt) {
 
-    int cnt = 1;
-    //Map<String, Integer> sortedMap = sortByValue(wordToNum);
     try {
-      writer.write(tokenCnt + "\t" + this.getWordToNum().size());
-      for (Map.Entry<String, Integer> entry : this.getWordToNum().entrySet()) {
-        writer.write("\n" + entry.getKey() + "\t" + entry.getValue());
-        if (cnt == n) {
-          break;
+      Files.createDirectories(targetPath.getParent());
+      try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+          targetPath, StandardCharsets.UTF_8))) {
+        int cnt = 1;
+        out.println(tokenCnt + "\t" + this.getWordToNum().size());
+        for (Map.Entry<String, Integer> entry : this.getWordToNum().entrySet()) {
+          out.println(entry.getKey() + "\t" + entry.getValue());
+          if (cnt == maxCnt) {
+            break;
+          }
+          cnt++;
         }
-        cnt++;
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-
-  public void writeSortedIndicatorWords(String targetFileName, int cnt) {
-
-    File file = new File(targetFileName);
-    file.getParentFile().mkdirs();
-    BufferedWriter writer;
-    try {
-      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-      this.writeSortedMap(cnt, writer);
-
-      writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -274,17 +243,15 @@ public class IndicatorWordsCreator {
   }
 
 
-  public void createAndWriteIndicatorTaggerNameWordsFromCorpus(Archivator archivator, String taggerName, Corpus corpus,
-      double subSamplingThreshold) {
+  public void createAndWriteIndicatorTaggerNameWordsFromCorpus(
+      Corpus corpus, double subSamplingThreshold) {
 
-    String iwFilename = this.getFeatureFilePathname() + taggerName + "/iw_all.txt";
-    System.out.println("Create indictor words and save in file: " + iwFilename);
+    Path iwPath = GlobalConfig.getModelBuildFolder().resolve("iw_all.txt");
+    System.out.println("Create indictor words and save in file: " + iwPath);
     IndicatorWordsCreator iwp = new IndicatorWordsCreator();
     iwp.createIndicatorTaggerNameWordsFromCorpus(corpus);
 
     iwp.postProcessWords(subSamplingThreshold);
-    iwp.writeSortedIndicatorWords(iwFilename, 10000);
-    // Add file to archivator
-    archivator.getFilesToPack().add(iwFilename);
+    iwp.writeSortedIndicatorWords(iwPath, 10000);
   }
 }

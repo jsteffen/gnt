@@ -32,11 +32,9 @@ public final class RunTagger {
         posTagger.getDataProps().getGlobalParams().getWindowSize(),
         posTagger.getDataProps().getGlobalParams().getDim());
 
-    EvalConllFile evalFile =
-        new EvalConllFile(posTagger.getDataProps().getGlobalParams().getFeatureFilePathname(),
-            posTagger.getDataProps().getGlobalParams().getTaggerName());
+    EvalConllFile evalFile = new EvalConllFile();
     System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: "
-        + evalFile.getData().getWordMapFileName());
+        + evalFile.getData().getWordMapPath());
 
     evalFile.getData().readWordSet(posTagger.getArchivator());
     System.out.println(evalFile.getData().toString());
@@ -70,18 +68,16 @@ public final class RunTagger {
     GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
     GNTagger posTagger = new GNTagger(archiveZipName, corpusProps);
     //GN: Major difference with above.
-    posTagger.getModelInfo().setModelFile(archiveTxtName);
-    System.out.println("ModelFile: " + posTagger.getModelInfo().getModelFile());
+    posTagger.getModelInfo().setModelName(archiveTxtName);
+    System.out.println("ModelName: " + posTagger.getModelInfo().getModelName());
 
     posTagger.initGNTagger(
         posTagger.getDataProps().getGlobalParams().getWindowSize(),
         posTagger.getDataProps().getGlobalParams().getDim());
 
-    EvalConllFile evalFile =
-        new EvalConllFile(posTagger.getDataProps().getGlobalParams().getFeatureFilePathname(),
-            posTagger.getDataProps().getGlobalParams().getTaggerName());
+    EvalConllFile evalFile = new EvalConllFile();
     System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: "
-        + evalFile.getData().getWordMapFileName());
+        + evalFile.getData().getWordMapPath());
 
     evalFile.getData().readWordSet(posTagger.getArchivator());
     System.out.println(evalFile.getData().toString());
