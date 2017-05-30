@@ -109,14 +109,6 @@ public class GNTrainer {
   }
 
 
-  // This is a method for on-demand creation of the indicator words
-  private void createIndicatorWords(double subSamplingThreshold) {
-
-    IndicatorWordsCreator iwp = new IndicatorWordsCreator();
-    iwp.createAndWriteIndicatorTaggerNameWordsFromCorpus(this.getCorpus(), subSamplingThreshold);
-  }
-
-
   // This is a method for on-demand creation of the feature files
   private void createWordVectors(int dim) {
 
@@ -217,7 +209,9 @@ public class GNTrainer {
     this.time1 = System.currentTimeMillis();
 
     // Create feature files
-    this.createIndicatorWords(this.getDataProps().getGlobalParams().getSubSamplingThreshold());
+    IndicatorWordsCreator iwp = new IndicatorWordsCreator();
+    iwp.createIndicatorTaggerNameWords(
+        this.getCorpus(), this.getDataProps().getGlobalParams().getSubSamplingThreshold());
     this.createTrainingFeatureFiles(trainingFileName + "-sents.txt", clusterIdSourceFileName, dim);
 
     this.time2 = System.currentTimeMillis();
