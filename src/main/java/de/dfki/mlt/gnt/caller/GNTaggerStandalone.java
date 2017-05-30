@@ -1,12 +1,12 @@
 package de.dfki.mlt.gnt.caller;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import de.dfki.mlt.gnt.tagger.GNTagger;
@@ -58,24 +58,25 @@ public class GNTaggerStandalone {
    * @param outEncode
    * @throws IOException
    */
-  public void tagFileRunner(String sourceFileName, String inEncode, String outEncode) throws IOException {
+  public void tagFileRunner(Path sourcePath, String inEncode, String outEncode) throws IOException {
 
-    BufferedReader fileReader = new BufferedReader(
-        new InputStreamReader(new FileInputStream(sourceFileName), inEncode));
-    BufferedWriter fileWriter = new BufferedWriter(
-        new OutputStreamWriter(new FileOutputStream(sourceFileName + ".GNT"), outEncode));
-    String line = "";
-    while ((line = fileReader.readLine()) != null) {
-      if (!line.isEmpty()) {
-        List<String> tokens = GntSimpleTokenizer.tokenize(line);
-        this.posTagger.tagUnlabeledTokens(tokens);
-        String taggedString = this.posTagger.taggedSentenceToString();
-        for (String token : taggedString.split(" ")) {
-          fileWriter.write(token + "\n");
+    Path resultPath = Paths.get(sourcePath.toString() + ".GNT");
+    try (BufferedReader in = Files.newBufferedReader(
+            sourcePath, Charset.forName(inEncode));
+        PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+            resultPath, Charset.forName(outEncode)))) {
+
+      String line;
+      while ((line = in.readLine()) != null) {
+        if (!line.isEmpty()) {
+          List<String> tokens = GntSimpleTokenizer.tokenize(line);
+          this.posTagger.tagUnlabeledTokens(tokens);
+          String taggedString = this.posTagger.taggedSentenceToString();
+          for (String token : taggedString.split(" ")) {
+            out.println(token);
+          }
         }
       }
     }
-    fileReader.close();
-    fileWriter.close();
   }
 }

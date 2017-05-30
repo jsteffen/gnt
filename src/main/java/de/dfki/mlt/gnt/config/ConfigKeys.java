@@ -9,8 +9,8 @@ public final class ConfigKeys {
 
   // GNT global config keys
   public static final String CREATE_LIBLINEAR_INPUT_FILE = "create.liblinear.input.file";
+  public static final String EVAL_FOLDER = "eval.folder";
   public static final String DEBUG = "debug";
-  public static final String DEBUG_FOLDER = "debug.folder";
   public static final String MODEL_BUILD_FOLDER = "model.build.folder";
   public static final String MODEL_OUTPUT_FOLDER = "model.output.folder";
 

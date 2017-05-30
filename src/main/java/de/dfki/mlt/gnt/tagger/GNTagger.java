@@ -1,17 +1,15 @@
 package de.dfki.mlt.gnt.tagger;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -395,9 +393,7 @@ public class GNTagger {
    */
   public String taggedSentenceToString() {
 
-    String output = "";
-    int mod = 10;
-    int cnt = 0;
+    StringBuilder output = new StringBuilder();
     Sentence sentence = this.getData().getSentence();
     for (int i = 0; i < sentence.getWordArray().length; i++) {
       String word = this.getData().getWordSet().getNum2label().get(sentence.getWordArray()[i]);
@@ -405,49 +401,57 @@ public class GNTagger {
 
       label = PostProcessor.determineTwitterLabel(word, label);
 
-      output += word + "/" + label + " ";
-      cnt++;
-      if ((cnt % mod) == 0) {
-        output += "\n";
-      }
+      output.append(word + "/" + label + " ");
     }
-    return output;
-
+    return output.toString();
   }
 
 
-  private void tagAndWriteSentencesFromConllReader(BufferedReader conllReader, BufferedWriter conllWriter, int max)
+  private Path tagAndWriteSentencesFromConllReader(String sourceFileName, int max)
       throws IOException {
 
-    String line = "";
-    List<String[]> tokens = new ArrayList<String[]>();
+    Path sourcePath = Paths.get(sourceFileName);
+    String evalFileName = sourcePath.getFileName().toString();
+    evalFileName = evalFileName.substring(0, evalFileName.lastIndexOf(".")) + ".txt";
+    Path evalPath = GlobalConfig.getPath(ConfigKeys.EVAL_FOLDER).resolve(evalFileName);
+    Files.createDirectories(evalPath.getParent());
+    System.out.println("Create eval file: " + evalPath);
 
-    while ((line = conllReader.readLine()) != null) {
-      if (line.isEmpty()) {
-        // For found sentence, do tagging:
-        // Stop if max sentences have been processed
-        if ((max > 0) && (this.data.getSentenceCnt() > max)) {
-          break;
+    try (BufferedReader conllReader = Files.newBufferedReader(sourcePath, StandardCharsets.UTF_8);
+        PrintWriter conllWriter = new PrintWriter(Files.newBufferedWriter(evalPath, StandardCharsets.UTF_8))) {
+
+      String line = "";
+      List<String[]> tokens = new ArrayList<String[]>();
+
+      while ((line = conllReader.readLine()) != null) {
+        if (line.isEmpty()) {
+          // For found sentence, do tagging:
+          // Stop if max sentences have been processed
+          if ((max > 0) && (this.data.getSentenceCnt() > max)) {
+            break;
+          }
+
+          // create internal sentence object and label maps
+          // Use specified label from conll file for evaluation purposes later
+          this.data.generateSentenceObjectFromConllLabeledSentence(tokens);
+
+          // tag sentence object
+          this.tagSentenceObject();
+
+          // Create conlleval consistent output using original conll tokens plus predicted labels
+          this.writeTokensAndWithLabels(conllWriter, tokens, this.data.getSentence());
+
+          // reset tokens
+          tokens = new ArrayList<String[]>();
+        } else {
+          // Collect all the words of a conll sentence
+          String[] tokenizedLine = line.split("\t");
+          tokens.add(tokenizedLine);
         }
-
-        // create internal sentence object and label maps
-        // Use specified label from conll file for evaluation purposes later
-        this.data.generateSentenceObjectFromConllLabeledSentence(tokens);
-
-        // tag sentence object
-        this.tagSentenceObject();
-
-        // Create conlleval consistent output using original conll tokens plus predicted labels
-        this.writeTokensAndWithLabels(conllWriter, tokens, this.data.getSentence());
-
-        // reset tokens
-        tokens = new ArrayList<String[]>();
-      } else {
-        // Collect all the words of a conll sentence
-        String[] tokenizedLine = line.split("\t");
-        tokens.add(tokenizedLine);
       }
     }
+
+    return evalPath;
   }
 
 
@@ -455,8 +459,8 @@ public class GNTagger {
   // I have adjusted the NER conll format to be consistent with the other conll formats, i.e.,
   // LONDON NNP I-NP I-LOC -> 1  LONDON  NNP  I-NP  I-LOC
   // This is why I have 5 elements instead of 4
-  private void writeTokensAndWithLabels(BufferedWriter conllWriter,
-      List<String[]> tokens, Sentence sentence) throws IOException {
+  private void writeTokensAndWithLabels(PrintWriter conllWriter,
+      List<String[]> tokens, Sentence sentence) {
 
     for (int i = 0; i < tokens.size(); i++) {
       String[] token = tokens.get(i);
@@ -470,26 +474,20 @@ public class GNTagger {
       String newConllToken = token[0] + " "
           + word + " "
           + token[Data.getPosTagIndex()] + " "
-          + label
-          + "\n";
+          + label;
 
-      conllWriter.write(newConllToken);
+      conllWriter.println(newConllToken);
     }
-    conllWriter.write("\n");
+    conllWriter.println();
   }
 
 
   // This is the current main caller for the GNTagger
-  public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName, int sentenceCnt)
+  public Path tagAndWriteFromConllDevelFile(String sourceFileName, int sentenceCnt)
       throws IOException {
 
     long localTime1;
     long localTime2;
-
-    BufferedReader conllReader = new BufferedReader(
-        new InputStreamReader(new FileInputStream(sourceFileName), "UTF-8"));
-    BufferedWriter conllWriter = new BufferedWriter(
-        new OutputStreamWriter(new FileOutputStream(evalFileName), "UTF-8"));
 
     // Set the writer buffer for the model input file based on the given sourceFileName
     if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
@@ -510,10 +508,8 @@ public class GNTagger {
 
     localTime1 = System.currentTimeMillis();
 
-    this.tagAndWriteSentencesFromConllReader(conllReader, conllWriter, sentenceCnt);
-    // close the buffers
-    conllReader.close();
-    conllWriter.close();
+    Path evalPath = this.tagAndWriteSentencesFromConllReader(sourceFileName, sentenceCnt);
+
     if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
       this.getModelInfo().getModelInputFileWriter().close();
     }
@@ -526,5 +522,7 @@ public class GNTagger {
     System.out.println("Testing instances: " + Window.getWindowCnt());
     System.out.println("Sentences/sec: " + (this.getData().getSentenceCnt() * 1000) / (localTime2 - localTime1));
     System.out.println("Words/sec: " + GNTagger.tokenPersec);
+
+    return evalPath;
   }
 }

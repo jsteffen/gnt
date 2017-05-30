@@ -6,8 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import de.dfki.mlt.gnt.corpus.EvalConllFile;
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.GlobalConfig;
+import de.dfki.mlt.gnt.corpus.ConllEvaluator;
 import de.dfki.mlt.gnt.corpus.GNTcorpusProperties;
+import de.dfki.mlt.gnt.data.Data;
 import de.dfki.mlt.gnt.tagger.GNTagger;
 
 /**
@@ -32,72 +35,25 @@ public final class RunTagger {
         posTagger.getDataProps().getGlobalParams().getWindowSize(),
         posTagger.getDataProps().getGlobalParams().getDim());
 
-    EvalConllFile evalFile = new EvalConllFile();
+    Data data = new Data();
+    data.readWordSet(posTagger.getArchivator());
     System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: "
-        + evalFile.getData().getWordMapPath());
-
-    evalFile.getData().readWordSet(posTagger.getArchivator());
-    System.out.println(evalFile.getData().toString());
+        + data.getWordMapPath());
+    System.out.println(data.toString());
+    ConllEvaluator evaluator = new ConllEvaluator(data);
 
     for (String fileName : posTagger.getCorpus().getDevLabeledData()) {
-      String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
-      posTagger.tagAndWriteFromConllDevelFile(fileName + ".conll", evalFileName, -1);
-      System.out.println("Create eval file: " + evalFileName);
-      evalFile.computeAccuracy(evalFileName, true);
+      Path evalPath = posTagger.tagAndWriteFromConllDevelFile(fileName, -1);
+      evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
     for (String fileName : posTagger.getCorpus().getTestLabeledData()) {
-      String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
-      posTagger.tagAndWriteFromConllDevelFile(fileName + ".conll", evalFileName, -1);
-      System.out.println("Create eval file: " + evalFileName);
-      evalFile.computeAccuracy(evalFileName, true);
+      Path evalPath = posTagger.tagAndWriteFromConllDevelFile(fileName, -1);
+      evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
   }
 
 
-  /**
-   * Used for running universal dependency treebanks as defined in project UniversalDepedencyBuilder
-   * @param archiveZipName
-   * @param corpusConfigFileName
-   * @param archiveTxtName
-   * @param debugTest
-   * @throws IOException
-   */
-  public static void runner(String archiveZipName, String corpusConfigFileName, String archiveTxtName,
-      boolean debugTest) throws IOException {
-
-    GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
-    GNTagger posTagger = new GNTagger(archiveZipName, corpusProps);
-    //GN: Major difference with above.
-    posTagger.getModelInfo().setModelName(archiveTxtName);
-    System.out.println("ModelName: " + posTagger.getModelInfo().getModelName());
-
-    posTagger.initGNTagger(
-        posTagger.getDataProps().getGlobalParams().getWindowSize(),
-        posTagger.getDataProps().getGlobalParams().getDim());
-
-    EvalConllFile evalFile = new EvalConllFile();
-    System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: "
-        + evalFile.getData().getWordMapPath());
-
-    evalFile.getData().readWordSet(posTagger.getArchivator());
-    System.out.println(evalFile.getData().toString());
-
-    for (String fileName : posTagger.getCorpus().getDevLabeledData()) {
-      String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
-      posTagger.tagAndWriteFromConllDevelFile(fileName + ".conll", evalFileName, -1);
-      System.out.println("Create eval file: " + evalFileName);
-      evalFile.computeAccuracy(evalFileName, true);
-    }
-    for (String fileName : posTagger.getCorpus().getTestLabeledData()) {
-      String evalFileName = posTagger.getCorpus().makeEvalFileName(fileName);
-      posTagger.tagAndWriteFromConllDevelFile(fileName + ".conll", evalFileName, -1);
-      System.out.println("Create eval file: " + evalFileName);
-      evalFile.computeAccuracy(evalFileName, debugTest);
-    }
-  }
-
-
-  public static void folderRunner(String archiveName, String corpusDir, String inEncode, String outEncode)
+  public static void folderRunner(String archiveName, String inputDir, String inEncode, String outEncode)
       throws IOException {
 
     GNTaggerStandalone runner = new GNTaggerStandalone();
@@ -106,7 +62,7 @@ public final class RunTagger {
     long time1;
     long time2;
 
-    Path dir = Paths.get(corpusDir);
+    Path dir = Paths.get(inputDir);
     try (DirectoryStream<Path> stream =
         Files.newDirectoryStream(dir, "*.{txt}")) {
       for (Path entry : stream) {
@@ -114,7 +70,7 @@ public final class RunTagger {
 
         System.out.println("Tagging file ... " + entry.toString());
 
-        runner.tagFileRunner(entry.toString(), inEncode, outEncode);
+        runner.tagFileRunner(entry, inEncode, outEncode);
 
         time2 = System.currentTimeMillis();
         System.out.println("System time (msec): " + (time2 - time1));
