@@ -22,6 +22,12 @@ public class GNTaggerStandalone {
   private GNTagger posTagger = null;
 
 
+  public GNTagger getPosTagger() {
+
+    return this.posTagger;
+  }
+
+
   public void initRunner(String archiveName) throws IOException {
 
     this.posTagger = new GNTagger(archiveName);

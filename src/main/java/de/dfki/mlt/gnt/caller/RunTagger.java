@@ -50,6 +50,7 @@ public final class RunTagger {
       Path evalPath = posTagger.tagAndWriteFromConllDevelFile(fileName, -1);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
+    posTagger.getArchivator().close();
   }
 
 
@@ -80,5 +81,7 @@ public final class RunTagger {
       // In this snippet, it can only be thrown by newDirectoryStream.
       e.printStackTrace();
     }
+
+    runner.getPosTagger().getArchivator().close();
   }
 }
