@@ -14,6 +14,8 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.dfki.mlt.gnt.tagger.GNTagger;
+
 /**
  * The main calls for training, evaluating and tagging with GNT.
  * <p>
@@ -35,38 +37,6 @@ public final class GNT {
   }
 
 
-  public static void train(String modelConfig, String corpusConfig) {
-
-    try {
-      TrainTagger gntTrainer = new TrainTagger();
-      gntTrainer.trainer(modelConfig, corpusConfig);
-    } catch (IOException e) {
-      logger.error(e.getLocalizedMessage(), e);
-    }
-  }
-
-
-  public static void eval(String modelName, String corpusConfigName) {
-
-    try {
-      RunTagger.runner(modelName, corpusConfigName);
-    } catch (IOException e) {
-      logger.error(e.getLocalizedMessage(), e);
-    }
-  }
-
-
-  public static void tag(
-      String modelName, String inputFolderName, String inputEncodingName, String outputEncodingName) {
-
-    try {
-      RunTagger.folderRunner(modelName, inputFolderName, inputEncodingName, outputEncodingName);
-    } catch (IOException e) {
-      logger.error(e.getLocalizedMessage(), e);
-    }
-  }
-
-
   /**
    * Trains a tagger model from an annotated corpus.
    *
@@ -75,69 +45,42 @@ public final class GNT {
    * @param corpusConfigName
    *          corpus configuration file name
    */
-  /*
-  public static void trainNew(String modelConfigName, String corpusConfigName) {
-
-    // validate parameters
-    if (!new File(modelConfigName).exists()) {
-      logger.error(String.format("could not find model config file \"%s\"", modelConfigName));
-      return;
-    }
-    if (!new File(corpusConfigName).exists()) {
-      logger.error(String.format("could not find corpus config file \"%s\"", corpusConfigName));
-      return;
-    }
+  public static void train(String modelConfigName, String corpusConfigName) {
 
     try {
-      ModelConfig modelConfig = new ModelConfig(loadConfig(modelConfigName));
-      CorpusConfig corpusConfig = new CorpusConfig(loadConfig(corpusConfigName));
-
-      // TODO run trainer
-    } catch (ConfigurationException e) {
+      TrainTagger gntTrainer = new TrainTagger();
+      gntTrainer.trainer(modelConfigName, corpusConfigName);
+    } catch (IOException e) {
       logger.error(e.getLocalizedMessage(), e);
-      return;
     }
   }
-*/
+
 
   /**
    * Evaluates a tagger model against an annotated corpus.
    *
-   * @param modelName
-   *          model, to be loaded from file system or classpath
+   * @param modelArchiveName
+   *          model archive, to be loaded from file system or classpath
    * @param corpusConfigName
    *          corpus configuration file name
    */
-  /*
-  public static void evalNew(String modelName, String corpusConfigName) {
-
-    // validate parameters
-    if (!new File(modelName).exists()
-        && GNT.class.getClassLoader().getResourceAsStream(modelName) == null) {
-      logger.error(String.format("could not find model \"%s\" in file system or classpath", modelName));
-      return;
-    }
-    if (!new File(corpusConfigName).exists()) {
-      logger.error(String.format("could not find corpus config file \"%s\"", corpusConfigName));
-      return;
-    }
+  public static void eval(String modelArchiveName, String corpusConfigName) {
 
     try {
-      CorpusConfig corpusConfig = new CorpusConfig(loadConfig(corpusConfigName));
-
-      // TODO run evaluation
-    } catch (ConfigurationException e) {
+      GNTagger tagger = new GNTagger(modelArchiveName);
+      tagger.eval(corpusConfigName);
+      tagger.close();
+    } catch (IOException e) {
       logger.error(e.getLocalizedMessage(), e);
-      return;
     }
   }
-*/
+
 
   /**
    * Tags all files in a folder using a tagger model.
    *
-   * @param modelName
-   *         model, to be loaded from file system or classpath
+   * @param modelArchiveName
+   *         modelArchive, to be loaded from file system or classpath
    * @param inputFolderName
    *         input folder name of files to tag
    * @param inputEncodingName
@@ -145,34 +88,20 @@ public final class GNT {
    * @param outputEncodingName
    *         output files encoding name
    */
-  /*
-  public static void tagNew(
-      String modelName, String inputFolderName, String inputEncodingName, String outputEncodingName) {
+  public static void tag(
+      String modelArchiveName, String inputFolderName, String inputEncodingName, String outputEncodingName) {
 
-    // validate parameters
-    if (!new File(modelName).exists()
-        && GNT.class.getClassLoader().getResourceAsStream(modelName) == null) {
-      logger.error(String.format("could not find model \"%s\" in file system or classpath", modelName));
-      return;
-    }
-    if (!new File(inputFolderName).exists()) {
-      logger.error(String.format("could not find input folder \"%s\"", inputFolderName));
-      return;
-    }
-    Charset inputEncoding = null;
-    Charset outputEncoding = null;
     try {
-      inputEncoding = Charset.forName(inputEncodingName);
-      outputEncoding = Charset.forName(outputEncodingName);
-    } catch (IllegalArgumentException e) {
+      GNTagger tagger = new GNTagger(modelArchiveName);
+      tagger.tagFolder(inputFolderName, inputEncodingName, outputEncodingName);
+      tagger.close();
+    } catch (IOException e) {
       logger.error(e.getLocalizedMessage(), e);
-      return;
     }
-
-    // TODO run tagger
   }
 
 
+  /*
   private static PropertiesConfiguration loadConfig(String configName) throws ConfigurationException {
 
     Parameters params = new Parameters();
@@ -184,7 +113,8 @@ public final class GNT {
                 .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
     return builder.getConfiguration();
   }
-*/
+  */
+
 
   /**
    * Main method to run GNT.
