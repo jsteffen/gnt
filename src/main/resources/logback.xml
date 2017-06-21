@@ -32,7 +32,7 @@
       <MaxFileSize>10MB</MaxFileSize>
     </triggeringPolicy>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>DEBUG</level>
+      <level>INFO</level>
     </filter>
   </appender>
   <logger name="de.dfki.mlt.gnt" level="DEBUG"/>
