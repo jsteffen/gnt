@@ -5,3 +5,4 @@
 /liblinear_input_model_*.txt
 /**/.DS_Store
 /resources/
+src/test/resources/
