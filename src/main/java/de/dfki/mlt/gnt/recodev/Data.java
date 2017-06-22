@@ -1,5 +1,8 @@
 package de.dfki.mlt.gnt.recodev;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import de.dfki.mlt.gnt.data.SetIndexMap;
 
 /**
@@ -11,8 +14,8 @@ public class Data {
 
   private SetIndexMap wordSet = new SetIndexMap();
   private SetIndexMap labelSet = new SetIndexMap();
-  private String labelMapFileName = "resources/recodev/labelSet.txt";
-  private String wordMapFileName = "resources/recodev/wordSet.txt";
+  private Path labelMapPath = Paths.get("resources/recodev/labelSet.txt");
+  private Path wordMapPath = Paths.get("resources/recodev/wordSet.txt");
 
 
   public Data() {
@@ -43,30 +46,6 @@ public class Data {
   }
 
 
-  public String getLabelMapFileName() {
-
-    return this.labelMapFileName;
-  }
-
-
-  public void setLabelMapFileName(String labelMapFileName) {
-
-    this.labelMapFileName = labelMapFileName;
-  }
-
-
-  public String getWordMapFileName() {
-
-    return this.wordMapFileName;
-  }
-
-
-  public void setWordMapFileName(String wordMapFileName) {
-
-    this.wordMapFileName = wordMapFileName;
-  }
-
-
   public int updateWordMap(String word) {
 
     return this.getWordSet().updateSetIndexMap(word);
@@ -93,25 +72,25 @@ public class Data {
 
   public void saveLabelSet() {
 
-    this.getLabelSet().writeSetIndexMap(this.getLabelMapFileName());
+    this.getLabelSet().writeSetIndexMap(this.labelMapPath);
   }
 
 
   public void readLabelSet() {
 
-    this.getLabelSet().readSetIndexMap(this.getLabelMapFileName());
+    this.getLabelSet().readSetIndexMap(this.labelMapPath);
   }
 
 
   public void saveWordSet() {
 
-    this.getWordSet().writeSetIndexMap(this.getWordMapFileName());
+    this.getWordSet().writeSetIndexMap(this.wordMapPath);
   }
 
 
   public void readWordSet() {
 
-    this.getWordSet().readSetIndexMap(this.getWordMapFileName());
+    this.getWordSet().readSetIndexMap(this.wordMapPath);
   }
 
 

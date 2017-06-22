@@ -10,12 +10,6 @@ public class GlobalParams {
   // Unique name of the tagger
   private String taggerName = "";
 
-  // Global path to features
-  private String featureFilePathname = "resources/features/";
-
-  // Global path to eval files
-  private String evalFilePathname = "resources/eval/";
-
   // This is a global flag to trigger saving of model input file
   private boolean saveModelInputFile = false;
 
@@ -35,30 +29,6 @@ public class GlobalParams {
   public void setTaggerName(String taggerName) {
 
     this.taggerName = taggerName;
-  }
-
-
-  public String getFeatureFilePathname() {
-
-    return this.featureFilePathname;
-  }
-
-
-  public void setFeatureFilePathname(String featureFilePathname) {
-
-    this.featureFilePathname = featureFilePathname;
-  }
-
-
-  public String getEvalFilePathname() {
-
-    return this.evalFilePathname;
-  }
-
-
-  public void setEvalFilePathname(String evalFilePathname) {
-
-    this.evalFilePathname = evalFilePathname;
   }
 
 

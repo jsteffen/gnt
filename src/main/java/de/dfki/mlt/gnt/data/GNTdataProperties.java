@@ -11,6 +11,7 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
 import de.bwaldvogel.liblinear.SolverType;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 import de.dfki.mlt.gnt.features.WordSuffixFeatureFactory;
 
 /**
@@ -19,8 +20,6 @@ import de.dfki.mlt.gnt.features.WordSuffixFeatureFactory;
  * @author Günter Neumann, DFKI
  */
 public class GNTdataProperties extends Properties {
-
-  public static final String configTmpFileName = "src/main/resources/dataConfig.xml";
 
   private static final long serialVersionUID = 1L;
 
@@ -155,8 +154,9 @@ public class GNTdataProperties extends Properties {
   public void copyConfigFile(String propsFileName) {
 
     Path sourceFile = new File(propsFileName).toPath();
-    Path targetFile = new File(GNTdataProperties.configTmpFileName).toPath();
+    Path targetFile = GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE);
     try {
+      Files.createDirectories(targetFile.getParent());
       Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
       // TODO Auto-generated catch block

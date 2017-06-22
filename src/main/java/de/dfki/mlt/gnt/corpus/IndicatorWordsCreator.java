@@ -1,22 +1,24 @@
 package de.dfki.mlt.gnt.corpus;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import de.dfki.mlt.gnt.archive.Archivator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
- * A indicator word is used to define a dimension of distributed word vectors
- * a indicator word is selected on basis of its rank.
+ * A indicator word is used to define a dimension of distributed word vectors;
+ * an indicator word is selected on basis of its rank.
  *<p>
  * A class for creating the indicator words for a given text corpus
  * <li> each line of a text file corresponds to a sentence of lower-cased words
@@ -30,49 +32,176 @@ import de.dfki.mlt.gnt.archive.Archivator;
  */
 public class IndicatorWordsCreator {
 
-  private static int lineCnt = 0;
-  private static int tokenCnt = 0;
-  private Map<String, Integer> wordToNum = new HashMap<String, Integer>();
-  private String featureFilePathname = "";
+  private static final Logger logger = LoggerFactory.getLogger(IndicatorWordsCreator.class);
+
+  private int lineCnt;
+  private int tokenCnt;
+  private Map<String, Integer> wordToNum;
 
 
   public IndicatorWordsCreator() {
+
+    this.lineCnt = 0;
+    this.tokenCnt = 0;
+    this.wordToNum = new HashMap<String, Integer>();
   }
 
 
-  public IndicatorWordsCreator(String featureFilePathname) {
-    this.setFeatureFilePathname(featureFilePathname);
+  /**
+   * @return indicator words statistics
+   */
+  public String getIndicatorWordStats() {
+
+    return "Token: " + this.tokenCnt + " Types: " + this.wordToNum.size();
   }
 
 
-  public String getFeatureFilePathname() {
+  public void createIndicatorTaggerNameWords(Corpus corpus, double subSamplingThreshold) {
 
-    return this.featureFilePathname;
+    // reset instance
+    this.lineCnt = 0;
+    this.tokenCnt = 0;
+    this.wordToNum.clear();
+
+    Path iwPath = GlobalConfig.getModelBuildFolder().resolve("iw_all.txt");
+    logger.info("create indictor words and save them in file: " + iwPath);
+
+    this.readUnlabeledDataFromCorpus(corpus);
+    this.postProcessWords(subSamplingThreshold);
+    this.writeIndicatorWords(iwPath, 10000);
   }
 
 
-  public void setFeatureFilePathname(String featureFilePathname) {
+  /**
+   * Creates word vectors from a list of relevant source files defined in given corpus.
+   *
+   * @param corpus
+   */
+  private void readUnlabeledDataFromCorpus(Corpus corpus) {
 
-    this.featureFilePathname = featureFilePathname;
+    for (String fileName : corpus.getTrainingUnLabeledData()) {
+      // read in first 100.000 sentences from each file
+      readUnlabeledDataFromFile(fileName, "ptb", 100000);
+    }
+    for (String fileName : corpus.getDevUnLabeledData()) {
+      // read in first 100.000 sentences from each file
+      readUnlabeledDataFromFile(fileName, "ptb", 100000);
+    }
+    for (String fileName : corpus.getTestUnLabeledData()) {
+      // read in first 100.000 sentences from each file
+      readUnlabeledDataFromFile(fileName, "ptb", 100000);
+    }
   }
 
 
-  public Map<String, Integer> getWordToNum() {
+  private void postProcessWords(double threshold) {
 
-    return this.wordToNum;
+    this.wordToNum = subSamplingEntries(threshold);
+    this.wordToNum = sortByValue(this.wordToNum);
   }
 
 
-  public void setWordToNum(Map<String, Integer> wordToNum) {
+  /**
+   * <li> iterate through input file linewise
+   * <li> clean line according to given type (depends on corpus encoding)
+   * <li> count words according to term frequency
+   *
+   * @param fileName
+   * @param type
+   * @param max
+   */
+  private void readUnlabeledDataFromFile(String fileName, String type, int max) {
 
-    this.wordToNum = wordToNum;
+    logger.info("processing " + fileName);
+    try (BufferedReader in = Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8)) {
+      int mod = 100000;
+      int localLineCnt = 0;
+      String line;
+      while ((line = in.readLine()) != null) {
+
+        if ((max > 0) && (localLineCnt >= max)) {
+          break;
+        }
+        this.lineCnt++;
+        localLineCnt++;
+        if (!line.isEmpty()) {
+          String[] words = cleanTextLine(line, type);
+          this.tokenCnt = this.tokenCnt + words.length;
+          updateWordsCount(words);
+        }
+        if ((this.lineCnt % mod) == 0) {
+          logger.info(String.format("total line count: %,d", this.lineCnt));
+        }
+
+      }
+      logger.info(String.format("%,d lines processed", localLineCnt));
+      logger.info(String.format("total line count: %,d", this.lineCnt));
+    } catch (IOException e) {
+      logger.error(e.getLocalizedMessage(), e);
+    }
+  }
+
+
+  private void writeIndicatorWords(Path targetPath, int maxCnt) {
+
+    try {
+      Files.createDirectories(targetPath.getParent());
+      try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+          targetPath, StandardCharsets.UTF_8))) {
+        int cnt = 1;
+        out.println(this.tokenCnt + "\t" + this.wordToNum.size());
+        for (Map.Entry<String, Integer> entry : this.wordToNum.entrySet()) {
+          out.println(entry.getKey() + "\t" + entry.getValue());
+          if (cnt == maxCnt) {
+            break;
+          }
+          cnt++;
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  /**
+   * Update frequency of given words.
+   * @param words
+   */
+  private void updateWordsCount(String[] words) {
+
+    for (String oneWord : words) {
+      Integer count = this.wordToNum.get(oneWord);
+      if (count != null) {
+        this.wordToNum.put(oneWord, count + 1);
+      } else {
+        this.wordToNum.put(oneWord, 1);
+      }
+    }
+  }
+
+
+  // This method helps subsampling based on Thomas Mikolov
+  private Map<String, Integer> subSamplingEntries(double threshold) {
+
+    Map<String, Integer> newMap = new TreeMap<String, Integer>();
+    for (Map.Entry<String, Integer> entry : this.wordToNum.entrySet()) {
+      String key = entry.getKey();
+      Integer value = entry.getValue();
+      double p = 1 - Math.sqrt(threshold / value);
+      if ((1 - p) > threshold) {
+        logger.debug("Key: " + key + " Value: " + value + " p: " + p);
+        newMap.put(key, value);
+      }
+    }
+    return newMap;
   }
 
 
   // Clean text line according to given type
   // AND lower case text
   // It is assumed that line is a tokenized sentence
-  private String[] cleanTextLine(String line, String type) {
+  private static String[] cleanTextLine(String line, String type) {
 
     String[] words = {};
     switch (type) {
@@ -87,90 +216,23 @@ public class IndicatorWordsCreator {
         break;
     }
 
-    tokenCnt = tokenCnt + words.length;
     return words;
   }
 
 
-  private String[] cleanPTBLine(String line) {
+  private static String[] cleanPTBLine(String line) {
 
     String[] words = line.toLowerCase().split(" ");
     return words;
   }
 
 
-  private String[] cleanWebTBKLine(String line) {
+  private static String[] cleanWebTBKLine(String line) {
 
     String[] words = line.toLowerCase().split(" ");
     String[] firstWord = words[0].split(">");
-    //for (String x : firstWord) System.out.print(x+" --- ");System.out.println("\n");
     words[0] = firstWord[firstWord.length - 1];
     return words;
-  }
-
-
-  /**
-   * Count frequency of words
-   * @param words
-   */
-  public void countWords(String[] words) {
-
-    for (String word : words) {
-      if (this.getWordToNum().containsKey(word)) {
-        this.getWordToNum().put(word, this.getWordToNum().get(word) + 1);
-      } else {
-        this.getWordToNum().put(word, 1);
-      }
-    }
-  }
-
-
-  /**
-   * Prints size of hash.
-   */
-  public void printWordNumSize() {
-
-    System.out.println("Token: " + tokenCnt + " Types: " + this.wordToNum.size());
-  }
-
-
-  /**
-   * <li> iterate through input file linewise
-   * <li> clean line according to given type (depends on corpus encoding)
-   * <li> count words according to term frequency
-   * @param fileName
-   * @param type
-   * @param max
-   */
-  public void readAndProcessInputTextLineWise(String fileName, String type, int max) {
-
-    BufferedReader reader;
-    int mod = 100000;
-    int myLineCnt = 0;
-    try {
-      reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
-
-      String line;
-      while ((line = reader.readLine()) != null) {
-        if ((max > 0) && (myLineCnt >= max)) {
-          break;
-        }
-        lineCnt++;
-        myLineCnt++;
-        if (!line.isEmpty()) {
-          String[] words = cleanTextLine(line, type);
-          countWords(words);
-        }
-        if ((lineCnt % mod) == 0) {
-          System.out.println(lineCnt);
-        }
-      }
-      System.out.println("+++" + myLineCnt);
-      reader.close();
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
 
@@ -181,110 +243,5 @@ public class IndicatorWordsCreator {
     Map<String, Integer> sortedMap = new TreeMap<String, Integer>(new ValueComparator(unsortedMap));
     sortedMap.putAll(unsortedMap);
     return sortedMap;
-  }
-
-
-  // This method helps subsampling based on Thomas Mikolov
-  private Map<String, Integer> subSamplingEntries(double threshold) {
-
-    Map<String, Integer> newMap = new TreeMap<String, Integer>();
-    for (Map.Entry<String, Integer> entry : this.getWordToNum().entrySet()) {
-      String key = entry.getKey();
-      Integer value = entry.getValue();
-      double p = 1 - Math.sqrt(threshold / value);
-      if ((1 - p) > threshold) {
-        //System.out.println("Key: " + key + " Value: " + value + " p: " + p);
-        newMap.put(key, value);
-      }
-    }
-    return newMap;
-  }
-
-
-  public void postProcessWords(double threshold) {
-
-    this.setWordToNum(this.subSamplingEntries(threshold));
-    this.setWordToNum(sortByValue(this.getWordToNum()));
-  }
-
-
-  private void writeSortedMap(int n, BufferedWriter writer) {
-
-    int cnt = 1;
-    //Map<String, Integer> sortedMap = sortByValue(wordToNum);
-    try {
-      writer.write(tokenCnt + "\t" + this.getWordToNum().size());
-      for (Map.Entry<String, Integer> entry : this.getWordToNum().entrySet()) {
-        writer.write("\n" + entry.getKey() + "\t" + entry.getValue());
-        if (cnt == n) {
-          break;
-        }
-        cnt++;
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-
-  public void writeSortedIndicatorWords(String targetFileName, int cnt) {
-
-    File file = new File(targetFileName);
-    file.getParentFile().mkdirs();
-    BufferedWriter writer;
-    try {
-      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-      this.writeSortedMap(cnt, writer);
-
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-
-  /**
-   * The following two functions are used to create word vectors from a list of relevant source files defined in Corpus
-   * Class for the selected tagger with name taggerName.
-   * @param corpus
-   */
-  private void readUnlabeledDataFromCorpus(Corpus corpus) {
-
-    for (String fileName : corpus.getTrainingUnLabeledData()) {
-      System.out.println(fileName);
-      // read in first 100.000 sentences from each file
-      readAndProcessInputTextLineWise(fileName, "ptb", 100000);
-    }
-    for (String fileName : corpus.getDevUnLabeledData()) {
-      System.out.println(fileName);
-      // read in first 100.000 sentences from each file
-      readAndProcessInputTextLineWise(fileName, "ptb", 100000);
-    }
-    for (String fileName : corpus.getTestUnLabeledData()) {
-      System.out.println(fileName);
-      // read in first 100.000 sentences from each file
-      readAndProcessInputTextLineWise(fileName, "ptb", 100000);
-    }
-  }
-
-
-  public void createIndicatorTaggerNameWordsFromCorpus(Corpus corpus) {
-
-    this.readUnlabeledDataFromCorpus(corpus);
-  }
-
-
-  public void createAndWriteIndicatorTaggerNameWordsFromCorpus(Archivator archivator, String taggerName, Corpus corpus,
-      double subSamplingThreshold) {
-
-    String iwFilename = this.getFeatureFilePathname() + taggerName + "/iw_all.txt";
-    System.out.println("Create indictor words and save in file: " + iwFilename);
-    IndicatorWordsCreator iwp = new IndicatorWordsCreator();
-    iwp.createIndicatorTaggerNameWordsFromCorpus(corpus);
-
-    iwp.postProcessWords(subSamplingThreshold);
-    iwp.writeSortedIndicatorWords(iwFilename, 10000);
-    // Add file to archivator
-    archivator.getFilesToPack().add(iwFilename);
   }
 }

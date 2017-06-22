@@ -1,5 +1,10 @@
 package de.dfki.mlt.gnt.config;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
@@ -15,6 +20,9 @@ import org.slf4j.LoggerFactory;
  * @author Jörg Steffen, DFKI
  */
 public final class GlobalConfig {
+
+  /** name of model config file in model archive */
+  public static final String MODEL_CONFIG_FILE = "dataConfig.xml";
 
   private static final Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
   private static PropertiesConfiguration instance;
@@ -44,5 +52,95 @@ public final class GlobalConfig {
     }
 
     return instance;
+  }
+
+
+  /**
+   * Convenience method to retrieve the model build folder from config.
+   *
+   * @return model build folder
+   */
+  public static Path getModelBuildFolder() {
+
+    return Paths.get(getInstance().getString(ConfigKeys.MODEL_BUILD_FOLDER));
+  }
+
+
+  /**
+   * @param key
+   *          the config key
+   * @return path associated with the given key
+   */
+  public static Path getPath(String key) {
+
+    return Paths.get(getInstance().getString(key));
+  }
+
+
+  /**
+   * @param key
+   *          the config key
+   * @return path list associated with the given key
+   */
+  public static List<Path> getPathList(String key) {
+
+    List<Path> pathList = new ArrayList<>();
+    List<String> stringList = getInstance().getList(String.class, key);
+    for (String oneString : stringList) {
+      pathList.add(Paths.get(oneString));
+    }
+    return pathList;
+  }
+
+
+  /**
+   * Convenience method to retrieve string values from config.
+   *
+   * @param key
+   *          the config key
+   * @return the key value
+   */
+  public static String getString(String key) {
+
+    return getInstance().getString(key);
+  }
+
+
+  /**
+   * Convenience method to retrieve int values from config.
+   *
+   * @param key
+   *          the config key
+   * @return the key value
+   */
+  public static int getInt(String key) {
+
+    return getInstance().getInt(key);
+  }
+
+
+  /**
+   * Convenience method to retrieve boolean values from config.
+   *
+   * @param key
+   *          the config key
+   * @return the key value
+   */
+  public static boolean getBoolean(String key) {
+
+    return getInstance().getBoolean(key);
+  }
+
+
+  /**
+   * Convenience method to retrieve double values from config.
+   *
+   * @param key
+   *          the config key
+   * @return the key value
+   */
+  public static double getDouble(String key) {
+
+    return getInstance().getDouble(key);
   }
 }

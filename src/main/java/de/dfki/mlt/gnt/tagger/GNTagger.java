@@ -1,20 +1,26 @@
 package de.dfki.mlt.gnt.tagger;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.GlobalConfig;
+import de.dfki.mlt.gnt.corpus.ConllEvaluator;
 import de.dfki.mlt.gnt.corpus.Corpus;
 import de.dfki.mlt.gnt.corpus.GNTcorpusProperties;
 import de.dfki.mlt.gnt.data.Alphabet;
@@ -24,6 +30,7 @@ import de.dfki.mlt.gnt.data.ModelInfo;
 import de.dfki.mlt.gnt.data.OffSets;
 import de.dfki.mlt.gnt.data.Sentence;
 import de.dfki.mlt.gnt.data.Window;
+import de.dfki.mlt.gnt.tokenizer.GntSimpleTokenizer;
 import de.dfki.mlt.gnt.trainer.ProblemInstance;
 
 /**
@@ -38,86 +45,27 @@ public class GNTagger {
   private Data data = new Data();
   private Alphabet alphabet = new Alphabet();
   private ModelInfo modelInfo = new ModelInfo();
-  private Corpus corpus = new Corpus();
   private OffSets offSets = new OffSets();
   private int windowSize = 2;
   private Model model;
   private Archivator archivator;
   private GNTdataProperties dataProps;
 
-  private long time1;
-  private long time2;
 
-
-  public GNTagger() {
-  }
-
-  //  public GNTagger(ModelInfo modelInfo) throws IOException {
-  //    this.setModelInfo(modelInfo);
-  //    this.setData(new Data());
-  //    modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
-  //    this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
-  //
-  //    System.out.println("Extract archive ...");
-  //    this.getArchivator().extract();
-  //  }
-
-
-  //  public GNTagger(ModelInfo modelInfo, GNTcorpusProperties props) throws IOException {
-  //    this.setModelInfo(modelInfo);
-  //    this.setData(new Data());
-  //    this.corpus = new Corpus(props);
-  //    System.out.println(this.getAlphabet().toActiveFeatureString());
-  //
-  //    modelInfo.createModelFileName(GlobalParams.windowSize, GlobalParams.dim, GlobalParams.numberOfSentences);
-  //    System.out.println(modelInfo.toString());
-  //
-  //
-  //    this.setArchivator(new Archivator(modelInfo.getModelFileArchive()));
-  //    System.out.println("Extract archive ...");
-  //    this.getArchivator().extract();
-  //  }
-
-  public GNTagger(String archiveName)
+  public GNTagger(String modelArchiveName)
       throws IOException {
 
-    this.setArchivator(new Archivator(archiveName));
+    this.archivator = new Archivator(modelArchiveName);
     System.out.println("Extract archive ...");
-    this.getArchivator().extract();
+    this.archivator.extract();
     System.out.println("Set dataProps ...");
-    this.setDataProps(
-        new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
-    this.setAlphabet(this.getDataProps().getAlphabet());
+    this.dataProps =
+        new GNTdataProperties(this.archivator.getArchiveMap().get(
+            GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE).toString()));
+    this.alphabet = this.dataProps.getAlphabet();
 
-    this.setModelInfo(this.getDataProps().getModelInfo());
-    this.setData(
-        new Data(this.getDataProps().getGlobalParams().getFeatureFilePathname(),
-            this.getDataProps().getGlobalParams().getTaggerName()));
-
-    this.modelInfo.createModelFileName(this.dataProps.getGlobalParams().getWindowSize(),
-        this.dataProps.getGlobalParams().getDim(),
-        this.dataProps.getGlobalParams().getNumberOfSentences(),
-        this.dataProps.getAlphabet(),
-        this.dataProps.getGlobalParams());
-  }
-
-
-  public GNTagger(String archiveName, GNTcorpusProperties props)
-      throws IOException {
-
-    this.setArchivator(new Archivator(archiveName));
-    System.out.println("Extract archive ...");
-    this.getArchivator().extract();
-    System.out.println("Set dataProps ...");
-    this.setDataProps(
-        new GNTdataProperties(this.getArchivator().getArchiveMap().get(GNTdataProperties.configTmpFileName)));
-    this.setAlphabet(this.getDataProps().getAlphabet());
-
-    this.setModelInfo(this.getDataProps().getModelInfo());
-    this.setData(
-        new Data(this.getDataProps().getGlobalParams().getFeatureFilePathname(),
-            this.getDataProps().getGlobalParams().getTaggerName()));
-    this.corpus = new Corpus(props, this.getDataProps().getGlobalParams());
+    this.modelInfo = this.dataProps.getModelInfo();
+    this.data = new Data();
 
     this.modelInfo.createModelFileName(this.dataProps.getGlobalParams().getWindowSize(),
         this.dataProps.getGlobalParams().getDim(),
@@ -125,161 +73,57 @@ public class GNTagger {
         this.dataProps.getAlphabet(),
         this.dataProps.getGlobalParams());
 
+    initGNTagger(
+        this.dataProps.getGlobalParams().getWindowSize(),
+        this.dataProps.getGlobalParams().getDim());
   }
 
 
-  public GNTdataProperties getDataProps() {
+  private void initGNTagger(int windowSizeParam, int dim)
+      throws UnsupportedEncodingException, IOException {
 
-    return this.dataProps;
-  }
-
-
-  public void setDataProps(GNTdataProperties dataProps) {
-
-    this.dataProps = dataProps;
-  }
-
-
-  public Archivator getArchivator() {
-
-    return this.archivator;
-  }
-
-
-  public void setArchivator(Archivator archivator) {
-
-    this.archivator = archivator;
-  }
-
-
-  public Data getData() {
-
-    return this.data;
-  }
-
-
-  public void setData(Data data) {
-
-    this.data = data;
-  }
-
-
-  public Alphabet getAlphabet() {
-
-    return this.alphabet;
-  }
-
-
-  public void setAlphabet(Alphabet alphabet) {
-
-    this.alphabet = alphabet;
-  }
-
-
-  public ModelInfo getModelInfo() {
-
-    return this.modelInfo;
-  }
-
-
-  public void setModelInfo(ModelInfo modelInfo) {
-
-    this.modelInfo = modelInfo;
-  }
-
-
-  public OffSets getOffSets() {
-
-    return this.offSets;
-  }
-
-
-  public void setOffSets(OffSets offSets) {
-
-    this.offSets = offSets;
-  }
-
-
-  public int getWindowSize() {
-
-    return this.windowSize;
-  }
-
-
-  public void setWindowSize(int windowSize) {
-
-    this.windowSize = windowSize;
-  }
-
-
-  public Model getModel() {
-
-    return this.model;
-  }
-
-
-  public void setModel(Model model) {
-
-    this.model = model;
-  }
-
-
-  public Corpus getCorpus() {
-
-    return this.corpus;
-  }
-
-
-  public void setCorpus(Corpus corpus) {
-
-    this.corpus = corpus;
-  }
-
-
-  public void initGNTagger(int windowSizeParam, int dim) throws UnsupportedEncodingException, IOException {
-
-    this.time1 = System.currentTimeMillis();
+    long time1 = System.currentTimeMillis();
 
     System.out.println("Set window size: " + windowSizeParam);
-    this.setWindowSize(windowSizeParam);
+    this.windowSize = windowSizeParam;
     System.out.println("Set window count: ");
     Window.setWindowCnt(0);
     GNTagger.tokenPersec = 0;
 
     System.out.println("Load feature files with dim: " + dim);
-    this.getAlphabet().loadFeaturesFromFiles(
-        this.getArchivator(), this.getDataProps().getGlobalParams().getTaggerName(), dim,
-        this.getDataProps().getGlobalParams().getFeatureFilePathname());
+    this.alphabet.loadFeaturesFromFiles(this.archivator, dim);
 
-    System.out.println("Load label set from archive: " + this.getData().getLabelMapFileName());
-    this.getData().readLabelSet(this.getArchivator());
+    System.out.println("Load label set from archive: " + this.data.getLabelMapPath());
+    this.data.readLabelSet(this.archivator);
 
     System.out.println("Cleaning non-used variables in Alphabet and in Data:");
-    this.getAlphabet().clean();
-    this.getData().cleanWordSet();
+    this.alphabet.clean();
+    this.data.cleanWordSet();
 
     System.out.println("Initialize offsets:");
-    this.getOffSets().initializeOffsets(
-        this.getAlphabet(), this.getData(), this.getWindowSize());
-    System.out.println("\t" + this.getOffSets().toString());
+    this.offSets.initializeOffsets(
+        this.alphabet, this.data, this.windowSize);
+    System.out.println("\t" + this.offSets.toString());
 
-    this.time2 = System.currentTimeMillis();
-    System.out.println("System time (msec): " + (this.time2 - this.time1) + "\n");
+    long time2 = System.currentTimeMillis();
+    System.out.println("System time (msec): " + (time2 - time1) + "\n");
 
-    this.time1 = System.currentTimeMillis();
+    time1 = System.currentTimeMillis();
 
-    System.out.println("Load model file from archive: " + this.getModelInfo().getModelFile());
+    System.out.println("Load model file from archive: " + this.modelInfo.getModelName() + ".txt");
 
     //this.setModel(Model.load(new File(this.getModelInfo().getModelFile())));
-    this.setModel(Linear.loadModel(
+    this.model = Linear.loadModel(
         new InputStreamReader(
-            this.getArchivator().getArchiveMap().get(this.getModelInfo().getModelFile()),
-            "UTF-8")));
+            this.archivator.getArchiveMap().get(
+                GlobalConfig.getModelBuildFolder().resolve(
+                    this.modelInfo.getModelName() + ".txt").toString()),
+            "UTF-8"));
     System.out.println(".... DONE!");
 
-    this.time2 = System.currentTimeMillis();
-    System.out.println("System time (msec): " + (this.time2 - this.time1));
-    System.out.println(this.getModel().toString() + "\n");
+    time2 = System.currentTimeMillis();
+    System.out.println("System time (msec): " + (time2 - time1));
+    System.out.println(this.model.toString() + "\n");
   }
 
 
@@ -289,17 +133,17 @@ public class GNTagger {
     // for each token t_i of current training sentence do
     // System.out.println("Sentence no: " + data.getSentenceCnt());
     int mod = 100000;
-    for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++) {
+    for (int i = 0; i < this.data.getSentence().getWordArray().length; i++) {
       // Assume that both arrays together define an ordered one-to-one correspondence
       // between token and label (POS)
-      int labelIndex = this.getData().getSentence().getLabelArray()[i];
+      int labelIndex = this.data.getSentence().getLabelArray()[i];
 
       // create local context for tagging t_i of size 2*windowSize+1 centered around t_i
-      Window tokenWindow = new Window(this.getData().getSentence(), i, this.windowSize, this.data, this.alphabet);
+      Window tokenWindow = new Window(this.data.getSentence(), i, this.windowSize, this.data, this.alphabet);
       // This basically has no effect during tagging
       tokenWindow.setLabelIndex(labelIndex);
 
-      this.getData().getInstances().add(tokenWindow);
+      this.data.getInstances().add(tokenWindow);
 
       // Print how many windows are created so far, and pretty print every mod-th window
       if ((Window.getWindowCnt() % mod) == 0) {
@@ -327,28 +171,28 @@ public class GNTagger {
       Window nextWindow = this.data.getInstances().get(i);
       // Fill the frame with all available features. First boolean sets
       // training mode to false which means that unknown words are handled.
-      nextWindow.setOffSets(this.getOffSets());
+      nextWindow.setOffSets(this.offSets);
       nextWindow.fillWindow(train, adjust);
       // Create the feature vector
       ProblemInstance problemInstance = new ProblemInstance();
       problemInstance.createProblemInstanceFromWindow(nextWindow);
 
-      if (this.getDataProps().getGlobalParams().isSaveModelInputFile()) {
+      if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
         problemInstance.saveProblemInstance(
-            this.getModelInfo().getModelInputFileWriter(),
+            this.modelInfo.getModelInputFileWriter(),
             nextWindow.getLabelIndex());
       } else {
         // Call the learner to predict the label
-        prediction = (int)Linear.predict(this.getModel(), problemInstance.getFeatureVector());
+        prediction = (int)Linear.predict(this.model, problemInstance.getFeatureVector());
         /*
         System.out.println(
-            "Word: " + this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i])
-                + "\tPrediction: " + this.getData().getLabelSet().getNum2label().get(prediction));
+            "Word: " + this.data.getWordSet().getNum2label().get(this.data.getSentence().getWordArray()[i])
+                + "\tPrediction: " + this.data.getLabelSet().getNum2label().get(prediction));
         */
 
         //  Here, I am assuming that sentence length equals # of windows
         // So store predicted label i to word i
-        this.getData().getSentence().getLabelArray()[i] = prediction;
+        this.data.getSentence().getLabelArray()[i] = prediction;
       }
 
       // Free space by resetting filled window to unfilled-window
@@ -357,7 +201,7 @@ public class GNTagger {
   }
 
 
-  public void tagSentenceObject() {
+  private void tagSentenceObject() {
 
     // create window frames from sentence and store in list
     this.createWindowFramesFromSentence();
@@ -366,7 +210,7 @@ public class GNTagger {
     this.constructProblemAndTag(false, true);
 
     // reset instances - need to do this here, because learner is called directly on windows
-    this.getData().cleanInstances();
+    this.data.cleanInstances();
   }
 
 
@@ -374,10 +218,10 @@ public class GNTagger {
    * A method for tagging a single sentence given as list of tokens.
    * @param tokens
    */
-  public void tagUnlabeledTokens(List<String> tokens) {
+  private void tagUnlabeledTokens(List<String> tokens) {
 
     // create internal sentence object
-    this.getData().generateSentenceObjectFromUnlabeledTokens(tokens);
+    this.data.generateSentenceObjectFromUnlabeledTokens(tokens);
 
     // tag sentence object
     this.tagSentenceObject();
@@ -388,61 +232,67 @@ public class GNTagger {
    * A simple print out of a sentence in form of list of word/tag
    * @return
    */
-  public String taggedSentenceToString() {
+  private String taggedSentenceToString() {
 
-    String output = "";
-    int mod = 10;
-    int cnt = 0;
-    Sentence sentence = this.getData().getSentence();
+    StringBuilder output = new StringBuilder();
+    Sentence sentence = this.data.getSentence();
     for (int i = 0; i < sentence.getWordArray().length; i++) {
-      String word = this.getData().getWordSet().getNum2label().get(sentence.getWordArray()[i]);
-      String label = this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
+      String word = this.data.getWordSet().getNum2label().get(sentence.getWordArray()[i]);
+      String label = this.data.getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
 
       label = PostProcessor.determineTwitterLabel(word, label);
 
-      output += word + "/" + label + " ";
-      cnt++;
-      if ((cnt % mod) == 0) {
-        output += "\n";
-      }
+      output.append(word + "/" + label + " ");
     }
-    return output;
-
+    return output.toString();
   }
 
 
-  private void tagAndWriteSentencesFromConllReader(BufferedReader conllReader, BufferedWriter conllWriter, int max)
+  private Path tagAndWriteSentencesFromConllReader(String sourceFileName, int max)
       throws IOException {
 
-    String line = "";
-    List<String[]> tokens = new ArrayList<String[]>();
+    Path sourcePath = Paths.get(sourceFileName);
+    String evalFileName = sourcePath.getFileName().toString();
+    evalFileName = evalFileName.substring(0, evalFileName.lastIndexOf(".")) + ".txt";
+    Path evalPath = GlobalConfig.getPath(ConfigKeys.EVAL_FOLDER).resolve(evalFileName);
+    Files.createDirectories(evalPath.getParent());
+    System.out.println("Create eval file: " + evalPath);
 
-    while ((line = conllReader.readLine()) != null) {
-      if (line.isEmpty()) {
-        // For found sentence, do tagging:
-        // Stop if max sentences have been processed
-        if ((max > 0) && (this.data.getSentenceCnt() > max)) {
-          break;
+    try (BufferedReader conllReader = Files.newBufferedReader(sourcePath, StandardCharsets.UTF_8);
+        PrintWriter conllWriter = new PrintWriter(Files.newBufferedWriter(evalPath, StandardCharsets.UTF_8))) {
+
+      String line = "";
+      List<String[]> tokens = new ArrayList<String[]>();
+
+      while ((line = conllReader.readLine()) != null) {
+        if (line.isEmpty()) {
+          // For found sentence, do tagging:
+          // Stop if max sentences have been processed
+          if ((max > 0) && (this.data.getSentenceCnt() > max)) {
+            break;
+          }
+
+          // create internal sentence object and label maps
+          // Use specified label from conll file for evaluation purposes later
+          this.data.generateSentenceObjectFromConllLabeledSentence(tokens);
+
+          // tag sentence object
+          this.tagSentenceObject();
+
+          // Create conlleval consistent output using original conll tokens plus predicted labels
+          this.writeTokensAndWithLabels(conllWriter, tokens, this.data.getSentence());
+
+          // reset tokens
+          tokens = new ArrayList<String[]>();
+        } else {
+          // Collect all the words of a conll sentence
+          String[] tokenizedLine = line.split("\t");
+          tokens.add(tokenizedLine);
         }
-
-        // create internal sentence object and label maps
-        // Use specified label from conll file for evaluation purposes later
-        this.data.generateSentenceObjectFromConllLabeledSentence(tokens);
-
-        // tag sentence object
-        this.tagSentenceObject();
-
-        // Create conlleval consistent output using original conll tokens plus predicted labels
-        this.writeTokensAndWithLabels(conllWriter, tokens, this.data.getSentence());
-
-        // reset tokens
-        tokens = new ArrayList<String[]>();
-      } else {
-        // Collect all the words of a conll sentence
-        String[] tokenizedLine = line.split("\t");
-        tokens.add(tokenizedLine);
       }
     }
+
+    return evalPath;
   }
 
 
@@ -450,12 +300,12 @@ public class GNTagger {
   // I have adjusted the NER conll format to be consistent with the other conll formats, i.e.,
   // LONDON NNP I-NP I-LOC -> 1  LONDON  NNP  I-NP  I-LOC
   // This is why I have 5 elements instead of 4
-  private void writeTokensAndWithLabels(BufferedWriter conllWriter,
-      List<String[]> tokens, Sentence sentence) throws IOException {
+  private void writeTokensAndWithLabels(
+      PrintWriter conllWriter, List<String[]> tokens, Sentence sentence) {
 
     for (int i = 0; i < tokens.size(); i++) {
       String[] token = tokens.get(i);
-      String label = this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
+      String label = this.data.getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
 
       String word = token[Data.getWordFormIndex()];
 
@@ -465,59 +315,177 @@ public class GNTagger {
       String newConllToken = token[0] + " "
           + word + " "
           + token[Data.getPosTagIndex()] + " "
-          + label
-          + "\n";
+          + label;
 
-      conllWriter.write(newConllToken);
+      conllWriter.println(newConllToken);
     }
-    conllWriter.write("\n");
+    conllWriter.println();
   }
 
 
   // This is the current main caller for the GNTagger
-  public void tagAndWriteFromConllDevelFile(String sourceFileName, String evalFileName, int sentenceCnt)
+  private Path tagAndWriteFromConllDevelFile(String sourceFileName, int sentenceCnt)
       throws IOException {
 
     long localTime1;
     long localTime2;
 
-    BufferedReader conllReader = new BufferedReader(
-        new InputStreamReader(new FileInputStream(sourceFileName), "UTF-8"));
-    BufferedWriter conllWriter = new BufferedWriter(
-        new OutputStreamWriter(new FileOutputStream(evalFileName), "UTF-8"));
-
     // Set the writer buffer for the model input file based on the given sourceFileName
-    if (this.getDataProps().getGlobalParams().isSaveModelInputFile()) {
+    if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
       String fileName = new File(sourceFileName).getName();
-      this.getModelInfo().setModelInputFileWriter(
-          new BufferedWriter(
-              new OutputStreamWriter(
-                  new FileOutputStream(
-                      this.getModelInfo().getModelInputFilePrefix() + fileName + ".txt"),
-                  "UTF-8")));
+      Path libLinearInputPath =
+          GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER)
+              .resolve("liblinear_input_" + fileName + ".txt");
+      if (libLinearInputPath.getParent() != null) {
+        Files.createDirectories(libLinearInputPath.getParent());
+      }
+      this.modelInfo.setModelInputFileWriter(
+          Files.newBufferedWriter(libLinearInputPath, StandardCharsets.UTF_8));
     }
     System.out.println("\n++++\nDo testing from file: " + sourceFileName);
     // Reset some data to make sure each file has same change
-    this.getData().setSentenceCnt(0);
+    this.data.setSentenceCnt(0);
     Window.setWindowCnt(0);
 
     localTime1 = System.currentTimeMillis();
 
-    this.tagAndWriteSentencesFromConllReader(conllReader, conllWriter, sentenceCnt);
-    // close the buffers
-    conllReader.close();
-    conllWriter.close();
-    if (this.getDataProps().getGlobalParams().isSaveModelInputFile()) {
-      this.getModelInfo().getModelInputFileWriter().close();
+    Path evalPath = this.tagAndWriteSentencesFromConllReader(sourceFileName, sentenceCnt);
+
+    if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
+      this.modelInfo.getModelInputFileWriter().close();
     }
 
     localTime2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (localTime2 - localTime1));
 
     GNTagger.tokenPersec = (Window.getWindowCnt() * 1000) / (localTime2 - localTime1);
-    System.out.println("Sentences: " + this.getData().getSentenceCnt());
+    System.out.println("Sentences: " + this.data.getSentenceCnt());
     System.out.println("Testing instances: " + Window.getWindowCnt());
-    System.out.println("Sentences/sec: " + (this.getData().getSentenceCnt() * 1000) / (localTime2 - localTime1));
+    System.out.println("Sentences/sec: " + (this.data.getSentenceCnt() * 1000) / (localTime2 - localTime1));
     System.out.println("Words/sec: " + GNTagger.tokenPersec);
+
+    return evalPath;
+  }
+
+
+  /**
+   * Tags the given string and outputs it in a line-oriented format.
+   *
+   * @param inputString
+   * @return the tagged string
+   */
+  public String tagString(String inputString) {
+
+    List<String> tokens = GntSimpleTokenizer.tokenize(inputString);
+
+    tagUnlabeledTokens(tokens);
+
+    String taggedString = taggedSentenceToString();
+
+    for (String token : taggedString.split(" ")) {
+      System.out.println(token);
+    }
+
+    return taggedString;
+  }
+
+
+  /**
+   * Tags each line of the given file and saves resulting tagged string in output file.
+   * Output file is build from sourceFilename by adding suffix .GNT
+   *
+   * @param sourceFileName
+   * @param inEncode
+   * @param outEncode
+   * @throws IOException
+   */
+  public void tagFile(Path sourcePath, String inEncode, String outEncode)
+      throws IOException {
+
+    Path resultPath = Paths.get(sourcePath.toString() + ".GNT");
+    try (BufferedReader in = Files.newBufferedReader(
+        sourcePath, Charset.forName(inEncode));
+        PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+            resultPath, Charset.forName(outEncode)))) {
+
+      String line;
+      while ((line = in.readLine()) != null) {
+        if (!line.isEmpty()) {
+          List<String> tokens = GntSimpleTokenizer.tokenize(line);
+          tagUnlabeledTokens(tokens);
+          String taggedString = taggedSentenceToString();
+          for (String token : taggedString.split(" ")) {
+            out.println(token);
+          }
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Tags all files in the given directory.
+   *
+   * @param inputDir
+   * @param inEncode
+   * @param outEncode
+   * @throws IOException
+   */
+  public void tagFolder(String inputDirName, String inEncode, String outEncode)
+      throws IOException {
+
+    Path inputDirPath = Paths.get(inputDirName);
+    try (DirectoryStream<Path> stream =
+        Files.newDirectoryStream(inputDirPath, "*.{txt}")) {
+      for (Path entry : stream) {
+        long time1 = System.currentTimeMillis();
+
+        System.out.println("Tagging file ... " + entry.toString());
+
+        tagFile(entry, inEncode, outEncode);
+
+        long time2 = System.currentTimeMillis();
+        System.out.println("System time (msec): " + (time2 - time1));
+      }
+    }
+  }
+
+
+  /**
+   * Evaluates the performance of the tagger using the given annotated corpus.
+   *
+   * @param corpusConfigName
+   *          corpus configuration file name
+   */
+  public void eval(String corpusConfigName) throws IOException {
+
+    GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigName);
+    Corpus corpus = new Corpus(corpusProps, this.dataProps.getGlobalParams());
+
+    Data wordSetData = new Data();
+    wordSetData.readWordSet(this.archivator);
+
+    System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: "
+        + wordSetData.getWordMapPath());
+    System.out.println(wordSetData.toString());
+    ConllEvaluator evaluator = new ConllEvaluator(wordSetData);
+
+    for (String fileName : corpus.getDevLabeledData()) {
+      Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1);
+      evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
+    }
+    for (String fileName : corpus.getTestLabeledData()) {
+      Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1);
+      evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
+    }
+  }
+
+
+  /**
+   * Closes all streams of embedded archivator.
+   */
+  public void close() {
+
+    this.archivator.close();
   }
 }

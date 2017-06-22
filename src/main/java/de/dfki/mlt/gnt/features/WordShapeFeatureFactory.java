@@ -1,19 +1,21 @@
 package de.dfki.mlt.gnt.features;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  * For each word given, check all shape features and set bit vector map accordingly.
@@ -52,27 +54,8 @@ public class WordShapeFeatureFactory {
   // private int wordCnt = 0;
   private int signatureCnt = 0;
 
-  private String featureFilePathname = "";
-
 
   public WordShapeFeatureFactory() {
-  }
-
-
-  public WordShapeFeatureFactory(String featureFilePathname) {
-    this.setFeatureFilePathname(featureFilePathname);
-  }
-
-
-  public String getFeatureFilePathname() {
-
-    return this.featureFilePathname;
-  }
-
-
-  public void setFeatureFilePathname(String featureFilePathname) {
-
-    this.featureFilePathname = featureFilePathname;
   }
 
 
@@ -119,17 +102,15 @@ public class WordShapeFeatureFactory {
   }
 
 
-  public void createAndSaveShapeFeature(Archivator archivator, String taggerName, String trainingFileName) {
+  public void createAndSaveShapeFeature(String trainingFileName) {
 
     System.out.println("Create shape list from: " + trainingFileName);
     this.createShapeVectorsFromFile(trainingFileName, -1);
 
-    String shapeFileName = this.getFeatureFilePathname() + taggerName + "/shapeList.txt";
-    System.out.println("Writing shape list to: " + shapeFileName);
-    this.writeShapeFeatureFile(shapeFileName);
+    Path shapePath = GlobalConfig.getModelBuildFolder().resolve("shapeList.txt");
+    System.out.println("Writing shape list to: " + shapePath);
+    this.writeShapeFeatureFile(shapePath);
     System.out.println("... done");
-    // Add file to archivator
-    archivator.getFilesToPack().add(shapeFileName);
   }
 
 
@@ -236,48 +217,46 @@ public class WordShapeFeatureFactory {
   }
 
 
-  public void writeShapeFeatureFile(String targetFileName) {
+  public void writeShapeFeatureFile(Path targetPath) {
 
-    BufferedWriter writer;
     try {
-      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(targetFileName), "UTF-8"));
-      for (int key : this.index2signature.keySet()) {
-        writer.write(this.index2signature.get(key) + "\n");
+      Files.createDirectories(targetPath.getParent());
+      try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+          targetPath, StandardCharsets.UTF_8))) {
+        for (int key : this.index2signature.keySet()) {
+          out.println(this.index2signature.get(key));
+        }
       }
-      writer.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
 
-  private void readShapeFeatureFile(String string) {
+  private void readShapeFeatureFile(Path path) {
 
-    BufferedReader reader;
-    int cnt = 1;
-    try {
-      reader = new BufferedReader(new InputStreamReader(new FileInputStream(string), "UTF-8"));
+
+    try (BufferedReader in = Files.newBufferedReader(
+        path, StandardCharsets.UTF_8)) {
       String line;
-      while ((line = reader.readLine()) != null) {
+      int cnt = 1;
+      while ((line = in.readLine()) != null) {
         this.signature2index.put(line, cnt);
         this.index2signature.put(cnt, line);
         cnt++;
       }
-      reader.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
 
-  private void readShapeFeatureFile(Archivator archivator, String string) {
+  private void readShapeFeatureFile(Archivator archivator, Path path) {
 
     BufferedReader reader;
     int cnt = 1;
     try {
-      InputStream inputStream = archivator.getArchiveMap().get(string);
+      InputStream inputStream = archivator.getArchiveMap().get(path.toString());
       reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
       String line;
       while ((line = reader.readLine()) != null) {
@@ -293,20 +272,20 @@ public class WordShapeFeatureFactory {
   }
 
 
-  public void readShapeList(String taggerName, String featureFilePath) {
+  public void readShapeList() {
 
-    String shapeFileName = featureFilePath + taggerName + "/shapeList.txt";
-    System.out.println("Reading shape list from: " + shapeFileName);
-    this.readShapeFeatureFile(shapeFileName);
+    Path shapePath = GlobalConfig.getModelBuildFolder().resolve("shapeList.txt");
+    System.out.println("Reading shape list from: " + shapePath);
+    this.readShapeFeatureFile(shapePath);
     System.out.println("... done");
   }
 
 
-  public void readShapeList(Archivator archivator, String taggerName, String featureFilePath) {
+  public void readShapeList(Archivator archivator) {
 
-    String shapeFileName = featureFilePath + taggerName + "/shapeList.txt";
-    System.out.println("Reading shape list from archive: " + shapeFileName);
-    this.readShapeFeatureFile(archivator, shapeFileName);
+    Path shapePath = GlobalConfig.getModelBuildFolder().resolve("shapeList.txt");
+    System.out.println("Reading shape list from archive: " + shapePath);
+    this.readShapeFeatureFile(archivator, shapePath);
     System.out.println("... done");
   }
 }

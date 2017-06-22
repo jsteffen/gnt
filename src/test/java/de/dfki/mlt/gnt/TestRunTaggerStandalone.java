@@ -2,7 +2,7 @@ package de.dfki.mlt.gnt;
 
 import java.io.IOException;
 
-import de.dfki.mlt.gnt.caller.GNTaggerStandalone;
+import de.dfki.mlt.gnt.tagger.GNTagger;
 
 /**
  *
@@ -13,11 +13,10 @@ public class TestRunTaggerStandalone {
 
   public static void main(String[] args) throws IOException {
 
-    GNTaggerStandalone runner = new GNTaggerStandalone();
-    runner.initRunner("resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip");
+    GNTagger tagger = new GNTagger("resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip");
 
     System.out.println("Tag text: ");
-    runner.tagStringRunner(
+    tagger.tagString(
         "Die Bundesanwaltschaft in Karlsruhe hat die Ermittlungen gegen einen terrorverdächtigen "
             + "Bundeswehroffizier übernommen. "
             + "Es bestehe der Anfangsverdacht der Vorbereitung einer schweren staatsgefährdenden Gewalttat, "

@@ -58,15 +58,15 @@ public class CorpusRecoverer {
 
     // Labeled data
     for (String fileName : this.getCorpus().getTrainingLabeledData()) {
-      String fileNameComplete = fileName + ".conll.orig";
+      String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
     for (String fileName : this.getCorpus().getDevLabeledData()) {
-      String fileNameComplete = fileName + ".conll.orig";
+      String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
     for (String fileName : this.getCorpus().getTestLabeledData()) {
-      String fileNameComplete = fileName + ".conll.orig";
+      String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
 

@@ -162,42 +162,39 @@ public class CorpusNormalizer {
   private void normalizeLabeledFilesFromCorpus() throws IOException {
 
     for (String fileName : this.getCorpus().getTrainingLabeledData()) {
-      String fileNameComplete = fileName + ".conll";
-      System.out.println("Copy and normalize: " + fileNameComplete);
-      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileNameComplete);
-      CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileNameComplete);
+      System.out.println("Copy and normalize: " + fileName);
+      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
+      CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileName);
     }
     for (String fileName : this.getCorpus().getDevLabeledData()) {
-      String fileNameComplete = fileName + ".conll";
-      System.out.println("Copy and normalize: " + fileNameComplete);
-      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileNameComplete);
-      CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileNameComplete);
+      System.out.println("Copy and normalize: " + fileName);
+      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
+      CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileName);
     }
     for (String fileName : this.getCorpus().getTestLabeledData()) {
-      String fileNameComplete = fileName + ".conll";
-      System.out.println("Copy and normalize: " + fileNameComplete);
-      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileNameComplete);
-      CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileNameComplete);
+      System.out.println("Copy and normalize: " + fileName);
+      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
+      CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileName);
     }
   }
 
 
   private void normalizeUnLabeledFilesFromCorpus() throws IOException {
 
-    for (String fileNameComplete : this.getCorpus().getTrainingUnLabeledData()) {
-      System.out.println("Copy and normalize: " + fileNameComplete);
-      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileNameComplete);
-      CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileNameComplete);
+    for (String fileName : this.getCorpus().getTrainingUnLabeledData()) {
+      System.out.println("Copy and normalize: " + fileName);
+      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
+      CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileName);
     }
-    for (String fileNameComplete : this.getCorpus().getDevUnLabeledData()) {
-      System.out.println("Copy and normalize: " + fileNameComplete);
-      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileNameComplete);
-      CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileNameComplete);
+    for (String fileName : this.getCorpus().getDevUnLabeledData()) {
+      System.out.println("Copy and normalize: " + fileName);
+      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
+      CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileName);
     }
-    for (String fileNameComplete : this.getCorpus().getTestUnLabeledData()) {
-      System.out.println("Copy and normalize: " + fileNameComplete);
-      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileNameComplete);
-      CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileNameComplete);
+    for (String fileName : this.getCorpus().getTestUnLabeledData()) {
+      System.out.println("Copy and normalize: " + fileName);
+      String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
+      CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileName);
     }
   }
 
