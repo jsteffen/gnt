@@ -40,8 +40,6 @@ import de.dfki.mlt.gnt.trainer.ProblemInstance;
  */
 public class GNTagger {
 
-  private static long tokenPersec = 0;
-
   private Data data = new Data();
   private Alphabet alphabet = new Alphabet();
   private ModelInfo modelInfo = new ModelInfo();
@@ -88,7 +86,6 @@ public class GNTagger {
     this.windowSize = windowSizeParam;
     System.out.println("Set window count: ");
     Window.setWindowCnt(0);
-    GNTagger.tokenPersec = 0;
 
     System.out.println("Load feature files with dim: " + dim);
     this.alphabet.loadFeaturesFromFiles(this.archivator, dim);
@@ -358,11 +355,11 @@ public class GNTagger {
     localTime2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (localTime2 - localTime1));
 
-    GNTagger.tokenPersec = (Window.getWindowCnt() * 1000) / (localTime2 - localTime1);
+    long tokenPerSec = (Window.getWindowCnt() * 1000) / (localTime2 - localTime1);
     System.out.println("Sentences: " + this.data.getSentenceCnt());
     System.out.println("Testing instances: " + Window.getWindowCnt());
     System.out.println("Sentences/sec: " + (this.data.getSentenceCnt() * 1000) / (localTime2 - localTime1));
-    System.out.println("Words/sec: " + GNTagger.tokenPersec);
+    System.out.println("Words/sec: " + tokenPerSec);
 
     return evalPath;
   }
@@ -457,7 +454,7 @@ public class GNTagger {
    * @param corpusConfigName
    *          corpus configuration file name
    */
-  public void eval(String corpusConfigName) throws IOException {
+  public ConllEvaluator eval(String corpusConfigName) throws IOException {
 
     GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigName);
     Corpus corpus = new Corpus(corpusProps, this.dataProps.getGlobalParams());
@@ -478,6 +475,8 @@ public class GNTagger {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
+
+    return evaluator;
   }
 
 

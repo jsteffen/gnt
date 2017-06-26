@@ -186,7 +186,7 @@ public final class GNT {
             cmd.getOptionValue("outEncode", OUT_ENCODE_DEFAULT));
         break;
       default:
-        logger.error(String.format("unkown mode flag '%s", mode));
+        logger.error(String.format("unkown mode '%s'", mode));
         return;
     }
   }
