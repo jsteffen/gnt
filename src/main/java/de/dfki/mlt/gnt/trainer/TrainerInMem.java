@@ -29,6 +29,7 @@ import de.dfki.mlt.gnt.config.ModelConfig;
 import de.dfki.mlt.gnt.data.Alphabet;
 import de.dfki.mlt.gnt.data.Data;
 import de.dfki.mlt.gnt.data.OffSets;
+import de.dfki.mlt.gnt.data.Sentence;
 import de.dfki.mlt.gnt.data.Window;
 
 /**
@@ -240,17 +241,17 @@ public class TrainerInMem {
    * I do this because I do not know in advance the number of sentences and hence, the number of tokens in a file.
    * @throws IOException
    */
-  private void createWindowFramesFromSentence() {
+  private void createWindowFramesFromSentence(Sentence sentence) {
 
     // for each token t_i of current training sentence do
     // System.out.println("Sentence no: " + data.getSentenceCnt());
     int mod = 100000;
-    for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++) {
-      int labelIndex = this.getData().getSentence().getLabelArray()[i];
+    for (int i = 0; i < sentence.getWordArray().length; i++) {
+      int labelIndex = sentence.getLabelArray()[i];
       // create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 
-      Window tokenWindow = new Window(
-          this.getData().getSentence(), i, this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE), this.data, this.alphabet);
+      Window tokenWindow =
+          new Window(sentence, i, this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE), this.data, this.alphabet);
       tokenWindow.setLabelIndex(labelIndex);
 
       this.getData().getInstances().add(tokenWindow);
@@ -277,7 +278,9 @@ public class TrainerInMem {
    * @param max if -1 then infinite else max sentences are processed and then methods stops
    * @throws IOException
    */
-  private void createTrainingInstancesFromConllReader(BufferedReader conllReader, int max) throws IOException {
+  private void createTrainingInstancesFromConllReader(
+      BufferedReader conllReader, int max, int wordFormIndex, int tagIndex)
+      throws IOException {
 
     String line = "";
     List<String[]> tokens = new ArrayList<String[]>();
@@ -289,12 +292,12 @@ public class TrainerInMem {
         }
 
         // create internal sentence object and label maps
-        this.data.generateSentenceObjectFromConllLabeledSentence(tokens);
+        Sentence sentence = this.data.generateSentenceObjectFromConllLabeledSentence(tokens, wordFormIndex, tagIndex);
 
         // System.out.println("In:  " + this.taggedSentenceToString());
 
         // create window frames and store in list
-        createWindowFramesFromSentence();
+        createWindowFramesFromSentence(sentence);
 
         // reset tokens
         tokens = new ArrayList<String[]>();
@@ -436,7 +439,7 @@ public class TrainerInMem {
    * @throws IOException
    */
   //TODO: currently runs only a single training file
-  public void trainFromConllTrainingFileInMemory(String sourceFileName, int max)
+  public void trainFromConllTrainingFileInMemory(String sourceFileName, int max, int wordFormIndex, int tagIndex)
       throws IOException {
 
     long time1;
@@ -453,7 +456,7 @@ public class TrainerInMem {
     // Read training data
     time1 = System.currentTimeMillis();
     System.out.println("Create conll training instances ...");
-    this.createTrainingInstancesFromConllReader(conllReader, max);
+    this.createTrainingInstancesFromConllReader(conllReader, max, wordFormIndex, tagIndex);
     time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (time2 - time1));
 
@@ -514,14 +517,14 @@ public class TrainerInMem {
 
 
   // Printing helpers
-  public String taggedSentenceToString() {
+  public String taggedSentenceToString(Sentence sentence) {
 
     String output = "";
     int mod = 10;
     int cnt = 0;
-    for (int i = 0; i < this.getData().getSentence().getWordArray().length; i++) {
-      output += this.getData().getWordSet().getNum2label().get(this.getData().getSentence().getWordArray()[i]) + "/"
-          + this.getData().getLabelSet().getNum2label().get(this.getData().getSentence().getLabelArray()[i]) + " ";
+    for (int i = 0; i < sentence.getWordArray().length; i++) {
+      output += this.getData().getWordSet().getNum2label().get(sentence.getWordArray()[i]) + "/"
+          + this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]) + " ";
       cnt++;
       if ((cnt % mod) == 0) {
         output += "\n";

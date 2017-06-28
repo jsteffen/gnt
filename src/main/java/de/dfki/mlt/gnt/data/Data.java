@@ -14,17 +14,8 @@ import de.dfki.mlt.gnt.config.GlobalConfig;
  */
 public class Data {
 
-  // counted from 0, 2nd column in conll in case of POS, else 0 for NER
-  /**
-   * Index of wordform in conll format
-   */
-  private static int wordFormIndex = 1;
-  // counted from 0, 5th column in conll
-  private static int posTagIndex = 4;
-
   private SetIndexMap wordSet = new SetIndexMap();
   private SetIndexMap labelSet = new SetIndexMap();
-  private Sentence sentence = new Sentence();
   private int sentenceCnt = 0;
   private List<Window> instances = new ArrayList<Window>();
   private Path labelMapPath;
@@ -32,44 +23,15 @@ public class Data {
 
 
   public Data() {
+
     this.labelMapPath = GlobalConfig.getModelBuildFolder().resolve("labelSet.txt");
     this.wordMapPath = GlobalConfig.getModelBuildFolder().resolve("wordSet.txt");
-  }
-
-
-  public static int getWordFormIndex() {
-
-    return wordFormIndex;
-  }
-
-
-  public static void setWordFormIndex(int wordFormIndex) {
-
-    Data.wordFormIndex = wordFormIndex;
-  }
-
-
-  public static int getPosTagIndex() {
-
-    return posTagIndex;
-  }
-
-
-  public static void setPosTagIndex(int posTagIndex) {
-
-    Data.posTagIndex = posTagIndex;
   }
 
 
   public List<Window> getInstances() {
 
     return this.instances;
-  }
-
-
-  public void setInstances(List<Window> instances) {
-
-    this.instances = instances;
   }
 
 
@@ -91,33 +53,9 @@ public class Data {
   }
 
 
-  public void setWordSet(SetIndexMap wordSet) {
-
-    this.wordSet = wordSet;
-  }
-
-
   public SetIndexMap getLabelSet() {
 
     return this.labelSet;
-  }
-
-
-  public void setLabelSet(SetIndexMap labelSet) {
-
-    this.labelSet = labelSet;
-  }
-
-
-  public Sentence getSentence() {
-
-    return this.sentence;
-  }
-
-
-  public void setSentence(Sentence sentence) {
-
-    this.sentence = sentence;
   }
 
 
@@ -135,13 +73,13 @@ public class Data {
 
   private int updateWordMap(String word) {
 
-    return this.getWordSet().updateSetIndexMap(word);
+    return this.wordSet.updateSetIndexMap(word);
   }
 
 
   private int updateLabelMap(String label) {
 
-    return this.getLabelSet().updateSetIndexMap(label);
+    return this.labelSet.updateSetIndexMap(label);
   }
 
 
@@ -153,7 +91,8 @@ public class Data {
    * and stored in the data object
    * @param tokens
    */
-  public void generateSentenceObjectFromConllLabeledSentence(List<String[]> tokens) {
+  public Sentence generateSentenceObjectFromConllLabeledSentence(
+      List<String[]> tokens, int wordFormIndex, int tagIndex) {
 
     // tokens are of form
     // "1  The  The  DT  DT  _  2  NMOD"
@@ -163,11 +102,11 @@ public class Data {
       // Extract word and pos from conll sentence, create index for both
       // and create sentence using word/pos index
       newSentence.addNextToken(i,
-          updateWordMap(tokens.get(i)[Data.wordFormIndex]),
-          updateLabelMap(tokens.get(i)[Data.posTagIndex]));
+          updateWordMap(tokens.get(i)[wordFormIndex]),
+          updateLabelMap(tokens.get(i)[tagIndex]));
     }
-    this.setSentence(newSentence);
     this.sentenceCnt++;
+    return newSentence;
   }
 
 
@@ -178,18 +117,18 @@ public class Data {
    * <li> Using a dummy POS "UNK" encoded as -1
    * @param tokens
    */
-  public void generateSentenceObjectFromConllUnLabeledSentence(List<String[]> tokens) {
+  public Sentence generateSentenceObjectFromConllUnLabeledSentence(List<String[]> tokens, int wordFormIndex) {
 
     Sentence newSentence = new Sentence(tokens.size());
     for (int i = 0; i < tokens.size(); i++) {
       // Extract word and pos from conll sentence, create index for both
       // and create sentence using word/pos index
       newSentence.addNextToken(i,
-          updateWordMap(tokens.get(i)[Data.wordFormIndex]),
+          updateWordMap(tokens.get(i)[wordFormIndex]),
           -1);
     }
-    this.setSentence(newSentence);
     this.sentenceCnt++;
+    return newSentence;
   }
 
 
@@ -200,7 +139,7 @@ public class Data {
    * <li> Using a dummy POS "UNK" encoded as -1
    * @param tokens
    */
-  public void generateSentenceObjectFromUnlabeledTokens(List<String> tokens) {
+  public Sentence generateSentenceObjectFromUnlabeledTokens(List<String> tokens) {
 
     Sentence newSentence = new Sentence(tokens.size());
     for (int i = 0; i < tokens.size(); i++) {
@@ -211,9 +150,8 @@ public class Data {
           updateWordMap(tokens.get(i)),
           -1);
     }
-    this.setSentence(newSentence);
     this.sentenceCnt++;
-
+    return newSentence;
   }
 
 
@@ -237,37 +175,37 @@ public class Data {
 
   public void saveLabelSet() {
 
-    this.getLabelSet().writeSetIndexMap(this.getLabelMapPath());
+    this.labelSet.writeSetIndexMap(this.labelMapPath);
   }
 
 
   public void readLabelSet() {
 
-    this.getLabelSet().readSetIndexMap(this.getLabelMapPath());
+    this.labelSet.readSetIndexMap(this.labelMapPath);
   }
 
 
   public void readLabelSet(Archivator archivator) {
 
-    this.getLabelSet().readSetIndexMap(archivator, this.getLabelMapPath());
+    this.labelSet.readSetIndexMap(archivator, this.labelMapPath);
   }
 
 
   public void saveWordSet() {
 
-    this.getWordSet().writeSetIndexMap(this.getWordMapPath());
+    this.wordSet.writeSetIndexMap(this.wordMapPath);
   }
 
 
   public void readWordSet() {
 
-    this.getWordSet().readSetIndexMap(this.getWordMapPath());
+    this.wordSet.readSetIndexMap(this.wordMapPath);
   }
 
 
   public void readWordSet(Archivator archivator) {
 
-    this.getWordSet().readSetIndexMap(archivator, this.getWordMapPath());
+    this.wordSet.readSetIndexMap(archivator, this.wordMapPath);
   }
 
 
@@ -276,8 +214,8 @@ public class Data {
 
     String output = "";
     output += "Sentences: " + this.sentenceCnt
-        + " words: " + this.getWordSet().getLabelCnt()
-        + " labels: " + this.getLabelSet().getLabelCnt() + "\n";
+        + " words: " + this.wordSet.getLabelCnt()
+        + " labels: " + this.labelSet.getLabelCnt() + "\n";
     return output;
   }
 }

@@ -149,7 +149,10 @@ public class GNTrainer {
     System.out.println("Set window count: ");
     Window.setWindowCnt(0);
 
-    this.getTrainer().trainFromConllTrainingFileInMemory(trainingFileName, maxExamples);
+    this.getTrainer().trainFromConllTrainingFileInMemory(
+        trainingFileName, maxExamples,
+        this.corpusConfig.getInt(ConfigKeys.WORD_FORM_INDEX),
+        this.corpusConfig.getInt(ConfigKeys.TAG_INDEX));
 
     this.time2 = System.currentTimeMillis();
     System.out.println("Total training time: " + (this.time2 - this.time1));
