@@ -117,7 +117,9 @@ public class WordShapeFeatureFactory {
   private void createShapeVectorsFromFile(String targetFileName, int max) {
 
     File file = new File(targetFileName);
-    file.getParentFile().mkdirs();
+    if (file.getParentFile() != null) {
+      file.getParentFile().mkdirs();
+    }
     BufferedReader reader;
     int lineCnt = 0;
     int mod = 10000;
