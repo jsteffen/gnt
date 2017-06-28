@@ -14,6 +14,8 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.CorpusConfig;
 import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
@@ -56,7 +58,7 @@ public class IndicatorWordsCreator {
   }
 
 
-  public void createIndicatorTaggerNameWords(Corpus corpus, double subSamplingThreshold) {
+  public void createIndicatorTaggerNameWords(CorpusConfig corpusConfig, double subSamplingThreshold) {
 
     // reset instance
     this.lineCnt = 0;
@@ -66,7 +68,7 @@ public class IndicatorWordsCreator {
     Path iwPath = GlobalConfig.getModelBuildFolder().resolve("iw_all.txt");
     logger.info("create indictor words and save them in file: " + iwPath);
 
-    this.readUnlabeledDataFromCorpus(corpus);
+    this.readUnlabeledDataFromCorpus(corpusConfig);
     this.postProcessWords(subSamplingThreshold);
     this.writeIndicatorWords(iwPath, 10000);
   }
@@ -77,17 +79,17 @@ public class IndicatorWordsCreator {
    *
    * @param corpus
    */
-  private void readUnlabeledDataFromCorpus(Corpus corpus) {
+  private void readUnlabeledDataFromCorpus(CorpusConfig corpusConfig) {
 
-    for (String fileName : corpus.getTrainingUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TRAINING_UNLABELED_DATA)) {
       // read in first 100.000 sentences from each file
       readUnlabeledDataFromFile(fileName, "ptb", 100000);
     }
-    for (String fileName : corpus.getDevUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.DEV_UNLABELED_DATA)) {
       // read in first 100.000 sentences from each file
       readUnlabeledDataFromFile(fileName, "ptb", 100000);
     }
-    for (String fileName : corpus.getTestUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TEST_UNLABELED_DATA)) {
       // read in first 100.000 sentences from each file
       readUnlabeledDataFromFile(fileName, "ptb", 100000);
     }

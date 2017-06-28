@@ -9,11 +9,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.CorpusConfig;
 
 /**
  * Provides methods to prepare a corpus for model training.
@@ -38,12 +41,12 @@ public final class CorpusProcessor {
    * @param corpusProps
    *          the corpus config
    */
-  public static void prepreCorpus(GNTcorpusProperties corpusProps) {
+  public static void prepreCorpus(CorpusConfig corpusConfig) {
 
     // transcode NER source files into proper CoNLL format
-    transcodeNerSourceFilesToConllFiles(corpusProps);
+    transcodeNerSourceFilesToConllFiles(corpusConfig);
     // transcode CoNLL files into plain text sentence files
-    transcodeConllFilesToSentenceFiles(corpusProps);
+    transcodeConllFilesToSentenceFiles(corpusConfig);
   }
 
 
@@ -53,17 +56,17 @@ public final class CorpusProcessor {
    * @param corpusProps
    *          the corpus config
    */
-  private static void transcodeNerSourceFilesToConllFiles(GNTcorpusProperties corpusProps) {
+  private static void transcodeNerSourceFilesToConllFiles(CorpusConfig corpusConfig) {
 
     // collect all NER source files to transcode
     String[] propKeys = new String[] {
-        "trainingLabeledSourceFiles", "devLabeledSourceFiles", "testLabeledSourceFiles" };
+        ConfigKeys.TRAINING_LABELED_SOURCE_DATA,
+        ConfigKeys.DEV_LABELED_SOURCE_DATA,
+        ConfigKeys.TEST_LABELED_SOURCE_DATA };
     List<String> nerSourceFilesToTranscode = new ArrayList<>();
     for (String oneKey : propKeys) {
-      if (corpusProps.containsKey(oneKey)) {
-        String[] nerSourceFiles = corpusProps.getProperty(oneKey).split(",");
-        nerSourceFilesToTranscode.addAll(Arrays.asList(nerSourceFiles));
-      }
+      List<String> fileList = corpusConfig.getList(String.class, oneKey, Collections.emptyList());
+      nerSourceFilesToTranscode.addAll(fileList);
     }
 
     if (nerSourceFilesToTranscode.isEmpty()) {
@@ -74,7 +77,7 @@ public final class CorpusProcessor {
 
     // language is required to distinguish between different NER source file formats
     String lang = "EN";
-    if (corpusProps.getProperty("taggerName").equals("DENER")) {
+    if (corpusConfig.getString(ConfigKeys.TAGGER_NAME).equals("DENER")) {
       lang = "DE";
     }
 
@@ -168,17 +171,17 @@ public final class CorpusProcessor {
    * @param corpusProps
    *          the corpus config
    */
-  private static void transcodeConllFilesToSentenceFiles(GNTcorpusProperties corpusProps) {
+  private static void transcodeConllFilesToSentenceFiles(CorpusConfig corpusConfig) {
 
     // collect all CoNLL files to transcode
     String[] propKeys = new String[] {
-        "trainingLabeledData", "devLabeledData", "testLabeledData" };
+        ConfigKeys.TRAINING_LABELED_DATA,
+        ConfigKeys.DEV_LABELED_DATA,
+        ConfigKeys.TEST_LABELED_DATA };
     List<String> conllFilesToTranscode = new ArrayList<>();
     for (String oneKey : propKeys) {
-      if (corpusProps.containsKey(oneKey)) {
-        String[] conllFiles = corpusProps.getProperty(oneKey).split(",");
-        conllFilesToTranscode.addAll(Arrays.asList(conllFiles));
-      }
+      List<String> fileList = corpusConfig.getList(String.class, oneKey, Collections.emptyList());
+      conllFilesToTranscode.addAll(fileList);
     }
 
     if (conllFilesToTranscode.isEmpty()) {

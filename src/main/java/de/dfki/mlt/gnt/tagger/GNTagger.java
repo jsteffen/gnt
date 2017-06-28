@@ -1,7 +1,6 @@
 package de.dfki.mlt.gnt.tagger;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -13,20 +12,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import de.bwaldvogel.liblinear.Linear;
 import de.bwaldvogel.liblinear.Model;
 import de.dfki.mlt.gnt.archive.Archivator;
 import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.CorpusConfig;
 import de.dfki.mlt.gnt.config.GlobalConfig;
+import de.dfki.mlt.gnt.config.ModelConfig;
 import de.dfki.mlt.gnt.corpus.ConllEvaluator;
-import de.dfki.mlt.gnt.corpus.Corpus;
-import de.dfki.mlt.gnt.corpus.GNTcorpusProperties;
 import de.dfki.mlt.gnt.data.Alphabet;
 import de.dfki.mlt.gnt.data.Data;
-import de.dfki.mlt.gnt.data.GNTdataProperties;
-import de.dfki.mlt.gnt.data.ModelInfo;
 import de.dfki.mlt.gnt.data.OffSets;
 import de.dfki.mlt.gnt.data.Sentence;
 import de.dfki.mlt.gnt.data.Window;
@@ -40,40 +40,31 @@ import de.dfki.mlt.gnt.trainer.ProblemInstance;
  */
 public class GNTagger {
 
-  private Data data = new Data();
-  private Alphabet alphabet = new Alphabet();
-  private ModelInfo modelInfo = new ModelInfo();
-  private OffSets offSets = new OffSets();
+  private Data data;
+  private Alphabet alphabet;
+  private OffSets offSets;
   private int windowSize = 2;
   private Model model;
   private Archivator archivator;
-  private GNTdataProperties dataProps;
+  private ModelConfig modelConfig;
 
 
   public GNTagger(String modelArchiveName)
-      throws IOException {
+      throws IOException, ConfigurationException {
 
     this.archivator = new Archivator(modelArchiveName);
     System.out.println("Extract archive ...");
     this.archivator.extract();
     System.out.println("Set dataProps ...");
-    this.dataProps =
-        new GNTdataProperties(this.archivator.getArchiveMap().get(
-            GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE).toString()));
-    this.alphabet = this.dataProps.getAlphabet();
+    this.modelConfig =
+        ModelConfig.create(
+            this.archivator.getArchiveMap().get(
+                GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE).toString()));
+    this.alphabet = new Alphabet(this.modelConfig);
 
-    this.modelInfo = this.dataProps.getModelInfo();
     this.data = new Data();
 
-    this.modelInfo.createModelFileName(this.dataProps.getGlobalParams().getWindowSize(),
-        this.dataProps.getGlobalParams().getDim(),
-        this.dataProps.getGlobalParams().getNumberOfSentences(),
-        this.dataProps.getAlphabet(),
-        this.dataProps.getGlobalParams());
-
-    initGNTagger(
-        this.dataProps.getGlobalParams().getWindowSize(),
-        this.dataProps.getGlobalParams().getDim());
+    initGNTagger(this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE), this.modelConfig.getInt(ConfigKeys.DIM));
   }
 
 
@@ -98,8 +89,7 @@ public class GNTagger {
     this.data.cleanWordSet();
 
     System.out.println("Initialize offsets:");
-    this.offSets.initializeOffsets(
-        this.alphabet, this.data, this.windowSize);
+    this.offSets = new OffSets(this.alphabet, this.data, this.windowSize);
     System.out.println("\t" + this.offSets.toString());
 
     long time2 = System.currentTimeMillis();
@@ -107,14 +97,14 @@ public class GNTagger {
 
     time1 = System.currentTimeMillis();
 
-    System.out.println("Load model file from archive: " + this.modelInfo.getModelName() + ".txt");
+    System.out.println("Load model file from archive: " + this.modelConfig.getModelName() + ".txt");
 
     //this.setModel(Model.load(new File(this.getModelInfo().getModelFile())));
     this.model = Linear.loadModel(
         new InputStreamReader(
             this.archivator.getArchiveMap().get(
                 GlobalConfig.getModelBuildFolder().resolve(
-                    this.modelInfo.getModelName() + ".txt").toString()),
+                    this.modelConfig.getModelName() + ".txt").toString()),
             "UTF-8"));
     System.out.println(".... DONE!");
 
@@ -174,23 +164,17 @@ public class GNTagger {
       ProblemInstance problemInstance = new ProblemInstance();
       problemInstance.createProblemInstanceFromWindow(nextWindow);
 
-      if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
-        problemInstance.saveProblemInstance(
-            this.modelInfo.getModelInputFileWriter(),
-            nextWindow.getLabelIndex());
-      } else {
-        // Call the learner to predict the label
-        prediction = (int)Linear.predict(this.model, problemInstance.getFeatureVector());
-        /*
+      // Call the learner to predict the label
+      prediction = (int)Linear.predict(this.model, problemInstance.getFeatureVector());
+      /*
         System.out.println(
             "Word: " + this.data.getWordSet().getNum2label().get(this.data.getSentence().getWordArray()[i])
                 + "\tPrediction: " + this.data.getLabelSet().getNum2label().get(prediction));
-        */
+       */
 
-        //  Here, I am assuming that sentence length equals # of windows
-        // So store predicted label i to word i
-        this.data.getSentence().getLabelArray()[i] = prediction;
-      }
+      //  Here, I am assuming that sentence length equals # of windows
+      // So store predicted label i to word i
+      this.data.getSentence().getLabelArray()[i] = prediction;
 
       // Free space by resetting filled window to unfilled-window
       nextWindow.clean();
@@ -327,18 +311,6 @@ public class GNTagger {
     long localTime1;
     long localTime2;
 
-    // Set the writer buffer for the model input file based on the given sourceFileName
-    if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
-      String fileName = new File(sourceFileName).getName();
-      Path libLinearInputPath =
-          GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER)
-              .resolve("liblinear_input_" + fileName + ".txt");
-      if (libLinearInputPath.getParent() != null) {
-        Files.createDirectories(libLinearInputPath.getParent());
-      }
-      this.modelInfo.setModelInputFileWriter(
-          Files.newBufferedWriter(libLinearInputPath, StandardCharsets.UTF_8));
-    }
     System.out.println("\n++++\nDo testing from file: " + sourceFileName);
     // Reset some data to make sure each file has same change
     this.data.setSentenceCnt(0);
@@ -347,10 +319,6 @@ public class GNTagger {
     localTime1 = System.currentTimeMillis();
 
     Path evalPath = this.tagAndWriteSentencesFromConllReader(sourceFileName, sentenceCnt);
-
-    if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
-      this.modelInfo.getModelInputFileWriter().close();
-    }
 
     localTime2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (localTime2 - localTime1));
@@ -451,13 +419,12 @@ public class GNTagger {
   /**
    * Evaluates the performance of the tagger using the given annotated corpus.
    *
-   * @param corpusConfigName
+   * @param corpusConfigFileName
    *          corpus configuration file name
    */
-  public ConllEvaluator eval(String corpusConfigName) throws IOException {
+  public ConllEvaluator eval(String corpusConfigFileName) throws IOException, ConfigurationException {
 
-    GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigName);
-    Corpus corpus = new Corpus(corpusProps, this.dataProps.getGlobalParams());
+    CorpusConfig corpusConfig = CorpusConfig.create(corpusConfigFileName);
 
     Data wordSetData = new Data();
     wordSetData.readWordSet(this.archivator);
@@ -467,11 +434,11 @@ public class GNTagger {
     System.out.println(wordSetData.toString());
     ConllEvaluator evaluator = new ConllEvaluator(wordSetData);
 
-    for (String fileName : corpus.getDevLabeledData()) {
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.DEV_LABELED_DATA, Collections.emptyList())) {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
-    for (String fileName : corpus.getTestLabeledData()) {
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TEST_LABELED_DATA, Collections.emptyList())) {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }

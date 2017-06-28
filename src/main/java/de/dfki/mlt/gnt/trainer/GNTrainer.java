@@ -3,12 +3,13 @@ package de.dfki.mlt.gnt.trainer;
 import java.io.IOException;
 
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.CorpusConfig;
 import de.dfki.mlt.gnt.config.GlobalConfig;
-import de.dfki.mlt.gnt.corpus.Corpus;
+import de.dfki.mlt.gnt.config.ModelConfig;
 import de.dfki.mlt.gnt.corpus.CorpusProcessor;
-import de.dfki.mlt.gnt.corpus.GNTcorpusProperties;
 import de.dfki.mlt.gnt.corpus.IndicatorWordsCreator;
-import de.dfki.mlt.gnt.data.GNTdataProperties;
+import de.dfki.mlt.gnt.data.Alphabet;
 import de.dfki.mlt.gnt.data.Window;
 import de.dfki.mlt.gnt.features.WordClusterFeatureFactory;
 import de.dfki.mlt.gnt.features.WordDistributedFeatureFactory;
@@ -25,39 +26,29 @@ public class GNTrainer {
   private TrainerInMem trainer;
   private long time1;
   private long time2;
-  private Corpus corpus = new Corpus();
+  private ModelConfig modelConfig;
+  private CorpusConfig corpusConfig;
+  private Alphabet alphabet;
+
   private Archivator archivator;
-  private GNTdataProperties dataProps;
 
 
-  public GNTrainer(GNTdataProperties dataProps, GNTcorpusProperties corpusProps) {
+  public GNTrainer(ModelConfig modelConfig, CorpusConfig corpusConfig) {
 
-    // Get general parameters and create model file name
-    this.setDataProps(dataProps);
-    System.out.println(this.getDataProps().getAlphabet().toActiveFeatureString());
+    this.modelConfig = modelConfig;
+    this.corpusConfig = corpusConfig;
 
-    this.getDataProps().getModelInfo().createModelFileName(this.getDataProps().getGlobalParams().getWindowSize(),
-        this.getDataProps().getGlobalParams().getDim(),
-        this.getDataProps().getGlobalParams().getNumberOfSentences(),
-        this.getDataProps().getAlphabet(),
-        this.getDataProps().getGlobalParams());
-    System.out.println(this.getDataProps().getModelInfo().toString());
-
-    // Set the corpus files for performing training and testing
-    this.corpus = new Corpus(corpusProps, this.getDataProps().getGlobalParams());
+    // init alphabet
+    this.alphabet = new Alphabet(modelConfig);
+    System.out.println(this.alphabet.toActiveFeatureString());
 
     // make sure corpus is available in CoNLL format and as plain text sentences
-    CorpusProcessor.prepreCorpus(corpusProps);
+    CorpusProcessor.prepreCorpus(corpusConfig);
 
     // set the ZIP archivator
-    this.setArchivator(
-        new Archivator(this.getDataProps().getModelInfo().getModelFileArchive()));
+    this.archivator = new Archivator(modelConfig.getModelName() + ".zip");
     // Initialize and set the internal training algorithm
-    this.setTrainer(
-        new TrainerInMem(this.getArchivator(), this.getDataProps().getModelInfo(),
-            this.getDataProps().getAlphabet(),
-            this.getDataProps().getGlobalParams(),
-            this.getDataProps().getGlobalParams().getWindowSize()));
+    this.setTrainer(new TrainerInMem(this.archivator, this.alphabet, this.modelConfig));
   }
 
 
@@ -73,18 +64,6 @@ public class GNTrainer {
   }
 
 
-  public GNTdataProperties getDataProps() {
-
-    return this.dataProps;
-  }
-
-
-  public void setDataProps(GNTdataProperties dataProps) {
-
-    this.dataProps = dataProps;
-  }
-
-
   public TrainerInMem getTrainer() {
 
     return this.trainer;
@@ -97,24 +76,12 @@ public class GNTrainer {
   }
 
 
-  public Corpus getCorpus() {
-
-    return this.corpus;
-  }
-
-
-  public void setCorpus(Corpus corpus) {
-
-    this.corpus = corpus;
-  }
-
-
   // This is a method for on-demand creation of the feature files
   private void createWordVectors(int dim) {
 
     if (dim > 0) {
       WordDistributedFeatureFactory dwvFactory = new WordDistributedFeatureFactory();
-      dwvFactory.createAndWriteDistributedWordFeaturesSparse(dim, this.getCorpus());
+      dwvFactory.createAndWriteDistributedWordFeaturesSparse(dim, this.corpusConfig);
     }
   }
 
@@ -143,19 +110,19 @@ public class GNTrainer {
   // This is a method for on-demand creation of the feature files
   private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim) {
 
-    String taggerName = this.getDataProps().getGlobalParams().getTaggerName();
+    String taggerName = this.modelConfig.getString(ConfigKeys.TAGGER_NAME);
     System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + taggerName);
 
-    if (this.getDataProps().getAlphabet().isWithWordFeats()) {
+    if (this.alphabet.isWithWordFeats()) {
       this.createWordVectors(dim);
     }
-    if (this.getDataProps().getAlphabet().isWithShapeFeats()) {
+    if (this.alphabet.isWithShapeFeats()) {
       this.createShapeFeatures(trainingFileName);
     }
-    if (this.getDataProps().getAlphabet().isWithSuffixFeats()) {
+    if (this.alphabet.isWithSuffixFeats()) {
       this.createSuffixFeatures(trainingFileName);
     }
-    if (this.getDataProps().getAlphabet().isWithClusterFeats()) {
+    if (this.alphabet.isWithClusterFeats()) {
       this.createClusterFeatures(clusterIdSourceFileName);
     }
   }
@@ -163,7 +130,7 @@ public class GNTrainer {
 
   private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException {
 
-    String taggerName = this.getDataProps().getGlobalParams().getTaggerName();
+    String taggerName = this.modelConfig.getString(ConfigKeys.TAGGER_NAME);
 
     System.out.println("From  " + GlobalConfig.getModelBuildFolder());
     System.out.println("Load feature files for tagger " + taggerName + ":");
@@ -177,7 +144,7 @@ public class GNTrainer {
     this.time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (this.time2 - this.time1));
 
-    System.out.println("Create windows with size: " + this.getTrainer().getWindowSize());
+    System.out.println("Create windows with size: " + this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE));
     this.time1 = System.currentTimeMillis();
     System.out.println("Set window count: ");
     Window.setWindowCnt(0);
@@ -202,16 +169,20 @@ public class GNTrainer {
 
 
   // This is the main caller for training
-  public void gntTrainingWithDimensionFromConllFile(String trainingFileName, String clusterIdSourceFileName, int dim,
-      int maxExamples)
+  public void gntTrainingWithDimensionFromConllFile()
       throws IOException {
+
+    String trainingFileName = this.corpusConfig.getString(ConfigKeys.TRAINING_FILE).split("\\.conll")[0];
+    String clusterIdSourceFileName = this.corpusConfig.getString(ConfigKeys.CLUSTER_FILE);
+    int dim = this.modelConfig.getInt(ConfigKeys.DIM);
+    int maxExamples = this.modelConfig.getInt(ConfigKeys.NUMBER_OF_SENTENCES);
 
     this.time1 = System.currentTimeMillis();
 
     // Create feature files
     IndicatorWordsCreator iwp = new IndicatorWordsCreator();
     iwp.createIndicatorTaggerNameWords(
-        this.getCorpus(), this.getDataProps().getGlobalParams().getSubSamplingThreshold());
+        this.corpusConfig, this.modelConfig.getDouble(ConfigKeys.SUB_SAMPLING_THRESHOLD));
     this.createTrainingFeatureFiles(trainingFileName + "-sents.txt", clusterIdSourceFileName, dim);
 
     this.time2 = System.currentTimeMillis();

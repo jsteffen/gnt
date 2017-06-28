@@ -1,6 +1,8 @@
 package de.dfki.mlt.gnt.data;
 
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.ModelConfig;
 import de.dfki.mlt.gnt.features.WordClusterFeatureFactory;
 import de.dfki.mlt.gnt.features.WordDistributedFeatureFactory;
 import de.dfki.mlt.gnt.features.WordShapeFeatureFactory;
@@ -14,10 +16,10 @@ import de.dfki.mlt.gnt.features.WordSuffixFeatureFactory;
  */
 public class Alphabet {
 
-  private WordDistributedFeatureFactory wordVectorFactory = new WordDistributedFeatureFactory();
-  private WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
-  private WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
-  private WordClusterFeatureFactory wordClusterFactory = new WordClusterFeatureFactory();
+  private WordDistributedFeatureFactory wordVectorFactory;
+  private WordSuffixFeatureFactory wordSuffixFactory;
+  private WordShapeFeatureFactory wordShapeFactory;
+  private WordClusterFeatureFactory wordClusterFactory;
 
   private boolean withWordFeats = true;
   private boolean withShapeFeats = true;
@@ -26,15 +28,24 @@ public class Alphabet {
   private boolean withLabelFeats = false;
 
 
-  public WordDistributedFeatureFactory getWordVectorFactory() {
+  public Alphabet(ModelConfig modelConfig) {
 
-    return this.wordVectorFactory;
+    this.wordVectorFactory = new WordDistributedFeatureFactory();
+    this.wordSuffixFactory = new WordSuffixFeatureFactory();
+    this.wordShapeFactory = new WordShapeFeatureFactory();
+    this.wordClusterFactory = new WordClusterFeatureFactory();
+
+    this.withWordFeats = modelConfig.getBoolean(ConfigKeys.WITH_WORD_FEATS);
+    this.withShapeFeats = modelConfig.getBoolean(ConfigKeys.WITH_SHAPE_FEATS);
+    this.withSuffixFeats = modelConfig.getBoolean(ConfigKeys.WITH_SUFFIX_FEATS);
+    this.withClusterFeats = modelConfig.getBoolean(ConfigKeys.WITH_CLUSTER_FEATS);
+    this.withLabelFeats = modelConfig.getBoolean(ConfigKeys.WITH_LABEL_FEATS);
   }
 
 
-  public void setWordVectorFactory(WordDistributedFeatureFactory wordVectorFactory) {
+  public WordDistributedFeatureFactory getWordVectorFactory() {
 
-    this.wordVectorFactory = wordVectorFactory;
+    return this.wordVectorFactory;
   }
 
 
@@ -44,21 +55,9 @@ public class Alphabet {
   }
 
 
-  public void setWordSuffixFactory(WordSuffixFeatureFactory wordSuffixFactory) {
-
-    this.wordSuffixFactory = wordSuffixFactory;
-  }
-
-
   public WordShapeFeatureFactory getWordShapeFactory() {
 
     return this.wordShapeFactory;
-  }
-
-
-  public void setWordShapeFactory(WordShapeFeatureFactory wordShapeFactory) {
-
-    this.wordShapeFactory = wordShapeFactory;
   }
 
 
@@ -68,21 +67,9 @@ public class Alphabet {
   }
 
 
-  public void setWordClusterFactory(WordClusterFeatureFactory wordClusterFactory) {
-
-    this.wordClusterFactory = wordClusterFactory;
-  }
-
-
   public boolean isWithWordFeats() {
 
     return this.withWordFeats;
-  }
-
-
-  public void setWithWordFeats(boolean withWordFeats) {
-
-    this.withWordFeats = withWordFeats;
   }
 
 
@@ -92,21 +79,9 @@ public class Alphabet {
   }
 
 
-  public void setWithShapeFeats(boolean withShapeFeats) {
-
-    this.withShapeFeats = withShapeFeats;
-  }
-
-
   public boolean isWithSuffixFeats() {
 
     return this.withSuffixFeats;
-  }
-
-
-  public void setWithSuffixFeats(boolean withSuffixFeats) {
-
-    this.withSuffixFeats = withSuffixFeats;
   }
 
 
@@ -116,21 +91,9 @@ public class Alphabet {
   }
 
 
-  public void setWithClusterFeats(boolean withClusterFeats) {
-
-    this.withClusterFeats = withClusterFeats;
-  }
-
-
   public boolean isWithLabelFeats() {
 
     return this.withLabelFeats;
-  }
-
-
-  public void setWithLabelFeats(boolean withLabelFeats) {
-
-    this.withLabelFeats = withLabelFeats;
   }
 
 

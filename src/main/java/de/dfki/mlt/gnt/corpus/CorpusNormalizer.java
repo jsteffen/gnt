@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
+import java.util.Collections;
+
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.CorpusConfig;
 
 /**
  * <pre>
@@ -36,24 +40,13 @@ import java.nio.file.Files;
  *
  * @author Günter Neumann, DFKI
  */
-public class CorpusNormalizer {
+public final class CorpusNormalizer {
 
-  private Corpus corpus = null;
+  private CorpusNormalizer() {
 
-
-  public Corpus getCorpus() {
-
-    return this.corpus;
+    // private constructor to enforce noninstantiability
   }
 
-
-  public void setCorpus(Corpus corpus) {
-
-    this.corpus = corpus;
-  }
-
-
-  // Code for normalization of all corpus files
 
   /**
    * Copy the file named fileNameOrig to fileNameOrig.orig if it does not exist.
@@ -159,19 +152,23 @@ public class CorpusNormalizer {
   }
 
 
-  private void normalizeLabeledFilesFromCorpus() throws IOException {
+  private static void normalizeLabeledFilesFromCorpus(CorpusConfig corpusConfig)
+      throws IOException {
 
-    for (String fileName : this.getCorpus().getTrainingLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TRAINING_LABELED_DATA, Collections.emptyList())) {
       System.out.println("Copy and normalize: " + fileName);
       String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
       CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileName);
     }
-    for (String fileName : this.getCorpus().getDevLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.DEV_LABELED_DATA, Collections.emptyList())) {
       System.out.println("Copy and normalize: " + fileName);
       String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
       CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileName);
     }
-    for (String fileName : this.getCorpus().getTestLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TEST_LABELED_DATA, Collections.emptyList())) {
       System.out.println("Copy and normalize: " + fileName);
       String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
       CorpusNormalizer.normalizeConllLabeledFile(fileNameCopyName, fileName);
@@ -179,19 +176,23 @@ public class CorpusNormalizer {
   }
 
 
-  private void normalizeUnLabeledFilesFromCorpus() throws IOException {
+  private static void normalizeUnLabeledFilesFromCorpus(CorpusConfig corpusConfig)
+      throws IOException {
 
-    for (String fileName : this.getCorpus().getTrainingUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TRAINING_UNLABELED_DATA, Collections.emptyList())) {
       System.out.println("Copy and normalize: " + fileName);
       String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
       CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileName);
     }
-    for (String fileName : this.getCorpus().getDevUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.DEV_UNLABELED_DATA, Collections.emptyList())) {
       System.out.println("Copy and normalize: " + fileName);
       String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
       CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileName);
     }
-    for (String fileName : this.getCorpus().getTestUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TEST_UNLABELED_DATA, Collections.emptyList())) {
       System.out.println("Copy and normalize: " + fileName);
       String fileNameCopyName = CorpusNormalizer.copyConllFile(fileName);
       CorpusNormalizer.normalizeUnLabeledFile(fileNameCopyName, fileName);
@@ -199,9 +200,9 @@ public class CorpusNormalizer {
   }
 
 
-  public void normalizeCorpus() throws IOException {
+  public static void normalizeCorpus(CorpusConfig corpusConfig) throws IOException {
 
-    this.normalizeLabeledFilesFromCorpus();
-    this.normalizeUnLabeledFilesFromCorpus();
+    normalizeLabeledFilesFromCorpus(corpusConfig);
+    normalizeUnLabeledFilesFromCorpus(corpusConfig);
   }
 }

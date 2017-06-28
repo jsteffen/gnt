@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class TestGNT {
 
   @Test
   public void testTrainEvalTag()
-      throws IOException {
+      throws IOException, ConfigurationException {
 
     GlobalConfig.getInstance().setProperty(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE, false);
     GlobalConfig.getInstance().setProperty(ConfigKeys.DEBUG, true);
@@ -51,12 +52,10 @@ public class TestGNT {
 
 
   private void testTrain()
-      throws IOException {
+      throws IOException, ConfigurationException {
 
     TrainTagger gntTrainer = new TrainTagger();
-    gntTrainer.trainer(
-        "src/test/resources/dataProps/EnPosTagger.xml",
-        "src/test/resources/corpusProps/EnPosTagger.xml");
+    gntTrainer.trainer("src/test/resources/EnPosTagger.model.conf", "src/test/resources/EnPosTagger.corpus.conf");
 
     String modelName = "model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS";
     assertThat(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(modelName + ".zip")).exists();
@@ -78,10 +77,10 @@ public class TestGNT {
 
 
   private void testEval()
-      throws IOException {
+      throws IOException, ConfigurationException {
 
     GNTagger tagger = new GNTagger("src/test/resources/model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
-    tagger.eval("src/test/resources/corpusProps/EnPosTagger.xml");
+    tagger.eval("src/test/resources/EnPosTagger.corpus.conf");
 
     List<Path> evalFiles =
         Utils.getAllFilesFromFolder(GlobalConfig.getPath(ConfigKeys.EVAL_FOLDER), "*");
@@ -100,7 +99,7 @@ public class TestGNT {
 
 
   private void testTag()
-      throws IOException {
+      throws IOException, ConfigurationException {
 
     GNTagger tagger = new GNTagger("src/test/resources/model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
     tagger.tagFolder("src/test/resources/input", "UTF-8", "UTF-8");
@@ -122,14 +121,13 @@ public class TestGNT {
 
 
   @Test
-  public void testTrainLiblinearInput() throws IOException {
+  public void testTrainLiblinearInput()
+      throws IOException, ConfigurationException {
 
     GlobalConfig.getInstance().setProperty(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE, true);
 
     TrainTagger gntTrainer = new TrainTagger();
-    gntTrainer.trainer(
-        "src/test/resources/dataProps/EnPosTagger.xml",
-        "src/test/resources/corpusProps/EnPosTagger.xml");
+    gntTrainer.trainer("src/test/resources/EnPosTagger.model.conf", "src/test/resources/EnPosTagger.corpus.conf");
     String modelName = "model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS";
     assertThat(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(modelName + ".zip")).exists();
     String liblinearInputFileName = "liblinear_input_" + modelName + ".txt";

@@ -1,16 +1,21 @@
 package de.dfki.mlt.gnt.caller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import org.apache.commons.configuration2.ex.ConfigurationException;
+
+import de.dfki.mlt.gnt.config.CorpusConfig;
 import de.dfki.mlt.gnt.config.GlobalConfig;
-import de.dfki.mlt.gnt.corpus.GNTcorpusProperties;
-import de.dfki.mlt.gnt.data.GNTdataProperties;
+import de.dfki.mlt.gnt.config.ModelConfig;
 import de.dfki.mlt.gnt.trainer.GNTrainer;
 
 /**
@@ -21,7 +26,7 @@ import de.dfki.mlt.gnt.trainer.GNTrainer;
 public class TrainTagger {
 
   public void trainer(String modelConfigFileName, String corpusConfigFileName)
-      throws IOException {
+      throws IOException, ConfigurationException {
 
     this.trainer(modelConfigFileName, corpusConfigFileName, null);
   }
@@ -36,24 +41,39 @@ public class TrainTagger {
    * @throws IOException
    */
   public void trainer(String modelConfigFileName, String corpusConfigFileName, String modelArchiveName)
-      throws IOException {
+      throws IOException, ConfigurationException {
 
     deleteFolder(GlobalConfig.getModelBuildFolder());
 
-    GNTdataProperties dataProps = new GNTdataProperties(modelConfigFileName);
-    GNTcorpusProperties corpusProps = new GNTcorpusProperties(corpusConfigFileName);
-    GNTrainer gnTrainer = new GNTrainer(dataProps, corpusProps);
+    InputStream in = getClass().getClassLoader().getResourceAsStream(modelConfigFileName);
+    if (in == null) {
+      // try file path if loading from classpath fails
+      in = Files.newInputStream(Paths.get(modelConfigFileName));
+    }
+    copyConfigFile(in);
 
-    dataProps.copyConfigFile(modelConfigFileName);
-
+    ModelConfig modelConfig = ModelConfig.create(modelConfigFileName);
+    CorpusConfig corpusConfig = CorpusConfig.create(corpusConfigFileName);
+    GNTrainer gnTrainer = new GNTrainer(modelConfig, corpusConfig);
     if (modelArchiveName != null) {
       gnTrainer.getArchivator().setArchiveName(modelArchiveName);
     }
 
-    gnTrainer.gntTrainingWithDimensionFromConllFile(
-        corpusProps.getTrainingFile(), corpusProps.getClusterIdNameFile(),
-        dataProps.getGlobalParams().getDim(),
-        dataProps.getGlobalParams().getNumberOfSentences());
+    gnTrainer.gntTrainingWithDimensionFromConllFile();
+  }
+
+
+  private static void copyConfigFile(InputStream in) {
+
+    //Path sourceFile = new File(configFileName).toPath();
+    Path targetFile = GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE);
+    try {
+      Files.createDirectories(targetFile.getParent());
+      Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
 

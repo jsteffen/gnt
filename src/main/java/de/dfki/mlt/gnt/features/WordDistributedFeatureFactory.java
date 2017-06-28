@@ -9,13 +9,15 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 import de.dfki.mlt.gnt.archive.Archivator;
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.CorpusConfig;
 import de.dfki.mlt.gnt.config.GlobalConfig;
-import de.dfki.mlt.gnt.corpus.Corpus;
 
 /**
  * <pre>
@@ -499,19 +501,22 @@ public class WordDistributedFeatureFactory {
   // I call the resulting files condensed because only non-zero weights are stored. This helps reducing space
   // very much !
 
-  public void readGNTCorpus(Corpus corpus) {
+  public void readGNTCorpus(CorpusConfig corpusConfig) {
 
-    for (String fileName : corpus.getTrainingUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TRAINING_UNLABELED_DATA, Collections.emptyList())) {
       System.out.println(fileName);
       // read in first 100.000 sentences from each file
       readAndProcessInputTextLineWise(fileName, "ptb", 100000);
     }
-    for (String fileName : corpus.getDevUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.DEV_UNLABELED_DATA, Collections.emptyList())) {
       System.out.println(fileName);
       // read in first 100.000 sentences from each file
       readAndProcessInputTextLineWise(fileName, "ptb", 100000);
     }
-    for (String fileName : corpus.getTestUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TEST_UNLABELED_DATA, Collections.emptyList())) {
       System.out.println(fileName);
       // read in first 100.000 sentences from each file
       readAndProcessInputTextLineWise(fileName, "ptb", 100000);
@@ -709,16 +714,16 @@ public class WordDistributedFeatureFactory {
 
 
   public void createAndWriteDistributedWordFeaturesSparse(
-      int maxIndicatorWords, Corpus corpus) {
+      int maxIndicatorWords, CorpusConfig corpusConfig) {
 
     Path iwPath = GlobalConfig.getModelBuildFolder().resolve("iw" + "_all" + ".txt");
     System.out.println(
         "Read  " + maxIndicatorWords + " indicator words from " + iwPath + " for tagger "
-            + corpus.getGlobalParams().getTaggerName() + "!");
+            + corpusConfig.getString(ConfigKeys.TAGGER_NAME) + "!");
     this.initIndicatorMap(iwPath, maxIndicatorWords);
 
     System.out.println("Read sentences from corpus and create word vectors.");
-    this.readGNTCorpus(corpus);
+    this.readGNTCorpus(corpusConfig);
     this.computeDistributedWordWeights();
 
     this.writeFlorsCondensed(maxIndicatorWords);

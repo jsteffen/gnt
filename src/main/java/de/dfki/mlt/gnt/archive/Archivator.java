@@ -4,9 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  *
@@ -32,6 +36,7 @@ public class Archivator {
 
 
   public Archivator(String archiveName) {
+
     this.archiveName = archiveName;
     this.archiveMap = new HashMap<String, InputStream>();
   }
@@ -40,12 +45,6 @@ public class Archivator {
   public List<String> getFilesToPack() {
 
     return this.filesToPack;
-  }
-
-
-  public void setFilesToPack(List<String> filesToPack) {
-
-    this.filesToPack = filesToPack;
   }
 
 
@@ -67,19 +66,14 @@ public class Archivator {
   }
 
 
-  public void setArchiveMap(HashMap<String, InputStream> archiveMap) {
-
-    this.archiveMap = archiveMap;
-  }
-
-
   /**
    * Creates a stream to the archive name, and adds all files collected in variable filesToPack.
    * @throws IOException
    */
   public void pack() throws IOException {
 
-    FileOutputStream dest = new FileOutputStream(this.archiveName);
+    OutputStream dest =
+        Files.newOutputStream(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(this.archiveName));
     ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(dest));
 
     Iterator<String> iter = this.filesToPack.iterator();
@@ -98,8 +92,6 @@ public class Archivator {
     }
     zipOut.close();
     dest.close();
-    System.out.println("Delete source files:");
-    this.deleteSourceFile();
   }
 
 

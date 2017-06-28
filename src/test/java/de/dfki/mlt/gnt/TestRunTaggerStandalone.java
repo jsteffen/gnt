@@ -2,6 +2,8 @@ package de.dfki.mlt.gnt;
 
 import java.io.IOException;
 
+import org.apache.commons.configuration2.ex.ConfigurationException;
+
 import de.dfki.mlt.gnt.tagger.GNTagger;
 
 /**
@@ -11,7 +13,7 @@ import de.dfki.mlt.gnt.tagger.GNTagger;
  */
 public class TestRunTaggerStandalone {
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, ConfigurationException {
 
     GNTagger tagger = new GNTagger("resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip");
 
