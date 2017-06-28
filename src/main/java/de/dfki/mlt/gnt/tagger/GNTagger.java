@@ -114,6 +114,12 @@ public class GNTagger {
   }
 
 
+  public Data getData() {
+
+    return this.data;
+  }
+
+
   /**
    * Tags all files in the given directory.
    *
