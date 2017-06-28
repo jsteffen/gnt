@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -81,15 +82,18 @@ public class IndicatorWordsCreator {
    */
   private void readUnlabeledDataFromCorpus(CorpusConfig corpusConfig) {
 
-    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TRAINING_UNLABELED_DATA)) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TRAINING_UNLABELED_DATA, Collections.emptyList())) {
       // read in first 100.000 sentences from each file
       readUnlabeledDataFromFile(fileName, "ptb", 100000);
     }
-    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.DEV_UNLABELED_DATA)) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.DEV_UNLABELED_DATA, Collections.emptyList())) {
       // read in first 100.000 sentences from each file
       readUnlabeledDataFromFile(fileName, "ptb", 100000);
     }
-    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TEST_UNLABELED_DATA)) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TEST_UNLABELED_DATA, Collections.emptyList())) {
       // read in first 100.000 sentences from each file
       readUnlabeledDataFromFile(fileName, "ptb", 100000);
     }
