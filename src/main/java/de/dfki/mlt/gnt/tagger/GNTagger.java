@@ -2,6 +2,7 @@ package de.dfki.mlt.gnt.tagger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -54,12 +55,10 @@ public class GNTagger {
 
     this.archivator = new Archivator(modelArchiveName);
     System.out.println("Extract archive ...");
-    this.archivator.extract();
     System.out.println("Set dataProps ...");
-    this.modelConfig =
-        ModelConfig.create(
-            this.archivator.getArchiveMap().get(
-                GlobalConfig.getModelBuildFolder().resolve(GlobalConfig.MODEL_CONFIG_FILE).toString()));
+    try (InputStream in = this.archivator.getInputStream(GlobalConfig.MODEL_CONFIG_FILE.toString())) {
+      this.modelConfig = ModelConfig.create(in);
+    }
     this.alphabet = new Alphabet(this.modelConfig);
 
     this.data = new Data();
@@ -81,7 +80,7 @@ public class GNTagger {
     System.out.println("Load feature files with dim: " + dim);
     this.alphabet.loadFeaturesFromFiles(this.archivator, dim);
 
-    System.out.println("Load label set from archive: " + this.data.getLabelMapPath());
+    System.out.println("Load label set from archive: " + this.data.getLabelMapFileName());
     this.data.readLabelSet(this.archivator);
 
     System.out.println("Cleaning non-used variables in Alphabet and in Data:");
@@ -100,12 +99,9 @@ public class GNTagger {
     System.out.println("Load model file from archive: " + this.modelConfig.getModelName() + ".txt");
 
     //this.setModel(Model.load(new File(this.getModelInfo().getModelFile())));
-    this.model = Linear.loadModel(
-        new InputStreamReader(
-            this.archivator.getArchiveMap().get(
-                GlobalConfig.getModelBuildFolder().resolve(
-                    this.modelConfig.getModelName() + ".txt").toString()),
-            "UTF-8"));
+    try (InputStream in = this.archivator.getInputStream(this.modelConfig.getModelName() + ".txt")) {
+      this.model = Linear.loadModel(new InputStreamReader(in, "UTF-8"));
+    }
     System.out.println(".... DONE!");
 
     time2 = System.currentTimeMillis();
@@ -336,7 +332,7 @@ public class GNTagger {
     wordSetData.readWordSet(this.archivator);
 
     System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: "
-        + wordSetData.getWordMapPath());
+        + wordSetData.getWordMapFileName());
     System.out.println(wordSetData.toString());
     ConllEvaluator evaluator = new ConllEvaluator(wordSetData);
 
@@ -455,14 +451,5 @@ public class GNTagger {
       conllWriter.println(newConllToken);
     }
     conllWriter.println();
-  }
-
-
-  /**
-   * Closes all streams of embedded archivator.
-   */
-  public void close() {
-
-    this.archivator.close();
   }
 }

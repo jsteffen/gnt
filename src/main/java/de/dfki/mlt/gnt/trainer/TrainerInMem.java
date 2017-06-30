@@ -505,7 +505,7 @@ public class TrainerInMem {
       public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
         if (!attrs.isDirectory()) {
           System.out.println(" add to archive: " + path);
-          getArchivator().getFilesToPack().add(path.toString());
+          getArchivator().getFilesToPack().add(path);
         }
         return FileVisitResult.CONTINUE;
       }

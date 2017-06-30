@@ -70,7 +70,6 @@ public final class GNT {
     try {
       GNTagger tagger = new GNTagger(modelArchiveName);
       tagger.eval(corpusConfigName);
-      tagger.close();
     } catch (IOException | ConfigurationException e) {
       logger.error(e.getLocalizedMessage(), e);
     }
@@ -95,7 +94,6 @@ public final class GNT {
     try {
       GNTagger tagger = new GNTagger(modelArchiveName);
       tagger.tagFolder(inputFolderName, inputEncodingName, outputEncodingName);
-      tagger.close();
     } catch (IOException | ConfigurationException e) {
       logger.error(e.getLocalizedMessage(), e);
     }

@@ -1,6 +1,5 @@
 package de.dfki.mlt.gnt.data;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +17,14 @@ public class Data {
   private SetIndexMap labelSet = new SetIndexMap();
   private int sentenceCnt = 0;
   private List<Window> instances = new ArrayList<Window>();
-  private Path labelMapPath;
-  private Path wordMapPath;
+  private String labelMapFileName;
+  private String wordMapFileName;
 
 
   public Data() {
 
-    this.labelMapPath = GlobalConfig.getModelBuildFolder().resolve("labelSet.txt");
-    this.wordMapPath = GlobalConfig.getModelBuildFolder().resolve("wordSet.txt");
+    this.labelMapFileName = "labelSet.txt";
+    this.wordMapFileName = "wordSet.txt";
   }
 
 
@@ -59,15 +58,15 @@ public class Data {
   }
 
 
-  public Path getLabelMapPath() {
+  public String getLabelMapFileName() {
 
-    return this.labelMapPath;
+    return this.labelMapFileName;
   }
 
 
-  public Path getWordMapPath() {
+  public String getWordMapFileName() {
 
-    return this.wordMapPath;
+    return this.wordMapFileName;
   }
 
 
@@ -175,37 +174,37 @@ public class Data {
 
   public void saveLabelSet() {
 
-    this.labelSet.writeSetIndexMap(this.labelMapPath);
+    this.labelSet.writeSetIndexMap(GlobalConfig.getModelBuildFolder().resolve(this.labelMapFileName));
   }
 
 
   public void readLabelSet() {
 
-    this.labelSet.readSetIndexMap(this.labelMapPath);
+    this.labelSet.readSetIndexMap(GlobalConfig.getModelBuildFolder().resolve(this.labelMapFileName));
   }
 
 
   public void readLabelSet(Archivator archivator) {
 
-    this.labelSet.readSetIndexMap(archivator, this.labelMapPath);
+    this.labelSet.readSetIndexMap(archivator, this.labelMapFileName);
   }
 
 
   public void saveWordSet() {
 
-    this.wordSet.writeSetIndexMap(this.wordMapPath);
+    this.wordSet.writeSetIndexMap(GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName));
   }
 
 
   public void readWordSet() {
 
-    this.wordSet.readSetIndexMap(this.wordMapPath);
+    this.wordSet.readSetIndexMap(GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName));
   }
 
 
   public void readWordSet(Archivator archivator) {
 
-    this.wordSet.readSetIndexMap(archivator, this.wordMapPath);
+    this.wordSet.readSetIndexMap(archivator, this.wordMapFileName);
   }
 
 

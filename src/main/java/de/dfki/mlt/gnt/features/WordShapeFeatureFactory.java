@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -253,21 +252,17 @@ public class WordShapeFeatureFactory {
   }
 
 
-  private void readShapeFeatureFile(Archivator archivator, Path path) {
+  private void readShapeFeatureFile(Archivator archivator, String shapeFeatureFileName) {
 
-    BufferedReader reader;
-    int cnt = 1;
-    try {
-      InputStream inputStream = archivator.getArchiveMap().get(path.toString());
-      reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    try (BufferedReader reader = new BufferedReader(
+          new InputStreamReader(archivator.getInputStream(shapeFeatureFileName), "UTF-8"))) {
+      int cnt = 1;
       String line;
       while ((line = reader.readLine()) != null) {
         this.signature2index.put(line, cnt);
         this.index2signature.put(cnt, line);
         cnt++;
       }
-      reader.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -285,9 +280,9 @@ public class WordShapeFeatureFactory {
 
   public void readShapeList(Archivator archivator) {
 
-    Path shapePath = GlobalConfig.getModelBuildFolder().resolve("shapeList.txt");
-    System.out.println("Reading shape list from archive: " + shapePath);
-    this.readShapeFeatureFile(archivator, shapePath);
+    String shapeFeatureFileName = "shapeList.txt";
+    System.out.println("Reading shape list from archive: " + shapeFeatureFileName);
+    this.readShapeFeatureFile(archivator, shapeFeatureFileName);
     System.out.println("... done");
   }
 }
