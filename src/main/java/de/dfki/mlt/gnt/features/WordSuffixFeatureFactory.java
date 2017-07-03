@@ -3,7 +3,6 @@ package de.dfki.mlt.gnt.features;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -480,21 +479,17 @@ public class WordSuffixFeatureFactory {
   }
 
 
-  private void readSuffixFile(Archivator archivator, Path path) {
+  private void readSuffixFile(Archivator archivator, String suffixFileName) {
 
-    BufferedReader reader;
-    int cnt = 1;
-    try {
-      InputStream inputStream = archivator.getArchiveMap().get(path.toString());
-      reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    try (BufferedReader reader = new BufferedReader(
+        new InputStreamReader(archivator.getInputStream(suffixFileName), "UTF-8"))) {
+      int cnt = 1;
       String line;
       while ((line = reader.readLine()) != null) {
         this.getSuffix2num().put(line, cnt);
         this.getNum2suffix().put(cnt, line);
         cnt++;
       }
-      reader.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -512,9 +507,9 @@ public class WordSuffixFeatureFactory {
 
   public void readSuffixList(Archivator archivator) {
 
-    Path suffixPath = GlobalConfig.getModelBuildFolder().resolve("suffixList.txt");
-    System.out.println("Reading suffix list from archive: " + suffixPath);
-    this.readSuffixFile(archivator, suffixPath);
+    String suffixFileName = "suffixList.txt";
+    System.out.println("Reading suffix list from archive: " + suffixFileName);
+    this.readSuffixFile(archivator, suffixFileName);
     System.out.println("... done");
   }
 

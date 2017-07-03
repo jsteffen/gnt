@@ -2,6 +2,8 @@ package de.dfki.mlt.gnt;
 
 import java.io.IOException;
 
+import org.apache.commons.configuration2.ex.ConfigurationException;
+
 import de.dfki.mlt.gnt.caller.TrainTagger;
 import de.dfki.mlt.gnt.trainer.TrainerInMem;
 
@@ -12,41 +14,41 @@ import de.dfki.mlt.gnt.trainer.TrainerInMem;
  */
 public class TestTrainPosTagger {
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, ConfigurationException {
     TrainTagger gntTrainer = new TrainTagger();
     TrainerInMem.setDebug(true);
 //    gntTrainer.trainer(
-//        "src/main/resources/dataProps/EnNerTagger.xml",
-//        "src/main/resources/corpusProps/EnNerTagger.xml");
+//        "src/main/resources/EnNerTagger.model.conf",
+//        "src/main/resources/EnNerTagger.corpus.conf");
     gntTrainer.trainer(
-        "src/main/resources/dataProps/DeNerKonvTagger.xml",
-        "src/main/resources/corpusProps/DeNerKonvTagger.xml");
+        "src/main/resources/DeNerKonvTagger.model.conf",
+        "src/main/resources/DeNerKonvTagger.corpus.conf");
 //            gntTrainer.trainer(
-//                "src/main/resources/dataProps/DePosTagger.xml",
-//                "src/main/resources/corpusProps/DePosTagger.xml");
+//                "src/main/resources/DePosTagger.model.conf",
+//                "src/main/resources/DePosTagger.corpus.conf");
 //            gntTrainer.trainer(
-//                "src/main/resources/dataProps/DeNerTagger.xml",
-//                "src/main/resources/corpusProps/DeNerTagger.xml");
+//                "src/main/resources/DeNerTagger.model.conf",
+//                "src/main/resources/DeNerTagger.corpus.conf");
 //            gntTrainer.trainer(
-//                "src/main/resources/dataProps/DeNerKonvTagger.xml",
-//                "src/main/resources/corpusProps/DeNerKonvTagger.xml");
+//                "src/main/resources/DeNerKonvTagger.model.conf",
+//                "src/main/resources/DeNerKonvTagger.corpus.conf");
     //        gntTrainer.trainer(
-    //            "src/main/resources/dataProps/DeTweetPosTagger.xml",
-    //            "src/main/resources/corpusProps/DeTweetPosTagger.xml");
+    //            "src/main/resources/DeTweetPosTagger.model.conf",
+    //            "src/main/resources/DeTweetPosTagger.corpus.conf");
     //        gntTrainer.trainer(
-    //            "src/main/resources/dataProps/DeMorphTagger.xml",
-    //            "src/main/resources/corpusProps/DeMorphTagger.xml");
+    //            "src/main/resources/DeMorphTagger.model.conf",
+    //            "src/main/resources/DeMorphTagger.corpus.conf");
 //            gntTrainer.trainer(
-//                "src/main/resources/dataProps/EnPosTagger.xml",
-//                "src/main/resources/corpusProps/EnPosTagger.xml");
+//                "src/main/resources/EnPosTagger.model.conf",
+//                "src/main/resources/EnPosTagger.corpus.conf");
     //        gntTrainer.trainer(
-    //            "src/main/resources/dataProps/BioNerTagger.xml",
-    //            "src/main/resources/corpusProps/BioNerTagger.xml");
+    //            "src/main/resources/BioNerTagger.model.conf",
+    //            "src/main/resources/BioNerTagger.corpus.conf");
     //    gntTrainer.trainer(
-    //        "src/main/resources/dataProps/EnUniPosTagger.xml",
-    //        "src/main/resources/corpusProps/EnUniPosTagger.xml");
+    //        "src/main/resources/EnUniPosTagger.model.conf",
+    //        "src/main/resources/EnUniPosTagger.corpus.conf");
     //    gntTrainer.trainer(
-    //        "src/main/resources/dataProps/EnUniPosTagger.xml",
-    //        "src/main/resources/corpusProps/EnUniPosTagger.xml");
+    //        "src/main/resources/EnUniPosTagger.model.conf",
+    //        "src/main/resources/EnUniPosTagger.corpus.conf");
   }
 }

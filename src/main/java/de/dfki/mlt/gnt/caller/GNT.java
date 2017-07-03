@@ -11,6 +11,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public final class GNT {
     try {
       TrainTagger gntTrainer = new TrainTagger();
       gntTrainer.trainer(modelConfigName, corpusConfigName);
-    } catch (IOException e) {
+    } catch (IOException | ConfigurationException e) {
       logger.error(e.getLocalizedMessage(), e);
     }
   }
@@ -69,8 +70,7 @@ public final class GNT {
     try {
       GNTagger tagger = new GNTagger(modelArchiveName);
       tagger.eval(corpusConfigName);
-      tagger.close();
-    } catch (IOException e) {
+    } catch (IOException | ConfigurationException e) {
       logger.error(e.getLocalizedMessage(), e);
     }
   }
@@ -94,8 +94,7 @@ public final class GNT {
     try {
       GNTagger tagger = new GNTagger(modelArchiveName);
       tagger.tagFolder(inputFolderName, inputEncodingName, outputEncodingName);
-      tagger.close();
-    } catch (IOException e) {
+    } catch (IOException | ConfigurationException e) {
       logger.error(e.getLocalizedMessage(), e);
     }
   }

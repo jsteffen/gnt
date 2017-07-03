@@ -2,7 +2,6 @@ package de.dfki.mlt.gnt.data;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -110,13 +109,11 @@ public class SetIndexMap {
   }
 
 
-  public void readSetIndexMap(Archivator archivator, Path path) {
+  public void readSetIndexMap(Archivator archivator, String setFileName) {
 
-    BufferedReader reader;
-    int cnt = 0;
-    try {
-      InputStream inputStream = archivator.getArchiveMap().get(path.toString());
-      reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    try (BufferedReader reader = new BufferedReader(
+        new InputStreamReader(archivator.getInputStream(setFileName), "UTF-8"))) {
+      int cnt = 0;
       String line;
       while ((line = reader.readLine()) != null) {
         cnt++;
@@ -124,8 +121,6 @@ public class SetIndexMap {
         this.getNum2label().put(cnt, line);
       }
       this.labelCnt = cnt++;
-      reader.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }

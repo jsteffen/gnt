@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import de.dfki.mlt.gnt.data.Data;
-import de.dfki.mlt.gnt.data.GlobalParams;
 
 /**
  * This class takes as input a conll file of gold tags and predicted tags
@@ -186,8 +185,6 @@ public class ConllEvaluator {
 
     // This is for testing
     // This reads saved vocabulary from training corpus
-    GlobalParams globals = new GlobalParams();
-    globals.setTaggerName("DEPOSMORPH");
     Data data = new Data();
     data.readWordSet();
     ConllEvaluator evalFile = new ConllEvaluator(data);

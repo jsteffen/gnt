@@ -3,6 +3,7 @@ package de.dfki.mlt.gnt.config;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -22,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public final class GlobalConfig {
 
   /** name of model config file in model archive */
-  public static final String MODEL_CONFIG_FILE = "dataConfig.xml";
+  public static final String MODEL_CONFIG_FILE = "model.conf";
 
   private static final Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
   private static PropertiesConfiguration instance;
@@ -85,7 +86,7 @@ public final class GlobalConfig {
   public static List<Path> getPathList(String key) {
 
     List<Path> pathList = new ArrayList<>();
-    List<String> stringList = getInstance().getList(String.class, key);
+    List<String> stringList = getInstance().getList(String.class, key, Collections.emptyList());
     for (String oneString : stringList) {
       pathList.add(Paths.get(oneString));
     }

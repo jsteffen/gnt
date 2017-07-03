@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
+
+import de.dfki.mlt.gnt.config.ConfigKeys;
+import de.dfki.mlt.gnt.config.CorpusConfig;
 
 /**
  * A class for recovering corpus files which have been nomrlaized by class CorpusNormalizer.
@@ -13,24 +17,13 @@ import java.nio.file.StandardCopyOption;
  *
  * @author Günter Neumann, DFKI
  */
-public class CorpusRecoverer {
+public final class CorpusRecoverer {
 
-  private Corpus corpus = null;
+  private CorpusRecoverer() {
 
-
-  public Corpus getCorpus() {
-
-    return this.corpus;
+    // private constructor to enforce noninstantiability
   }
 
-
-  public void setCorpus(Corpus corpus) {
-
-    this.corpus = corpus;
-  }
-
-
-  // These methods are for recovering the orig files
 
   private static void recoverCopyConllFile(String fileNameOrig) throws IOException {
 
@@ -54,32 +47,39 @@ public class CorpusRecoverer {
   }
 
 
-  private void recoverCopiedFilesFromCorpus() throws IOException {
+  public static void recoverCopiedFilesFromCorpus(CorpusConfig corpusConfig)
+      throws IOException {
 
     // Labeled data
-    for (String fileName : this.getCorpus().getTrainingLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TRAINING_LABELED_DATA, Collections.emptyList())) {
       String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
-    for (String fileName : this.getCorpus().getDevLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.DEV_LABELED_DATA, Collections.emptyList())) {
       String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
-    for (String fileName : this.getCorpus().getTestLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TEST_LABELED_DATA, Collections.emptyList())) {
       String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
 
     // Unlabeled data
-    for (String fileName : this.getCorpus().getTrainingUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TRAINING_UNLABELED_DATA, Collections.emptyList())) {
       String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
-    for (String fileName : this.getCorpus().getDevUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.DEV_UNLABELED_DATA, Collections.emptyList())) {
       String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }
-    for (String fileName : this.getCorpus().getTestUnLabeledData()) {
+    for (String fileName : corpusConfig.getList(
+        String.class, ConfigKeys.TEST_UNLABELED_DATA, Collections.emptyList())) {
       String fileNameComplete = fileName + ".orig";
       recoverCopyConllFile(fileNameComplete);
     }

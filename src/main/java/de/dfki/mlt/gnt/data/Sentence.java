@@ -7,15 +7,12 @@ package de.dfki.mlt.gnt.data;
  */
 public class Sentence {
 
-  private int[] wordArray = new int[0];
-  private int[] labelArray = new int[0];
-
-
-  public Sentence() {
-  }
+  private int[] wordArray;
+  private int[] labelArray;
 
 
   public Sentence(int size) {
+
     this.wordArray = new int[size];
     this.labelArray = new int[size];
   }
@@ -47,7 +44,7 @@ public class Sentence {
 
   public void addNextToken(int i, int wordIndex, int posIndex) {
 
-    this.getWordArray()[i] = wordIndex;
-    this.getLabelArray()[i] = posIndex;
+    this.wordArray[i] = wordIndex;
+    this.labelArray[i] = posIndex;
   }
 }
