@@ -194,6 +194,7 @@ public final class GNT {
   private static Options createTrainOptions() {
 
     Options trainOptions = new Options();
+
     Option modeOption = new Option("train", false, "run in train mode");
     modeOption.setRequired(true);
     trainOptions.addOption(modeOption);
@@ -215,14 +216,15 @@ public final class GNT {
   private static Options createEvalOptions() {
 
     Options evalOptions = new Options();
+
     Option modeOption = new Option("eval", false, "run in evaluation mode");
     modeOption.setRequired(true);
     evalOptions.addOption(modeOption);
 
-    Option modelConfigOption = new Option("model", true, "model, to be loaded from file system or classpath");
-    modelConfigOption.setRequired(true);
-    modelConfigOption.setArgName("file");
-    evalOptions.addOption(modelConfigOption);
+    Option modelOption = new Option("model", true, "model, to be loaded from classpath or file system");
+    modelOption.setRequired(true);
+    modelOption.setArgName("file");
+    evalOptions.addOption(modelOption);
 
     Option corpusConfigOption = new Option("corpusConfig", true, "corpus config file");
     corpusConfigOption.setRequired(true);
@@ -236,31 +238,32 @@ public final class GNT {
   private static Options createTagOptions() {
 
     Options tagOptions = new Options();
+
     Option modeOption = new Option("tag", false, "run in tag mode");
     modeOption.setRequired(true);
     tagOptions.addOption(modeOption);
 
-    Option modelConfigOption = new Option("model", true, "model, to be loaded from file system or classpath");
+    Option modelConfigOption = new Option("model", true, "model, to be loaded from classpath or file system");
     modelConfigOption.setRequired(true);
     modelConfigOption.setArgName("file");
     tagOptions.addOption(modelConfigOption);
 
-    Option inputConfigOption = new Option("input", true, "input folder");
-    inputConfigOption.setRequired(true);
-    inputConfigOption.setArgName("folder");
-    tagOptions.addOption(inputConfigOption);
+    Option inputOption = new Option("input", true, "input folder");
+    inputOption.setRequired(true);
+    inputOption.setArgName("folder");
+    tagOptions.addOption(inputOption);
 
-    Option inputEncodingConfigOption =
-        new Option("inEncode", true, "input encoding, optional, default: " + IN_ENCODE_DEFAULT);
-    inputEncodingConfigOption.setRequired(false);
-    inputEncodingConfigOption.setArgName("encoding");
-    tagOptions.addOption(inputEncodingConfigOption);
+    Option inputEncodingOption =
+        new Option("inEncode", true, String.format("input encoding (optional, default: %s)", IN_ENCODE_DEFAULT));
+    inputEncodingOption.setRequired(false);
+    inputEncodingOption.setArgName("encoding");
+    tagOptions.addOption(inputEncodingOption);
 
-    Option outputEncodingConfigOption =
-        new Option("outEncode", true, "output encoding, optional, default: " + OUT_ENCODE_DEFAULT);
-    outputEncodingConfigOption.setRequired(false);
-    outputEncodingConfigOption.setArgName("encoding");
-    tagOptions.addOption(outputEncodingConfigOption);
+    Option outputEncodingOption =
+        new Option("outEncode", true, String.format("output encoding (optional, default: %s)", OUT_ENCODE_DEFAULT));
+    outputEncodingOption.setRequired(false);
+    outputEncodingOption.setArgName("encoding");
+    tagOptions.addOption(outputEncodingOption);
 
     return tagOptions;
   }

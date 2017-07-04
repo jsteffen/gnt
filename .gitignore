@@ -1,5 +1,6 @@
 /target/
 /model/
+/eval/
 /gnt.log*
 /model_*.zip
 /liblinear_input_model_*.txt

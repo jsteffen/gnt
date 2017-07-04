@@ -212,9 +212,10 @@ public class GntMorphixTokenizer {
       logger.debug("Start: " + start + " end: " + end + " State " + state + " c: " + c);
 
       if (end > il) {
-        if (this.createSentence) {
-          this.extendSentenceList();
-        }
+        //if (this.createSentence) {
+        // always collect remaining tokens in a last sentence
+        this.extendSentenceList();
+        //}
         break;
       }
 
