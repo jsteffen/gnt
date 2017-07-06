@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -101,10 +102,13 @@ public class WordShapeFeatureFactory {
   }
 
 
-  public void createAndSaveShapeFeature(String trainingFileName) {
+  public void createAndSaveShapeFeatures(List<String> trainingFileNames) {
 
-    System.out.println("Create shape list from: " + trainingFileName);
-    this.createShapeVectorsFromFile(trainingFileName, -1);
+    for (String oneTrainingFileName : trainingFileNames) {
+      String trainingSentsFileName = oneTrainingFileName.split("\\.conll")[0] + "-sents.txt";
+      System.out.println("Create shape list from: " + trainingSentsFileName);
+      this.createShapeVectorsFromFile(trainingSentsFileName, -1);
+    }
 
     Path shapePath = GlobalConfig.getModelBuildFolder().resolve("shapeList.txt");
     System.out.println("Writing shape list to: " + shapePath);

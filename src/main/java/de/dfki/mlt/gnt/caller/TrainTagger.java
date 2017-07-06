@@ -59,7 +59,7 @@ public class TrainTagger {
       gnTrainer.getArchivator().setArchiveName(modelArchiveName);
     }
 
-    gnTrainer.gntTrainingWithDimensionFromConllFile();
+    gnTrainer.gntTrainingWithDimensionFromConllFiles();
   }
 
 
