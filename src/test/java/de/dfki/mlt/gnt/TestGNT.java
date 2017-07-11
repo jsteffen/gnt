@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.Before;
@@ -41,14 +40,12 @@ public class TestGNT {
 
   @Test
   public void testTrainEvalTag()
-      throws IOException, ConfigurationException, InterruptedException {
+      throws IOException, ConfigurationException {
 
     GlobalConfig.getInstance().setProperty(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE, false);
     GlobalConfig.getInstance().setProperty(ConfigKeys.DEBUG, true);
 
     testTrain();
-    // for some reason the model archive is not immediately available in the file system, so we wait a moment
-    TimeUnit.SECONDS.sleep(5);
     testEval();
     testTag();
   }
@@ -82,7 +79,10 @@ public class TestGNT {
   private void testEval()
       throws IOException, ConfigurationException {
 
-    GNTagger tagger = new GNTagger("model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
+    GNTagger tagger = new GNTagger(
+        // load model from file system and not classpath
+        GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER)
+            .resolve("model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip").toString());
     tagger.eval("src/test/resources/EnPosTagger.corpus.conf");
 
     List<Path> evalFiles =
@@ -103,7 +103,10 @@ public class TestGNT {
   private void testTag()
       throws IOException, ConfigurationException {
 
-    GNTagger tagger = new GNTagger("model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
+    GNTagger tagger = new GNTagger(
+        // load model from file system and not classpath
+        GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER)
+            .resolve("model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip").toString());
     tagger.tagFolder("src/test/resources/input", "UTF-8", "UTF-8");
 
     List<Path> taggedFiles =
