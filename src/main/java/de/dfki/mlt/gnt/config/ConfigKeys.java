@@ -48,7 +48,6 @@ public final class ConfigKeys {
   public static final String DEV_UNLABELED_DATA = "dev.unlabeled.data";
   public static final String TEST_UNLABELED_DATA = "test.unlabeled.data";
   public static final String CLUSTER_FILE = "cluster.file";
-  public static final String TRAINING_FILE = "training.file";
 
 
   private ConfigKeys() {

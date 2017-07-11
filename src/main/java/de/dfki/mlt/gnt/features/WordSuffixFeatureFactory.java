@@ -398,12 +398,15 @@ public class WordSuffixFeatureFactory {
 
   //*********************** creating and storing ***********************
 
-  public void createAndSaveSuffixFeature(String trainingFileName) {
+  public void createAndSaveSuffixFeatures(List<String> trainingFileNames) {
 
-    System.out.println("Create suffix list from: " + trainingFileName);
-    this.createSuffixListFromFile(trainingFileName, -1);
+    for (String oneTrainingFileName : trainingFileNames) {
+      String trainingSentsFileName = oneTrainingFileName.split("\\.conll")[0] + "-sents.txt";
+      System.out.println("Create suffix list from: " + trainingSentsFileName);
+      this.createSuffixListFromFile(trainingSentsFileName, -1);
 
-    System.out.println("#word: " + this.getWordCnt() + " #suffixes: " + this.getSuffixCnt());
+      System.out.println("#word: " + this.getWordCnt() + " #suffixes: " + this.getSuffixCnt());
+    }
 
     Path suffixPath = GlobalConfig.getModelBuildFolder().resolve("suffixList.txt");
     System.out.println("Writing suffix list to: " + suffixPath);

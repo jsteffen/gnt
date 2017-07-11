@@ -1,6 +1,7 @@
 package de.dfki.mlt.gnt.trainer;
 
 import java.io.IOException;
+import java.util.List;
 
 import de.dfki.mlt.gnt.archive.Archivator;
 import de.dfki.mlt.gnt.config.ConfigKeys;
@@ -86,17 +87,17 @@ public class GNTrainer {
   }
 
 
-  private void createShapeFeatures(String trainingFileName) {
+  private void createShapeFeatures(List<String> trainingFileNames) {
 
     WordShapeFeatureFactory wordShapeFactory = new WordShapeFeatureFactory();
-    wordShapeFactory.createAndSaveShapeFeature(trainingFileName);
+    wordShapeFactory.createAndSaveShapeFeatures(trainingFileNames);
   }
 
 
-  private void createSuffixFeatures(String trainingFileName) {
+  private void createSuffixFeatures(List<String> trainingFileNames) {
 
     WordSuffixFeatureFactory wordSuffixFactory = new WordSuffixFeatureFactory();
-    wordSuffixFactory.createAndSaveSuffixFeature(trainingFileName);
+    wordSuffixFactory.createAndSaveSuffixFeatures(trainingFileNames);
   }
 
 
@@ -108,19 +109,19 @@ public class GNTrainer {
 
 
   // This is a method for on-demand creation of the feature files
-  private void createTrainingFeatureFiles(String trainingFileName, String clusterIdSourceFileName, int dim) {
+  private void createTrainingFeatureFiles(List<String> trainingFileNames, String clusterIdSourceFileName, int dim) {
 
     String taggerName = this.modelConfig.getString(ConfigKeys.TAGGER_NAME);
-    System.out.println("Create feature files from: " + trainingFileName + " and TaggerName: " + taggerName);
+    System.out.println("Create feature files from: " + trainingFileNames + " and TaggerName: " + taggerName);
 
     if (this.alphabet.isWithWordFeats()) {
       this.createWordVectors(dim);
     }
     if (this.alphabet.isWithShapeFeats()) {
-      this.createShapeFeatures(trainingFileName);
+      this.createShapeFeatures(trainingFileNames);
     }
     if (this.alphabet.isWithSuffixFeats()) {
-      this.createSuffixFeatures(trainingFileName);
+      this.createSuffixFeatures(trainingFileNames);
     }
     if (this.alphabet.isWithClusterFeats()) {
       this.createClusterFeatures(clusterIdSourceFileName);
@@ -128,7 +129,7 @@ public class GNTrainer {
   }
 
 
-  private void gntTrainingFromConllFile(String trainingFileName, int dim, int maxExamples) throws IOException {
+  private void gntTrainingFromConllFile(List<String> trainingFileNames, int dim, int maxExamples) throws IOException {
 
     String taggerName = this.modelConfig.getString(ConfigKeys.TAGGER_NAME);
 
@@ -149,8 +150,8 @@ public class GNTrainer {
     System.out.println("Set window count: ");
     Window.setWindowCnt(0);
 
-    this.getTrainer().trainFromConllTrainingFileInMemory(
-        trainingFileName, maxExamples,
+    this.getTrainer().trainFromConllTrainingFilesInMemory(
+        trainingFileNames, maxExamples,
         this.corpusConfig.getInt(ConfigKeys.WORD_FORM_INDEX),
         this.corpusConfig.getInt(ConfigKeys.TAG_INDEX));
 
@@ -172,10 +173,10 @@ public class GNTrainer {
 
 
   // This is the main caller for training
-  public void gntTrainingWithDimensionFromConllFile()
+  public void gntTrainingWithDimensionFromConllFiles()
       throws IOException {
 
-    String trainingFileName = this.corpusConfig.getString(ConfigKeys.TRAINING_FILE).split("\\.conll")[0];
+    List<String> trainingFileNames = this.corpusConfig.getList(String.class, ConfigKeys.TRAINING_LABELED_DATA);
     String clusterIdSourceFileName = this.corpusConfig.getString(ConfigKeys.CLUSTER_FILE);
     int dim = this.modelConfig.getInt(ConfigKeys.DIM);
     int maxExamples = this.modelConfig.getInt(ConfigKeys.NUMBER_OF_SENTENCES);
@@ -186,12 +187,12 @@ public class GNTrainer {
     IndicatorWordsCreator iwp = new IndicatorWordsCreator();
     iwp.createIndicatorTaggerNameWords(
         this.corpusConfig, this.modelConfig.getDouble(ConfigKeys.SUB_SAMPLING_THRESHOLD));
-    this.createTrainingFeatureFiles(trainingFileName + "-sents.txt", clusterIdSourceFileName, dim);
+    this.createTrainingFeatureFiles(trainingFileNames, clusterIdSourceFileName, dim);
 
     this.time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (this.time2 - this.time1));
 
     // Do training
-    this.gntTrainingFromConllFile(trainingFileName + ".conll", dim, maxExamples);
+    this.gntTrainingFromConllFile(trainingFileNames, dim, maxExamples);
   }
 }

@@ -274,39 +274,47 @@ public class TrainerInMem {
    * <p>- create window frames and store in list (non-feature filled windows):
    *      I do this, because each window is then filled iteratively when calling the trainer; it actually saves space
    * <p>-  Finally, feature files for label set and word set lists are created and stored for taggerName
-   * @param conllReader
+   * @param trainingFileNames
    * @param max if -1 then infinite else max sentences are processed and then methods stops
    * @throws IOException
    */
   private void createTrainingInstancesFromConllReader(
-      BufferedReader conllReader, int max, int wordFormIndex, int tagIndex)
+      List<String> trainingFileNames, int max, int wordFormIndex, int tagIndex)
       throws IOException {
 
-    String line = "";
+    String line;
     List<String[]> tokens = new ArrayList<String[]>();
 
-    while ((line = conllReader.readLine()) != null) {
-      if (line.isEmpty()) {
-        if ((max > 0) && (this.data.getSentenceCnt() > max)) {
-          break;
+    for (String oneTrainingFileName : trainingFileNames) {
+      try (BufferedReader conllReader = new BufferedReader(
+          new InputStreamReader(new FileInputStream(oneTrainingFileName), "UTF-8"))) {
+
+        System.out.println("Do training with TrainerInMem() from file: " + oneTrainingFileName);
+
+        while ((line = conllReader.readLine()) != null) {
+          if (line.isEmpty()) {
+            if ((max > 0) && (this.data.getSentenceCnt() > max)) {
+              break;
+            }
+
+            // create internal sentence object and label maps
+            Sentence sentence =
+                this.data.generateSentenceObjectFromConllLabeledSentence(tokens, wordFormIndex, tagIndex);
+
+            // System.out.println("In:  " + this.taggedSentenceToString());
+
+            // create window frames and store in list
+            createWindowFramesFromSentence(sentence);
+
+            // reset tokens
+            tokens = new ArrayList<String[]>();
+          } else {
+            String[] tokenizedLine = line.split("\t");
+            tokens.add(tokenizedLine);
+          }
         }
-
-        // create internal sentence object and label maps
-        Sentence sentence = this.data.generateSentenceObjectFromConllLabeledSentence(tokens, wordFormIndex, tagIndex);
-
-        // System.out.println("In:  " + this.taggedSentenceToString());
-
-        // create window frames and store in list
-        createWindowFramesFromSentence(sentence);
-
-        // reset tokens
-        tokens = new ArrayList<String[]>();
-      } else {
-        String[] tokenizedLine = line.split("\t");
-        tokens.add(tokenizedLine);
       }
     }
-    conllReader.close();
     this.data.saveLabelSet();
     this.data.saveWordSet();
     System.out.println("... done");
@@ -439,26 +447,18 @@ public class TrainerInMem {
    * @throws IOException
    */
   //TODO: currently runs only a single training file
-  public void trainFromConllTrainingFileInMemory(String sourceFileName, int max, int wordFormIndex, int tagIndex)
+  public void trainFromConllTrainingFilesInMemory(
+      List<String> trainingFileNames, int max, int wordFormIndex, int tagIndex)
       throws IOException {
 
     long time1;
     long time2;
 
-    BufferedReader conllReader = new BufferedReader(
-        new InputStreamReader(new FileInputStream(sourceFileName), "UTF-8"));
     boolean train = true;
     boolean adjust = true;
-
-    System.out.println("Do training with TrainerInMem() from file: " + sourceFileName);
     System.out.println("Train?: " + train + " Adjust?: " + adjust);
 
-    // Read training data
-    time1 = System.currentTimeMillis();
-    System.out.println("Create conll training instances ...");
-    this.createTrainingInstancesFromConllReader(conllReader, max, wordFormIndex, tagIndex);
-    time2 = System.currentTimeMillis();
-    System.out.println("System time (msec): " + (time2 - time1));
+    this.createTrainingInstancesFromConllReader(trainingFileNames, max, wordFormIndex, tagIndex);
 
     this.offSets = new OffSets(this.getAlphabet(), this.getData(), this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE));
 
