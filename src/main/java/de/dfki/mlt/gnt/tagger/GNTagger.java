@@ -109,12 +109,6 @@ public class GNTagger {
   }
 
 
-  public Data getData() {
-
-    return this.data;
-  }
-
-
   /**
    * Tags all files in the given directory.
    *
@@ -239,10 +233,15 @@ public class GNTagger {
     // for each token t_i of current training sentence do
     // System.out.println("Sentence no: " + data.getSentenceCnt());
     int mod = 100000;
-    for (int i = 0; i < sentence.getWordArray().length; i++) {
+    for (int i = 0; i < sentence.getWords().length; i++) {
       // Assume that both arrays together define an ordered one-to-one correspondence
       // between token and label (POS)
-      int labelIndex = sentence.getLabelArray()[i];
+
+      int labelIndex = -1;
+      String tag = sentence.getTags()[i];
+      if (tag != null) {
+        labelIndex = this.data.getLabelSet().getLabel2num().get(tag);
+      }
 
       // create local context for tagging t_i of size 2*windowSize+1 centered around t_i
       Window tokenWindow = new Window(sentence, i, this.windowSize, this.data, this.alphabet);
@@ -293,7 +292,8 @@ public class GNTagger {
 
       //  Here, I am assuming that sentence length equals # of windows
       // So store predicted label i to word i
-      sentence.getLabelArray()[i] = prediction;
+      String tag = this.data.getLabelSet().getNum2label().get(prediction);
+      sentence.getTags()[i] = tag;
 
       // Free space by resetting filled window to unfilled-window
       nextWindow.clean();
@@ -308,9 +308,9 @@ public class GNTagger {
   private String taggedSentenceToString(Sentence sentence) {
 
     StringBuilder output = new StringBuilder();
-    for (int i = 0; i < sentence.getWordArray().length; i++) {
-      String word = this.data.getWordSet().getNum2label().get(sentence.getWordArray()[i]);
-      String label = this.data.getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
+    for (int i = 0; i < sentence.getWords().length; i++) {
+      String word = sentence.getWords()[i];
+      String label = sentence.getTags()[i];
 
       label = PostProcessor.determineTwitterLabel(word, label);
 
@@ -441,7 +441,7 @@ public class GNTagger {
 
     for (int i = 0; i < tokens.size(); i++) {
       String[] token = tokens.get(i);
-      String label = this.data.getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
+      String label = sentence.getTags()[i];
 
       String word = token[wordFormIndex];
 

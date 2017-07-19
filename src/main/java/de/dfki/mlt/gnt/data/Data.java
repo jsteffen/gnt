@@ -100,9 +100,11 @@ public class Data {
     for (int i = 0; i < tokens.size(); i++) {
       // Extract word and pos from conll sentence, create index for both
       // and create sentence using word/pos index
-      newSentence.addNextToken(i,
-          updateWordMap(tokens.get(i)[wordFormIndex]),
-          updateLabelMap(tokens.get(i)[tagIndex]));
+      String token = tokens.get(i)[wordFormIndex];
+      String tag = tokens.get(i)[tagIndex];
+      newSentence.addNextToken(i, token, tag);
+      updateWordMap(token);
+      updateLabelMap(tag);
     }
     this.sentenceCnt++;
     return newSentence;
@@ -122,9 +124,10 @@ public class Data {
     for (int i = 0; i < tokens.size(); i++) {
       // Extract word and pos from conll sentence, create index for both
       // and create sentence using word/pos index
-      newSentence.addNextToken(i,
-          updateWordMap(tokens.get(i)[wordFormIndex]),
-          -1);
+      // Using a dummy tag null
+      String token = tokens.get(i)[wordFormIndex];
+      newSentence.addNextToken(i, token, null);
+      updateWordMap(token);
     }
     this.sentenceCnt++;
     return newSentence;
@@ -146,10 +149,10 @@ public class Data {
     for (int i = 0; i < tokens.size(); i++) {
       // tokens are strings
       // NOTE: No lower case here of word
-      // Using a dummy POS -1
-      newSentence.addNextToken(i,
-          updateWordMap(tokens.get(i)),
-          -1);
+      // Using a dummy tag null
+      String token = tokens.get(i);
+      newSentence.addNextToken(i, token, null);
+      updateWordMap(token);
     }
     this.sentenceCnt++;
     return newSentence;

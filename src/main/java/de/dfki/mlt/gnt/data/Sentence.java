@@ -7,44 +7,32 @@ package de.dfki.mlt.gnt.data;
  */
 public class Sentence {
 
-  private int[] wordArray;
-  private int[] labelArray;
+  private String[] words;
+  private String[] tags;
 
 
   public Sentence(int size) {
 
-    this.wordArray = new int[size];
-    this.labelArray = new int[size];
+    this.words = new String[size];
+    this.tags = new String[size];
   }
 
 
-  public int[] getWordArray() {
+  public String[] getWords() {
 
-    return this.wordArray;
+    return this.words;
   }
 
 
-  public void setWordArray(int[] wordArray) {
+  public String[] getTags() {
 
-    this.wordArray = wordArray;
+    return this.tags;
   }
 
 
-  public int[] getLabelArray() {
+  public void addNextToken(int i, String word, String tag) {
 
-    return this.labelArray;
-  }
-
-
-  public void setLabelArray(int[] labelArray) {
-
-    this.labelArray = labelArray;
-  }
-
-
-  public void addNextToken(int i, int wordIndex, int posIndex) {
-
-    this.wordArray[i] = wordIndex;
-    this.labelArray[i] = posIndex;
+    this.words[i] = word;
+    this.tags[i] = tag;
   }
 }

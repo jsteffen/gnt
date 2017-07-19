@@ -246,8 +246,8 @@ public class TrainerInMem {
     // for each token t_i of current training sentence do
     // System.out.println("Sentence no: " + data.getSentenceCnt());
     int mod = 100000;
-    for (int i = 0; i < sentence.getWordArray().length; i++) {
-      int labelIndex = sentence.getLabelArray()[i];
+    for (int i = 0; i < sentence.getWords().length; i++) {
+      int labelIndex = this.data.getLabelSet().getLabel2num().get(sentence.getTags()[i]);
       // create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 
       Window tokenWindow =
@@ -522,9 +522,8 @@ public class TrainerInMem {
     String output = "";
     int mod = 10;
     int cnt = 0;
-    for (int i = 0; i < sentence.getWordArray().length; i++) {
-      output += this.getData().getWordSet().getNum2label().get(sentence.getWordArray()[i]) + "/"
-          + this.getData().getLabelSet().getNum2label().get(sentence.getLabelArray()[i]) + " ";
+    for (int i = 0; i < sentence.getWords().length; i++) {
+      output += sentence.getWords()[i] + "/" + sentence.getTags()[i] + " ";
       cnt++;
       if ((cnt % mod) == 0) {
         output += "\n";
