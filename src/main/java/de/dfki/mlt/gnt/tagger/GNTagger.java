@@ -80,12 +80,10 @@ public class GNTagger {
     System.out.println("Load feature files with dim: " + dim);
     this.alphabet.loadFeaturesFromFiles(this.archivator, dim);
 
-    System.out.println("Load label set from archive: " + this.data.getLabelMapFileName());
     this.data.readLabelSet(this.archivator);
 
     System.out.println("Cleaning non-used variables in Alphabet and in Data:");
     this.alphabet.clean();
-    this.data.cleanWordSet();
 
     System.out.println("Initialize offsets:");
     this.offSets = new OffSets(this.alphabet, this.data, this.windowSize);
@@ -107,12 +105,6 @@ public class GNTagger {
     time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (time2 - time1));
     System.out.println(this.model.toString() + "\n");
-  }
-
-
-  public Data getData() {
-
-    return this.data;
   }
 
 
@@ -156,6 +148,8 @@ public class GNTagger {
   public void tagFile(Path sourcePath, String inEncode, String outEncode)
       throws IOException {
 
+    Window.setWindowCnt(0);
+
     Path resultPath = Paths.get(sourcePath.toString() + ".GNT");
     try (BufferedReader in = Files.newBufferedReader(
         sourcePath, Charset.forName(inEncode));
@@ -185,6 +179,8 @@ public class GNTagger {
    */
   public String tagString(String inputString) {
 
+    Window.setWindowCnt(0);
+
     List<String> tokens = GntSimpleTokenizer.tokenize(inputString);
 
     Sentence sentence = tagUnlabeledTokens(tokens);
@@ -204,6 +200,8 @@ public class GNTagger {
    * @param tokens
    */
   public Sentence tagUnlabeledTokens(List<String> tokens) {
+
+    Window.setWindowCnt(0);
 
     // create internal sentence object
     Sentence sentence = this.data.generateSentenceObjectFromUnlabeledTokens(tokens);
@@ -234,10 +232,10 @@ public class GNTagger {
     // for each token t_i of current training sentence do
     // System.out.println("Sentence no: " + data.getSentenceCnt());
     int mod = 100000;
-    for (int i = 0; i < sentence.getWordArray().length; i++) {
+    for (int i = 0; i < sentence.getWords().length; i++) {
       // Assume that both arrays together define an ordered one-to-one correspondence
       // between token and label (POS)
-      int labelIndex = sentence.getLabelArray()[i];
+      int labelIndex = this.data.getLabelSet().getIndex(sentence.getTags()[i]);
 
       // create local context for tagging t_i of size 2*windowSize+1 centered around t_i
       Window tokenWindow = new Window(sentence, i, this.windowSize, this.data, this.alphabet);
@@ -288,7 +286,8 @@ public class GNTagger {
 
       //  Here, I am assuming that sentence length equals # of windows
       // So store predicted label i to word i
-      sentence.getLabelArray()[i] = prediction;
+      String tag = this.data.getLabelSet().getLabel(prediction);
+      sentence.getTags()[i] = tag;
 
       // Free space by resetting filled window to unfilled-window
       nextWindow.clean();
@@ -303,9 +302,9 @@ public class GNTagger {
   private String taggedSentenceToString(Sentence sentence) {
 
     StringBuilder output = new StringBuilder();
-    for (int i = 0; i < sentence.getWordArray().length; i++) {
-      String word = this.data.getWordSet().getNum2label().get(sentence.getWordArray()[i]);
-      String label = this.data.getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
+    for (int i = 0; i < sentence.getWords().length; i++) {
+      String word = sentence.getWords()[i];
+      String label = sentence.getTags()[i];
 
       label = PostProcessor.determineTwitterLabel(word, label);
 
@@ -330,11 +329,8 @@ public class GNTagger {
 
     Data wordSetData = new Data();
     wordSetData.readWordSet(this.archivator);
-
-    System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: "
-        + wordSetData.getWordMapFileName());
-    System.out.println(wordSetData.toString());
-    ConllEvaluator evaluator = new ConllEvaluator(wordSetData);
+    System.out.println(" words: " + wordSetData.getWordSet().size());
+    ConllEvaluator evaluator = new ConllEvaluator(wordSetData.getWordSet());
 
     for (String fileName : corpusConfig.getList(String.class, ConfigKeys.DEV_LABELED_DATA, Collections.emptyList())) {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
@@ -436,7 +432,7 @@ public class GNTagger {
 
     for (int i = 0; i < tokens.size(); i++) {
       String[] token = tokens.get(i);
-      String label = this.data.getLabelSet().getNum2label().get(sentence.getLabelArray()[i]);
+      String label = sentence.getTags()[i];
 
       String word = token[wordFormIndex];
 

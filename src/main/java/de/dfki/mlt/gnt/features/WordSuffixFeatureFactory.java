@@ -137,7 +137,7 @@ public class WordSuffixFeatureFactory {
 
   public void clean() {
 
-    this.num2suffix = new TreeMap<Integer, String>();
+    this.num2suffix.clear();
   }
 
 
