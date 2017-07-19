@@ -236,12 +236,7 @@ public class GNTagger {
     for (int i = 0; i < sentence.getWords().length; i++) {
       // Assume that both arrays together define an ordered one-to-one correspondence
       // between token and label (POS)
-
-      int labelIndex = -1;
-      String tag = sentence.getTags()[i];
-      if (tag != null) {
-        labelIndex = this.data.getLabelSet().getLabel2num().get(tag);
-      }
+      int labelIndex = this.data.getLabelSet().getIndex(sentence.getTags()[i]);
 
       // create local context for tagging t_i of size 2*windowSize+1 centered around t_i
       Window tokenWindow = new Window(sentence, i, this.windowSize, this.data, this.alphabet);
@@ -292,7 +287,7 @@ public class GNTagger {
 
       //  Here, I am assuming that sentence length equals # of windows
       // So store predicted label i to word i
-      String tag = this.data.getLabelSet().getNum2label().get(prediction);
+      String tag = this.data.getLabelSet().getLabel(prediction);
       sentence.getTags()[i] = tag;
 
       // Free space by resetting filled window to unfilled-window

@@ -20,70 +20,64 @@ import de.dfki.mlt.gnt.archive.Archivator;
  */
 public class SetIndexMap {
 
-  private Map<Integer, String> num2label = new TreeMap<Integer, String>();
-  private Map<String, Integer> label2num = new HashMap<String, Integer>();
+  private Map<Integer, String> index2label = new TreeMap<Integer, String>();
+  private Map<String, Integer> label2index = new HashMap<String, Integer>();
   private int labelCnt = 0;
 
 
-  public Map<String, Integer> getLabel2num() {
-
-    return this.label2num;
-  }
-
-
-  public void setLabel2num(Map<String, Integer> label2num) {
-
-    this.label2num = label2num;
-  }
-
-
-  public Map<Integer, String> getNum2label() {
-
-    return this.num2label;
-  }
-
-
-  public void setNum2label(Map<Integer, String> num2label) {
-
-    this.num2label = num2label;
-  }
-
-
-  public int getLabelCnt() {
+  public int size() {
 
     return this.labelCnt;
   }
 
 
-  public void setLabelCnt(int labelCnt) {
-
-    this.labelCnt = labelCnt;
-  }
-
-
-  public int updateSetIndexMap(String label) {
+  /**
+   * Adds an entry for the given label 9if it doesn't exist yet)
+   * and returns its index.
+   *
+   * @param label
+   *          the label
+   * @return the label's index
+   */
+  public int addLabel(String label) {
 
     int index = -1;
-    if (this.getLabel2num().containsKey(label)) {
-      index = this.getLabel2num().get(label);
+    if (this.label2index.containsKey(label)) {
+      index = this.label2index.get(label);
     } else {
       this.labelCnt++;
-      this.getLabel2num().put(label, this.labelCnt);
-      this.getNum2label().put(this.labelCnt, label);
+      this.label2index.put(label, this.labelCnt);
+      this.index2label.put(this.labelCnt, label);
       index = this.labelCnt;
     }
     return index;
   }
 
 
-  public void writeSetIndexMap(Path targetPath) {
+  public String getLabel(int index) {
+
+    return this.index2label.get(index);
+  }
+
+
+  public int getIndex(String label) {
+
+    Integer index = this.label2index.get(label);
+    if (index == null) {
+      return -1;
+    }
+    return index;
+  }
+
+
+  public void write(Path targetPath) {
 
     try {
       Files.createDirectories(targetPath.getParent());
       try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
           targetPath, StandardCharsets.UTF_8))) {
-        for (int key : this.getNum2label().keySet()) {
-          out.println(this.getNum2label().get(key));
+        for (int key : this.index2label.keySet()) {
+          out.println(this.index2label.get(key));
         }
       }
     } catch (IOException e) {
@@ -91,46 +85,46 @@ public class SetIndexMap {
     }
   }
 
-  public void readSetIndexMap(Path path) {
 
-    try (BufferedReader in = Files.newBufferedReader(
-        path, StandardCharsets.UTF_8)) {
-      int cnt = 0;
-      String line;
-      while ((line = in.readLine()) != null) {
-        cnt++;
-        this.getLabel2num().put(line, cnt);
-        this.getNum2label().put(cnt, line);
-      }
-      this.labelCnt = cnt++;
+  public void readFromPath(Path path) {
+
+    try (BufferedReader in = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+      read(in);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
 
-  public void readSetIndexMap(Archivator archivator, String setFileName) {
+  public void readFromArchive(Archivator archivator, String setFileName) {
 
-    try (BufferedReader reader = new BufferedReader(
+    try (BufferedReader in = new BufferedReader(
         new InputStreamReader(archivator.getInputStream(setFileName), "UTF-8"))) {
-      int cnt = 0;
-      String line;
-      while ((line = reader.readLine()) != null) {
-        cnt++;
-        this.getLabel2num().put(line, cnt);
-        this.getNum2label().put(cnt, line);
-      }
-      this.labelCnt = cnt++;
+      read(in);
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+
+  private void read(BufferedReader in)
+      throws IOException {
+
+    int cnt = 0;
+    String line;
+    while ((line = in.readLine()) != null) {
+      cnt++;
+      this.label2index.put(line, cnt);
+      this.index2label.put(cnt, line);
+    }
+    this.labelCnt = cnt++;
   }
 
 
   public void clean() {
 
-    this.num2label.clear();
-    this.label2num.clear();
+    this.index2label.clear();
+    this.label2index.clear();
     this.labelCnt = 0;
   }
 
@@ -139,8 +133,8 @@ public class SetIndexMap {
   public String toString() {
 
     String output = "";
-    for (int index : getNum2label().keySet()) {
-      output += index + ": " + getNum2label().get(index) + "\n";
+    for (int index : this.index2label.keySet()) {
+      output += index + ": " + this.index2label.get(index) + "\n";
     }
     return output;
   }

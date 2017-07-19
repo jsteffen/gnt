@@ -70,18 +70,6 @@ public class Data {
   }
 
 
-  private int updateWordMap(String word) {
-
-    return this.wordSet.updateSetIndexMap(word);
-  }
-
-
-  private int updateLabelMap(String label) {
-
-    return this.labelSet.updateSetIndexMap(label);
-  }
-
-
   /**
    * If all conll lines of a sentence have been collected
    * extract the relevant information (here word and pos)
@@ -103,8 +91,8 @@ public class Data {
       String token = tokens.get(i)[wordFormIndex];
       String tag = tokens.get(i)[tagIndex];
       newSentence.addNextToken(i, token, tag);
-      updateWordMap(token);
-      updateLabelMap(tag);
+      this.wordSet.addLabel(token);
+      this.labelSet.addLabel(tag);
     }
     this.sentenceCnt++;
     return newSentence;
@@ -127,7 +115,7 @@ public class Data {
       // Using a dummy tag null
       String token = tokens.get(i)[wordFormIndex];
       newSentence.addNextToken(i, token, null);
-      updateWordMap(token);
+      this.wordSet.addLabel(token);
     }
     this.sentenceCnt++;
     return newSentence;
@@ -152,7 +140,7 @@ public class Data {
       // Using a dummy tag null
       String token = tokens.get(i);
       newSentence.addNextToken(i, token, null);
-      updateWordMap(token);
+      this.wordSet.addLabel(token);
     }
     this.sentenceCnt++;
     return newSentence;
@@ -167,37 +155,37 @@ public class Data {
 
   public void saveLabelSet() {
 
-    this.labelSet.writeSetIndexMap(GlobalConfig.getModelBuildFolder().resolve(this.labelMapFileName));
+    this.labelSet.write(GlobalConfig.getModelBuildFolder().resolve(this.labelMapFileName));
   }
 
 
   public void readLabelSet() {
 
-    this.labelSet.readSetIndexMap(GlobalConfig.getModelBuildFolder().resolve(this.labelMapFileName));
+    this.labelSet.readFromPath(GlobalConfig.getModelBuildFolder().resolve(this.labelMapFileName));
   }
 
 
   public void readLabelSet(Archivator archivator) {
 
-    this.labelSet.readSetIndexMap(archivator, this.labelMapFileName);
+    this.labelSet.readFromArchive(archivator, this.labelMapFileName);
   }
 
 
   public void saveWordSet() {
 
-    this.wordSet.writeSetIndexMap(GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName));
+    this.wordSet.write(GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName));
   }
 
 
   public void readWordSet() {
 
-    this.wordSet.readSetIndexMap(GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName));
+    this.wordSet.readFromPath(GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName));
   }
 
 
   public void readWordSet(Archivator archivator) {
 
-    this.wordSet.readSetIndexMap(archivator, this.wordMapFileName);
+    this.wordSet.readFromArchive(archivator, this.wordMapFileName);
   }
 
 
@@ -206,8 +194,8 @@ public class Data {
 
     String output = "";
     output += "Sentences: " + this.sentenceCnt
-        + " words: " + this.wordSet.getLabelCnt()
-        + " labels: " + this.labelSet.getLabelCnt() + "\n";
+        + " words: " + this.wordSet.size()
+        + " labels: " + this.labelSet.size() + "\n";
     return output;
   }
 }

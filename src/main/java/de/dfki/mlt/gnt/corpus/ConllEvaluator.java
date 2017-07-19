@@ -117,7 +117,7 @@ public class ConllEvaluator {
           // TODO: note I do not lower case words when counting OOV -> correct?
           // I guess so, because words in getWordSet() are also not lower-cased
           // -> not sure, better try lowercase it as well
-          boolean knownWord = this.data.getWordSet().getLabel2num().containsKey(word);
+          boolean knownWord = this.data.getWordSet().getIndex(word) != -1;
           if (!knownWord) {
             goldOOVCnt++;
           }

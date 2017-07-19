@@ -256,7 +256,7 @@ public class Window {
         // Treat as dummy
         wordFeatures.setLabelIndex(this.offSets.getLabelVectorSize());
       } else {
-        int tagIndex = this.data.getLabelSet().getLabel2num().get(sentenceParam.getTags()[wordPosition]);
+        int tagIndex = this.data.getLabelSet().getIndex(sentenceParam.getTags()[wordPosition]);
         wordFeatures.setLabelIndex(tagIndex);
 
       }

@@ -28,7 +28,7 @@ public class DataProcessor {
 
   private BufferedWriter writer = null;
 
-  private Data dataObj = new Data();
+  private Data data = new Data();
 
   private Tokenizer tokenizer = new Tokenizer();
 
@@ -132,18 +132,6 @@ public class DataProcessor {
   }
 
 
-  public Data getDataObj() {
-
-    return this.dataObj;
-  }
-
-
-  public void setDataObj(Data dataObj) {
-
-    this.dataObj = dataObj;
-  }
-
-
   //*****************************************************************************************************
 
   /**
@@ -160,7 +148,7 @@ public class DataProcessor {
       // Normalize token
       String normalizedToken = this.getNormalizer().normalize(tokens[i]);
       // Insert and/or update token
-      this.getDataObj().updateWordMap(normalizedToken);
+      this.data.getWordSet().addLabel(normalizedToken);
     }
   }
 
@@ -227,7 +215,7 @@ public class DataProcessor {
     for (File labelDir : labelDirs) {
       if (!labelDir.getName().endsWith(".DS_Store")) {
         //System.out.println("Label name: " + labelDir.getName());
-        this.getDataObj().updateLabelMap(labelDir.getName());
+        this.data.getLabelSet().addLabel(labelDir.getName());
         this.processLabelDocs(labelDir);
       }
     }
@@ -250,7 +238,7 @@ public class DataProcessor {
       // Normalize token
       String normalizedToken = this.getNormalizer().normalize(tokens[i]);
       // Get integer encoding of current token of current line of current doc
-      int integerCode = this.getDataObj().getWordSet().getLabel2num().get(normalizedToken);
+      int integerCode = this.data.getWordSet().getIndex(normalizedToken);
       // Add integerCode plus its value as new liblinear feature-value to featureMap
       // I assume that it will be automatically sorted according to natural order
       featureMap.getFeatureMap().put(integerCode, 1.0);
@@ -296,8 +284,7 @@ public class DataProcessor {
 
     problem.saveProblemInstance(
         this.getWriter(),
-        this.getDataObj().getLabelSet().getLabel2num().get(labelName));
-
+        this.data.getLabelSet().getIndex(labelName));
   }
 
 
@@ -349,13 +336,13 @@ public class DataProcessor {
 
     dp.processCorpusToCreateDataSets();
 
-    dp.getDataObj().saveLabelSet();
-    dp.getDataObj().saveWordSet();
+    dp.data.saveLabelSet();
+    dp.data.saveWordSet();
 
-    System.out.println(dp.getDataObj().toString());
+    System.out.println(dp.data.toString());
 
     dp.processCorpusToCreateLiblinearInputFile();
 
-    System.out.println(dp.getDataObj().toString());
+    System.out.println(dp.data.toString());
   }
 }

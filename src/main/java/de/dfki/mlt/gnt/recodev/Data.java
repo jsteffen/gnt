@@ -28,69 +28,33 @@ public class Data {
   }
 
 
-  public void setWordSet(SetIndexMap wordSet) {
-
-    this.wordSet = wordSet;
-  }
-
-
   public SetIndexMap getLabelSet() {
 
     return this.labelSet;
   }
 
 
-  public void setLabelSet(SetIndexMap labelSet) {
-
-    this.labelSet = labelSet;
-  }
-
-
-  public int updateWordMap(String word) {
-
-    return this.getWordSet().updateSetIndexMap(word);
-  }
-
-
-  public int updateLabelMap(String label) {
-
-    return this.getLabelSet().updateSetIndexMap(label);
-  }
-
-
-  public void cleanWordSet() {
-
-    this.wordSet = new SetIndexMap();
-  }
-
-
-  public void cleanLabelSet() {
-
-    this.labelSet = new SetIndexMap();
-  }
-
-
   public void saveLabelSet() {
 
-    this.getLabelSet().writeSetIndexMap(this.labelMapPath);
+    this.getLabelSet().write(this.labelMapPath);
   }
 
 
   public void readLabelSet() {
 
-    this.getLabelSet().readSetIndexMap(this.labelMapPath);
+    this.getLabelSet().readFromPath(this.labelMapPath);
   }
 
 
   public void saveWordSet() {
 
-    this.getWordSet().writeSetIndexMap(this.wordMapPath);
+    this.getWordSet().write(this.wordMapPath);
   }
 
 
   public void readWordSet() {
 
-    this.getWordSet().readSetIndexMap(this.wordMapPath);
+    this.getWordSet().readFromPath(this.wordMapPath);
   }
 
 
@@ -98,8 +62,8 @@ public class Data {
   public String toString() {
 
     String output = "";
-    output += " words: " + this.getWordSet().getLabelCnt()
-        + " labels: " + this.getLabelSet().getLabelCnt() + "\n";
+    output += " words: " + this.getWordSet().size()
+        + " labels: " + this.getLabelSet().size() + "\n";
     return output;
   }
 }
