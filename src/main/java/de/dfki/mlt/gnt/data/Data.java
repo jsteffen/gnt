@@ -140,6 +140,8 @@ public class Data {
    */
   public Sentence generateSentenceObjectFromUnlabeledTokens(List<String> tokens) {
 
+    this.wordSet.clean();
+
     Sentence newSentence = new Sentence(tokens.size());
     for (int i = 0; i < tokens.size(); i++) {
       // tokens are strings

@@ -127,6 +127,14 @@ public class SetIndexMap {
   }
 
 
+  public void clean() {
+
+    this.num2label.clear();
+    this.label2num.clear();
+    this.labelCnt = 0;
+  }
+
+
   @Override
   public String toString() {
 
