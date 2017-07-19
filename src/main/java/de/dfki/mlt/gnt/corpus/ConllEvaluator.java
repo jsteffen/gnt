@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import de.dfki.mlt.gnt.data.Data;
@@ -31,12 +32,12 @@ public class ConllEvaluator {
   private double accOOV;
   private double accInV;
 
-  private Data data;
+  private Set<String> wordSet;
 
 
-  public ConllEvaluator(Data data) {
+  public ConllEvaluator(Set<String> wordSet) {
 
-    this.data = data;
+    this.wordSet = wordSet;
   }
 
 
@@ -117,7 +118,7 @@ public class ConllEvaluator {
           // TODO: note I do not lower case words when counting OOV -> correct?
           // I guess so, because words in getWordSet() are also not lower-cased
           // -> not sure, better try lowercase it as well
-          boolean knownWord = this.data.getWordSet().getIndex(word) != -1;
+          boolean knownWord = this.wordSet.contains(word);
           if (!knownWord) {
             goldOOVCnt++;
           }
@@ -187,7 +188,7 @@ public class ConllEvaluator {
     // This reads saved vocabulary from training corpus
     Data data = new Data();
     data.readWordSet();
-    ConllEvaluator evalFile = new ConllEvaluator(data);
+    ConllEvaluator evalFile = new ConllEvaluator(data.getWordSet());
 
     try {
       evalFile.computeAccuracy(Paths.get("resources/eval/tiger2_posmorph_devel.txt"), true);

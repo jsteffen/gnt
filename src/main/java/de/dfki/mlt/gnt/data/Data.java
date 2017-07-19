@@ -1,7 +1,16 @@
 package de.dfki.mlt.gnt.data;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.dfki.mlt.gnt.archive.Archivator;
 import de.dfki.mlt.gnt.config.GlobalConfig;
@@ -13,7 +22,7 @@ import de.dfki.mlt.gnt.config.GlobalConfig;
  */
 public class Data {
 
-  private SetIndexMap wordSet = new SetIndexMap();
+  private Set<String> wordSet = new HashSet<>();
   private SetIndexMap labelSet = new SetIndexMap();
   private int sentenceCnt = 0;
   private List<Window> instances = new ArrayList<Window>();
@@ -46,7 +55,7 @@ public class Data {
   }
 
 
-  public SetIndexMap getWordSet() {
+  public Set<String> getWordSet() {
 
     return this.wordSet;
   }
@@ -55,12 +64,6 @@ public class Data {
   public SetIndexMap getLabelSet() {
 
     return this.labelSet;
-  }
-
-
-  public String getLabelMapFileName() {
-
-    return this.labelMapFileName;
   }
 
 
@@ -76,6 +79,9 @@ public class Data {
    * and make a sentence object of it (two parallel int[];)
    * as a side effect, word and pos SetIndexMaps are created
    * and stored in the data object
+   * <p>
+   * Used in training and evaluation only
+   *
    * @param tokens
    */
   public Sentence generateSentenceObjectFromConllLabeledSentence(
@@ -91,31 +97,8 @@ public class Data {
       String token = tokens.get(i)[wordFormIndex];
       String tag = tokens.get(i)[tagIndex];
       newSentence.addNextToken(i, token, tag);
-      this.wordSet.addLabel(token);
+      this.wordSet.add(token);
       this.labelSet.addLabel(tag);
-    }
-    this.sentenceCnt++;
-    return newSentence;
-  }
-
-
-  /**
-   * Tokens are a list of words in form of conll strings.
-   * <li> the words are unlabeled
-   * <li> No lower case here of word
-   * <li> Using a dummy POS "UNK" encoded as -1
-   * @param tokens
-   */
-  public Sentence generateSentenceObjectFromConllUnLabeledSentence(List<String[]> tokens, int wordFormIndex) {
-
-    Sentence newSentence = new Sentence(tokens.size());
-    for (int i = 0; i < tokens.size(); i++) {
-      // Extract word and pos from conll sentence, create index for both
-      // and create sentence using word/pos index
-      // Using a dummy tag null
-      String token = tokens.get(i)[wordFormIndex];
-      newSentence.addNextToken(i, token, null);
-      this.wordSet.addLabel(token);
     }
     this.sentenceCnt++;
     return newSentence;
@@ -127,11 +110,12 @@ public class Data {
    * <li> the words are unlabeled
    * <li> No lower case here of word
    * <li> Using a dummy POS "UNK" encoded as -1
+   * <p>
+   * Used in tagging only
+   *
    * @param tokens
    */
   public Sentence generateSentenceObjectFromUnlabeledTokens(List<String> tokens) {
-
-    this.wordSet.clean();
 
     Sentence newSentence = new Sentence(tokens.size());
     for (int i = 0; i < tokens.size(); i++) {
@@ -140,7 +124,6 @@ public class Data {
       // Using a dummy tag null
       String token = tokens.get(i);
       newSentence.addNextToken(i, token, null);
-      this.wordSet.addLabel(token);
     }
     this.sentenceCnt++;
     return newSentence;
@@ -167,25 +150,62 @@ public class Data {
 
   public void readLabelSet(Archivator archivator) {
 
+    System.out.println("Load label set from archive: " + this.labelMapFileName);
     this.labelSet.readFromArchive(archivator, this.labelMapFileName);
   }
 
 
   public void saveWordSet() {
 
-    this.wordSet.write(GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName));
+    List<String> sortedWordSet = new ArrayList<>(this.wordSet);
+    sortedWordSet.sort(null);
+
+    try {
+      Path wordSetPath = GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName);
+      Files.createDirectories(wordSetPath.getParent());
+      try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
+          wordSetPath, StandardCharsets.UTF_8))) {
+        for (String oneWord : sortedWordSet) {
+          out.println(oneWord);
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
   }
 
 
   public void readWordSet() {
 
-    this.wordSet.readFromPath(GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName));
+    Path wordSetPath = GlobalConfig.getModelBuildFolder().resolve(this.wordMapFileName);
+    try (BufferedReader in = Files.newBufferedReader(wordSetPath, StandardCharsets.UTF_8)) {
+      read(in);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 
   public void readWordSet(Archivator archivator) {
 
-    this.wordSet.readFromArchive(archivator, this.wordMapFileName);
+    System.out.println("\n++++\nLoad known vocabulary from archive: " + this.wordMapFileName);
+    try (BufferedReader in = new BufferedReader(
+        new InputStreamReader(archivator.getInputStream(this.wordMapFileName), "UTF-8"))) {
+      read(in);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  private void read(BufferedReader in)
+      throws IOException {
+
+    String line;
+    while ((line = in.readLine()) != null) {
+      this.wordSet.add(line);
+    }
   }
 
 

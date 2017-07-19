@@ -80,7 +80,6 @@ public class GNTagger {
     System.out.println("Load feature files with dim: " + dim);
     this.alphabet.loadFeaturesFromFiles(this.archivator, dim);
 
-    System.out.println("Load label set from archive: " + this.data.getLabelMapFileName());
     this.data.readLabelSet(this.archivator);
 
     System.out.println("Cleaning non-used variables in Alphabet and in Data:");
@@ -330,11 +329,8 @@ public class GNTagger {
 
     Data wordSetData = new Data();
     wordSetData.readWordSet(this.archivator);
-
-    System.out.println("\n++++\nLoad known vocabulary from archive training for evaluating OOV: "
-        + wordSetData.getWordMapFileName());
-    System.out.println(wordSetData.toString());
-    ConllEvaluator evaluator = new ConllEvaluator(wordSetData);
+    System.out.println(" words: " + wordSetData.getWordSet().size());
+    ConllEvaluator evaluator = new ConllEvaluator(wordSetData.getWordSet());
 
     for (String fileName : corpusConfig.getList(String.class, ConfigKeys.DEV_LABELED_DATA, Collections.emptyList())) {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
