@@ -97,8 +97,8 @@ public class WordShapeFeatureFactory {
 
   public void clean() {
 
-    this.word2signature = new HashMap<String, WordShapeFeature>();
-    this.index2signature = new TreeMap<Integer, String>();
+    this.word2signature.clear();
+    this.index2signature.clear();
   }
 
 

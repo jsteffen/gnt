@@ -85,7 +85,6 @@ public class GNTagger {
 
     System.out.println("Cleaning non-used variables in Alphabet and in Data:");
     this.alphabet.clean();
-    this.data.cleanWordSet();
 
     System.out.println("Initialize offsets:");
     this.offSets = new OffSets(this.alphabet, this.data, this.windowSize);
@@ -156,6 +155,8 @@ public class GNTagger {
   public void tagFile(Path sourcePath, String inEncode, String outEncode)
       throws IOException {
 
+    Window.setWindowCnt(0);
+
     Path resultPath = Paths.get(sourcePath.toString() + ".GNT");
     try (BufferedReader in = Files.newBufferedReader(
         sourcePath, Charset.forName(inEncode));
@@ -185,6 +186,8 @@ public class GNTagger {
    */
   public String tagString(String inputString) {
 
+    Window.setWindowCnt(0);
+
     List<String> tokens = GntSimpleTokenizer.tokenize(inputString);
 
     Sentence sentence = tagUnlabeledTokens(tokens);
@@ -204,6 +207,8 @@ public class GNTagger {
    * @param tokens
    */
   public Sentence tagUnlabeledTokens(List<String> tokens) {
+
+    Window.setWindowCnt(0);
 
     // create internal sentence object
     Sentence sentence = this.data.generateSentenceObjectFromUnlabeledTokens(tokens);

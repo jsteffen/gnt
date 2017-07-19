@@ -172,8 +172,8 @@ public class WordDistributedFeatureFactory {
 
   public void clean() {
 
-    this.num2iw = new HashMap<Integer, String>();
-    this.num2word = new HashMap<Integer, String>();
+    this.num2iw.clear();
+    this.num2word.clear();
 
   }
 

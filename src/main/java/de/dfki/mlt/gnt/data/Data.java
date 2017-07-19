@@ -154,18 +154,6 @@ public class Data {
   }
 
 
-  public void cleanWordSet() {
-
-    this.wordSet = new SetIndexMap();
-  }
-
-
-  public void cleanLabelSet() {
-
-    this.labelSet = new SetIndexMap();
-  }
-
-
   public void cleanInstances() {
 
     this.instances = new ArrayList<Window>();
