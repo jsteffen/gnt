@@ -77,8 +77,11 @@ public final class CorpusProcessor {
 
     // language is required to distinguish between different NER source file formats
     String lang = "EN";
-    if (corpusConfig.getString(ConfigKeys.TAGGER_NAME).equals("DENER")) {
+    if (corpusConfig.getString(ConfigKeys.TAGGER_NAME).equals("DENER")
+        || corpusConfig.getString(ConfigKeys.TAGGER_NAME).contains("_DE_")) {
       lang = "DE";
+    } else if (corpusConfig.getString(ConfigKeys.TAGGER_NAME).contains("_ES_")) {
+      lang = "ES";
     }
 
     // transcode NER source files
@@ -161,6 +164,15 @@ public final class CorpusProcessor {
           .append(tokenizedLine[2] + "\t")
           .append(tokenizedLine[3] + "\t")
           .append(tokenizedLine[4]);
+    } else if (lang.equals("ES")) {
+      // ES
+      // Sao B-LOC
+      // index Sao _ _ B-LOC
+      output.append(index + "\t")
+      .append(tokenizedLine[0] + "\t")
+      .append("_\t")
+      .append("_\t")
+      .append(tokenizedLine[1]);
     }
     return output.toString();
   }
