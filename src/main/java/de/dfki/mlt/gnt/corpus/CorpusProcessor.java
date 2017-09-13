@@ -85,7 +85,8 @@ public final class CorpusProcessor {
     for (String fileName : nerSourceFilesToTranscode) {
       try {
         logger.info(fileName.trim());
-        transcodeNerSourceFileToConllFile(fileName.trim(), "ISO-8859-1", "utf-8", lang);
+        String sourceEncoding = corpusConfig.getString(ConfigKeys.LABELED_SOURCE_DATA_ENCODING);
+        transcodeNerSourceFileToConllFile(fileName.trim(), sourceEncoding, "utf-8", lang);
       } catch (IOException e) {
         e.printStackTrace();
       }
