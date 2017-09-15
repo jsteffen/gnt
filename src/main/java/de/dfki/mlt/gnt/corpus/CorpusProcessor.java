@@ -77,15 +77,19 @@ public final class CorpusProcessor {
 
     // language is required to distinguish between different NER source file formats
     String lang = "EN";
-    if (corpusConfig.getString(ConfigKeys.TAGGER_NAME).equals("DENER")) {
+    if (corpusConfig.getString(ConfigKeys.TAGGER_NAME).equals("DENER")
+        || corpusConfig.getString(ConfigKeys.TAGGER_NAME).contains("_DE_")) {
       lang = "DE";
+    } else if (corpusConfig.getString(ConfigKeys.TAGGER_NAME).contains("_ES_")) {
+      lang = "ES";
     }
 
     // transcode NER source files
     for (String fileName : nerSourceFilesToTranscode) {
       try {
         logger.info(fileName.trim());
-        transcodeNerSourceFileToConllFile(fileName.trim(), "ISO-8859-1", "utf-8", lang);
+        String sourceEncoding = corpusConfig.getString(ConfigKeys.LABELED_SOURCE_DATA_ENCODING);
+        transcodeNerSourceFileToConllFile(fileName.trim(), sourceEncoding, "utf-8", lang);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -160,6 +164,15 @@ public final class CorpusProcessor {
           .append(tokenizedLine[2] + "\t")
           .append(tokenizedLine[3] + "\t")
           .append(tokenizedLine[4]);
+    } else if (lang.equals("ES")) {
+      // ES
+      // Sao B-LOC
+      // index Sao _ _ B-LOC
+      output.append(index + "\t")
+      .append(tokenizedLine[0] + "\t")
+      .append("_\t")
+      .append("_\t")
+      .append(tokenizedLine[1]);
     }
     return output.toString();
   }

@@ -94,8 +94,8 @@ public class Data {
     for (int i = 0; i < tokens.size(); i++) {
       // Extract word and pos from conll sentence, create index for both
       // and create sentence using word/pos index
-      String token = tokens.get(i)[wordFormIndex];
-      String tag = tokens.get(i)[tagIndex];
+      String token = tokens.get(i)[wordFormIndex].trim();
+      String tag = tokens.get(i)[tagIndex].trim();
       newSentence.addNextToken(i, token, tag);
       this.wordSet.add(token);
       this.labelSet.addLabel(tag);
