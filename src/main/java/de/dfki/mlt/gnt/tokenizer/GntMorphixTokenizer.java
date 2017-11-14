@@ -23,7 +23,7 @@ public class GntMorphixTokenizer {
 
   // the last one should be #\^D, the Fill Down character
   private static final List<Character> SPECIAL_CHARS =
-      Arrays.asList('.', ',', ';', '!', '?', ':', '(', ')', '{', '}', '[', ']', '$', '€', '\'', '\b');
+      Arrays.asList('.', ',', ';', '!', '?', ':', '(', ')', '{', '}', '[', ']', '$', '€', '\'', '\b', '"');
 
   private static final List<Character> EOS_CHARS =
       Arrays.asList('.', '!', '?');
@@ -210,6 +210,7 @@ public class GntMorphixTokenizer {
     // This will be a loop which is terminated inside
     while (true) {
       logger.debug("Start: " + start + " end: " + end + " State " + state + " c: " + c);
+      //System.out.println("Start: " + start + " end: " + end + " State " + state + " c: " + c);
 
       if (end > il) {
         //if (this.createSentence) {
@@ -302,6 +303,7 @@ public class GntMorphixTokenizer {
               start = (1 + end);
             } else if (Character.isDigit(c)) {
               // do nothing
+
             } else {
               state = 1;
             }
@@ -310,8 +312,9 @@ public class GntMorphixTokenizer {
           break;
 
         case 3: // state three: floating point designated by #\,
+
           if ((c == '\0') || TOKEN_SEP_CHARS.contains(c)) {
-            String newToken = this.makeToken(start, (1 - end), this.lowerCase);
+            String newToken = this.makeToken(start, (end - 1), this.lowerCase);
             String cardinalString = convertToCardinal(newToken);
             this.tokenList.add(cardinalString);
             this.tokenList.add(",");
@@ -319,7 +322,7 @@ public class GntMorphixTokenizer {
             start = (1 + end);
           } else {
             if (SPECIAL_CHARS.contains(c)) {
-              String newToken = this.makeToken(start, (1 - end), this.lowerCase);
+              String newToken = this.makeToken(start, (end - 1), this.lowerCase);
               String cardinalString = convertToCardinal(newToken);
               this.tokenList.add(cardinalString);
               this.tokenList.add(",");
@@ -332,7 +335,7 @@ public class GntMorphixTokenizer {
                 // state = 5;
                 state = 2;
               } else {
-                String newToken = this.makeToken(start, (1 - end), this.lowerCase);
+                String newToken = this.makeToken(start, (end - 1), this.lowerCase);
                 String cardinalString = convertToCardinal(newToken);
                 this.tokenList.add(cardinalString);
                 this.tokenList.add(",");
