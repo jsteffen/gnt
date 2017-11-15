@@ -20,9 +20,9 @@ public class TestTrainPosTagger {
 //    gntTrainer.trainer(
 //        "src/main/resources/EnNerTagger.model.conf",
 //        "src/main/resources/EnNerTagger.corpus.conf");
-    gntTrainer.trainer(
-        "src/main/resources/DeNerKonvTagger.model.conf",
-        "src/main/resources/DeNerKonvTagger.corpus.conf");
+//    gntTrainer.trainer(
+//        "src/main/resources/DeNerKonvTagger.model.conf",
+//        "src/main/resources/DeNerKonvTagger.corpus.conf");
 //            gntTrainer.trainer(
 //                "src/main/resources/DePosTagger.model.conf",
 //                "src/main/resources/DePosTagger.corpus.conf");
@@ -38,9 +38,9 @@ public class TestTrainPosTagger {
     //        gntTrainer.trainer(
     //            "src/main/resources/DeMorphTagger.model.conf",
     //            "src/main/resources/DeMorphTagger.corpus.conf");
-//            gntTrainer.trainer(
-//                "src/main/resources/EnPosTagger.model.conf",
-//                "src/main/resources/EnPosTagger.corpus.conf");
+            gntTrainer.trainer(
+                "src/main/resources/EnPosTagger.model.conf",
+                "src/main/resources/EnPosTagger.corpus.conf");
     //        gntTrainer.trainer(
     //            "src/main/resources/BioNerTagger.model.conf",
     //            "src/main/resources/BioNerTagger.corpus.conf");
