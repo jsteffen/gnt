@@ -40,13 +40,12 @@ public class GntMorphixTokenizer {
   private boolean createSentence;
   private boolean isCandidateAbrev;
 
-  private String inputString;
+ private String inputString;
   private List<String> tokenList;
   private List<List<String>> sentenceList;
 
 
   public GntMorphixTokenizer(boolean lowerCase, boolean splitString) {
-
     this.lowerCase = lowerCase;
     this.splitString = splitString;
   }
@@ -153,17 +152,19 @@ public class GntMorphixTokenizer {
     }
   }
 
-
   private void extendSentenceList() {
-
+    PostProcessor postProcessor = new PostProcessor();
     // make a sentence
     if (!this.tokenList.isEmpty()) {
-        this.sentenceList.add(this.tokenList);
-      }
+      List<String> newSentence = postProcessor.postProcessTokenList(this.tokenList);
+      this.sentenceList.add(newSentence);
+    }
     // reset sensible class parameters
     this.createSentence = false;
     this.tokenList = new ArrayList<String>();
   }
+
+  // ****************************** Main tokenizer based on Morphix Lisp tokenizer
 
 
   /*
