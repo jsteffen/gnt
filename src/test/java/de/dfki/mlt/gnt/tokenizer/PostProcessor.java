@@ -184,21 +184,15 @@ public class PostProcessor {
           if (token.equals("`")) {
             tokenId = this.handleOpenPara(token, sentence, newSentence, tokenId, sentenceLength);
           } else
-        // if token is of form $dY or €dY split into & dY
+        // if token is of form $dY or €dY split into $ dY
+            // TODO handle also US $ 10 -> US$ 10
         if ((token.length() > 1) && ((token.charAt(0) == '$') || (token.charAt(0) == '€'))
             && Character.isDigit(token.charAt(1))) {
           newSentence.add(token.substring(0, 1));
           newSentence.add(token.substring(1));
           tokenId = tokenId - 1;
         } else
-        // Ignore ( or )
-        if ((token.equals("(") || token.equals(")"))) {
-          sentence.remove(tokenId);
-          tokenId--;
-          sentenceLength--;
-        }
-        // Nothing to handle
-        else {
+        {
           newSentence.add(token);
         }
       }

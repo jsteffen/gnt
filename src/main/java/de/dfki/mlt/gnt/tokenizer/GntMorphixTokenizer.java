@@ -112,10 +112,10 @@ public class GntMorphixTokenizer {
   private String convertToCardinalAndOrdinal(String newToken) {
 
     //    System.out.println("AAA:" + newToken+":AAA");
-    //    String cardinalString = newToken.substring(0, (newToken.length() - 1));
+        String cardinalString = newToken.substring(0, (newToken.length() - 1));
     //    String ordinalString = newToken;
     //    String outputString = cardinalString+"card:or:ord:"+ordinalString;
-    String outputString = newToken; //+":CARDORD";
+    String outputString = cardinalString;
     return outputString;
   }
 
@@ -153,6 +153,21 @@ public class GntMorphixTokenizer {
   }
 
 
+  private boolean isSingelCharSentence(List<String> tokenlist) {
+
+    return ((tokenlist.size() == 1)
+        && tokenlist.get(0).equals("\"")
+        &&
+        !this.sentenceList.isEmpty());
+  }
+
+  //TODO
+  // adapt this to handle abbreviations:
+  // if sentence starts with , or lowercase word, and last sentence last token is a small-enough word, then
+  // make last word as abbreviation (adding .) and concatenate the two sentences.
+  // Now, what if Sentence starts upper case or otherwise, and previous word would have been an abbreviation ?
+  // At least, get ride of setCandidateAbrev.
+
   private void extendSentenceList() {
 
     PostProcessor postProcessor = new PostProcessor();
@@ -160,12 +175,9 @@ public class GntMorphixTokenizer {
     if (!this.tokenList.isEmpty()) {
       List<String> newSentence = postProcessor.postProcessTokenList(this.tokenList);
 
-      if ((newSentence.size() == 1)
-          && newSentence.get(0).equals("\"")
-          &&
-          !this.sentenceList.isEmpty()) {
+      if (this.isSingelCharSentence(newSentence)) {
         List<String> prevSentence = this.sentenceList.get(this.sentenceList.size() - 1);
-        prevSentence.add("\"");
+        prevSentence.add(newSentence.get(0));
       } else {
 
         this.sentenceList.add(newSentence);
