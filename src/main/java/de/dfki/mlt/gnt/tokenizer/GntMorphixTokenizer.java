@@ -23,7 +23,7 @@ public class GntMorphixTokenizer {
 
   // the last one should be #\^D, the Fill Down character
   private static final List<Character> SPECIAL_CHARS =
-      Arrays.asList('.', ',', ';', '!', '?', ':', '(', ')', '{', '}', '[', ']', '$', '€', '\'', '\b', '"');
+      Arrays.asList('.', ',', ';', '!', '?', ':', '(', ')', '{', '}', '[', ']', '$', '€', '\'', '\b', '"', '`');
 
   private static final List<Character> EOS_CHARS =
       Arrays.asList('.', '!', '?');
@@ -152,14 +152,29 @@ public class GntMorphixTokenizer {
     }
   }
 
+
   private void extendSentenceList() {
+
     PostProcessor postProcessor = new PostProcessor();
     // make a sentence
     if (!this.tokenList.isEmpty()) {
       List<String> newSentence = postProcessor.postProcessTokenList(this.tokenList);
-      this.sentenceList.add(newSentence);
+
+      if ((newSentence.size() == 1)
+          && newSentence.get(0).equals("\"")
+          &&
+          !this.sentenceList.isEmpty()) {
+        List<String> prevSentence = this.sentenceList.get(this.sentenceList.size() - 1);
+        prevSentence.add("\"");
+      } else {
+
+        this.sentenceList.add(newSentence);
+      }
+
+      System.out.println("Out: " + this.sentenceList.get(this.sentenceList.size() - 1));
     }
     // reset sensible class parameters
+
     this.createSentence = false;
     this.tokenList = new ArrayList<String>();
   }
