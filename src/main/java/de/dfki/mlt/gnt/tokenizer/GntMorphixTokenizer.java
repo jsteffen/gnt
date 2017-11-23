@@ -28,6 +28,9 @@ public class GntMorphixTokenizer {
   private static final List<Character> EOS_CHARS =
       Arrays.asList('.', '!', '?');
 
+  private static final List<Character> NON_EOS_CHARS =
+      Arrays.asList(',');
+
   private static final List<Character> DELIMITER_CHARS =
       Arrays.asList('-', '_');
 
@@ -99,13 +102,13 @@ public class GntMorphixTokenizer {
 
   private String convertToCardinal(String newToken) {
 
-    return newToken; // +":CARD";
+    return newToken ; //+":CARD";
   }
 
 
   private String convertToOrdinal(String newToken) {
 
-    return newToken; //+":ORD";
+    return newToken ; //+":ORD";
   }
 
 
@@ -153,20 +156,52 @@ public class GntMorphixTokenizer {
   }
 
 
-  private boolean isSingelCharSentence(List<String> tokenlist) {
+  private boolean isSingleCharSentence(List<String> tokenlist) {
 
     return ((tokenlist.size() == 1)
-        && tokenlist.get(0).equals("\"")
+        &&
+        (
+            tokenlist.get(0).equals("\"")
+            ||
+            tokenlist.get(0).equals("'")
+            )
         &&
         !this.sentenceList.isEmpty());
   }
 
-  //TODO
-  // adapt this to handle abbreviations:
-  // if sentence starts with , or lowercase word, and last sentence last token is a small-enough word, then
-  // make last word as abbreviation (adding .) and concatenate the two sentences.
-  // Now, what if Sentence starts upper case or otherwise, and previous word would have been an abbreviation ?
-  // At least, get ride of setCandidateAbrev.
+  private boolean isCandidateAbrevIndicator(List<String> tokenlist){
+    String firstToken = tokenlist.get(0);
+
+    boolean isNonEosPunct = (NON_EOS_CHARS.contains(firstToken.charAt(0)))?true:false;
+    boolean startsWithLowerCase = (Character.isLowerCase(firstToken.charAt(0)))?true:false;
+
+    return ( isNonEosPunct || startsWithLowerCase);
+
+  }
+
+  private static int abrevLength = 5;
+
+
+  private boolean lastTokenIsCandidateAbrev(List<String> tokenlist){
+    boolean result = false;
+    String lastTokenBeforeEos = tokenlist.get(tokenlist.size()-2);
+
+    if (lastTokenBeforeEos.length() <= abrevLength) {
+      result = true;
+    }
+
+    return result;
+
+  }
+
+  private void makeSentenceWithAbrev(List<String> prevSentence, List<String> newSentence) {
+    String newLastToken = prevSentence.get(prevSentence.size()-2)+".";
+    prevSentence.remove((prevSentence.size() - 1));
+    prevSentence.remove((prevSentence.size() - 1));
+    prevSentence.add(newLastToken);
+    prevSentence.addAll(newSentence);
+
+  }
 
   private void extendSentenceList() {
 
@@ -174,16 +209,24 @@ public class GntMorphixTokenizer {
     // make a sentence
     if (!this.tokenList.isEmpty()) {
       List<String> newSentence = postProcessor.postProcessTokenList(this.tokenList);
+      if (this.isSingleCharSentence(newSentence)) {
 
-      if (this.isSingelCharSentence(newSentence)) {
         List<String> prevSentence = this.sentenceList.get(this.sentenceList.size() - 1);
         prevSentence.add(newSentence.get(0));
       } else {
+        if (this.isCandidateAbrevIndicator(newSentence)
+            &&
+            this.sentenceList.get(this.sentenceList.size() - 1) != null
+            &&
+            this.lastTokenIsCandidateAbrev(this.sentenceList.get(this.sentenceList.size() - 1))) {
+          List<String> prevSentence = this.sentenceList.get(this.sentenceList.size() - 1);
 
-        this.sentenceList.add(newSentence);
+          this.makeSentenceWithAbrev(prevSentence, newSentence);
+
+        } else {
+          this.sentenceList.add(newSentence);
+        }
       }
-
-      System.out.println("Out: " + this.sentenceList.get(this.sentenceList.size() - 1));
     }
     // reset sensible class parameters
 
@@ -238,7 +281,7 @@ public class GntMorphixTokenizer {
     // This will be a loop which is terminated inside
     while (true) {
       logger.debug("Start: " + start + " end: " + end + " State " + state + " c: " + c);
-      //System.out.println("Start: " + start + " end: " + end + " State " + state + " c: " + c);
+      // System.out.println("Start: " + start + " end: " + end + " State " + state + " c: " + c);
 
       if (end > il) {
         //if (this.createSentence) {

@@ -83,7 +83,6 @@ public class PostProcessor {
       else
         // ',', -> '',
         if (rightToken.equals("'")){
-          newSentence.remove((newSentence.size() - 1));
           newSentence.add("''");
           tokenId++;
 
@@ -106,7 +105,6 @@ public class PostProcessor {
       String rightToken = sentence.get(tokenId + 1);
 
       if (rightToken.equals("`")) {
-        newSentence.remove((newSentence.size() - 1));
         newSentence.add("``");
         tokenId++;
       } else {
