@@ -28,14 +28,15 @@ public class PostProcessor {
    */
 
 
-  //TODO use hashtables
-//cf. https://www.learnenglish.de/grammar/shortforms.html
+  // TODO use hashtables
+  // cf. https://www.learnenglish.de/grammar/shortforms.html
 
   static List<String> englishPositiveForms =
       Arrays.asList("i", "he", "she", "it", "we", "you", "what", "they", "them", "that", "there");
 
   static List<String> englishNegativeForms =
-      Arrays.asList("wasn", "doesn", "don", "weren", "didn", "hasn", "hadn", "can", "couldn", "mustn", "shan", "shouldn", "won", "wouldn");
+      Arrays.asList("wasn", "doesn", "don", "weren", "didn", "hasn", "hadn", "can", "couldn", "mustn", "shan",
+          "shouldn", "won", "wouldn");
 
   static List<String> englishCliticSuffix =
       Arrays.asList("s", "d", "re", "m", "ve", "ll");
@@ -76,18 +77,18 @@ public class PostProcessor {
           // skip "s" in the input
           tokenId++;
         } else {
+          // handle possessives; basically the them as above, but I leave it here for logical reasons
           newSentence.add(suffix);
           tokenId++;
         }
-      }
-      else
-        // ',', -> '',
-        if (rightToken.equals("'")){
-          newSentence.add("''");
-          tokenId++;
+      } else
+      // closing parenthesis ',', -> '',
+      if (rightToken.equals("'")) {
+        newSentence.add("''");
+        tokenId++;
 
       }
-      // what about plural genetives
+      // TODO plural possessives
       else {
         newSentence.add(token);
       }
@@ -97,7 +98,7 @@ public class PostProcessor {
     return tokenId;
   }
 
-  // `, `, -> ``
+  // opening parenthesis `, `, -> ``
   private int handleOpenPara(String token, List<String> sentence, List<String> newSentence, int tokenId,
       int sentenceLength) {
 
@@ -126,22 +127,29 @@ public class PostProcessor {
       String leftToken = sentence.get(tokenId - 1);
       String rightToken = sentence.get(tokenId + 1);
 
-//      System.out.println("In: " + sentence);
-//      System.out.println(tokenId + ": " + token);
-//      System.out.println(leftToken + " # " + rightToken);
+      //      System.out.println("In: " + sentence);
+      //      System.out.println(tokenId + ": " + token);
+      //      System.out.println(leftToken + " # " + rightToken);
 
       // Cases like M . T , but not M . ? or M . string
-      if (Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
-          && (rightToken.length() == 1)
-          && Character.isAlphabetic(rightToken.charAt(0))) {
+      if (
+          Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
+          &&
+          (rightToken.length() == 1)
+          &&
+          Character.isAlphabetic(rightToken.charAt(0))
+          ) {
         String newToken = newSentence.get(newSentence.size() - 1) + "." + rightToken;
         newSentence.remove((newSentence.size() - 1));
         newSentence.add(newToken);
         tokenId = tokenId + 1;
       } else
       // Cases like A . string
-      if (Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
-          && (rightToken.length() >= 1)) {
+      if (
+          Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
+          &&
+          (rightToken.length() >= 1)
+          ) {
         String newToken = newSentence.get(newSentence.size() - 1) + ".";
         newSentence.remove((newSentence.size() - 1));
         newSentence.add(newToken);
@@ -178,19 +186,17 @@ public class PostProcessor {
           List<Integer> result = this.handleCandidateAbreviation(token, sentence, newSentence, tokenId, sentenceLength);
           tokenId = result.get(0);
           sentenceLength = result.get(1);
+        } else if (token.equals("`")) {
+          tokenId = this.handleOpenPara(token, sentence, newSentence, tokenId, sentenceLength);
         } else
-          if (token.equals("`")) {
-            tokenId = this.handleOpenPara(token, sentence, newSentence, tokenId, sentenceLength);
-          } else
         // if token is of form $dY or €dY split into $ dY
-            // TODO handle also US $ 10 -> US$ 10
+        // TODO handle also US $ 10 -> US$ 10
         if ((token.length() > 1) && ((token.charAt(0) == '$') || (token.charAt(0) == '€'))
             && Character.isDigit(token.charAt(1))) {
           newSentence.add(token.substring(0, 1));
           newSentence.add(token.substring(1));
           tokenId = tokenId - 1;
-        } else
-        {
+        } else {
           newSentence.add(token);
         }
       }

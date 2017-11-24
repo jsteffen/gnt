@@ -41,7 +41,8 @@ public class GntMorphixTokenizer {
   private boolean splitString;
 
   private boolean createSentence;
-  private boolean isCandidateAbrev;
+  private boolean isCandidateAbbrev;
+  private static int abbrevLength = 5;
 
  private String inputString;
   private List<String> tokenList;
@@ -130,32 +131,32 @@ public class GntMorphixTokenizer {
   // also: capture some specific HTML patterns like "HTTP/1.1", cf. GarbageFilter
 
 
-  // works but often not enough, e.g., when abrev is at end of sentence or token is larger than 3 chars, e.g.,
+  // works but often not enough, e.g., when abbrev is at end of sentence or token is larger than 3 chars, e.g.,
   // bzw. domainname . de -> . als sentence boundary
   // I need left/right context
-  private void setCandidateAbrev(String token) {
+  private void setCandidateAbbrev(String token) {
 
-    logger.debug("Abrev? " + token);
+    logger.debug("Abbrev? " + token);
     if ((token.length() <= 3)) {
-      this.isCandidateAbrev = true;
+      this.isCandidateAbbrev = true;
     } else {
-      this.isCandidateAbrev = false;
-      logger.debug("this.isCandidateAbrev=" + this.isCandidateAbrev);
+      this.isCandidateAbbrev = false;
+      logger.debug("this.isCandidateAbbrev=" + this.isCandidateAbbrev);
     }
   }
-
 
   private void setCreateSentenceFlag(char c) {
 
     logger.debug("Create sent: " + c);
     if (EOS_CHARS.contains(c)
-        && !this.isCandidateAbrev) {
+        && !this.isCandidateAbbrev) {
       this.createSentence = true;
       logger.debug("this.createSentence=" + this.createSentence);
     }
   }
 
 
+  // Cases like ["], [']
   private boolean isSingleCharSentence(List<String> tokenlist) {
 
     return ((tokenlist.size() == 1)
@@ -169,7 +170,7 @@ public class GntMorphixTokenizer {
         !this.sentenceList.isEmpty());
   }
 
-  private boolean isCandidateAbrevIndicator(List<String> tokenlist){
+  private boolean isCandidateAbbrevIndicator(List<String> tokenlist){
     String firstToken = tokenlist.get(0);
 
     boolean isNonEosPunct = (NON_EOS_CHARS.contains(firstToken.charAt(0)))?true:false;
@@ -179,22 +180,24 @@ public class GntMorphixTokenizer {
 
   }
 
-  private static int abrevLength = 5;
 
+  private boolean lastTokenIsCandidateAbbrev(List<String> tokens) {
 
-  private boolean lastTokenIsCandidateAbrev(List<String> tokenlist){
     boolean result = false;
-    String lastTokenBeforeEos = tokenlist.get(tokenlist.size()-2);
 
-    if (lastTokenBeforeEos.length() <= abrevLength) {
-      result = true;
+    if (tokens.size() >= 2) {
+      String lastTokenBeforeEos = tokens.get(tokens.size() - 2);
+
+      if (lastTokenBeforeEos.length() <= abbrevLength) {
+        result = true;
+      }
     }
 
     return result;
 
   }
 
-  private void makeSentenceWithAbrev(List<String> prevSentence, List<String> newSentence) {
+  private void makeSentenceWithAbbrev(List<String> prevSentence, List<String> newSentence) {
     String newLastToken = prevSentence.get(prevSentence.size()-2)+".";
     prevSentence.remove((prevSentence.size() - 1));
     prevSentence.remove((prevSentence.size() - 1));
@@ -206,7 +209,6 @@ public class GntMorphixTokenizer {
   private void extendSentenceList() {
 
     PostProcessor postProcessor = new PostProcessor();
-    // make a sentence
     if (!this.tokenList.isEmpty()) {
       List<String> newSentence = postProcessor.postProcessTokenList(this.tokenList);
       if (this.isSingleCharSentence(newSentence)) {
@@ -214,14 +216,17 @@ public class GntMorphixTokenizer {
         List<String> prevSentence = this.sentenceList.get(this.sentenceList.size() - 1);
         prevSentence.add(newSentence.get(0));
       } else {
-        if (this.isCandidateAbrevIndicator(newSentence)
+        if (
+            (this.sentenceList.size() >= 1)
             &&
-            this.sentenceList.get(this.sentenceList.size() - 1) != null
+            (this.sentenceList.get(this.sentenceList.size() - 1) != null)
             &&
-            this.lastTokenIsCandidateAbrev(this.sentenceList.get(this.sentenceList.size() - 1))) {
+            this.isCandidateAbbrevIndicator(newSentence)
+            &&
+            this.lastTokenIsCandidateAbbrev(this.sentenceList.get(this.sentenceList.size() - 1))) {
           List<String> prevSentence = this.sentenceList.get(this.sentenceList.size() - 1);
 
-          this.makeSentenceWithAbrev(prevSentence, newSentence);
+          this.makeSentenceWithAbbrev(prevSentence, newSentence);
 
         } else {
           this.sentenceList.add(newSentence);
@@ -265,7 +270,7 @@ public class GntMorphixTokenizer {
 
     // Initialization
     this.createSentence = false;
-    this.isCandidateAbrev = false;
+    this.isCandidateAbbrev = false;
     this.inputString = inputStringParam;
     this.tokenList = new ArrayList<>();
     this.sentenceList = new ArrayList<>();
@@ -301,7 +306,6 @@ public class GntMorphixTokenizer {
         this.extendSentenceList();
       }
 
-
       switch (state) {
         // state actions
 
@@ -319,7 +323,7 @@ public class GntMorphixTokenizer {
               if (SPECIAL_CHARS.contains(c)) {
                 String newToken = this.makeToken(start, end, this.lowerCase);
                 this.tokenList.add(newToken);
-                this.setCandidateAbrev(newToken);
+                this.setCandidateAbbrev(newToken);
                 this.tokenList.add(Character.toString(c));
                 this.setCreateSentenceFlag(c);
                 state = 0;
@@ -339,7 +343,7 @@ public class GntMorphixTokenizer {
               String newToken = this.makeToken(start, end, this.lowerCase);
               this.tokenList.add(newToken);
               // newToken is a char-string like "!"
-              this.isCandidateAbrev = false;
+              this.isCandidateAbbrev = false;
               this.setCreateSentenceFlag(c);
               start++;
             } else {
