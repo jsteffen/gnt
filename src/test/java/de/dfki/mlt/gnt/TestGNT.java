@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +36,12 @@ public class TestGNT {
     for (Path oneFileToDelete : filesToDelete) {
       Files.delete(oneFileToDelete);
     }
+  }
+
+  @After
+  public void tearDown() throws IOException {
+
+    Utils.deleteFolder(GlobalConfig.getModelBuildFolder());
   }
 
 

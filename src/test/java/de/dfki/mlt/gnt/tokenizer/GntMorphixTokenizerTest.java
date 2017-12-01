@@ -39,14 +39,14 @@ public class GntMorphixTokenizerTest {
     List<List<String>> sentenceList = tokenizer.tokenize(text);
     logger.info(String.format("%n%s", GntMorphixTokenizer.sentenceListToString(sentenceList)));
     assertThat(sentenceList).hasSize(2);
-    assertThat(sentenceList.get(0)).hasSize(20);
+    assertThat(sentenceList.get(0)).hasSize(19);
     assertThat(sentenceList.get(1)).hasSize(6);
 
     tokenizer.setSplitString(true);
     List<List<String>> sentenceListWithSplit = tokenizer.tokenize(text);
     logger.info(String.format("%n%s", GntMorphixTokenizer.sentenceListToString(sentenceListWithSplit)));
     assertThat(sentenceListWithSplit).hasSize(2);
-    assertThat(sentenceListWithSplit.get(0)).hasSize(20);
+    assertThat(sentenceListWithSplit.get(0)).hasSize(19);
     assertThat(sentenceListWithSplit.get(1)).hasSize(6);
   }
 
@@ -89,7 +89,7 @@ public class GntMorphixTokenizerTest {
     List<List<String>> sentenceList = tokenizer.tokenize(text);
     logger.info(String.format("%n%s", GntMorphixTokenizer.sentenceListToString(sentenceList)));
     assertThat(sentenceList).hasSize(5);
-    assertThat(sentenceList.get(0)).hasSize(27);
+    assertThat(sentenceList.get(0)).hasSize(22);
     assertThat(sentenceList.get(1)).hasSize(14);
     assertThat(sentenceList.get(2)).hasSize(7);
     assertThat(sentenceList.get(3)).hasSize(3);
@@ -99,7 +99,7 @@ public class GntMorphixTokenizerTest {
     List<List<String>> sentenceListWithSplit = tokenizer.tokenize(text);
     logger.info(String.format("%n%s", GntMorphixTokenizer.sentenceListToString(sentenceListWithSplit)));
     assertThat(sentenceListWithSplit).hasSize(5);
-    assertThat(sentenceListWithSplit.get(0)).hasSize(27);
+    assertThat(sentenceListWithSplit.get(0)).hasSize(22);
     assertThat(sentenceListWithSplit.get(1)).hasSize(14);
     assertThat(sentenceListWithSplit.get(2)).hasSize(7);
     assertThat(sentenceListWithSplit.get(3)).hasSize(3);

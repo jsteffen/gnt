@@ -58,6 +58,9 @@ public final class Utils {
       throws IOException {
 
     List<Path> pathList = new ArrayList<>();
+    if (!Files.exists(path)) {
+      return pathList;
+    }
     try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path, glob)) {
       for (Path onePath : directoryStream) {
         pathList.add(onePath);
