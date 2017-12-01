@@ -28,6 +28,8 @@ public final class GlobalConfig {
   public static final String MODEL_CONFIG_FILE = "model.conf";
 
   private static final Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
+  private static final String DATA_FORMAT_STRING = "_yyyy-MM-dd_HH.mm.ss";
+
   private static PropertiesConfiguration instance;
 
 
@@ -50,7 +52,7 @@ public final class GlobalConfig {
       try {
         instance = builder.getConfiguration();
         // make model build folder unique by adding a time stamp
-        SimpleDateFormat sdf = new SimpleDateFormat("_yyyy-MM-dd_HH.mm.ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(DATA_FORMAT_STRING);
         instance.setProperty(ConfigKeys.MODEL_BUILD_FOLDER,
             instance.getString(ConfigKeys.MODEL_BUILD_FOLDER)
                 + sdf.format(new Timestamp(System.currentTimeMillis())));
@@ -70,6 +72,23 @@ public final class GlobalConfig {
    */
   public static Path getModelBuildFolder() {
 
+    return Paths.get(getInstance().getString(ConfigKeys.MODEL_BUILD_FOLDER));
+  }
+
+
+  /**
+   * Convenience method to create a new model build folder from config.
+   *
+   * @return model build folder
+   */
+  public static Path getNewModelBuildFolder() {
+
+    // make model build folder unique by adding a time stamp
+    SimpleDateFormat sdf = new SimpleDateFormat(DATA_FORMAT_STRING);
+    String oldModelBuildFolder = instance.getString(ConfigKeys.MODEL_BUILD_FOLDER);
+    instance.setProperty(ConfigKeys.MODEL_BUILD_FOLDER,
+        oldModelBuildFolder.substring(0, oldModelBuildFolder.length() - DATA_FORMAT_STRING.length())
+            + sdf.format(new Timestamp(System.currentTimeMillis())));
     return Paths.get(getInstance().getString(ConfigKeys.MODEL_BUILD_FOLDER));
   }
 

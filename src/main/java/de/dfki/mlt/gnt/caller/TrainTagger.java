@@ -2,14 +2,10 @@ package de.dfki.mlt.gnt.caller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
@@ -43,7 +39,7 @@ public class TrainTagger {
   public void trainer(String modelConfigFileName, String corpusConfigFileName, String modelArchiveName)
       throws IOException, ConfigurationException {
 
-    deleteFolder(GlobalConfig.getModelBuildFolder());
+    GlobalConfig.getNewModelBuildFolder();
 
     InputStream in = getClass().getClassLoader().getResourceAsStream(modelConfigFileName);
     if (in == null) {
@@ -73,35 +69,6 @@ public class TrainTagger {
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    }
-  }
-
-
-  private static void deleteFolder(Path path)
-      throws IOException {
-
-    try {
-      Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-            throws IOException {
-
-          Files.delete(file);
-          return FileVisitResult.CONTINUE;
-        }
-
-
-        @Override
-        public FileVisitResult postVisitDirectory(Path dir, IOException exc)
-            throws IOException {
-
-          Files.delete(dir);
-          return FileVisitResult.CONTINUE;
-        }
-      });
-    } catch (NoSuchFileException e) {
-      // nothing to do, file already deleted
     }
   }
 }
