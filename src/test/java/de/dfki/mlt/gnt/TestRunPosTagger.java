@@ -19,8 +19,8 @@ public class TestRunPosTagger {
 //    tagger.eval("src/main/resources/EnUniPosTagger.corpus.conf");
 //    GNTagger tagger = new GNTagger("resources/models/model_ENNER_2_0iw-1sent_FTTTT_MCSVM_CS.zip");
 //    tagger.eval("src/main/resources/EnNerTagger.corpus.conf");
-    GNTagger tagger = new GNTagger("resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip");
-    tagger.eval("src/main/resources/DeNerKonvTagger.corpus.conf");
+//    GNTagger tagger = new GNTagger("resources/models/model_DENERKONV_2_0iw-1sent_FTTTT_MCSVM_CS.zip");
+//    tagger.eval("src/main/resources/DeNerKonvTagger.corpus.conf");
 //    GNTagger tagger = new GNTagger("resources/models/model_BIONER_2_0iw-1sent_FFTTT_MCSVM_CS.zip");
 //    tagger.eval("src/main/resources/BioNerTagger.corpus.conf");
 //    GNTagger tagger = new GNTagger("resources/models/model_DETWEETPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
@@ -29,8 +29,8 @@ public class TestRunPosTagger {
 //    tagger.eval("src/main/resources/DeMorphTagger.corpus.conf");
 //    GNTagger tagger = new GNTagger("resources/models/model_DENER_2_0iw-1sent_FTTTT_MCSVM_CS.zip");
 //    tagger.eval("src/main/resources/DeNerTagger.corpus.conf");
-//    GNTagger tagger = new GNTagger("resources/models/model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
-//    tagger.eval("src/main/resources/EnPosTagger.corpus.conf");
+    GNTagger tagger = new GNTagger("src/test/resources/model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
+    tagger.eval("src/main/resources/EnPosTagger.corpus.conf");
 //    GNTagger tagger = new GNTagger("resources/models/model_DEPOS_2_0iw-1sent_FTTTF_MCSVM_CS.zip");
 //    tagger.eval("src/main/resources/DePosTagger.corpus.conf");
   }
