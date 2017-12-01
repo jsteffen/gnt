@@ -2,6 +2,8 @@ package de.dfki.mlt.gnt.config;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +49,11 @@ public final class GlobalConfig {
                   .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
       try {
         instance = builder.getConfiguration();
+        // make model build folder unique by adding a time stamp
+        SimpleDateFormat sdf = new SimpleDateFormat("_yyyy-MM-dd_HH.mm.ss");
+        instance.setProperty(ConfigKeys.MODEL_BUILD_FOLDER,
+            instance.getString(ConfigKeys.MODEL_BUILD_FOLDER)
+                + sdf.format(new Timestamp(System.currentTimeMillis())));
       } catch (ConfigurationException e) {
         logger.error(e.getLocalizedMessage(), e);
       }
