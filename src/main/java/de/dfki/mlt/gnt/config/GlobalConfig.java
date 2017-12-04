@@ -85,7 +85,7 @@ public final class GlobalConfig {
 
     // make model build folder unique by adding a time stamp
     SimpleDateFormat sdf = new SimpleDateFormat(DATA_FORMAT_STRING);
-    String oldModelBuildFolder = instance.getString(ConfigKeys.MODEL_BUILD_FOLDER);
+    String oldModelBuildFolder = getInstance().getString(ConfigKeys.MODEL_BUILD_FOLDER);
     instance.setProperty(ConfigKeys.MODEL_BUILD_FOLDER,
         oldModelBuildFolder.substring(0, oldModelBuildFolder.length() - DATA_FORMAT_STRING.length())
             + sdf.format(new Timestamp(System.currentTimeMillis())));
