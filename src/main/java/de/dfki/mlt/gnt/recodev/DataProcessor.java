@@ -41,6 +41,7 @@ public class DataProcessor {
 
 
   public DataProcessor(Tokenizer tokenizer, TokenNormalizer normalizer) {
+
     this.setTokenizer(tokenizer);
     this.setNormalizer(normalizer);
 
@@ -132,10 +133,11 @@ public class DataProcessor {
   }
 
 
-  //*****************************************************************************************************
+  //************************************************************************************************
 
   /**
-   * Receives a string, tokenizes it, normalizes the token and then inserts it into the dictionary set.
+   * Receives a string, tokenizes it, normalizes the token and then inserts it into
+   * the dictionary set.
    * @param line
    */
   // TODO check here: different tokenization, normalization, filtering, counting etc on token level
@@ -221,7 +223,7 @@ public class DataProcessor {
     }
   }
 
-  //******************************************************************************************************************
+  //************************************************************************************************
 
 
   /*
@@ -332,7 +334,8 @@ public class DataProcessor {
   public static void main(String[] args) {
 
     DataProcessor dp = new DataProcessor(new Tokenizer(), new TokenNormalizer());
-    System.out.println("Processing classified documents from: " + dp.getBasePath() + dp.getBaseDirectory());
+    System.out.println(
+        "Processing classified documents from: " + dp.getBasePath() + dp.getBaseDirectory());
 
     dp.processCorpusToCreateDataSets();
 

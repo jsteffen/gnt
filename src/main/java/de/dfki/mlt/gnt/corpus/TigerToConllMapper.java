@@ -133,7 +133,8 @@ public class TigerToConllMapper {
   /**
    * Gets a line which represents the token information in tiger export format.
    * Splitting the string is a bit complex, because the token elements are not always
-   * separated by a \t as I expected. Sometimes a tab can be empty, so I need to check this carefully.
+   * separated by a \t as I expected. Sometimes a tab can be empty, so I need to check
+   * this carefully.
    * Currently, I do not take into account other information than POS.
    * @param line
    * @param index
@@ -176,7 +177,8 @@ public class TigerToConllMapper {
 
   private String tiger2FromConllString(String line, int index) {
 
-    //4_9  Establishment  Establishment  _  NN  _  case=acc|number=sg|gender=neut  _  12  _  OA  _  _  _  _
+    // 4_9  Establishment  Establishment  _  NN  _  case=acc|number=sg|gender=neut
+    // _  12  _  OA  _  _  _  _
     String[] tokenizedLine = line.split("\t");
     String word = tokenizedLine[1];
     String lemma = tokenizedLine[2];
@@ -206,8 +208,8 @@ public class TigerToConllMapper {
 
 
   /**
-   * Parse the tiger export file and create three conll format files for train/devel/test according to
-   * Müller et al. 2013.
+   * Parse the tiger export file and create three conll format files for train/devel/test
+   * according to Müller et al. 2013.
    * Parsing is then quite straight.
    * @param sourceFileName
    * @param trainFile
@@ -217,7 +219,7 @@ public class TigerToConllMapper {
    */
   private void transcodeTigerExportSourcefile(
       String sourceFileName, String trainFile, String develFile, String testFile)
-          throws IOException {
+      throws IOException {
 
     BufferedReader reader = new BufferedReader(
         new InputStreamReader(
@@ -289,7 +291,8 @@ public class TigerToConllMapper {
   }
 
 
-  private void transcodeTigerConllSourcefile(String sourceFileName, String trainFile, String develFile, String testFile)
+  private void transcodeTigerConllSourcefile(
+      String sourceFileName, String trainFile, String develFile, String testFile)
       throws IOException {
 
     BufferedReader reader = new BufferedReader(
@@ -363,7 +366,8 @@ public class TigerToConllMapper {
   }
 
 
-  private void transcodeTigerSourcefile(String sourceFile, String train, String devel, String test) throws IOException {
+  private void transcodeTigerSourcefile(String sourceFile, String train, String devel, String test)
+      throws IOException {
 
     if (TigerToConllMapper.fromExport) {
       this.transcodeTigerExportSourcefile(sourceFile, train, devel, test);
@@ -380,7 +384,7 @@ public class TigerToConllMapper {
     TigerToConllMapper.fromExport = false;
     String sourceFile = (TigerToConllMapper.fromExport)
         ? "/Users/gune00/data/tigercorpus2/corpus/tiger_release_dec05.export"
-            : "/Users/gune00/data/tigercorpus2.2/tiger_release_aug07.corrected.16012013.conll09";
+        : "/Users/gune00/data/tigercorpus2.2/tiger_release_aug07.corrected.16012013.conll09";
     try {
       mapper.makePOSconll(sourceFile);
       mapper.makeMorphconll(sourceFile);

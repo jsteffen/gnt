@@ -14,6 +14,7 @@ final class ValueComparator implements Comparator<String> {
 
 
   ValueComparator(Map<String, Integer> base) {
+
     this.map = base;
   }
 

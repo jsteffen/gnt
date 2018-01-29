@@ -45,7 +45,8 @@ import de.dfki.mlt.gnt.data.Window;
  *
  * SolverType solver = SolverType.L2R_LR; // -s 0
  * double cost = 1.0;    // cost of constraints violation
- * double eps = 0.01; // stopping criteria; influences number of iterations performed, the higher the less
+ * double eps = 0.01; // stopping criteria;
+ *                       influences number of iterations performed, the higher the less
  *
  * Parameter parameter = new Parameter(solver, cost, eps);
  * Model model = Linear.train(problem, parameter);
@@ -60,8 +61,9 @@ import de.dfki.mlt.gnt.data.Window;
  * My idea is to create directly a FeatureNode list from a training instance
  * by using the relative indices from the alphabet and using corresponding offsets.
  * In order to do so, I need the tokenVectorSize in advance (non-incremental version) or
- * I need to create an intermediate representation with window-size many sublists of sublist (for the token
- * feature parts) with relative indices, for which I then create the final one (incremental version);
+ * I need to create an intermediate representation with window-size many sublists of sublist
+ * (for the token feature parts) with relative indices, for which I then create the final one
+ * (incremental version);
  * such a intermediate representation should be useful for testing anyway.
  * </code>
  * </pre>
@@ -109,13 +111,14 @@ public class TrainerInMem {
     if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
       try {
         Path libLinearInputPath =
-            GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER)
-            .resolve("liblinear_input_" + modelConfig.getModelName() + ".txt");
+            GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(
+                "liblinear_input_" + modelConfig.getModelName() + ".txt");
         if (libLinearInputPath.getParent() != null) {
           Files.createDirectories(libLinearInputPath.getParent());
         }
         // create and open the writerBuffer
-        this.modelInputFileWriter = Files.newBufferedWriter(libLinearInputPath, StandardCharsets.UTF_8);
+        this.modelInputFileWriter =
+            Files.newBufferedWriter(libLinearInputPath, StandardCharsets.UTF_8);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -235,10 +238,11 @@ public class TrainerInMem {
 
 
   /**
-   * For each token of a sentence create a window frame, add the label of the current sentence token wrt the window
-   * and store it in Data instances.
+   * For each token of a sentence create a window frame, add the label of the current sentence token
+   * wrt the window and store it in Data instances.
    * The latter is a global storage and stores all frames first, before the windows are filled.
-   * I do this because I do not know in advance the number of sentences and hence, the number of tokens in a file.
+   * I do this because I do not know in advance the number of sentences and hence, the number of
+   * tokens in a file.
    * @throws IOException
    */
   private void createWindowFramesFromSentence(Sentence sentence) {
@@ -251,7 +255,9 @@ public class TrainerInMem {
       // create local context for tagging t_i of size 2*windowSize+1 centered around t_i
 
       Window tokenWindow =
-          new Window(sentence, i, this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE), this.data, this.alphabet);
+          new Window(
+              sentence, i, this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE),
+              this.data, this.alphabet);
       tokenWindow.setLabelIndex(labelIndex);
 
       this.getData().getInstances().add(tokenWindow);
@@ -272,8 +278,10 @@ public class TrainerInMem {
    * <p>- collect conll tokens in list
    * <p>- create internal sentence object and label maps
    * <p>- create window frames and store in list (non-feature filled windows):
-   *      I do this, because each window is then filled iteratively when calling the trainer; it actually saves space
-   * <p>-  Finally, feature files for label set and word set lists are created and stored for taggerName
+   *      I do this, because each window is then filled iteratively when calling the trainer;
+   *      it actually saves space
+   * <p>- Finally, feature files for label set and word set lists are created and stored
+   *      for taggerName
    * @param trainingFileNames
    * @param max if -1 then infinite else max sentences are processed and then methods stops
    * @throws IOException
@@ -299,7 +307,8 @@ public class TrainerInMem {
 
             // create internal sentence object and label maps
             Sentence sentence =
-                this.data.generateSentenceObjectFromConllLabeledSentence(tokens, wordFormIndex, tagIndex);
+                this.data.generateSentenceObjectFromConllLabeledSentence(
+                    tokens, wordFormIndex, tagIndex);
 
             // System.out.println("In:  " + this.taggedSentenceToString());
 
@@ -408,7 +417,8 @@ public class TrainerInMem {
       int indexBefore = 0;
       for (Feature n : nodes) {
         if (n.getIndex() <= indexBefore) {
-          throw new IllegalArgumentException("feature nodes must be sorted by index in ascending order");
+          throw new IllegalArgumentException(
+              "feature nodes must be sorted by index in ascending order");
         }
       }
     }
@@ -460,7 +470,8 @@ public class TrainerInMem {
 
     this.createTrainingInstancesFromConllReader(trainingFileNames, max, wordFormIndex, tagIndex);
 
-    this.offSets = new OffSets(this.getAlphabet(), this.getData(), this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE));
+    this.offSets = new OffSets(
+        this.getAlphabet(), this.getData(), this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE));
 
     System.out.println("Offsets: " + this.getOffSets().toString());
     System.out.println("Sentences: " + this.getData().getSentenceCnt());
@@ -474,15 +485,18 @@ public class TrainerInMem {
     time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (time2 - time1));
 
-    System.out.println("Average window vector lenght: " + ProblemInstance.getCumLength() / Window.getWindowCnt());
+    System.out.println(
+        "Average window vector lenght: " + ProblemInstance.getCumLength() / Window.getWindowCnt());
     System.out.println("Approx. GB needed: "
-        + ((ProblemInstance.getCumLength() / Window.getWindowCnt()) * Window.getWindowCnt() * 8 + Window.getWindowCnt())
+        + ((ProblemInstance.getCumLength() / Window.getWindowCnt()) * Window.getWindowCnt() * 8
+            + Window.getWindowCnt())
             / 1000000000.0);
 
     // Do learning
     /*
      * If ModelInfo.saveModelInputFile=true, then close model input file stream
-     * but do not do training; useful if liblinear should be run directly from shell, e.g., using the C-implementation
+     * but do not do training; useful if liblinear should be run directly from shell,
+     * e.g., using the C-implementation
      */
     // NOTE this is the only place, where I make use of the model input file
     if (GlobalConfig.getBoolean(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE)) {
@@ -490,7 +504,8 @@ public class TrainerInMem {
       // Close the model input file writer buffer
       this.modelInputFileWriter.close();
       time2 = System.currentTimeMillis();
-      System.out.println("Complete time for creating  and writing model input file (msec): " + (time2 - time1));
+      System.out.println(
+          "Complete time for creating  and writing model input file (msec): " + (time2 - time1));
     } else {
       // ELSE DO training with java library
       time1 = System.currentTimeMillis();
@@ -501,8 +516,10 @@ public class TrainerInMem {
 
     // pack all files in model build folder
     Files.walkFileTree(GlobalConfig.getModelBuildFolder(), new SimpleFileVisitor<Path>() {
+
       @Override
       public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+
         if (!attrs.isDirectory()) {
           System.out.println(" add to archive: " + path);
           getArchivator().getFilesToPack().add(path);

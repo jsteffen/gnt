@@ -26,7 +26,8 @@ import de.dfki.mlt.gnt.config.GlobalConfig;
  * A class for creating the indicator words for a given text corpus
  * <li> each line of a text file corresponds to a sentence of lower-cased words
  * <li> depending on the corpus sources, some cleaning has to be done
- * <li> then term frequency TF is computed and finally a ranked list is computed in decreasing order of TF
+ * <li> then term frequency TF is computed and finally a ranked list is computed in
+ *      decreasing order of TF
  * <li> the final list is then output - either completely or only N highest terms
  * <p>
  * NOTE: it is open for other corpora as well
@@ -59,7 +60,8 @@ public class IndicatorWordsCreator {
   }
 
 
-  public void createIndicatorTaggerNameWords(CorpusConfig corpusConfig, double subSamplingThreshold) {
+  public void createIndicatorTaggerNameWords(
+      CorpusConfig corpusConfig, double subSamplingThreshold) {
 
     // reset instance
     this.lineCnt = 0;

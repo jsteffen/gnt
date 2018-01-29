@@ -90,10 +90,10 @@ public class ModelConfig extends PropertiesConfiguration {
       dim = 0;
     }
 
-    String modelName =
-        "model_" + taggerName + "_" + windowSize + "_" + dim + "iw" + numberOfSentences + "sent_"
-            + wordFeatString + shapeFeatString + suffixFeatString + clusterFeatString + labelFeatString + "_"
-            + solverType;
+    String modelName = "model_" + taggerName + "_" + windowSize + "_" + dim + "iw"
+        + numberOfSentences + "sent_" + wordFeatString + shapeFeatString + suffixFeatString
+        + clusterFeatString
+        + labelFeatString + "_" + solverType;
     return modelName;
   }
 }

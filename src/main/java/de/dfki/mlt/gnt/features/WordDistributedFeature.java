@@ -22,13 +22,16 @@ public class WordDistributedFeature {
 
 
   WordDistributedFeature(int n) {
+
     this.leftContext = new double[n + 1];
     this.rightContext = new double[n + 1];
   }
 
 
   public WordDistributedFeature(int n, int leftWordIndex, int rightWordIndex) {
-    // when a new word vector is initialized, all elements should be initialized with 0 -> in java the default
+
+    // when a new word vector is initialized, all elements should be initialized with 0
+    // -> in java the default
     this.leftContext = new double[n + 1];
     this.rightContext = new double[n + 1];
     this.updateWordVector(leftWordIndex, rightWordIndex);

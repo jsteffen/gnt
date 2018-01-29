@@ -12,8 +12,8 @@ import de.dfki.mlt.gnt.config.CorpusConfig;
 /**
  * A class for recovering corpus files which have been nomrlaized by class CorpusNormalizer.
  * That class saves the orig files to files with extension ".orig" before normalization is done.
- * The task of the CorpusRecoverer is to restore the original .conll and -sents.txt files and deleting
- * the .orig files afterwards.
+ * The task of the CorpusRecoverer is to restore the original .conll and -sents.txt files and
+ * deleting the .orig files afterwards.
  *
  * @author Günter Neumann, DFKI
  */
@@ -29,7 +29,8 @@ public final class CorpusRecoverer {
 
     File fileOrig = new File(fileNameOrig);
 
-    String fileNameCopy = (String)fileNameOrig.subSequence(0, (fileNameOrig.length() - ".orig".length()));
+    String fileNameCopy =
+        (String)fileNameOrig.subSequence(0, (fileNameOrig.length() - ".orig".length()));
     File fileCopyConll = new File(fileNameCopy);
 
     if (!fileOrig.exists()) {

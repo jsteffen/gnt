@@ -56,14 +56,16 @@ public class GNTagger {
     this.archivator = new Archivator(modelArchiveName);
     System.out.println("Extract archive ...");
     System.out.println("Set dataProps ...");
-    try (InputStream in = this.archivator.getInputStream(GlobalConfig.MODEL_CONFIG_FILE.toString())) {
+    try (InputStream in =
+        this.archivator.getInputStream(GlobalConfig.MODEL_CONFIG_FILE.toString())) {
       this.modelConfig = ModelConfig.create(in);
     }
     this.alphabet = new Alphabet(this.modelConfig);
 
     this.data = new Data();
 
-    initGNTagger(this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE), this.modelConfig.getInt(ConfigKeys.DIM));
+    initGNTagger(
+        this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE), this.modelConfig.getInt(ConfigKeys.DIM));
   }
 
 
@@ -97,7 +99,8 @@ public class GNTagger {
     System.out.println("Load model file from archive: " + this.modelConfig.getModelName() + ".txt");
 
     //this.setModel(Model.load(new File(this.getModelInfo().getModelFile())));
-    try (InputStream in = this.archivator.getInputStream(this.modelConfig.getModelName() + ".txt")) {
+    try (
+        InputStream in = this.archivator.getInputStream(this.modelConfig.getModelName() + ".txt")) {
       this.model = Linear.loadModel(new InputStreamReader(in, "UTF-8"));
     }
     System.out.println(".... DONE!");
@@ -254,7 +257,8 @@ public class GNTagger {
 
   /**
    * Iterate through all window frames:
-   * - create the feature vector: train=false means: handle unknown words; adjust=true: means adjust feature indices
+   * - create the feature vector: train=false means: handle unknown words; adjust=true:
+   *   means adjust feature indices
    * - create a problem instance -> mainly the feature vector
    * - and call the learner with model and feature vector
    * - save the predicted label in the corresponding field of the word in the sentence.
@@ -279,10 +283,11 @@ public class GNTagger {
       // Call the learner to predict the label
       prediction = (int)Linear.predict(this.model, problemInstance.getFeatureVector());
       /*
-        System.out.println(
-            "Word: " + this.data.getWordSet().getNum2label().get(this.data.getSentence().getWordArray()[i])
-                + "\tPrediction: " + this.data.getLabelSet().getNum2label().get(prediction));
-       */
+      System.out.println(
+          "Word: "
+              + this.data.getWordSet().getNum2label().get(this.data.getSentence().getWordArray()[i])
+              + "\tPrediction: " + this.data.getLabelSet().getNum2label().get(prediction));
+      */
 
       //  Here, I am assuming that sentence length equals # of windows
       // So store predicted label i to word i
@@ -320,7 +325,8 @@ public class GNTagger {
    * @param corpusConfigFileName
    *          corpus configuration file name
    */
-  public ConllEvaluator eval(String corpusConfigFileName) throws IOException, ConfigurationException {
+  public ConllEvaluator eval(String corpusConfigFileName)
+      throws IOException, ConfigurationException {
 
     CorpusConfig corpusConfig = CorpusConfig.create(corpusConfigFileName);
 
@@ -332,11 +338,13 @@ public class GNTagger {
     System.out.println(" words: " + wordSetData.getWordSet().size());
     ConllEvaluator evaluator = new ConllEvaluator(wordSetData.getWordSet());
 
-    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.DEV_LABELED_DATA, Collections.emptyList())) {
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.DEV_LABELED_DATA,
+        Collections.emptyList())) {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
-    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TEST_LABELED_DATA, Collections.emptyList())) {
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TEST_LABELED_DATA,
+        Collections.emptyList())) {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
@@ -346,7 +354,8 @@ public class GNTagger {
 
 
   // This is the current main caller for the GNTagger
-  private Path tagAndWriteFromConllDevelFile(String sourceFileName, int sentenceCnt, int wordFormIndex, int tagIndex)
+  private Path tagAndWriteFromConllDevelFile(
+      String sourceFileName, int sentenceCnt, int wordFormIndex, int tagIndex)
       throws IOException {
 
     long localTime1;
@@ -359,7 +368,8 @@ public class GNTagger {
 
     localTime1 = System.currentTimeMillis();
 
-    Path evalPath = this.tagAndWriteSentencesFromConllReader(sourceFileName, sentenceCnt, wordFormIndex, tagIndex);
+    Path evalPath = this.tagAndWriteSentencesFromConllReader(
+        sourceFileName, sentenceCnt, wordFormIndex, tagIndex);
 
     localTime2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (localTime2 - localTime1));
@@ -367,14 +377,16 @@ public class GNTagger {
     long tokenPerSec = (Window.getWindowCnt() * 1000) / (localTime2 - localTime1);
     System.out.println("Sentences: " + this.data.getSentenceCnt());
     System.out.println("Testing instances: " + Window.getWindowCnt());
-    System.out.println("Sentences/sec: " + (this.data.getSentenceCnt() * 1000) / (localTime2 - localTime1));
+    System.out.println(
+        "Sentences/sec: " + (this.data.getSentenceCnt() * 1000) / (localTime2 - localTime1));
     System.out.println("Words/sec: " + tokenPerSec);
 
     return evalPath;
   }
 
 
-  private Path tagAndWriteSentencesFromConllReader(String sourceFileName, int max, int wordFormIndex, int tagIndex)
+  private Path tagAndWriteSentencesFromConllReader(
+      String sourceFileName, int max, int wordFormIndex, int tagIndex)
       throws IOException {
 
     Path sourcePath = Paths.get(sourceFileName);
@@ -385,7 +397,8 @@ public class GNTagger {
     System.out.println("Create eval file: " + evalPath);
 
     try (BufferedReader conllReader = Files.newBufferedReader(sourcePath, StandardCharsets.UTF_8);
-        PrintWriter conllWriter = new PrintWriter(Files.newBufferedWriter(evalPath, StandardCharsets.UTF_8))) {
+        PrintWriter conllWriter =
+            new PrintWriter(Files.newBufferedWriter(evalPath, StandardCharsets.UTF_8))) {
 
       String line = "";
       List<String[]> tokens = new ArrayList<String[]>();
@@ -401,7 +414,8 @@ public class GNTagger {
           // create internal sentence object and label maps
           // Use specified label from conll file for evaluation purposes later
           Sentence sentence =
-              this.data.generateSentenceObjectFromConllLabeledSentence(tokens, wordFormIndex, tagIndex);
+              this.data.generateSentenceObjectFromConllLabeledSentence(
+                  tokens, wordFormIndex, tagIndex);
 
           // tag sentence object
           this.tagSentenceObject(sentence);
@@ -428,7 +442,8 @@ public class GNTagger {
   // LONDON NNP I-NP I-LOC -> 1  LONDON  NNP  I-NP  I-LOC
   // This is why I have 5 elements instead of 4
   private void writeTokensAndWithLabels(
-      PrintWriter conllWriter, List<String[]> tokens, Sentence sentence, int wordFormIndex, int tagIndex) {
+      PrintWriter conllWriter, List<String[]> tokens, Sentence sentence,
+      int wordFormIndex, int tagIndex) {
 
     for (int i = 0; i < tokens.size(); i++) {
       String[] token = tokens.get(i);

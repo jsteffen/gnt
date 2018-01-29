@@ -77,11 +77,13 @@ public class Archivator {
   public void pack() throws IOException {
 
     OutputStream dest =
-        Files.newOutputStream(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(this.archiveName));
+        Files.newOutputStream(
+            GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(this.archiveName));
     ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(dest));
 
     for (Path onePath : this.filesToPack) {
-      String zipEntry = GlobalConfig.getModelBuildFolder().relativize(onePath).normalize().toString();
+      String zipEntry =
+          GlobalConfig.getModelBuildFolder().relativize(onePath).normalize().toString();
       zipEntry = zipEntry.replaceAll("\\" + System.getProperty("file.separator"), "/");
       zipOut.putNextEntry(new ZipEntry(zipEntry));
       BufferedInputStream origin = new BufferedInputStream(Files.newInputStream(onePath));

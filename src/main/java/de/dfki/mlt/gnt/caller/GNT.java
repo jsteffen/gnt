@@ -89,7 +89,8 @@ public final class GNT {
    *         output files encoding name
    */
   public static void tag(
-      String modelArchiveName, String inputFolderName, String inputEncodingName, String outputEncodingName) {
+      String modelArchiveName, String inputFolderName,
+      String inputEncodingName, String outputEncodingName) {
 
     try {
       GNTagger tagger = new GNTagger(modelArchiveName);
@@ -101,8 +102,9 @@ public final class GNT {
 
 
   /*
-  private static PropertiesConfiguration loadConfig(String configName) throws ConfigurationException {
-
+  private static PropertiesConfiguration loadConfig(String configName)
+      throws ConfigurationException {
+  
     Parameters params = new Parameters();
     FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
         new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
@@ -221,7 +223,8 @@ public final class GNT {
     modeOption.setRequired(true);
     evalOptions.addOption(modeOption);
 
-    Option modelOption = new Option("model", true, "model, to be loaded from classpath or file system");
+    Option modelOption = new Option(
+        "model", true, "model, to be loaded from classpath or file system");
     modelOption.setRequired(true);
     modelOption.setArgName("file");
     evalOptions.addOption(modelOption);
@@ -243,7 +246,8 @@ public final class GNT {
     modeOption.setRequired(true);
     tagOptions.addOption(modeOption);
 
-    Option modelConfigOption = new Option("model", true, "model, to be loaded from classpath or file system");
+    Option modelConfigOption = new Option(
+        "model", true, "model, to be loaded from classpath or file system");
     modelConfigOption.setRequired(true);
     modelConfigOption.setArgName("file");
     tagOptions.addOption(modelConfigOption);
@@ -253,14 +257,15 @@ public final class GNT {
     inputOption.setArgName("folder");
     tagOptions.addOption(inputOption);
 
-    Option inputEncodingOption =
-        new Option("inEncode", true, String.format("input encoding (optional, default: %s)", IN_ENCODE_DEFAULT));
+    Option inputEncodingOption = new Option(
+        "inEncode", true,
+        String.format("input encoding (optional, default: %s)", IN_ENCODE_DEFAULT));
     inputEncodingOption.setRequired(false);
     inputEncodingOption.setArgName("encoding");
     tagOptions.addOption(inputEncodingOption);
 
-    Option outputEncodingOption =
-        new Option("outEncode", true, String.format("output encoding (optional, default: %s)", OUT_ENCODE_DEFAULT));
+    Option outputEncodingOption = new Option("outEncode", true,
+        String.format("output encoding (optional, default: %s)", OUT_ENCODE_DEFAULT));
     outputEncodingOption.setRequired(false);
     outputEncodingOption.setArgName("encoding");
     tagOptions.addOption(outputEncodingOption);

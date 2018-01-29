@@ -98,14 +98,14 @@
  * Approach for unpacking:
  * -  data.Alphabet.loadFeaturesFromArchive()
  * -  it calls all feature reading methods with archive as argument
- * -  the methods itself check inside whether archive contains its file name (only the file name) and if so
- *   retrieves the input stream and reads the file
+ * -  the methods itself check inside whether archive contains its file name (only the file name)
+ *    and if so retrieves the input stream and reads the file
  *   -  thus the archive-filename interface is within the feature class
  *   -  and should also work for new feature files
  *   -  note: I need unique file names which I currently have
  * -> DONE, but had to duplicate reading methods
- *   - because, in training phase I first compute the features files before training is started and then add their
- *     compressed version to the archive.
+ *   - because, in training phase I first compute the features files before training is started and
+ *     then add their compressed version to the archive.
  *   - in principle can be avoided if archive is used in
  *     trainer.GNTrainer.createTrainingFeatureFiles(String, String, int)
  * -> after archive is created delete the non-compressed features files

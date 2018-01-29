@@ -51,11 +51,13 @@ public class WordFeatures {
 
 
   public WordFeatures(String word) {
+
     this.word = word;
   }
 
 
   public WordFeatures(String word2, String l, String r) {
+
     this.word = word2;
     this.leftWord = l;
     this.rightWord = r;
@@ -253,7 +255,8 @@ public class WordFeatures {
     this.shapeOffset = this.rightOffset + offSets.getWvRightSize();
     this.suffixOffset = this.shapeOffset + offSets.getShapeSize();
     this.clusterIdOffset = this.suffixOffset + offSets.getSuffixSize();
-    this.clusterIdOffset = (alphabet.isWithLabelFeats()) ? this.clusterIdOffset : this.clusterIdOffset - 1;
+    this.clusterIdOffset =
+        (alphabet.isWithLabelFeats()) ? this.clusterIdOffset : this.clusterIdOffset - 1;
     this.labelOffset = this.clusterIdOffset + offSets.getClusterIdSize();
   }
 
@@ -332,7 +335,8 @@ public class WordFeatures {
   /**
    * boolean flag offline means: assume that known signatures have been pre-loaded into to memory
    * NOTE: even in training phase, signature are computed dynamically
-   * NOTE: we assume that a word has a unique signature so the list shape actually only contains a single element.
+   * NOTE: we assume that a word has a unique signature so the list shape actually only contains a
+   * single element.
    * NOTE: word is case-sensitive, because otherwise shape feature can be computed reliable!
    * @param word
    * @param index
@@ -341,7 +345,8 @@ public class WordFeatures {
    */
   // NOTE: it is an overhead to keep a list of shapes, because we always have a single element,
   // but it keeps code more transparent
-  private void fillShapeFeatures(String wordParam, int indexParam, Alphabet alphabet, boolean offline) {
+  private void fillShapeFeatures(String wordParam, int indexParam, Alphabet alphabet,
+      boolean offline) {
 
     int wordShapeIndex = alphabet.getWordShapeFactory().getShapeFeature(wordParam, indexParam);
     if (wordShapeIndex > -1) {
@@ -378,7 +383,8 @@ public class WordFeatures {
      */
     // since word is from input stream, need to lower-case it first
     String lowWord = wordParam.toLowerCase();
-    List<Integer> suffixIndices = alphabet.getWordSuffixFactory().getAllKnownSubstringsForWord(lowWord);
+    List<Integer> suffixIndices =
+        alphabet.getWordSuffixFactory().getAllKnownSubstringsForWord(lowWord);
     //if (suffixIndices.isEmpty()) System.err.println("No known suffixes: " + word);
     for (int x : suffixIndices) {
       int realIndex = (this.isAdjust()) ? (this.suffixOffset + x) : x;
@@ -393,7 +399,8 @@ public class WordFeatures {
   /**
    * boolean flag offline means: assume that known cluster IDs have been pre-loaded into to memory
    * NOTE: even in training phase, signature are computed dynamically
-   * NOTE: we assume that a word has a unique signature so the list cluster IDs actually only contains a single element.
+   * NOTE: we assume that a word has a unique signature so the list cluster IDs actually only
+   *       contains a single element.
    * NOTE: word is case-sensitive, because otherwise cluster IDs feature can be computed reliable!
    * @param word
    * @param alphabet
@@ -405,8 +412,12 @@ public class WordFeatures {
 
     int wordClusterIndex = alphabet.getWordClusterFactory().getClusterIdFeature(wordParam);
     if (wordClusterIndex > -1) {
-      int realIndex = (this.isAdjust()) ? (this.clusterIdOffset + wordClusterIndex) : wordClusterIndex;
-      //System.out.println("Word: " + word + " ClusterId: " + wordClusterIndex + " Realindex: " + realIndex);
+      int realIndex =
+          (this.isAdjust()) ? (this.clusterIdOffset + wordClusterIndex) : wordClusterIndex;
+      /*
+      System.out.println(
+          "Word: " + word + " ClusterId: " + wordClusterIndex + " Realindex: " + realIndex);
+      */
       Pair<Integer, Boolean> node = new Pair<Integer, Boolean>(realIndex, true);
       this.cluster.add(node);
     } else {
@@ -422,7 +433,8 @@ public class WordFeatures {
 
   private void fillLabelFeatures(String wordParam, Alphabet alphabet, boolean offline) {
 
-    int localLabelIndex = (this.getLabelIndex() > -1) ? this.getLabelIndex() : this.getOffSets().getLabelVectorSize();
+    int localLabelIndex =
+        (this.getLabelIndex() > -1) ? this.getLabelIndex() : this.getOffSets().getLabelVectorSize();
     int realIndex = (this.isAdjust()) ? (this.labelOffset + localLabelIndex) : localLabelIndex;
 
     /*

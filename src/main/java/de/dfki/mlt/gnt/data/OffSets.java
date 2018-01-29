@@ -17,16 +17,23 @@ public class OffSets {
   private int labelVectorSize = -1;
 
 
-  // This is the length of the feature vector of a window element, this is constant, as well is the window vector size
+  // This is the length of the feature vector of a window element, this is constant,
+  // as well is the window vector size
 
   public OffSets(Alphabet alphabet, Data data, int windowSize) {
 
-    this.wvLeftSize = (alphabet.isWithWordFeats()) ? alphabet.getWordVectorFactory().getIw2num().size() + 1 : 0;
-    // plus one for unknown word statistics, cf. features.WordDistributedFeature.WordDistributedFeature(int)
-    this.wvRightSize = (alphabet.isWithWordFeats()) ? alphabet.getWordVectorFactory().getIw2num().size() + 1 : 0;
-    this.suffixSize = (alphabet.isWithSuffixFeats()) ? alphabet.getWordSuffixFactory().getSuffix2num().size() : 0;
-    this.shapeSize = (alphabet.isWithShapeFeats()) ? alphabet.getWordShapeFactory().getSignature2index().size() : 0;
-    this.clusterIdSize = (alphabet.isWithClusterFeats()) ? alphabet.getWordClusterFactory().getClusterIdcnt() : 0;
+    this.wvLeftSize =
+        (alphabet.isWithWordFeats()) ? alphabet.getWordVectorFactory().getIw2num().size() + 1 : 0;
+    // plus one for unknown word statistics,
+    // cf. features.WordDistributedFeature.WordDistributedFeature(int)
+    this.wvRightSize =
+        (alphabet.isWithWordFeats()) ? alphabet.getWordVectorFactory().getIw2num().size() + 1 : 0;
+    this.suffixSize =
+        (alphabet.isWithSuffixFeats()) ? alphabet.getWordSuffixFactory().getSuffix2num().size() : 0;
+    this.shapeSize = (alphabet.isWithShapeFeats())
+        ? alphabet.getWordShapeFactory().getSignature2index().size() : 0;
+    this.clusterIdSize =
+        (alphabet.isWithClusterFeats()) ? alphabet.getWordClusterFactory().getClusterIdcnt() : 0;
     //TODO: check whether I need an extra 1 for the dummy label
     this.labelVectorSize = (alphabet.isWithLabelFeats()) ? data.getLabelSet().size() + 1 : 0;
     this.tokenVectorSize =
@@ -132,7 +139,8 @@ public class OffSets {
   }
 
 
-  // This is the length of the feature vector of a window element, this is constant, as well is the window vector size
+  // This is the length of the feature vector of a window element, this is constant,
+  // as well is the window vector size
 
   @Override
   public String toString() {

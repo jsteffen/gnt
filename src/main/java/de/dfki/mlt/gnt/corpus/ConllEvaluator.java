@@ -18,9 +18,10 @@ import de.dfki.mlt.gnt.data.Data;
 /**
  * This class takes as input a conll file of gold tags and predicted tags
  * <li> computes accuracy
- * <li> and writes out a file with extension .debug of all false tags in form of line number: word gold-tag
- * predicted-tag
- * <li> a file with extension .errs of all wrong tag-pairs gold-tag predicted-tag together with ist frequency
+ * <li> and writes out a file with extension .debug of all false tags in form of line number:
+ * word gold-tag predicted-tag
+ * <li> a file with extension .errs of all wrong tag-pairs gold-tag predicted-tag together with
+ *      ist frequency
  * <li> a file with extension .iob containing just the words and their predicetd tags
  *
  * @author Günter Neumann, DFKI
@@ -167,8 +168,9 @@ public class ConllEvaluator {
         + formatter.format(this.acc * 100) + "%");
     System.out.println("All OOV pos: " + goldOOVCnt + " Correct: " + correctOOVCnt + " Accuracy: "
         + formatter.format(this.accOOV * 100) + "%");
-    System.out.println("All InV pos: " + correctKnownWords + " Correct: " + correctFoundKnownWords + " Accuracy: "
-        + formatter.format(this.accInV * 100) + "%");
+    System.out.println("All InV pos: " + correctKnownWords
+        + " Correct: " + correctFoundKnownWords
+        + " Accuracy: " + formatter.format(this.accInV * 100) + "%");
   }
 
 

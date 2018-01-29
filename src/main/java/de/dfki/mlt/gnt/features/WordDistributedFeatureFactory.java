@@ -26,44 +26,33 @@ import de.dfki.mlt.gnt.config.GlobalConfig;
  * These are processed line wise, where each line corresponds to a tokenized lower-cased sentence.
  * The indicator words iw are used to define the dimension of left and right distributed vectors.
  * The index i corresponds to the rank iw_i+1, i.e., 0 == iw_1 ... n == iw_m.
- * The context vectors are extended by a n+1 element for counting omitted context (avoids zero vectors)
+ * The context vectors are extended by a n+1 element for counting omitted context
+ * (avoids zero vectors)
  * Steps:
  * - define dimension m
  * - read in indicator words make a mapping iw2num and num2iw
  * - define word2num and num2word map for the words to come.
- * - define distributedWordsTable: index corresponds to index of value of word2num; elements are instances of wordVector
+ * - define distributedWordsTable: index corresponds to index of value of word2num; elements are
+ *   instances of wordVector
  *
- * - read in file linewise; each line corresponds to a tokenized sentence and also has <s> and </s> boundaries
- *   (implicit)
- * - iterate through token list of sentence: means words are counted from left to right which will define word2num and
- *   num2word mapping
+ * - read in file linewise; each line corresponds to a tokenized sentence and also has <s> and </s>
+ *   boundaries (implicit)
+ * - iterate through token list of sentence: means words are counted from left to right which will
+ *   define word2num and num2word mapping
  * - for each word w_i:
- * - check whether already in word2num -> if false initialize word2num, num2word and word vector -> if true retrieve
- *   wordsVector(word2num)
- * - update left and right context with w_i-1 and w_i+1 by using iw2num(w_i-1); if iw2num is NULL then update last
- *   vector cell n+1
- * - when eof is reached, compute weight for non-zero frequencies of each word vector context element
- * - then create vocabulary file vocFilename.txt using num2word and vocVector.txt file that keeps the left and
- *   right vector
+ * - check whether already in word2num -> if false initialize word2num, num2word and word vector
+ *   -> if true retrieve wordsVector(word2num)
+ * - update left and right context with w_i-1 and w_i+1 by using iw2num(w_i-1); if iw2num is NULL
+ *   then update last vector cell n+1
+ * - when eof is reached, compute weight for non-zero frequencies of each word vector context
+ *   element
+ * - then create vocabulary file vocFilename.txt using num2word and vocVector.txt file that keeps
+ *   the left and right vector
  * - this way we obtain a static knowledge base of distributed vectors for a set of words
- * - finally, provide methods that enable reading and loading embedded word vectors from files directly.
+ * - finally, provide methods that enable reading and loading embedded word vectors from files
+ *   directly.
  * }
  * </pre>
- *
- * @author Günter Neumann, DFKI
- */
-/**
- *
- *
- * @author Günter Neumann, DFKI
- */
-/**
- *
- *
- * @author Günter Neumann, DFKI
- */
-/**
- *
  *
  * @author Günter Neumann, DFKI
  */
@@ -81,8 +70,8 @@ public class WordDistributedFeatureFactory {
   private Map<String, Integer> word2num = new HashMap<String, Integer>();
 
   // after word features are created or loaded, not more used
-  // stores num -> word -> is needed for creating the vocabulary file so that position in file corresponds
-  // to index and position of left/right vector files
+  // stores num -> word -> is needed for creating the vocabulary file so that position in
+  // file corresponds to index and position of left/right vector files
   private Map<Integer, String> num2word = new HashMap<Integer, String>();
 
   // keeps track of the word indices
@@ -90,10 +79,12 @@ public class WordDistributedFeatureFactory {
 
   // stores context vector of each word, whereby word is indexed using value of word2num
   // Once text is processed, table has to be sorted in increasing order
-  private Map<Integer, WordDistributedFeature> distributedWordsTable = new HashMap<Integer, WordDistributedFeature>();
+  private Map<Integer, WordDistributedFeature> distributedWordsTable =
+      new HashMap<Integer, WordDistributedFeature>();
 
 
   public WordDistributedFeatureFactory() {
+
   }
 
 
@@ -216,18 +207,21 @@ public class WordDistributedFeatureFactory {
 
   // NOW, create and fill the distributed word vectors
 
-  // Iterate from left to right through the words of a sentence and construct/extend distributed vector of each word
+  // Iterate from left to right through the words of a sentence and construct/extend distributed
+  // vector of each word
   // Check whether word is in first/last position of sentence
 
 
   // by adding <s> and </s> virtually,
-  // I do NOT treat them as individual words that should be tagged but I will count them as context elements.
+  // I do NOT treat them as individual words that should be tagged but I will count them as
+  // context elements.
   // THIS also means <s> and </s> are also not part of the indicator words
   //
-  // TODO: make a version that can be used during training and testing, were (strict) testing means: no updates
-  // in this way, unknown words can be handled and tested and eventually it can be decided to extend the vocabulary
-  // NOTE, that we incrementally extend the vocabulary, and thus can also incrementally update statistics
-  // and the training model
+  // TODO: make a version that can be used during training and testing, were (strict) testing means:
+  // no updates in this way, unknown words can be handled and tested and eventually it can be
+  // decided to extend the vocabulary
+  // NOTE, that we incrementally extend the vocabulary, and thus can also incrementally
+  // update statistics and the training model
   private void sentence2Bigrams(String[] sentence) {
 
     // sentence only contains a single word (or \newline)
@@ -238,14 +232,13 @@ public class WordDistributedFeatureFactory {
         // two word sentence
         if (i == 0) {
           word2Bigram("<BOUNDARY>", sentence[0], sentence[1]);
-        } else
+        } else if (i == (sentence.length - 1)) {
           // remaining two words
-          if (i == (sentence.length - 1)) {
-            word2Bigram(sentence[i - 1], sentence[i], "<BOUNDARY>");
-          } else {
-            // all others
-            word2Bigram(sentence[i - 1], sentence[i], sentence[i + 1]);
-          }
+          word2Bigram(sentence[i - 1], sentence[i], "<BOUNDARY>");
+        } else {
+          // all others
+          word2Bigram(sentence[i - 1], sentence[i], sentence[i + 1]);
+        }
       }
     }
   }
@@ -261,7 +254,8 @@ public class WordDistributedFeatureFactory {
     int wordIndex = determineWordIndex(word);
     int leftWordIndex = determineIwIndex(leftWord);
     int rightWordIndex = determineIwIndex(rightWord);
-    // TAKE CARE that context vector and word list index starts from 0 -> this is why they are called with x-1
+    // TAKE CARE that context vector and word list index starts from 0 -> this is why they are
+    // called with x-1
     updateDistributedWordsVector(wordIndex, leftWordIndex - 1, rightWordIndex - 1);
   }
 
@@ -301,22 +295,26 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  // Create or update the distributed word representation using the word and its current context elements
+  // Create or update the distributed word representation using the word and its current
+  // context elements
   private void updateDistributedWordsVector(int wordIndex, int leftWordIndex,
       int rightWordIndex) {
-    // create or update distributedWordVector of word, which is stored in updateDistributedWordsVector.get(wordIndex)
+    // create or update distributedWordVector of word, which is stored in
 
-    // NOTE: the list is generated incrementally from left to right, so that new elements are always added
-    // to the end of that array
-    // updating means: create and then access word vector and then adjust left and right context vectors by
-    // freq(bigram (leftWordIndex, wordIndex))
+    // updateDistributedWordsVector.get(wordIndex)
+
+    // NOTE: the list is generated incrementally from left to right, so that new elements are
+    // always added to the end of that array
+    // updating means: create and then access word vector and then adjust left and right context
+    // vectors by freq(bigram (leftWordIndex, wordIndex))
 
     //    System.out.println("Left: " + leftWordIndex+":"+num2iw.get(leftWordIndex+1)
     //        + " Word: " + wordIndex+":"+num2word.get(wordIndex)
     //        + " Right: " + rightWordIndex+":"+num2iw.get(rightWordIndex+1)
     //        );
     if (this.getDistributedWordsTable().containsKey(wordIndex)) {
-      this.getDistributedWordsTable().get(wordIndex).updateWordVector(leftWordIndex, rightWordIndex);
+      this.getDistributedWordsTable().get(wordIndex)
+          .updateWordVector(leftWordIndex, rightWordIndex);
       //System.out.println("Old:\n" + distributedWordsTable.get(wordIndex).toStringEncoded(num2iw));
     } else {
       WordDistributedFeature newWordVector = new WordDistributedFeature(
@@ -327,8 +325,8 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  //after all distributed word vectors have been computed, compute weights for the nonzero frequencies according
-  // to tf(x) = 1 + log(x)
+  // after all distributed word vectors have been computed, compute weights for the nonzero
+  // frequencies according to tf(x) = 1 + log(x)
   private void computeDistributedWordWeights() {
 
     for (int key : this.getDistributedWordsTable().keySet()) {
@@ -339,9 +337,9 @@ public class WordDistributedFeatureFactory {
 
   /**
    * A dummy for handling unknown words, if a word is tested in isolation.
-   * Word is known to be unknown in test phase, that is, it is not yet part of the distributed vector model
-   * but if a unknown feature vector is computed then it is added to the distributed feature vector as a side effect
-   * so next time it is known; in some sense it is cached
+   * Word is known to be unknown in test phase, that is, it is not yet part of the distributed
+   * vector model but if a unknown feature vector is computed then it is added to the distributed
+   * feature vector as a side effect so next time it is known; in some sense it is cached
    * @param word
    * @return
    */
@@ -359,7 +357,8 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  private WordDistributedFeature handleUnknownWordWithContext(String word, String leftWord, String rightWord) {
+  private WordDistributedFeature handleUnknownWordWithContext(
+      String word, String leftWord, String rightWord) {
 
     System.err.println("Unknown word in context: " + leftWord + ":" + word + ":" + rightWord);
     word2Bigram(leftWord, word, rightWord);
@@ -373,17 +372,20 @@ public class WordDistributedFeatureFactory {
 
 
   /**
-   * Returns the distributed word vector of a word. Only in non training phase handle unknown words phase
+   * Returns the distributed word vector of a word. Only in non training phase handle unknown
+   * words phase
    * @param word
    * @param unknown
    * @return
    */
-  public WordDistributedFeature getWordVector(String word, String leftWord, String rightWord, boolean train) {
+  public WordDistributedFeature getWordVector(
+      String word, String leftWord, String rightWord, boolean train) {
 
     if (getWord2num().containsKey(word)) {
       return getDistributedWordsTable().get(getWord2num().get(word));
     } else if (!train) {
-      WordDistributedFeature unknownWordVector = handleUnknownWordWithContext(word, leftWord, rightWord);
+      WordDistributedFeature unknownWordVector =
+          handleUnknownWordWithContext(word, leftWord, rightWord);
       return unknownWordVector;
     } else {
       return null;
@@ -394,7 +396,8 @@ public class WordDistributedFeatureFactory {
   /**
    * Read file line-wise - basically the same as in indicator words creator.
    * <p>NOTE: this means that the model is created incrementally;
-   * in principle corpus.DistributedWordVectorFactory.sentence2Bigrams(String[]) can be called after each word !
+   * in principle corpus.DistributedWordVectorFactory.sentence2Bigrams(String[]) can be
+   * called after each word !
    * as I do it in handleUnknownWordWithoutContext
    * @param fileName
    * @param type
@@ -467,11 +470,14 @@ public class WordDistributedFeatureFactory {
     }
   }
 
-  // after the above has been done, write out left and right context vectors separated by ### in a single file.
-  // The order follows the natural order in num2word, i.e., x-th  left context vector belongs x-th word.
+  // after the above has been done, write out left and right context vectors separated by
+  // ### in a single file.
+  // The order follows the natural order in num2word, i.e., x-th  left context vector belongs
+  // x-th word.
   // Same for right context.
   // Hence, sort distributedWordsTable according to natural order, and write value of entry key.
-  // To save space, only write non-zero weights in form of iw_index:weight -> leads to much smaller files
+  // To save space, only write non-zero weights in form of iw_index:weight
+  // -> leads to much smaller files
 
 
   // Store it only in ONE FILE:
@@ -495,10 +501,10 @@ public class WordDistributedFeatureFactory {
   }
 
 
-  // The following two functions are used to create word vectors from a list of relevant source files
-  // and then stored on file.
-  // I call the resulting files condensed because only non-zero weights are stored. This helps reducing space
-  // very much !
+  // The following two functions are used to create word vectors from a list of relevant
+  // source files and then stored on file.
+  // I call the resulting files condensed because only non-zero weights are stored. This helps
+  // reducing space very much !
 
   public void readGNTCorpus(CorpusConfig corpusConfig) {
 
@@ -535,7 +541,8 @@ public class WordDistributedFeatureFactory {
     this.writeVocabularyFile(vocPath);
 
     System.out.println("Write out left/right context vector files.");
-    Path vocContextPath = GlobalConfig.getModelBuildFolder().resolve("vocContext" + maxIndicatorWords + ".txt");
+    Path vocContextPath =
+        GlobalConfig.getModelBuildFolder().resolve("vocContext" + maxIndicatorWords + ".txt");
     this.writeContextFile(vocContextPath);
     System.out.println("Done!");
   }
@@ -571,7 +578,8 @@ public class WordDistributedFeatureFactory {
 
   // Read in a file where each line corresponds to a word. Create bijective index
   // starting with index 1.
-  private void readWordFile(Path path, Map<String, Integer> word2index, Map<Integer, String> index2word) {
+  private void readWordFile(
+      Path path, Map<String, Integer> word2index, Map<Integer, String> index2word) {
 
     try (BufferedReader in = Files.newBufferedReader(
         path, StandardCharsets.UTF_8)) {
@@ -591,8 +599,8 @@ public class WordDistributedFeatureFactory {
 
   // Read in a file where each line corresponds to a word. Create bijective index
   // starting with index 1.
-  private void readWordFile(Archivator archivator, String wordFileName, Map<String, Integer> word2index,
-      Map<Integer, String> index2word) {
+  private void readWordFile(Archivator archivator, String wordFileName,
+      Map<String, Integer> word2index, Map<Integer, String> index2word) {
 
     try (BufferedReader reader = new BufferedReader(
         new InputStreamReader(archivator.getInputStream(wordFileName), "UTF-8"))) {
@@ -677,7 +685,8 @@ public class WordDistributedFeatureFactory {
     System.out.println("Read vocabulary file: " + vocPath);
     this.readVocabularyFile(vocPath);
 
-    Path dwvPath = GlobalConfig.getModelBuildFolder().resolve("vocContext" + maxIndicatorWords + ".txt");
+    Path dwvPath =
+        GlobalConfig.getModelBuildFolder().resolve("vocContext" + maxIndicatorWords + ".txt");
     System.out.println("Read left/right context vector from file: " + dwvPath);
     this.readContextFile(dwvPath);
     System.out.println("Done!");

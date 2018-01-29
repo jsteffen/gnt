@@ -9,12 +9,13 @@ package de.dfki.mlt.gnt.features;
  * https://github.com/slavpetrov/berkeleyparser/blob/master/src/edu/berkeley/nlp/discPCFG/LexiconFeature.java
  * }
  * </pre>
- * Each word is mapped to a bit string encompassing 16 binary indicators that correspond to different orthographic
- * (e.g., does the word contain a digit, hyphen, upper case character) and morphological (e.g., does the
- * word end in -ed or -ing) features.
+ * Each word is mapped to a bit string encompassing 16 binary indicators that correspond to
+ * different orthographic (e.g., does the word contain a digit, hyphen, upper case character) and
+ * morphological (e.g., does the word end in -ed or -ing) features.
  * <p>There are 50 unique signatures in WSJ.
- * <p>We set the dimension of f_shape(w) that corresponds to the signature of w to 1 and all other dimensions to 0.
- * We note that the shape features we use were designed for English and probably would have to be adjusted for other
+ * <p>We set the dimension of f_shape(w) that corresponds to the signature of w to 1 and all other
+ * dimensions to 0. We note that the shape features we use were designed for English and probably
+ * would have to be adjusted for other
  * languages.
  *
  * @author Günter Neumann, DFKI
@@ -62,6 +63,7 @@ public class WordShapeFeature {
 
 
   public WordShapeFeature(String word, int wordIndex) {
+
     createShapeVectorFromWord(word, wordIndex);
   }
 
@@ -174,7 +176,8 @@ public class WordShapeFeature {
 
 
   /**
-   * Given a word and its index position in a string (0 means: start position, others means: inside sentence)
+   * Given a word and its index position in a string
+   * (0 means: start position, others means: inside sentence)
    * create a string which represent the signature of that word
    * @param word
    * @param wordIndex
