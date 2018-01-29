@@ -37,14 +37,16 @@ public class GntMorphixTokenizer {
   private static final List<Character> TOKEN_SEP_CHARS =
       Arrays.asList(' ', '\n', '\t');
 
+  private static int abbrevLength = 5;
+
   private boolean lowerCase;
   private boolean splitString;
 
   private boolean createSentence;
   private boolean isCandidateAbbrev;
-  private static int abbrevLength = 5;
 
- private String inputString;
+
+  private String inputString;
   private List<String> tokenList;
   private List<List<String>> sentenceList;
 
@@ -103,20 +105,20 @@ public class GntMorphixTokenizer {
 
   private String convertToCardinal(String newToken) {
 
-    return newToken ; //+":CARD";
+    return newToken; //+":CARD";
   }
 
 
   private String convertToOrdinal(String newToken) {
 
-    return newToken ; //+":ORD";
+    return newToken; //+":ORD";
   }
 
 
   private String convertToCardinalAndOrdinal(String newToken) {
 
     //    System.out.println("AAA:" + newToken+":AAA");
-        String cardinalString = newToken.substring(0, (newToken.length() - 1));
+    String cardinalString = newToken.substring(0, (newToken.length() - 1));
     //    String ordinalString = newToken;
     //    String outputString = cardinalString+"card:or:ord:"+ordinalString;
     String outputString = cardinalString;
@@ -170,13 +172,13 @@ public class GntMorphixTokenizer {
         !this.sentenceList.isEmpty());
   }
 
-  private boolean isCandidateAbbrevIndicator(List<String> tokenlist){
+  private boolean isCandidateAbbrevIndicator(List<String> tokenlist) {
     String firstToken = tokenlist.get(0);
 
-    boolean isNonEosPunct = (NON_EOS_CHARS.contains(firstToken.charAt(0)))?true:false;
-    boolean startsWithLowerCase = (Character.isLowerCase(firstToken.charAt(0)))?true:false;
+    boolean isNonEosPunct = (NON_EOS_CHARS.contains(firstToken.charAt(0))) ? true : false;
+    boolean startsWithLowerCase = (Character.isLowerCase(firstToken.charAt(0))) ? true : false;
 
-    return ( isNonEosPunct || startsWithLowerCase);
+    return (isNonEosPunct || startsWithLowerCase);
 
   }
 
@@ -198,7 +200,7 @@ public class GntMorphixTokenizer {
   }
 
   private void makeSentenceWithAbbrev(List<String> prevSentence, List<String> newSentence) {
-    String newLastToken = prevSentence.get(prevSentence.size()-2)+".";
+    String newLastToken = prevSentence.get(prevSentence.size() - 2) + ".";
     prevSentence.remove((prevSentence.size() - 1));
     prevSentence.remove((prevSentence.size() - 1));
     prevSentence.add(newLastToken);

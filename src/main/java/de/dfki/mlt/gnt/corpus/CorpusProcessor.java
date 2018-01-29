@@ -169,10 +169,10 @@ public final class CorpusProcessor {
       // Sao B-LOC
       // index Sao _ _ B-LOC
       output.append(index + "\t")
-      .append(tokenizedLine[0] + "\t")
-      .append("_\t")
-      .append("_\t")
-      .append(tokenizedLine[1]);
+        .append(tokenizedLine[0] + "\t")
+        .append("_\t")
+        .append("_\t")
+        .append(tokenizedLine[1]);
     }
     return output.toString();
   }

@@ -12,7 +12,13 @@ import de.dfki.mlt.gnt.trainer.TrainerInMem;
  *
  * @author Günter Neumann, DFKI
  */
-public class TestTrainPosTagger {
+public final class TestTrainPosTagger {
+
+  private TestTrainPosTagger() {
+
+    // private constructor to enforce noninstantiability
+  }
+
 
   public static void main(String[] args) throws IOException, ConfigurationException {
     TrainTagger gntTrainer = new TrainTagger();

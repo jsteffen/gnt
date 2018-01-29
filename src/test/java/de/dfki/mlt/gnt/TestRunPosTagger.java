@@ -11,7 +11,13 @@ import de.dfki.mlt.gnt.tagger.GNTagger;
  *
  * @author Günter Neumann, DFKI
  */
-public class TestRunPosTagger {
+public final class TestRunPosTagger {
+
+  private TestRunPosTagger() {
+
+    // private constructor to enforce noninstantiability
+  }
+
 
   public static void main(String[] args) throws IOException, ConfigurationException {
 

@@ -6,6 +6,19 @@ import java.util.List;
 
 public class PostProcessor {
 
+  // TODO use hashtables
+  // cf. https://www.learnenglish.de/grammar/shortforms.html
+
+  private static List<String> englishPositiveForms =
+      Arrays.asList("i", "he", "she", "it", "we", "you", "what", "they", "them", "that", "there");
+
+  private static List<String> englishNegativeForms =
+      Arrays.asList("wasn", "doesn", "don", "weren", "didn", "hasn", "hadn", "can", "couldn", "mustn", "shan",
+          "shouldn", "won", "wouldn");
+
+  private static List<String> englishCliticSuffix =
+      Arrays.asList("s", "d", "re", "m", "ve", "ll");
+
   private boolean postProcess = true;
 
 
@@ -28,20 +41,6 @@ public class PostProcessor {
    */
 
 
-  // TODO use hashtables
-  // cf. https://www.learnenglish.de/grammar/shortforms.html
-
-  static List<String> englishPositiveForms =
-      Arrays.asList("i", "he", "she", "it", "we", "you", "what", "they", "them", "that", "there");
-
-  static List<String> englishNegativeForms =
-      Arrays.asList("wasn", "doesn", "don", "weren", "didn", "hasn", "hadn", "can", "couldn", "mustn", "shan",
-          "shouldn", "won", "wouldn");
-
-  static List<String> englishCliticSuffix =
-      Arrays.asList("s", "d", "re", "m", "ve", "ll");
-
-
   private int handleEnglishClitics(String token, List<String> sentence, List<String> newSentence, int tokenId,
       int sentenceLength) {
 
@@ -60,17 +59,15 @@ public class PostProcessor {
           newSentence.remove((newSentence.size() - 1));
           newSentence.add("n't");
           tokenId++;
-        }
-        // handle wouldn't etc.
-        else if (englishNegativeForms.contains(leftToken.toLowerCase())) {
+        } else if (englishNegativeForms.contains(leftToken.toLowerCase())) {
+          // handle wouldn't etc.
           newSentence.remove((newSentence.size() - 1));
           newSentence.add(leftToken.substring(0, leftToken.length() - 1));
           newSentence.add("n't");
           tokenId++;
         }
-      }
-      // handle 's 'd 're etc.
-      else if (englishCliticSuffix.contains(rightToken.toLowerCase())) {
+      } else if (englishCliticSuffix.contains(rightToken.toLowerCase())) {
+        // handle 's 'd 're etc.
         String suffix = "'" + rightToken;
         if (englishPositiveForms.contains(leftToken.toLowerCase())) {
           newSentence.add(suffix);
@@ -81,15 +78,13 @@ public class PostProcessor {
           newSentence.add(suffix);
           tokenId++;
         }
-      } else
-      // closing parenthesis ',', -> '',
-      if (rightToken.equals("'")) {
+      } else if (rightToken.equals("'")) {
+        // closing parenthesis ',', -> '',
         newSentence.add("''");
         tokenId++;
 
-      }
-      // TODO plural possessives
-      else {
+      } else {
+        // TODO plural possessives
         newSentence.add(token);
       }
     } else {
@@ -143,13 +138,11 @@ public class PostProcessor {
         newSentence.remove((newSentence.size() - 1));
         newSentence.add(newToken);
         tokenId = tokenId + 1;
-      } else
-      // Cases like A . string
-      if (
+      } else if (
           Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
           &&
-          (rightToken.length() >= 1)
-          ) {
+          (rightToken.length() >= 1)) {
+        // Cases like A . string
         String newToken = newSentence.get(newSentence.size() - 1) + ".";
         newSentence.remove((newSentence.size() - 1));
         newSentence.add(newToken);
@@ -180,19 +173,17 @@ public class PostProcessor {
         // Handle English clitics
         if (token.equals("'")) {
           tokenId = this.handleEnglishClitics(token, sentence, newSentence, tokenId, sentenceLength);
-        } else
-        // Handle non-eof dot sign
-        if (token.equals(".")) {
+        } else if (token.equals(".")) {
+          // Handle non-eof dot sign
           List<Integer> result = this.handleCandidateAbreviation(token, sentence, newSentence, tokenId, sentenceLength);
           tokenId = result.get(0);
           sentenceLength = result.get(1);
         } else if (token.equals("`")) {
           tokenId = this.handleOpenPara(token, sentence, newSentence, tokenId, sentenceLength);
-        } else
-        // if token is of form $dY or €dY split into $ dY
-        // TODO handle also US $ 10 -> US$ 10
-        if ((token.length() > 1) && ((token.charAt(0) == '$') || (token.charAt(0) == '€'))
+        } else if ((token.length() > 1) && ((token.charAt(0) == '$') || (token.charAt(0) == '€'))
             && Character.isDigit(token.charAt(1))) {
+          // if token is of form $dY or €dY split into $ dY
+          // TODO handle also US $ 10 -> US$ 10
           newSentence.add(token.substring(0, 1));
           newSentence.add(token.substring(1));
           tokenId = tokenId - 1;
