@@ -117,7 +117,8 @@ public final class CorpusProcessor {
             sourceEncoding));
 
     // init writer for line-wise file
-    String conllFileName = nerSourceFileName.substring(0, nerSourceFileName.lastIndexOf(".")) + ".conll";
+    String conllFileName =
+        nerSourceFileName.substring(0, nerSourceFileName.lastIndexOf(".")) + ".conll";
     PrintWriter writer = new PrintWriter(
         new BufferedWriter(
             new OutputStreamWriter(
@@ -169,10 +170,10 @@ public final class CorpusProcessor {
       // Sao B-LOC
       // index Sao _ _ B-LOC
       output.append(index + "\t")
-        .append(tokenizedLine[0] + "\t")
-        .append("_\t")
-        .append("_\t")
-        .append(tokenizedLine[1]);
+          .append(tokenizedLine[0] + "\t")
+          .append("_\t")
+          .append("_\t")
+          .append(tokenizedLine[1]);
     }
     return output.toString();
   }
@@ -218,7 +219,8 @@ public final class CorpusProcessor {
   /**
    * <pre>
    * {@code
-   * Reads in a file of sentences in CoNLL format and writes out each sentence lines-wise in a output file.
+   * Reads in a file of sentences in CoNLL format and writes out each sentence lines-wise in an
+   * output file.
    * CoNLL format:
    * - each word a line, sentence ends with newline
    * - word is at second position:

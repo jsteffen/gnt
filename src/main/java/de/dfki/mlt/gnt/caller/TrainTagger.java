@@ -36,7 +36,8 @@ public class TrainTagger {
    * @param modelArchiveName
    * @throws IOException
    */
-  public void trainer(String modelConfigFileName, String corpusConfigFileName, String modelArchiveName)
+  public void trainer(
+      String modelConfigFileName, String corpusConfigFileName, String modelArchiveName)
       throws IOException, ConfigurationException {
 
     GlobalConfig.getNewModelBuildFolder();

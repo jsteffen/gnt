@@ -21,21 +21,23 @@ import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  * Goal is to compute all lower-case suffixes from a training set of words.
- * For suffix s, we set the dimension corresponding to s in f_suffix(w) to 1 if lowercased w ends in s
- * and to 0 otherwise. Note that w is a suffix of itself.
+ * For suffix s, we set the dimension corresponding to s in f_suffix(w) to 1 if lowercased w ends
+ * in s and to 0 otherwise. Note that w is a suffix of itself.
  * <p>In FLORS: 91,161 suffix features from PTB - I guess - and PTB as about 32.500 words.
- * As far as I understand, a word should match just one suffix, so we have a very sparse vector in principle
- * but we can represent it for each word good, if we only have non-zero feature values.
- * For training it means we can determine, which suffix is particular for some POS tag, and for testing, we
- * simple compute it.
+ * As far as I understand, a word should match just one suffix, so we have a very sparse vector in
+ * principle but we can represent it for each word good, if we only have non-zero feature values.
+ * For training it means we can determine, which suffix is particular for some POS tag, and for
+ * testing, we simple compute it.
  * <p>
  * Current result when using PTB version three: #word: 32491 #suffixes: 98358
- * I have different numbers. I do not know how how exactly Flors defines word, but so maybe they have some filters.
+ * I have different numbers. I do not know how how exactly Flors defines word, but so maybe they
+ * have some filters.
  * I will use it, e.g., no number tokens or other specialized tokens.
  * I filter string which starts and ends with a digit.
  * This gives: #word: 28481 #suffixes: 91144
  * <p>
- * NOTE: in principle: file operation not really needed here, because will be later done in one training class
+ * NOTE: in principle: file operation not really needed here, because will be later done in one
+ * training class
  *
  * @author Günter Neumann, DFKI
  */
@@ -60,6 +62,7 @@ public class WordSuffixFeatureFactory {
 
 
   public WordSuffixFeatureFactory() {
+
   }
 
 
@@ -141,7 +144,7 @@ public class WordSuffixFeatureFactory {
   }
 
 
-  // ************************** Inserting or Updating extracted suffix/ngram **************************
+  // ************************** Inserting or Updating extracted suffix/ngram **********************
 
   /**
    * A number is a string which starts and ends with a digit.
@@ -157,7 +160,7 @@ public class WordSuffixFeatureFactory {
     return (Character.isDigit(lastChar)
         && Character.isDigit(firstChar));
   }
-  // ************************** Inserting or Updating extracted suffix/ngram **************************
+  // ************************** Inserting or Updating extracted suffix/ngram **********************
 
 
   private boolean hasLastNonLetter(String word) {
@@ -165,7 +168,7 @@ public class WordSuffixFeatureFactory {
     char lastChar = word.charAt(word.length() - 1);
     return !Character.isLetter(lastChar);
   }
-  // ************************** Inserting or Updating extracted suffix/ngram **************************
+  // ************************** Inserting or Updating extracted suffix/ngram **********************
 
 
   private boolean hasOnlyNonLetters(String token) {
@@ -180,7 +183,7 @@ public class WordSuffixFeatureFactory {
     }
     return isValid;
   }
-  // ************************** Inserting or Updating extracted suffix/ngram **************************
+  // ************************** Inserting or Updating extracted suffix/ngram **********************
 
 
   /**
@@ -191,13 +194,16 @@ public class WordSuffixFeatureFactory {
   private boolean isNonWord(String token) {
 
     return (false
-        //        (token.length() < 3) ||
-        //         hasLastNonLetter(token)
-        //                || hasOnlyNonLetters(token)
-        //                || isNumber(token)
-        );
+    /*
+    (token.length() < 3)
+    ||
+    hasLastNonLetter(token)
+    || hasOnlyNonLetters(token)
+    || isNumber(token)
+    */
+    );
   }
-  // ************************** Inserting or Updating extracted suffix/ngram **************************
+  // ************************** Inserting or Updating extracted suffix/ngram **********************
 
 
   // parameter i is just used as a flag for increasing the word counter
@@ -349,7 +355,7 @@ public class WordSuffixFeatureFactory {
     }
   }
 
-  // ************************** Inserting or Updating extracted suffix/ngram **************************
+  // ************************** Inserting or Updating extracted suffix/ngram **********************
 
 
   //*********************** generic caller ***********************

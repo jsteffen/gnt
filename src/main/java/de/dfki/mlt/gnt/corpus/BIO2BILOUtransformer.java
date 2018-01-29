@@ -57,6 +57,7 @@ public class BIO2BILOUtransformer {
 
 
   public BIO2BILOUtransformer(boolean conll2003) {
+
     if (conll2003) {
       this.labelPos = 4;
     } else {
@@ -99,30 +100,28 @@ public class BIO2BILOUtransformer {
         } catch (IOException e) {
           e.printStackTrace();
         }
-      } else
+      } else if (neLabel.startsWith("B-")) {
         // neLabel starts with B- and we have an open bioPhrase
         // covers cases like O I-PER I-PER B-PER-I-PER I-ORG
         // close open bioPhrase and make a new bioPhrase
-        if (neLabel.startsWith("B-")) {
+        // close, map and save open bioPhrase
+        mapAndWriteBioPhrase(writer);
+        // - and reset it
+        this.bioPhrase = new ArrayList<String>();
+        this.bioPhrase.add(line);
+      } else if (neLabel.startsWith("I-")) {
+        // should start with "I-"
+        if (this.bioPhraseLastElemHasSameLabel(neLabel)) {
+          // open bioPhrase and current token have same type
+          this.bioPhrase.add(line);
+        } else {
           // close, map and save open bioPhrase
           mapAndWriteBioPhrase(writer);
           // - and reset it
           this.bioPhrase = new ArrayList<String>();
           this.bioPhrase.add(line);
-        } else
-          // should start with "I-"
-          if (neLabel.startsWith("I-")) {
-            if (this.bioPhraseLastElemHasSameLabel(neLabel)) {
-              // open bioPhrase and current token have same type
-              this.bioPhrase.add(line);
-            } else {
-              // close, map and save open bioPhrase
-              mapAndWriteBioPhrase(writer);
-              // - and reset it
-              this.bioPhrase = new ArrayList<String>();
-              this.bioPhrase.add(line);
-            }
-          }
+        }
+      }
     }
   }
 
@@ -130,7 +129,8 @@ public class BIO2BILOUtransformer {
   private boolean bioPhraseLastElemHasSameLabel(String neLabel) {
 
     return (!this.bioPhrase.isEmpty()
-        && this.bioPhrase.get(this.bioPhrase.size() - 1).split(this.sepChar)[this.labelPos].equals(neLabel));
+        && this.bioPhrase.get(this.bioPhrase.size() - 1).split(this.sepChar)[this.labelPos]
+            .equals(neLabel));
   }
 
 
@@ -170,7 +170,8 @@ public class BIO2BILOUtransformer {
   }
 
 
-  // This actually changes the BOI tag to an BILOU tag, by copying the string and only change the label part
+  // This actually changes the BOI tag to an BILOU tag, by copying the string and only change
+  // the label part
   // TODO
   // Could be more efficient by using a internal data structure instead of the line.
   private String makeNewBilouLine(String bioLine, String neLabelPrefix) {

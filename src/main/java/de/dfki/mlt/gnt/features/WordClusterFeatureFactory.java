@@ -23,8 +23,8 @@ import de.dfki.mlt.gnt.config.GlobalConfig;
  * And then create a clusterId to index hash needed for liblinear encoding.
  * NOTE: words are case-sensitive !!
  *
- * Then create a new dictionary word2liblinearClusterId which directly maps a word to the integer representation
- * of liblinear;
+ * Then create a new dictionary word2liblinearClusterId which directly maps a word to the
+ * integer representation of liblinear;
  * This file should be saved and loaded for use in training and application phase.
  * This file should be part of Alphabet class.
  *
@@ -41,6 +41,7 @@ public class WordClusterFeatureFactory {
 
 
   public WordClusterFeatureFactory() {
+
   }
 
 

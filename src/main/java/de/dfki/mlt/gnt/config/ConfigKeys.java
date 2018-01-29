@@ -30,8 +30,10 @@ public final class ConfigKeys {
   public static final String WITH_SUFFIX_FEATS = "with.suffix.feats";
   public static final String WITH_CLUSTER_FEATS = "with.cluster.feats";
   public static final String WITH_LABEL_FEATS = "with.label.feats";
-  public static final String WORD_SUFFIX_FEATURE_FACTORY_NGRAM = "word.suffix.feature.factory.ngram";
-  public static final String WORD_SUFFIX_FEATURE_FACTORY_NGRAM_SIZE = "word.suffix.feature.factory.ngram.size";
+  public static final String WORD_SUFFIX_FEATURE_FACTORY_NGRAM =
+      "word.suffix.feature.factory.ngram";
+  public static final String WORD_SUFFIX_FEATURE_FACTORY_NGRAM_SIZE =
+      "word.suffix.feature.factory.ngram.size";
 
   // corpus config keys
   public static final String WORD_FORM_INDEX = "word.form.index";

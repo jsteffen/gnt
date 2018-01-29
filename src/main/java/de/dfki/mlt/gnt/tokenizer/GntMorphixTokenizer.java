@@ -8,10 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A reimplementation of our morphix-reader which is a very simple but effective and fast automaton for mapping a
- * string into a list of tokens.
+ * A reimplementation of our morphix-reader which is a very simple but effective and fast automaton
+ * for mapping a string into a list of tokens.
  * It handles cardinals and ordinals and special chars between words.
- * Punctuation are also isolated as single strings so can be used to split the token list into a list of sentences.
+ * Punctuation are also isolated as single strings so can be used to split the token list into a
+ * list of sentences.
  * Output tokens can be lowCased or not.
  * Currently, developed for EN/DE like languages.
  *
@@ -23,7 +24,9 @@ public class GntMorphixTokenizer {
 
   // the last one should be #\^D, the Fill Down character
   private static final List<Character> SPECIAL_CHARS =
-      Arrays.asList('.', ',', ';', '!', '?', ':', '(', ')', '{', '}', '[', ']', '$', '€', '\'', '\b', '"', '`');
+      Arrays.asList(
+          '.', ',', ';', '!', '?', ':', '(', ')', '{', '}', '[', ']', '$', '€', '\'',
+          '\b', '"', '`');
 
   private static final List<Character> EOS_CHARS =
       Arrays.asList('.', '!', '?');
@@ -52,6 +55,7 @@ public class GntMorphixTokenizer {
 
 
   public GntMorphixTokenizer(boolean lowerCase, boolean splitString) {
+
     this.lowerCase = lowerCase;
     this.splitString = splitString;
   }
@@ -81,8 +85,10 @@ public class GntMorphixTokenizer {
   }
 
 
-  // The idea is to define two points s and e which define a possible span over the input string vector.
-  // Depending on the type of char, a substring is extracted using current span information and a token is created.
+  // The idea is to define two points s and e which define a possible span over the input
+  // string vector.
+  // Depending on the type of char, a substring is extracted using current span information and a
+  // token is created.
   // By making a new string form the substring and eventually lower-case the char or not.
   // Thus the input string should be processed as a global variable
 
@@ -94,7 +100,8 @@ public class GntMorphixTokenizer {
 
     for (int i = 0; i < sl; i++) {
       c = (lowerCaseParam)
-          ? (Character.toLowerCase(this.inputString.charAt(i + start))) : this.inputString.charAt(i + start);
+          ? (Character.toLowerCase(this.inputString.charAt(i + start)))
+          : this.inputString.charAt(i + start);
       newToken.append(c);
     }
     //String outputString = newToken.toString()+"["+(start)+":"+(start+sl)+"]";
@@ -133,8 +140,8 @@ public class GntMorphixTokenizer {
   // also: capture some specific HTML patterns like "HTTP/1.1", cf. GarbageFilter
 
 
-  // works but often not enough, e.g., when abbrev is at end of sentence or token is larger than 3 chars, e.g.,
-  // bzw. domainname . de -> . als sentence boundary
+  // works but often not enough, e.g., when abbrev is at end of sentence or token is larger
+  // than 3 chars, e.g., bzw. domainname . de -> . als sentence boundary
   // I need left/right context
   private void setCandidateAbbrev(String token) {
 
@@ -146,6 +153,7 @@ public class GntMorphixTokenizer {
       logger.debug("this.isCandidateAbbrev=" + this.isCandidateAbbrev);
     }
   }
+
 
   private void setCreateSentenceFlag(char c) {
 
@@ -163,16 +171,16 @@ public class GntMorphixTokenizer {
 
     return ((tokenlist.size() == 1)
         &&
-        (
-            tokenlist.get(0).equals("\"")
+        (tokenlist.get(0).equals("\"")
             ||
-            tokenlist.get(0).equals("'")
-            )
+            tokenlist.get(0).equals("'"))
         &&
         !this.sentenceList.isEmpty());
   }
 
+
   private boolean isCandidateAbbrevIndicator(List<String> tokenlist) {
+
     String firstToken = tokenlist.get(0);
 
     boolean isNonEosPunct = (NON_EOS_CHARS.contains(firstToken.charAt(0))) ? true : false;
@@ -199,7 +207,9 @@ public class GntMorphixTokenizer {
 
   }
 
+
   private void makeSentenceWithAbbrev(List<String> prevSentence, List<String> newSentence) {
+
     String newLastToken = prevSentence.get(prevSentence.size() - 2) + ".";
     prevSentence.remove((prevSentence.size() - 1));
     prevSentence.remove((prevSentence.size() - 1));
@@ -207,6 +217,7 @@ public class GntMorphixTokenizer {
     prevSentence.addAll(newSentence);
 
   }
+
 
   private void extendSentenceList() {
 
@@ -218,8 +229,7 @@ public class GntMorphixTokenizer {
         List<String> prevSentence = this.sentenceList.get(this.sentenceList.size() - 1);
         prevSentence.add(newSentence.get(0));
       } else {
-        if (
-            (this.sentenceList.size() >= 1)
+        if ((this.sentenceList.size() >= 1)
             &&
             (this.sentenceList.get(this.sentenceList.size() - 1) != null)
             &&
@@ -251,8 +261,8 @@ public class GntMorphixTokenizer {
    *.
    * The original morphix-reader jumped from 3 and 4 to state 5
    * if the char followed the delimiter is a number.
-   * I think this is wrong, because it leads to a separation of the numbers after all 1+ delimiters, e.g.,
-   * 1,500,000 etc.
+   * I think this is wrong, because it leads to a separation of the numbers after all 1+ delimiters,
+   * e.g., 1,500,000 etc.
    * For that reason, I changed the FST so that it jumps back to state 2.
    * This will then keep all digits together, e.g., also in date like tokens of form:
    * 23.10.2016 or 1.2.3.4.5. or 3,4,5,6,6

@@ -78,7 +78,8 @@ public class NLPBA2ConllMapper {
         if (!line.startsWith("#")) {
           String[] stringVector = line.split("\t");
           lineCnt++;
-          String newLine = lineCnt + "\t" + stringVector[0] + "\t" + "X" + "\t" + "Y" + "\t" + stringVector[1];
+          String newLine =
+              lineCnt + "\t" + stringVector[0] + "\t" + "X" + "\t" + "Y" + "\t" + stringVector[1];
           writer.write(newLine);
           writer.newLine();
         }
@@ -139,7 +140,8 @@ public class NLPBA2ConllMapper {
   }
 
 
-  private static void normalizeUnlabeledFile4Marlin(String dir, String inFile, String outFile) throws IOException {
+  private static void normalizeUnlabeledFile4Marlin(String dir, String inFile, String outFile)
+      throws IOException {
 
     CorpusNormalizer.normalizeUnLabeledFile(dir + inFile, dir + outFile);
   }
@@ -149,12 +151,12 @@ public class NLPBA2ConllMapper {
 
     /*
     NLPBA2ConllMapper mapper = new NLPBA2ConllMapper();
-
+    
     NLPBA2ConllMapper.transformNLPBAToConllFile(mapper.makeFileName("nlpba-train.txt"),
         mapper.makeFileName("nlpba-train.conll"));
     NLPBA2ConllMapper.transformNLPBAToConllFile(mapper.makeFileName("nlpba-test.txt"),
         mapper.makeFileName("nlpba-test.conll"));
-
+    
     NLPBA2ConllMapper.transcodeConllToSentenceFile(mapper.makeFileName("nlpba-train.conll"),
         mapper.makeFileName("nlpba-train-sents.txt"));
     NLPBA2ConllMapper.transcodeConllToSentenceFile(mapper.makeFileName("nlpba-test.conll"),

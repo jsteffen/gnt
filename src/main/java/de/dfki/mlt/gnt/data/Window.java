@@ -18,7 +18,8 @@ import de.dfki.mlt.gnt.features.WordFeatures;
  */
 public class Window {
 
-  // Used to control the use of labels from left context as features in predicting label for current token
+  // Used to control the use of labels from left context as features in predicting label
+  // for current token
   private static boolean recurrent = false;
 
   private static int windowCnt = 0;
@@ -38,6 +39,7 @@ public class Window {
 
   public Window(Sentence sentence, int i, int windowSize, Data data,
       Alphabet alphabet) {
+
     Window.windowCnt++;
     this.windowSize = windowSize;
     this.alphabet = alphabet;
@@ -115,7 +117,8 @@ public class Window {
 
 
   /*
-   * I have to fill pads on either sides of a sentence, depending on windowSize l and sentence length max.
+   * I have to fill pads on either sides of a sentence, depending on windowSize l and sentence
+   * length max.
    * In order to do so, I distinguish for the window center i:
    * - leftPads -> number of left pads : if i < l then lp=l-i  else lp=0;
    * - leftContext -> number of left context elements -> lc=l-lp
@@ -133,13 +136,13 @@ public class Window {
    * }
    * </pre>
    * where center is a single element, and the other elements are sequences of elements
-   * depending on the actually value of this.windowSize; this means that the total number of elements
-   * is #|leftPads + leftContext| == this.windowSize
+   * depending on the actually value of this.windowSize; this means that the total number of
+   * elements is #|leftPads + leftContext| == this.windowSize
    * <p>
    * boolean train means: we are in the training mode
    * <p>
-   * boolean adjust means: add offsets to each index in order to get Liblinear-consitent feature names
-   * (numerical indices)
+   * boolean adjust means: add offsets to each index in order to get Liblinear-consitent
+   * feature names (numerical indices)
    * @param train
    * @param adjust
    */
@@ -149,7 +152,8 @@ public class Window {
     int max = this.sentence.getWords().length - 1; // Because elements are indexed from 0 upwards
     int leftPads = (this.center < this.windowSize) ? (this.windowSize - this.center) : 0;
     int leftContext = (this.windowSize - leftPads);
-    int rightContext = ((max - this.center) < this.windowSize) ? (max - this.center) : this.windowSize;
+    int rightContext =
+        ((max - this.center) < this.windowSize) ? (max - this.center) : this.windowSize;
     int rightPads = (this.windowSize - rightContext);
 
     // the surface word string determined from the training examples
@@ -165,7 +169,8 @@ public class Window {
     // based on value this.size;
     // NOTE Does not add label
 
-    // Add left padding elements to sentence (if any); needed later to correctly compute global offSets
+    // Add left padding elements to sentence (if any); needed later to correctly
+    // compute global offSets
 
     for (int i = 0; i < leftPads; i++) {
       // Make sure that center element does not cross sentence boundary
@@ -195,7 +200,8 @@ public class Window {
     Window.recurrent = false;
     // Add token center element
     wordString = this.sentence.getWords()[this.center];
-    wordFeatures = createWordFeatures(this.sentence, wordString, this.center, elementCnt, train, adjust);
+    wordFeatures =
+        createWordFeatures(this.sentence, wordString, this.center, elementCnt, train, adjust);
     this.windowLength += wordFeatures.getLength();
     this.elements.add(wordFeatures);
     elementCnt++;
@@ -234,17 +240,19 @@ public class Window {
    * @param adjust
    * @return
    */
-  private WordFeatures createWordFeatures(Sentence sentenceParam, String word, int wordPosition, int elementCnt,
+  private WordFeatures createWordFeatures(
+      Sentence sentenceParam, String word, int wordPosition, int elementCnt,
       boolean train, boolean adjust) {
 
     // Get left and right word of word -> later used for handing unknown words
     Pair<String, String> contextWords = getContextWords(sentenceParam, wordPosition);
     // create a new WordFeatures element
-    WordFeatures wordFeatures = new WordFeatures(word, contextWords.getLeft(), contextWords.getRight());
+    WordFeatures wordFeatures =
+        new WordFeatures(word, contextWords.getLeft(), contextWords.getRight());
     // set its index
     wordFeatures.setIndex(elementCnt);
-    // set its offsets using the values from OffSets which are pre-initialised after data has been loaded and before
-    // training starts
+    // set its offsets using the values from OffSets which are pre-initialised after data has been
+    // loaded and before training starts
     wordFeatures.setOffSets(this.alphabet, this.offSets);
     // indicate whether relative feature names (indices) should be adjusted to global ones according
     // to the rules of Liblinear
@@ -272,7 +280,10 @@ public class Window {
 
   private Pair<String, String> getContextWords(Sentence sentenceParam, int wordIndex) {
 
-    //System.out.println("Sentence: " + sentence.getWordArray().length + " Wordindex: " + wordIndex);
+    /*
+    System.out.println(
+        "Sentence: " + sentence.getWordArray().length + " Wordindex: " + wordIndex);
+    */
     String leftWord = (wordIndex == 0)
         ? "<BOUNDARY>" : this.sentence.getWords()[wordIndex - 1];
     String rightWord = (wordIndex >= sentenceParam.getWords().length - 1)
@@ -327,7 +338,8 @@ public class Window {
   @Override
   public String toString() {
 
-    String output = "Window index:" + Window.windowCnt + " Window label index: " + this.getLabelIndex() + "\n";
+    String output =
+        "Window index:" + Window.windowCnt + " Window label index: " + this.getLabelIndex() + "\n";
     output += "Window total length:" + this.getWindowLength() + "\n";
     for (WordFeatures wordFeatures : this.elements) {
       output += wordFeatures.toString();

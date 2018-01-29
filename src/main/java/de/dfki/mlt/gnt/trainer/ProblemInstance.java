@@ -14,8 +14,10 @@ import de.dfki.mlt.gnt.features.WordFeatures;
  * xList keeps the feature vector of i which is a FeatureNode[];
  * together with the max feature size
  * a problem is actually created;
- * <p>From de.dfki.lt.mdparser.parser.Trainer.constructProblem(List<Integer>, List<FeatureNode[]>, int)
- * problem.y is an array of size problem.l and each element keeps the label index of that training instance i
+ * <p>From de.dfki.lt.mdparser.parser.Trainer.constructProblem(
+ * List<Integer>, List<FeatureNode[]>, int)
+ * problem.y is an array of size problem.l and each element keeps the label index of that
+ * training instance i
  * problem.x is a parallel array where each element keeps the FeatureNode[]
  * the size of each  FeatureNode[] depends on non-zero values; each element is a feature node.
  * so, in order to use a similar approach, I would need to collect all labels and feature vectors of
@@ -31,6 +33,7 @@ public class ProblemInstance {
 
 
   public ProblemInstance() {
+
   }
 
 
@@ -53,8 +56,10 @@ public class ProblemInstance {
 
 
   /**
-   * Given a tokenWindow (which is a list of Wordfeatures (which each is a list of feature-value pairs)),
-   * compute a feature vector which is a naturally ordered enumeration of all feature values nodes of a problem instance
+   * Given a tokenWindow (which is a list of Wordfeatures
+   * (which each is a list of feature-value pairs)),
+   * compute a feature vector which is a naturally ordered enumeration of all feature values nodes
+   * of a problem instance
    * @param tokenWindow
    */
   public void createProblemInstanceFromWindow(Window tokenWindow) {
@@ -142,7 +147,8 @@ public class ProblemInstance {
 
   /**
    * Checks whether a feature vector is well-formed
-   * wrt. to the definition of liblinear which requires that the features in the vector are in natural order.
+   * wrt. to the definition of liblinear which requires that the features in the vector are
+   * in natural order.
    * <p>
    * It is activated when TrainerInMem.debug = true;
    * @param tokenWindow
@@ -155,8 +161,9 @@ public class ProblemInstance {
       FeatureNode x = this.featureVector[i];
       if (x.getIndex() <= lastValue) {
         System.err.println(tokenWindow.toString());
-        throw new IllegalArgumentException("GN: feature nodes must be sorted by index in ascending order: "
-            + lastValue + "..." + x.getIndex() + " i= " + i + " value: " + x.getValue());
+        throw new IllegalArgumentException(
+            "GN: feature nodes must be sorted by index in ascending order: "
+                + lastValue + "..." + x.getIndex() + " i= " + i + " value: " + x.getValue());
       }
       lastValue = x.getIndex();
     }

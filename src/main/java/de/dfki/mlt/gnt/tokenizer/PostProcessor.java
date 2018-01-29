@@ -13,8 +13,8 @@ public class PostProcessor {
       Arrays.asList("i", "he", "she", "it", "we", "you", "what", "they", "them", "that", "there");
 
   private static List<String> englishNegativeForms =
-      Arrays.asList("wasn", "doesn", "don", "weren", "didn", "hasn", "hadn", "can", "couldn", "mustn", "shan",
-          "shouldn", "won", "wouldn");
+      Arrays.asList("wasn", "doesn", "don", "weren", "didn", "hasn", "hadn", "can", "couldn",
+          "mustn", "shan", "shouldn", "won", "wouldn");
 
   private static List<String> englishCliticSuffix =
       Arrays.asList("s", "d", "re", "m", "ve", "ll");
@@ -41,8 +41,9 @@ public class PostProcessor {
    */
 
 
-  private int handleEnglishClitics(String token, List<String> sentence, List<String> newSentence, int tokenId,
-      int sentenceLength) {
+  private int handleEnglishClitics(
+      String token, List<String> sentence, List<String> newSentence,
+      int tokenId, int sentenceLength) {
 
     if (tokenId > 0 && tokenId < sentenceLength) {
       String leftToken = sentence.get(tokenId - 1);
@@ -74,7 +75,8 @@ public class PostProcessor {
           // skip "s" in the input
           tokenId++;
         } else {
-          // handle possessives; basically the them as above, but I leave it here for logical reasons
+          // handle possessives; basically the them as above,
+          // but I leave it here for logical reasons
           newSentence.add(suffix);
           tokenId++;
         }
@@ -93,9 +95,11 @@ public class PostProcessor {
     return tokenId;
   }
 
+
   // opening parenthesis `, `, -> ``
-  private int handleOpenPara(String token, List<String> sentence, List<String> newSentence, int tokenId,
-      int sentenceLength) {
+  private int handleOpenPara(
+      String token, List<String> sentence, List<String> newSentence,
+      int tokenId, int sentenceLength) {
 
     if (tokenId > 0 && tokenId < sentenceLength) {
       String rightToken = sentence.get(tokenId + 1);
@@ -113,9 +117,9 @@ public class PostProcessor {
   }
 
 
-  private List<Integer> handleCandidateAbreviation(String token, List<String> sentence, List<String> newSentence,
-      int tokenId,
-      int sentenceLength) {
+  private List<Integer> handleCandidateAbreviation(
+      String token, List<String> sentence, List<String> newSentence,
+      int tokenId, int sentenceLength) {
 
     List<Integer> result = new ArrayList<Integer>();
     if (tokenId > 0 && tokenId < sentenceLength) {
@@ -127,19 +131,16 @@ public class PostProcessor {
       //      System.out.println(leftToken + " # " + rightToken);
 
       // Cases like M . T , but not M . ? or M . string
-      if (
-          Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
+      if (Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
           &&
           (rightToken.length() == 1)
           &&
-          Character.isAlphabetic(rightToken.charAt(0))
-          ) {
+          Character.isAlphabetic(rightToken.charAt(0))) {
         String newToken = newSentence.get(newSentence.size() - 1) + "." + rightToken;
         newSentence.remove((newSentence.size() - 1));
         newSentence.add(newToken);
         tokenId = tokenId + 1;
-      } else if (
-          Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
+      } else if (Character.isAlphabetic(leftToken.charAt(leftToken.length() - 1))
           &&
           (rightToken.length() >= 1)) {
         // Cases like A . string
@@ -172,10 +173,12 @@ public class PostProcessor {
 
         // Handle English clitics
         if (token.equals("'")) {
-          tokenId = this.handleEnglishClitics(token, sentence, newSentence, tokenId, sentenceLength);
+          tokenId = this.handleEnglishClitics(
+              token, sentence, newSentence, tokenId, sentenceLength);
         } else if (token.equals(".")) {
           // Handle non-eof dot sign
-          List<Integer> result = this.handleCandidateAbreviation(token, sentence, newSentence, tokenId, sentenceLength);
+          List<Integer> result = this.handleCandidateAbreviation(
+              token, sentence, newSentence, tokenId, sentenceLength);
           tokenId = result.get(0);
           sentenceLength = result.get(1);
         } else if (token.equals("`")) {

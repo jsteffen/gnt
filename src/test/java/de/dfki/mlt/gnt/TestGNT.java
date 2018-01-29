@@ -31,12 +31,15 @@ public class TestGNT {
 
     Utils.deleteFolder(GlobalConfig.getModelBuildFolder());
     Utils.deleteFolder(GlobalConfig.getPath(ConfigKeys.EVAL_FOLDER));
-    List<Path> filesToDelete = Utils.getAllFilesFromFolder(Paths.get("src/test/resources"), "*.{zip,txt}");
-    filesToDelete.addAll(Utils.getAllFilesFromFolder(Paths.get("src/test/resources/input"), "*.GNT"));
+    List<Path> filesToDelete =
+        Utils.getAllFilesFromFolder(Paths.get("src/test/resources"), "*.{zip,txt}");
+    filesToDelete
+        .addAll(Utils.getAllFilesFromFolder(Paths.get("src/test/resources/input"), "*.GNT"));
     for (Path oneFileToDelete : filesToDelete) {
       Files.delete(oneFileToDelete);
     }
   }
+
 
   @After
   public void tearDown() throws IOException {
@@ -62,10 +65,12 @@ public class TestGNT {
       throws IOException, ConfigurationException {
 
     TrainTagger gntTrainer = new TrainTagger();
-    gntTrainer.trainer("src/test/resources/EnPosTagger.model.conf", "src/test/resources/EnPosTagger.corpus.conf");
+    gntTrainer.trainer("src/test/resources/EnPosTagger.model.conf",
+        "src/test/resources/EnPosTagger.corpus.conf");
 
     String modelName = "model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS";
-    assertThat(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(modelName + ".zip")).exists();
+    assertThat(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(modelName + ".zip"))
+        .exists();
 
     List<Path> modelFiles =
         Utils.getAllFilesFromFolder(GlobalConfig.getModelBuildFolder(), "*");
@@ -76,7 +81,8 @@ public class TestGNT {
     modelFiles.sort(null);
     expectedModelFiles.sort(null);
     for (int i = 0; i < modelFiles.size(); i++) {
-      assertThat(modelFiles.get(i).getFileName()).isEqualTo(expectedModelFiles.get(i).getFileName());
+      assertThat(modelFiles.get(i).getFileName())
+          .isEqualTo(expectedModelFiles.get(i).getFileName());
       assertThat(modelFiles.get(i)).usingCharset(StandardCharsets.UTF_8)
           .hasSameContentAs(expectedModelFiles.get(i), StandardCharsets.UTF_8);
     }
@@ -124,7 +130,8 @@ public class TestGNT {
     taggedFiles.sort(null);
     expectedTaggedFiles.sort(null);
     for (int i = 0; i < taggedFiles.size(); i++) {
-      assertThat(taggedFiles.get(i).getFileName()).isEqualTo(expectedTaggedFiles.get(i).getFileName());
+      assertThat(taggedFiles.get(i).getFileName())
+          .isEqualTo(expectedTaggedFiles.get(i).getFileName());
       assertThat(taggedFiles.get(i)).usingCharset(StandardCharsets.UTF_8)
           .hasSameContentAs(expectedTaggedFiles.get(i), StandardCharsets.UTF_8);
     }
@@ -138,12 +145,15 @@ public class TestGNT {
     GlobalConfig.getInstance().setProperty(ConfigKeys.CREATE_LIBLINEAR_INPUT_FILE, true);
 
     TrainTagger gntTrainer = new TrainTagger();
-    gntTrainer.trainer("src/test/resources/EnPosTagger.model.conf", "src/test/resources/EnPosTagger.corpus.conf");
+    gntTrainer.trainer("src/test/resources/EnPosTagger.model.conf",
+        "src/test/resources/EnPosTagger.corpus.conf");
     String modelName = "model_ENPOS_2_0iw-1sent_FTTTF_MCSVM_CS";
-    assertThat(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(modelName + ".zip")).exists();
+    assertThat(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(modelName + ".zip"))
+        .exists();
     String liblinearInputFileName = "liblinear_input_" + modelName + ".txt";
     assertThat(GlobalConfig.getPath(ConfigKeys.MODEL_OUTPUT_FOLDER).resolve(liblinearInputFileName))
         .usingCharset(StandardCharsets.UTF_8).hasSameContentAs(
-            Paths.get("src/test/resources/expected").resolve(liblinearInputFileName), StandardCharsets.UTF_8);
+            Paths.get("src/test/resources/expected").resolve(liblinearInputFileName),
+            StandardCharsets.UTF_8);
   }
 }

@@ -34,7 +34,6 @@ public final class ConlluToConllMapper {
   }
 
 
-
   /* Create corpusProp.xml file
    * E.g., conll/Arabic/arabicCorpusProps.xml
    * -> only used during training
@@ -46,9 +45,9 @@ public final class ConlluToConllMapper {
   /*
    * <!-- Tagger name -->
   <entry key="taggerName">FRUNIPOS</entry>
-
+  
   <!-- HERE ARE THE MAIN CORPUS BASED SETTINGS -->
-
+  
   <!-- Corpus access parameters: Index of relevant tags in conll format -->
   <entry key="wordFormIndex">1</entry>
   <entry key="posTagIndex">3</entry>
@@ -61,9 +60,12 @@ public final class ConlluToConllMapper {
   }
 
 
-  private static void writeLanguageConfigPropsFile(String languageName, String languageID) throws IOException {
+  private static void writeLanguageConfigPropsFile(
+      String languageName, String languageID)
+      throws IOException {
 
-    String configFilename = ConlluToConllMapper.conllPath + languageName + "/" + languageID + "corpusProps.xml";
+    String configFilename =
+        ConlluToConllMapper.conllPath + languageName + "/" + languageID + "corpusProps.xml";
     File file = new File(configFilename);
     FileOutputStream fileOut = new FileOutputStream(file);
     ConlluToConllMapper.configProps.storeToXML(fileOut, "Settings for corpus props");
@@ -79,29 +81,29 @@ public final class ConlluToConllMapper {
   /*
    * Example from FrUniPosTagger.xml
    * /GNT/src/main/resources/dataProps/FrUniPosTagger.xml
-
+  
    * <entry key="saveModelInputFile">false</entry>
-
+  
   <!-- Store wrong tag assignment in file resources/eval/*.debug -->
   <entry key="debug">false</entry>
-
+  
   <!-- Liblinear settings -->
   <entry key="solverType">MCSVM_CS</entry>
   <entry key="c">0.1</entry>
   <entry key="eps">0.3</entry>
-
+  
   <!-- Control parameters -->
   <entry key="windowSize">2</entry>
   <entry key="numberOfSentences">-1</entry>
   <entry key="dim">0</entry>
   <entry key="subSamplingThreshold">0.000000001</entry>
-
+  
   <!-- features (not) activated -->
   <entry key="withWordFeats">false</entry>
   <entry key="withShapeFeats">true</entry>
   <entry key="withSuffixFeats">true</entry>
   <entry key="withClusterFeats">false</entry>
-
+  
   <entry key="WordSuffixFeatureFactory.ngram">false</entry>
    */
 
@@ -129,9 +131,11 @@ public final class ConlluToConllMapper {
   }
 
 
-  private static void writeLanguageDataPropsFile(String languageName, String languageID) throws IOException {
+  private static void writeLanguageDataPropsFile(String languageName, String languageID)
+      throws IOException {
 
-    String configFilename = ConlluToConllMapper.conllPath + languageName + "/" + languageID + "dataProps.xml";
+    String configFilename =
+        ConlluToConllMapper.conllPath + languageName + "/" + languageID + "dataProps.xml";
     File file = new File(configFilename);
     FileOutputStream fileOut = new FileOutputStream(file);
     ConlluToConllMapper.dataProps.storeToXML(fileOut, "Settings for data props");
@@ -158,8 +162,8 @@ public final class ConlluToConllMapper {
    */
   private static String makeConlluFileName(String languageName, String languageID, String mode) {
 
-    String fileName =
-        ConlluToConllMapper.conlluPath + "UD_" + languageName + "-master/" + languageID + "-ud-" + mode + ".conllu";
+    String fileName = ConlluToConllMapper.conlluPath + "UD_" + languageName + "-master/"
+        + languageID + "-ud-" + mode + ".conllu";
     return fileName;
 
   }

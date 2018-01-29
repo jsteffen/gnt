@@ -19,11 +19,13 @@ import de.dfki.mlt.gnt.config.GlobalConfig;
 
 /**
  * For each word given, check all shape features and set bit vector map accordingly.
- * <p>Maintain a map of word - bit vector, so that a output file for the training set can be created - really needed ?
+ * <p>Maintain a map of word - bit vector, so that a output file for the training set can be
+ * created - really needed ?
  * Anyway, processing PTB should give me 50 different bit vectors instances (or signatures).
  * -> Basically I get only 49 !
  * <p>
- * NOTE: in principle: file operation not really needed here, because will be later done in one training class.
+ * NOTE: in principle: file operation not really needed here, because will be later done in one
+ * training class.
  * BUT then: take care that words are not lower cased, before calling this.
  *
  * @author Günter Neumann, DFKI
@@ -32,7 +34,8 @@ public class WordShapeFeatureFactory {
 
   // A mapping from word to Shape vector; used as a cache to avoid redundant computation
   // NOTE: need to distinguish whether word is at sentence initial position or not
-  // I do this by adding 0 or 1 as key value (but NOT when creating the shape, because otherwise I get wrong results)
+  // I do this by adding 0 or 1 as key value (but NOT when creating the shape, because otherwise
+  // I get wrong results)
 
   //TODO only used in ppPrint
   private Map<String, WordShapeFeature> word2signature = new HashMap<String, WordShapeFeature>();
@@ -56,6 +59,7 @@ public class WordShapeFeatureFactory {
 
 
   public WordShapeFeatureFactory() {
+
   }
 
 
@@ -136,7 +140,8 @@ public class WordShapeFeatureFactory {
           break;
         }
         lineCnt++;
-        // split off words -> it will be lower-cased as part of the process that computes the signatures
+        // split off words -> it will be lower-cased as part of the process that
+        // computes the signatures
         String[] words = line.split(" ");
         // then compute suffixes
         computeShapeVectorsFromWords(words);
@@ -187,7 +192,8 @@ public class WordShapeFeatureFactory {
   }
 
 
-  // NOTE: I need to take into account the loc value, either 0 or 1 to distinguish the position of a word
+  // NOTE: I need to take into account the loc value, either 0 or 1 to distinguish
+  // the position of a word
   private void determineSignatureType(String wordIn, int wordIndex) {
 
     String word = (wordIndex == 0) ? wordIn + "0" : wordIn + "1";
@@ -200,15 +206,20 @@ public class WordShapeFeatureFactory {
   }
 
 
-  // NOTE: I need to take into account the loc value, either 0 or 1 to distinguish the position of a word
+  // NOTE: I need to take into account the loc value, either 0 or 1 to distinguish
+  // the position of a word
   private void computeShapeVectorAndStore(String wordIn, int wordIndex) {
 
     String word = (wordIndex == 0) ? wordIn + "0" : wordIn + "1";
     if (!this.word2signature.containsKey(word)) {
       // NOTE: here, I need to use the original word for creating its shape !
       WordShapeFeature wordShapeVector = new WordShapeFeature(wordIn, wordIndex);
-      // this.wordCnt++;
-      //System.out.println("Word: " + word + " and Loc: " + wordIndex + " Sign: " + wordShapeVector.toString());
+      /*
+      this.wordCnt++;
+      System.out.println(
+          "Word: " + word + " and Loc: " + wordIndex + " Sign: " +
+              wordShapeVector.toString());
+      */
       this.word2signature.put(word, wordShapeVector);
     }
   }
@@ -259,7 +270,7 @@ public class WordShapeFeatureFactory {
   private void readShapeFeatureFile(Archivator archivator, String shapeFeatureFileName) {
 
     try (BufferedReader reader = new BufferedReader(
-          new InputStreamReader(archivator.getInputStream(shapeFeatureFileName), "UTF-8"))) {
+        new InputStreamReader(archivator.getInputStream(shapeFeatureFileName), "UTF-8"))) {
       int cnt = 1;
       String line;
       while ((line = reader.readLine()) != null) {

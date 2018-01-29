@@ -109,10 +109,12 @@ public class GNTrainer {
 
 
   // This is a method for on-demand creation of the feature files
-  private void createTrainingFeatureFiles(List<String> trainingFileNames, String clusterIdSourceFileName, int dim) {
+  private void createTrainingFeatureFiles(
+      List<String> trainingFileNames, String clusterIdSourceFileName, int dim) {
 
     String taggerName = this.modelConfig.getString(ConfigKeys.TAGGER_NAME);
-    System.out.println("Create feature files from: " + trainingFileNames + " and TaggerName: " + taggerName);
+    System.out.println(
+        "Create feature files from: " + trainingFileNames + " and TaggerName: " + taggerName);
 
     if (this.alphabet.isWithWordFeats()) {
       this.createWordVectors(dim);
@@ -129,7 +131,9 @@ public class GNTrainer {
   }
 
 
-  private void gntTrainingFromConllFile(List<String> trainingFileNames, int dim, int maxExamples) throws IOException {
+  private void gntTrainingFromConllFile(
+      List<String> trainingFileNames, int dim, int maxExamples)
+      throws IOException {
 
     String taggerName = this.modelConfig.getString(ConfigKeys.TAGGER_NAME);
 
@@ -145,7 +149,8 @@ public class GNTrainer {
     this.time2 = System.currentTimeMillis();
     System.out.println("System time (msec): " + (this.time2 - this.time1));
 
-    System.out.println("Create windows with size: " + this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE));
+    System.out.println(
+        "Create windows with size: " + this.modelConfig.getInt(ConfigKeys.WINDOW_SIZE));
     this.time1 = System.currentTimeMillis();
     System.out.println("Set window count: ");
     Window.setWindowCnt(0);
@@ -164,10 +169,12 @@ public class GNTrainer {
     System.out.println("Offsets: " + this.getTrainer().getOffSets().toString());
     System.out.println("Sentences: " + this.getTrainer().getData().getSentenceCnt());
     System.out.println("Feature instances size: " + this.getTrainer().getProblem().n);
-    System.out.println("Average window vector lenght: " + ProblemInstance.getCumLength() / Window.getWindowCnt());
+    System.out.println(
+        "Average window vector lenght: " + ProblemInstance.getCumLength() / Window.getWindowCnt());
     System.out.println("Training instances: " + this.getTrainer().getProblem().l);
     System.out.println("Approx. GB needed: "
-        + ((ProblemInstance.getCumLength() / Window.getWindowCnt()) * Window.getWindowCnt() * 8 + Window.getWindowCnt())
+        + ((ProblemInstance.getCumLength() / Window.getWindowCnt()) * Window.getWindowCnt() * 8
+            + Window.getWindowCnt())
             / 1000000000.0);
   }
 
@@ -176,7 +183,8 @@ public class GNTrainer {
   public void gntTrainingWithDimensionFromConllFiles()
       throws IOException {
 
-    List<String> trainingFileNames = this.corpusConfig.getList(String.class, ConfigKeys.TRAINING_LABELED_DATA);
+    List<String> trainingFileNames =
+        this.corpusConfig.getList(String.class, ConfigKeys.TRAINING_LABELED_DATA);
     String clusterIdSourceFileName = this.corpusConfig.getString(ConfigKeys.CLUSTER_FILE);
     int dim = this.modelConfig.getInt(ConfigKeys.DIM);
     int maxExamples = this.modelConfig.getInt(ConfigKeys.NUMBER_OF_SENTENCES);

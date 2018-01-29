@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 /*
- * <tweet id="298211097217994752" date="2013-02-04" time="00:27:59" corpus="PoTwiC" subcorpus="HAMBURG">
+ * <tweet id="298211097217994752" date="2013-02-04" time="00:27:59"
+   corpus="PoTwiC" subcorpus="HAMBURG">
 <text>Und wieder werbung #superbowl #sat1 @sat1
 </text>
 <w start="T1" end="T2" lemma="und" type="KON">Und</w>
@@ -56,7 +57,8 @@ public class TweetToConllMapper {
     BufferedWriter outStream = null;
     try {
       // The output for the transformed pubmed file.
-      outStream = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), this.encoding));
+      outStream =
+          new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), this.encoding));
       // Flags for indicating the corresponding tag is opened or closed
       boolean wordFlag = false;
 
@@ -90,16 +92,16 @@ public class TweetToConllMapper {
 
             EndElement end = event.asEndElement();
 
-            // For end tags: add information to pubmed object and if end of article arrived output depending on
-            // output style define by TargetUnitType.
+            // For end tags: add information to pubmed object and if end of article arrived
+            // output depending on output style define by TargetUnitType.
             if (end.getName().equals(Text_ELE)) {
               wordCnt = 0;
               outStream.newLine();
             }
             if (end.getName().equals(Word_ELE)) {
               wordFlag = false;
-              outStream.write(
-                  wordCnt + "\t" + wordString.toString() + "\t" + lemmaString + "\t" + typeString + "\t" + typeString);
+              outStream.write(wordCnt + "\t" + wordString.toString() + "\t" + lemmaString + "\t"
+                  + typeString + "\t" + typeString);
               outStream.newLine();
               wordString = new StringBuilder();
             }
