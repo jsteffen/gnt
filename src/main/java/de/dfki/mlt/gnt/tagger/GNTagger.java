@@ -216,6 +216,38 @@ public class GNTagger {
   }
 
 
+  /**
+   * Applies the tagger to the tokens of the given CoNLL tables.
+   *
+   * @param coNllTables
+   *          CoNLL tables, each table representing a single sentence
+   * @param tokenColumIndex
+   *          column where to read the tokens from, zero-based
+   * @param tagColumnIndex
+   *          column where to add tags, zero-based
+   * @return CoNLL tables, extended with computed tag
+   */
+  public List<String[][]> tagCoNllTables(
+      List<String[][]> coNllTables, int tokenColumnIndex, int tagColumnIndex) {
+
+    for (String[][] oneCoNllTable : coNllTables) {
+      // collect tokens
+      List<String> tokens = new ArrayList<>();
+      for (int i = 0; i < oneCoNllTable.length; i++) {
+        tokens.add(oneCoNllTable[i][tokenColumnIndex]);
+      }
+      // apply tagger
+      Sentence taggedSentence = tagUnlabeledTokens(tokens);
+      // write tags to CoNLL table
+      for (int i = 0; i < taggedSentence.getTags().length; i++) {
+        oneCoNllTable[i][tagColumnIndex] = taggedSentence.getTags()[i];
+      }
+    }
+
+    return coNllTables;
+  }
+
+
   private void tagSentenceObject(Sentence sentence) {
 
     // create window frames from sentence and store in list
