@@ -414,11 +414,15 @@ public class TrainerInMem {
         System.out.println("shit!!");
         continue;
       }
+      //System.out.println("Next node!" + nodes.toString());
       int indexBefore = 0;
       for (Feature n : nodes) {
+        //System.out.println("Index " + n.getIndex() + " Before: " + indexBefore);
         if (n.getIndex() <= indexBefore) {
           throw new IllegalArgumentException(
-              "feature nodes must be sorted by index in ascending order");
+              " Message from GNT: feature nodes must be sorted by index in ascending order");
+        } else {
+          indexBefore = n.getIndex();
         }
       }
     }
