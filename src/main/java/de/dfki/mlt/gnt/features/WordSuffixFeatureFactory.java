@@ -305,6 +305,14 @@ public class WordSuffixFeatureFactory {
     // Smallest suffix is just last character of a word
     for (int i = 0; i < word.length(); i++) {
       String suffix = word.substring(i);
+      if (Character.isHighSurrogate(suffix.charAt(0))
+          && suffix.length() > 1
+          && Character.isLowSurrogate(suffix.charAt(1))) {
+        // skip the next character, as it builds a
+        // 2-character unicode sign with the current character
+        i++;
+      }
+
       if (!isNonWord(suffix)) {
         updateSuffixTable(suffix, i);
       }
