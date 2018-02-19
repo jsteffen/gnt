@@ -85,4 +85,14 @@ HIERIX
 	- 	main problem seems to be the update of the iw2num/num2iw mapping: 
 		maybe create it online by means of a virtual indicator file
 		of entries: feat1, feat2, ...,
+  - core idea: simulate creation of indicator file
 
+Steps:
+- in de.dfki.mlt.gnt.trainer.GNTrainer.gntTrainingWithDimensionFromConllFiles():
+  do not create indicator words
+- in de.dfki.mlt.gnt.trainer.GNTrainer.createWordVectors(int)
+  do not call of de.dfki.mlt.gnt.features.WordDistributedFeatureFactory.createAndWriteDistributedWordFeaturesSparse(int, CorpusConfig)
+- in de.dfki.mlt.gnt.trainer.GNTrainer.gntTrainingFromConllFile(List<String>, int, int)
+  in de.dfki.mlt.gnt.data.Alphabet.loadFeaturesFromFiles(int)
+- update de.dfki.mlt.gnt.features.WordDistributedFeatureFactory.readDistributedWordFeaturesSparse(int)
+  load word embedding file -> COMPLETE FILE ?
