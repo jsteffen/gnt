@@ -21,7 +21,7 @@ public class GntSimpleTokenizerTest {
             + "3. Reiter danach! Alleh hopp noch e mal.";
 
     List<String> tokens = GntSimpleTokenizer.tokenize(text);
-    assertThat(tokens).hasSize(21);
+    assertThat(tokens).hasSize(27);
   }
 
 
@@ -36,7 +36,7 @@ public class GntSimpleTokenizerTest {
             + "cytokines leaves patients susceptible to infection.";
 
     List<String> tokens = GntSimpleTokenizer.tokenize(text);
-    assertThat(tokens).hasSize(45);
+    assertThat(tokens).hasSize(51);
   }
 
 
@@ -49,7 +49,7 @@ public class GntSimpleTokenizerTest {
         + "weisst du es ? Wieso nicht?    Weil ";
 
     List<String> tokens = GntSimpleTokenizer.tokenize(text);
-    assertThat(tokens).hasSize(44);
+    assertThat(tokens).hasSize(58);
   }
 
 
@@ -87,7 +87,7 @@ public class GntSimpleTokenizerTest {
         + "features with a weight of zero.";
 
     List<String> tokens = GntSimpleTokenizer.tokenize(text);
-    assertThat(tokens).hasSize(285);
+    assertThat(tokens).hasSize(335);
   }
 
 
@@ -97,7 +97,7 @@ public class GntSimpleTokenizerTest {
     String text = ":Text with separator at the beginning.";
 
     List<String> tokens = GntSimpleTokenizer.tokenize(text);
-    assertThat(tokens).hasSize(6);
+    assertThat(tokens).hasSize(8);
   }
 }
 
