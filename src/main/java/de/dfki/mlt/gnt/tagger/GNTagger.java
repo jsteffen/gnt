@@ -353,6 +353,10 @@ public class GNTagger {
 
   /**
    * Evaluates the performance of the tagger using the given annotated corpus.
+   * NOTE:
+   * it computes evaluation files for devel and test file in that order
+   * and sets variables in evaluator class (accuracy for pos/oov/inv.
+   * but it overwrites these values so that only numbers for test will survive.
    *
    * @param corpusConfigFileName
    *          corpus configuration file name
@@ -375,13 +379,104 @@ public class GNTagger {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
+
     for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TEST_LABELED_DATA,
+        Collections.emptyList())) {
+      Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
+      evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
+      }
+
+    return evaluator;
+  }
+
+  /**
+   * This version additionally creates an output file which can be used by the offical UD evaluation script
+   * AND can be used as input also for testing MDParser on predicted POS tags !
+   *
+   * @param corpusConfigFileName
+   * @param sourceConnlFile
+   * @param targetConllFile
+   * @return
+   * @throws IOException
+   * @throws ConfigurationException
+   */
+  public ConllEvaluator evalAndWriteResultFile(String corpusConfigFileName, String sourceConnlFile, String targetConllFile)
+      throws IOException, ConfigurationException {
+
+    CorpusConfig corpusConfig = CorpusConfig.create(corpusConfigFileName);
+
+    int wordFormIndex = corpusConfig.getInt(ConfigKeys.WORD_FORM_INDEX);
+    int tagIndex = corpusConfig.getInt(ConfigKeys.TAG_INDEX);
+
+    Data wordSetData = new Data();
+    wordSetData.readWordSet(this.archivator);
+    System.out.println(" words: " + wordSetData.getWordSet().size());
+    ConllEvaluator evaluator = new ConllEvaluator(wordSetData.getWordSet());
+
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.DEV_LABELED_DATA,
         Collections.emptyList())) {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
     }
 
+    for (String fileName : corpusConfig.getList(String.class, ConfigKeys.TEST_LABELED_DATA,
+        Collections.emptyList())) {
+      Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
+      evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
+
+      this.createConllResultFileFromEvalFile(tagIndex, evalPath, sourceConnlFile, targetConllFile);
+      }
+
     return evaluator;
+  }
+
+  /*
+   * Given an evalFile and a conllSourceFile
+   * make a new conllTargetFile
+   * by copy all conll fields from source file to target file
+   * but the tag index field
+   * Here use the second (counting from 0) column from eval file
+   * and overwrite column index by tagIndex
+   *
+   *
+   */
+
+  private void createConllResultFileFromEvalFile(int tagIndex, Path evalPath, String conllSourceFile, String  conllTargetFile) {
+
+    try (BufferedReader evalReader = Files.newBufferedReader(evalPath, StandardCharsets.UTF_8);
+        BufferedReader sourceFileReader = Files.newBufferedReader(Paths.get(conllSourceFile), StandardCharsets.UTF_8);
+        PrintWriter targetFileWriter =
+            new PrintWriter(Files.newBufferedWriter(Paths.get(conllTargetFile), StandardCharsets.UTF_8))) {
+
+      String evalLine = "";
+      String sourceLine = "";
+      int evalPredictedTagIndex = 3;
+      while ((evalLine = evalReader.readLine()) != null) {
+        sourceLine = sourceFileReader.readLine();
+
+        if (evalLine.isEmpty()) {
+          targetFileWriter.println();
+          } else {
+            String[] evalTokens = evalLine.split(" ");
+
+            String[] sourceToken = sourceLine.split("\t");
+
+            sourceToken[tagIndex] = evalTokens[evalPredictedTagIndex];
+            String newConllToken = sourceToken[0];
+            for (int i = 1; i < sourceToken.length; i++) {
+              newConllToken += "\t" + sourceToken[i];
+            }
+            targetFileWriter.write(newConllToken);
+            targetFileWriter.println();
+        }
+      }
+      evalReader.close();
+      sourceFileReader.close();
+      targetFileWriter.close();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
 
@@ -459,6 +554,7 @@ public class GNTagger {
           tokens = new ArrayList<String[]>();
         } else {
           // Collect all the words of a conll sentence
+
           String[] tokenizedLine = line.split("\t");
           tokens.add(tokenizedLine);
         }
@@ -495,4 +591,5 @@ public class GNTagger {
     }
     conllWriter.println();
   }
+
 }
