@@ -40,7 +40,7 @@ public class GntMorphixTokenizer {
   private static final List<Character> TOKEN_SEP_CHARS =
       Arrays.asList(' ', '\n', '\t');
 
-  private static int abbrevLength = 5;
+  private static int abbrevLength = 2;
 
   private boolean lowerCase;
   private boolean splitString;
@@ -146,7 +146,7 @@ public class GntMorphixTokenizer {
   private void setCandidateAbbrev(String token) {
 
     logger.debug("Abbrev? " + token);
-    if ((token.length() <= 3)) {
+    if ((token.length() <= abbrevLength)) {
       this.isCandidateAbbrev = true;
     } else {
       this.isCandidateAbbrev = false;
