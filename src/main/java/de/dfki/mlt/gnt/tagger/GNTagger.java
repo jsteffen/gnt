@@ -390,7 +390,7 @@ public class GNTagger {
   }
 
   /**
-   * This version additionally creates an output file which can be used by the offical UD evaluation script
+   * This version additionally creates an output file which can be used by the official UD evaluation script
    * AND can be used as input also for testing MDParser on predicted POS tags !
    *
    * @param corpusConfigFileName
@@ -424,6 +424,7 @@ public class GNTagger {
       Path evalPath = tagAndWriteFromConllDevelFile(fileName, -1, wordFormIndex, tagIndex);
       evaluator.computeAccuracy(evalPath, GlobalConfig.getBoolean(ConfigKeys.DEBUG));
 
+      // Create UD conform output file: overwrite gold tag with predicted tag in conll gold file and store it in result file
       this.createConllResultFileFromEvalFile(tagIndex, evalPath, sourceConnlFile, targetConllFile);
       }
 
