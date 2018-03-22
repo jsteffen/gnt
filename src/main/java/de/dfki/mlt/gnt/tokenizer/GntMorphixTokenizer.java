@@ -23,6 +23,7 @@ public class GntMorphixTokenizer {
   private static final Logger logger = LoggerFactory.getLogger(GntMorphixTokenizer.class);
 
   // the last one should be #\^D, the Fill Down character
+  // adapt this
   private static final List<Character> SPECIAL_CHARS =
       Arrays.asList(
           '.', ',', ';', '!', '?', ':', '(', ')', '{', '}', '[', ']', '$', '€', '\'',
