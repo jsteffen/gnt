@@ -19,3 +19,27 @@ TODO:
 
 - improve recognition of special tokens, e.g., numbers, date, abbrevs
 	- need better disambiguation etc.
+
+MARCH, 2018:
+
+- develop a trainable tokenizer for use with UD
+
+- follow ideas by Straka et al., (2016)
+
+- assume SPACE as always token separator
+
+- classify sentence punctuation from training treebanks
+
+- now develop a classifier on a character segments of fixed size 
+
+	- classify each character as:
+	
+	- token boundary follows
+	
+	- sentence boundary follows
+	
+	- no boundary
+	
+- Use treebanks as basis for tagging raw text similar to POS tagger
+
+- Then I might be able to learn a GNT model
