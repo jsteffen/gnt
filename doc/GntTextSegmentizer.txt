@@ -30,15 +30,15 @@ MARCH, 2018:
 
 - classify sentence punctuation from training treebanks
 
-- now develop a classifier on a character segments of fixed size 
+- now develop a classifier on a character segment of fixed size 
 
 	- classify each character as:
 	
-	- token boundary follows
+		- token boundary follows
 	
-	- sentence boundary follows
+		- sentence boundary follows
 	
-	- no boundary
+		- no boundary
 	
 - Use treebanks as basis for tagging raw text similar to POS tagger
 
