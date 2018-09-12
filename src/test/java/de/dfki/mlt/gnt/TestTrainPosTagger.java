@@ -46,9 +46,9 @@ public final class TestTrainPosTagger {
     //    gntTrainer.trainer(
     //        "src/main/resources/DeMorphTagger.model.conf",
     //        "src/main/resources/DeMorphTagger.corpus.conf");
-    gntTrainer.trainer(
-        "src/main/resources/EnPosTagger.model.conf",
-        "src/main/resources/EnPosTagger.corpus.conf");
+//    gntTrainer.trainer(
+//        "src/main/resources/EnPosTagger.model.conf",
+//        "src/main/resources/EnPosTagger.corpus.conf");
     //    gntTrainer.trainer(
     //        "src/main/resources/BioNerTagger.model.conf",
     //        "src/main/resources/BioNerTagger.corpus.conf");
@@ -96,11 +96,18 @@ public final class TestTrainPosTagger {
 
 
     // NAMR BIO
+//    GNT.train(
+//        "src/main/resources/EnNerNamrBioTagger.model.conf",
+//        "EnNerNamrBioTagger.corpus.conf");
+//    GNT.eval("src/test/resources/model_NAMR-BIO-EN-NER_2_0iw-1sent_FTTTT_MCSVM_CS.zip",
+//        "EnNerNamrBioTagger.corpus.conf");
+
+ // NAMR ES-NER
     GNT.train(
-        "src/main/resources/EnNerNamrBioTagger.model.conf",
-        "EnNerNamrBioTagger.corpus.conf");
-    GNT.eval("src/test/resources/model_NAMR-BIO-EN-NER_2_0iw-1sent_FTTTT_MCSVM_CS.zip",
-        "EnNerNamrBioTagger.corpus.conf");
+        "src/main/resources/GNT_NER_ES_CoNLL.model.conf",
+        "GNT_NER_ES_CoNLL.corpus.conf");
+    GNT.eval("src/test/resources/model_NER_ES_CoNLL_2_0iw-1sent_FTTTT_MCSVM_CS.zip",
+        "GNT_NER_ES_CoNLL.corpus.conf");
 
 
     /*

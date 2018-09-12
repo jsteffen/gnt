@@ -1,0 +1,23 @@
+12.09.2018, GN:
+
+Using marling clusters
+              
+              
+SPANISH:
+
+neumann@xman:~/eclipse-workspace/gnt/resources$ ./conlleval < eval/es_testa.txt
+processed 52849 tokens with 4338 phrases; found: 4245 phrases; correct: 3343.
+accuracy:  96.18%; precision:  78.75%; recall:  77.06%; FB1:  77.90
+              LOC: precision:  73.59%; recall:  80.61%; FB1:  76.94
+             MISC: precision:  57.49%; recall:  52.70%; FB1:  54.99
+              ORG: precision:  80.81%; recall:  76.11%; FB1:  78.39
+              PER: precision:  88.12%; recall:  84.37%; FB1:  86.20
+
+neumann@xman:~/eclipse-workspace/gnt/resources$ ./conlleval < eval/es_testb.txt
+processed 51487 tokens with 3559 phrases; found: 3534 phrases; correct: 2862.
+accuracy:  97.44%; precision:  80.98%; recall:  80.42%; FB1:  80.70
+              LOC: precision:  84.70%; recall:  77.12%; FB1:  80.73
+             MISC: precision:  61.24%; recall:  55.29%; FB1:  58.11
+              ORG: precision:  79.03%; recall:  82.64%; FB1:  80.80
+              PER: precision:  87.76%; recall:  92.65%; FB1:  90.14
+
