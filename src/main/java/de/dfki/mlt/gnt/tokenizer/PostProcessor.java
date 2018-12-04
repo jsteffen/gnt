@@ -14,7 +14,7 @@ public class PostProcessor {
 
   private static List<String> englishNegativeForms =
       Arrays.asList("wasn", "doesn", "don", "weren", "didn", "hasn", "hadn", "can", "couldn",
-          "mustn", "shan", "shouldn", "won", "wouldn");
+          "mustn", "shan", "shouldn", "won", "wouldn", "isn", "haven");
 
   private static List<String> englishCliticSuffix =
       Arrays.asList("s", "d", "re", "m", "ve", "ll");
