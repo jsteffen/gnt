@@ -217,15 +217,22 @@ public class WordShapeFeature {
 
     // Now, analyse the different cases, and set the relevant bits in the bitVector
     if (Character.isUpperCase(ch0) || Character.isTitleCase(ch0)) {
+      // First char is upper case
       if (wordIndex == 0 && numCaps == 1) {
+        // AND word is in sentence initial position and it has no other upper case
         this.setBit(MorphFeature.INIT_CAP);
 
       } else {
+        // Else word is not in sentence initial but starts with a upper case
+        // Or word is in initial sentence position but has more than 1 upper case
         this.setBit(MorphFeature.ALL_CAPS);
       }
-    } else if (!Character.isLetter(ch0) && numCaps > 0) {
+    }
+    // Word does not start with upper case, but starts with a non-letter char and has more than one upper char
+    else if (!Character.isLetter(ch0) && numCaps > 0) {
       this.setBit(MorphFeature.ALL_CAPS);
     } else if (hasLower) {
+      // only lower case modulo start of word
       this.setBit(MorphFeature.LOWER_CASE);
     }
     if (hasDigit) {
@@ -298,7 +305,7 @@ public class WordShapeFeature {
 
   public static void main(String[] args) {
 
-    WordShapeFeature test = new WordShapeFeature("PETER", 0);
+    WordShapeFeature test = new WordShapeFeature("!ibmkll", 1);
     System.out.println(test.toString());
   }
 }
